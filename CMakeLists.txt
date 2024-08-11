@@ -4,7 +4,16 @@ project(BlockSmashies VERSION 0.1)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
-set(SourceFiles src/main.c)
+set(SourceFiles
+    src/main.c
+    src/scene_manager.c
+    src/main_menu.c
+    src/gameplay.c
+    src/title_screen.c
+    src/logo_screen.c
+    src/game_settings.c
+)
+
 include_directories(include)
 
 add_subdirectory(external/raylib)

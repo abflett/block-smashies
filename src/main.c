@@ -1,124 +1,81 @@
 #include "raylib.h"
+#include "main.h"
+#include "scene_manager.h"
+#include "logo_screen.h"
 
-typedef enum GameScreen
+SceneManager scene_manager;
+
+bool exitWindow = false;
+bool exitWindowRequested = false;
+int screen_width = 1280;
+int screen_height = 720;
+bool fullscreen = true;
+
+int main(void)
 {
-    LOGO = 0,
-    TITLE,
-    GAMEPLAY,
-    ENDING
-} GameScreen;
-
-int main()
-{
-    const int screenWidth = 1280;
-    const int screenHeight = 720;
-
-    bool exitWindowRequested = false;
-    bool exitWindow = false;
-    int framesCounter = 0;
-
-    GameScreen currentScreen = LOGO;
-
-    InitWindow(screenWidth, screenHeight, "Block Smashies");
-    SetExitKey(KEY_NULL);
-    SetTargetFPS(60);
+    init_game();
 
     while (!exitWindow)
     {
-        if (WindowShouldClose() || IsKeyPressed(KEY_ESCAPE))
-            exitWindowRequested = true;
+        float delta_time = GetFrameTime();
+        update_game(delta_time);
+        draw_game();
+    }
 
-        if (exitWindowRequested)
-        {
-            if (IsKeyPressed(KEY_Y))
-                exitWindow = true;
-            else if (IsKeyPressed(KEY_N))
-                exitWindowRequested = false;
-        }
+    close_game();
+    return 0;
+}
 
-        switch (currentScreen)
-        {
-        case LOGO:
-        {
-            framesCounter++; // Count frames
-            if (framesCounter > 120)
-            {
-                currentScreen = TITLE;
-            }
-        }
-        break;
-        case TITLE:
-        {
-            if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
-            {
-                currentScreen = GAMEPLAY;
-            }
-        }
-        break;
-        case GAMEPLAY:
-        {
-            if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
-            {
-                currentScreen = ENDING;
-            }
-        }
-        break;
-        case ENDING:
-        {
-            if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
-            {
-                currentScreen = TITLE;
-            }
-        }
-        break;
-        default:
-            break;
-        }
+void init_game(void)
+{
+    set_game_resolution(&screen_width, &screen_height, fullscreen);
+    SetExitKey(KEY_NULL); // Disable default exit key (ESC)
+    SetTargetFPS(60);     // Set target FPS for the game loop
+    scene_manager_change_scene(&scene_manager, &logo_screen_scene);
+}
 
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-        if (exitWindowRequested)
-        {
-            DrawRectangle(0, 100, screenWidth, 200, DARKGRAY);
-            DrawText("Are you sure you want to exit program? [Y/N]", 40, 180, 30, WHITE);
-        }
-        else
-        {
-            switch (currentScreen)
-            {
-            case LOGO:
-            {
-                DrawText("LOGO SCREEN", 20, 20, 40, LIGHTGRAY);
-                DrawText("WAIT for 2 SECONDS...", 290, 220, 20, GRAY);
-            }
-            break;
-            case TITLE:
-            {
-                DrawRectangle(0, 0, screenWidth, screenHeight, GREEN);
-                DrawText("TITLE SCREEN", 20, 20, 40, DARKGREEN);
-                DrawText("PRESS ENTER or TAP to JUMP to GAMEPLAY SCREEN", 120, 220, 20, DARKGREEN);
-            }
-            break;
-            case GAMEPLAY:
-            {
-                DrawRectangle(0, 0, screenWidth, screenHeight, PURPLE);
-                DrawText("GAMEPLAY SCREEN", 20, 20, 40, MAROON);
-                DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
-            }
-            break;
-            case ENDING:
-            {
-                DrawRectangle(0, 0, screenWidth, screenHeight, BLUE);
-                DrawText("ENDING SCREEN", 20, 20, 40, DARKBLUE);
-                DrawText("PRESS ENTER or TAP to RETURN to TITLE SCREEN", 120, 220, 20, DARKBLUE);
-            }
-            break;
-            default:
-                break;
-            }
-        }
-        EndDrawing();
+void update_game(float delta_time)
+{
+    scene_manager_update(&scene_manager, delta_time);
+
+    if (WindowShouldClose() || IsKeyPressed(KEY_ESCAPE))
+        exitWindowRequested = true;
+
+    // Handle exit confirmation
+    if (exitWindowRequested)
+    {
+        if (IsKeyPressed(KEY_Y))
+            exitWindow = true;
+        else if (IsKeyPressed(KEY_N))
+            exitWindowRequested = false;
+    }
+}
+
+void draw_game(void)
+{
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+
+    if (exitWindowRequested)
+    {
+        // Display exit confirmation dialog
+        DrawRectangle(0, (screen_height / 2) - 100, screen_width, 200, DARKGRAY);
+        DrawText("Are you sure you want to exit the game? [Y/N]", 40, (screen_height / 2) - 15, 30, WHITE);
+    }
+    else
+    {
+        // Render the current scene
+        scene_manager_render(&scene_manager);
+    }
+
+    EndDrawing();
+}
+
+void close_game(void)
+{
+    if (scene_manager.current_scene && scene_manager.current_scene->cleanup)
+    {
+        scene_manager.current_scene->cleanup();
     }
     CloseWindow();
-    return 0;
 }
