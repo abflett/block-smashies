@@ -2,6 +2,7 @@
 #include "main.h"
 #include "scene_manager.h"
 #include "logo_screen.h"
+#include "gameplay.h"
 
 SceneManager scene_manager;
 
@@ -38,7 +39,7 @@ void init_game(void)
 
     target_texture = LoadRenderTexture(target_width, target_height);
 
-    scene_manager_change_scene(&scene_manager, &logo_screen_scene);
+    scene_manager_change_scene(&scene_manager, &gameplay_scene);
 }
 
 void update_game(float delta_time)
