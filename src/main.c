@@ -9,7 +9,11 @@ bool exitWindow = false;
 bool exitWindowRequested = false;
 int screen_width = 1280;
 int screen_height = 720;
-bool fullscreen = true;
+bool fullscreen = false;
+
+RenderTexture2D target_texture; // Render texture target
+int target_width = 320;
+int target_height = 180;
 
 int main(void)
 {
@@ -31,6 +35,9 @@ void init_game(void)
     set_game_resolution(&screen_width, &screen_height, fullscreen);
     SetExitKey(KEY_NULL); // Disable default exit key (ESC)
     SetTargetFPS(60);     // Set target FPS for the game loop
+
+    target_texture = LoadRenderTexture(target_width, target_height);
+
     scene_manager_change_scene(&scene_manager, &logo_screen_scene);
 }
 
@@ -53,20 +60,33 @@ void update_game(float delta_time)
 
 void draw_game(void)
 {
-    BeginDrawing();
-    ClearBackground(RAYWHITE);
+
+    BeginTextureMode(target_texture);
+    ClearBackground(BLACK);
 
     if (exitWindowRequested)
     {
         // Display exit confirmation dialog
-        DrawRectangle(0, (screen_height / 2) - 100, screen_width, 200, DARKGRAY);
-        DrawText("Are you sure you want to exit the game? [Y/N]", 40, (screen_height / 2) - 15, 30, WHITE);
+        DrawRectangle(0, (target_height / 2) - 25, target_width, 50, DARKPURPLE);
+        DrawText("Are you sure you want to exit the game? [Y/N]", 5, (target_height / 2) - 5, 8, WHITE);
     }
     else
     {
         // Render the current scene
         scene_manager_render(&scene_manager);
     }
+    EndTextureMode();
+
+    BeginDrawing();
+    ClearBackground(BLACK);
+
+    // Draw the target texture scaled to fit the screen
+    DrawTexturePro(target_texture.texture,
+                   (Rectangle){0, 0, (float)target_width, -(float)target_height},
+                   (Rectangle){0, 0, (float)screen_width, (float)screen_height},
+                   (Vector2){0, 0},
+                   0.0f,
+                   WHITE);
 
     EndDrawing();
 }
@@ -77,5 +97,7 @@ void close_game(void)
     {
         scene_manager.current_scene->cleanup();
     }
+
+    UnloadRenderTexture(target_texture);
     CloseWindow();
 }

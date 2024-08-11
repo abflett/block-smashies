@@ -36,8 +36,8 @@ void logo_screen_update(float delta_time)
 
 void logo_screen_render(void)
 {
-    DrawText("Logo Screen", 190, 200, 20, DARKGRAY);
-    DrawText("Press ENTER to Title Screen", 190, 250, 20, DARKGRAY);
+    DrawText("Logo Screen", 5, 5, 8, WHITE);
+    DrawText("Press ENTER to Title Screen", 5, 16, 8, WHITE);
 }
 
 void logo_screen_cleanup(void)

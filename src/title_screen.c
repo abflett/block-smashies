@@ -26,8 +26,8 @@ void title_screen_update(float delta_time)
 
 void title_screen_render(void)
 {
-    DrawText("Title Screen", 190, 200, 20, DARKGRAY);
-    DrawText("Press ENTER to Main Menu", 190, 250, 20, DARKGRAY);
+    DrawText("Title Screen", 5, 5, 8, WHITE);
+    DrawText("Press ENTER to Main Menu", 5, 16, 8, WHITE);
 }
 
 void title_screen_cleanup(void)

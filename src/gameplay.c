@@ -27,8 +27,9 @@ void gameplay_update(float delta_time)
 
 void gameplay_render(void)
 {
-    DrawText("Gameplay", 190, 200, 20, DARKGRAY);
-    DrawText("Press ENTER to Main Menu", 190, 250, 20, DARKGRAY);
+    DrawText("Gameplay", 5, 5, 8, WHITE);
+    DrawText("Press ENTER to Main Menu", 5, 16, 8, WHITE);
+    DrawRectangle(150, 170, 20, 5, RED);
 }
 
 void gameplay_cleanup(void)
