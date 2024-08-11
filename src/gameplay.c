@@ -3,6 +3,7 @@
 #include "scene_manager.h"
 #include "main_menu.h"
 #include <math.h>
+#include <stdio.h>
 
 extern SceneManager scene_manager;
 
@@ -20,6 +21,11 @@ static float friction;
 static Vector2 ball_position;
 static Vector2 ball_velocity;
 static float ball_radius;
+
+// Game status variables
+static int player_lives;
+static int player_score;
+static float game_time;
 
 Scene gameplay_scene = {
     .init = gameplay_init,
@@ -44,10 +50,18 @@ void gameplay_init(void)
     ball_position = (Vector2){160.0f, 90.0f};   // Start in the middle of the screen
     ball_velocity = (Vector2){100.0f, -100.0f}; // Initial velocity
     ball_radius = 1.5f;
+
+    // Initialize game status variables
+    player_lives = 3;
+    player_score = 0;
+    game_time = 0.0f;
 }
 
 void gameplay_update(float delta_time)
 {
+    // Update game time
+    game_time += delta_time;
+
     // Update paddle speed based on input
     if (IsKeyDown(KEY_A))
     {
@@ -109,12 +123,26 @@ void gameplay_update(float delta_time)
         {
             ball_velocity.x = (ball_velocity.x > 0) ? max_speed : -max_speed;
         }
+
+        // Increase score when the ball hits the paddle
+        player_score += 10;
     }
 
     // Ball falls below the paddle (you can add life loss or game over logic here)
     if (ball_position.y + ball_radius > 180)
     {
-        gameplay_init(); // Reset game if the ball falls below the screen
+        player_lives--;
+        if (player_lives <= 0)
+        {
+            // Game over logic here (for now, just reset the game)
+            gameplay_init();
+        }
+        else
+        {
+            // Reset ball position and velocity
+            ball_position = (Vector2){160.0f, 90.0f};
+            ball_velocity = (Vector2){100.0f, -100.0f};
+        }
     }
 
     // Switch to the main menu scene if ENTER is pressed
@@ -126,9 +154,23 @@ void gameplay_update(float delta_time)
 
 void gameplay_render(void)
 {
-    ClearBackground(BLACK); // Clear the screen with a black background
-    DrawText("Gameplay", 5, 5, 8, WHITE);
-    DrawText("Press ENTER to Main Menu", 5, 16, 8, WHITE);
+
+    char score_text[20];
+    snprintf(score_text, sizeof(score_text), "%d", player_score);
+    DrawText(score_text, 5, 5, 8, LIGHTGRAY);
+    // Draw game information
+
+    char time_text[20];
+    int minutes = (int)(game_time / 60);
+    float seconds = game_time - minutes * 60;
+    snprintf(time_text, sizeof(time_text), "%d:%04.2f", minutes, seconds);
+    DrawText(time_text, 145, 5, 8, LIGHTGRAY);
+
+    char lives_text[20];
+    snprintf(lives_text, sizeof(lives_text), "<3 %d", player_lives);
+    DrawText(lives_text, 295, 5, 8, LIGHTGRAY);
+
+    // Draw the paddle and ball
     DrawRectangle((int)paddle_x, paddle_y, paddle_size_x, paddle_size_y, RED);
     DrawCircleV(ball_position, ball_radius, GREEN); // Draw the ball
 }
