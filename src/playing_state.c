@@ -1,11 +1,14 @@
 #include "playing_state.h"
 #include "play_state_manager.h"
+#include "scene_manager.h"
 #include "raylib.h"
 #include "high_score.h"
+#include "main_menu.h"
 #include <math.h>
 #include <stdio.h>
 
 extern PlayStateManager play_state_manager;
+extern SceneManager scene_manager;
 
 // Static variables, scoped only to this file
 static float paddle_x;
@@ -158,10 +161,10 @@ void playing_state_update(float delta_time)
     }
 
     // // Switch to the main menu scene if ENTER is pressed
-    // if (IsKeyPressed(KEY_ENTER))
-    // {
-    //     scene_manager.next_scene = &main_menu_scene;
-    // }
+    if (IsKeyPressed(KEY_ENTER))
+    {
+        scene_manager.next_scene = &main_menu_scene;
+    }
 }
 
 void playing_state_render(void)
