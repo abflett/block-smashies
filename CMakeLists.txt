@@ -12,10 +12,12 @@ set(SourceFiles
     src/title_screen.c
     src/logo_screen.c
     src/game_settings.c
+    src/high_score.c
 )
 
 # Include directories
 include_directories(include)
+include_directories(external/parson)
 
 # Add raylib as a subdirectory
 add_subdirectory(external/raylib)

@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "scene_manager.h"
 #include "main_menu.h"
+#include "high_score.h"
 #include <math.h>
 #include <stdio.h>
 
@@ -27,6 +28,9 @@ static int player_lives;
 static int player_score;
 static float game_time;
 
+HighScore high_scores[10];
+int count = 0;
+
 Scene gameplay_scene = {
     .init = gameplay_init,
     .update = gameplay_update,
@@ -36,6 +40,16 @@ Scene gameplay_scene = {
 
 void gameplay_init(void)
 {
+
+    // Load high scores from file
+    load_high_scores("high_scores.json", high_scores, &count);
+
+    // Add a new high score
+    add_high_score(high_scores, &count, "Adam", 1000000);
+
+    // Save high scores to file
+    save_high_scores("high_scores.json", high_scores, count);
+
     // Resetting paddle variables
     paddle_x = 150.0f;
     paddle_y = 170;
@@ -169,6 +183,14 @@ void gameplay_render(void)
     char lives_text[20];
     snprintf(lives_text, sizeof(lives_text), "<3 %d", player_lives);
     DrawText(lives_text, 295, 5, 8, LIGHTGRAY);
+
+    char high_score_text[50];
+    // Print high scores
+    for (int i = 0; i < count; ++i)
+    {
+        snprintf(high_score_text, sizeof(high_score_text), "%s - %d", high_scores[i].username, high_scores[i].score);
+        DrawText(high_score_text, 5, 10 * i + 16, 8, LIGHTGRAY);
+    }
 
     // Draw the paddle and ball
     DrawRectangle((int)paddle_x, paddle_y, paddle_size_x, paddle_size_y, RED);
