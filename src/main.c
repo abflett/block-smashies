@@ -26,10 +26,10 @@ int main(void)
 void init_game(void)
 {
     init_game_from_settings("settings.json");
-    // SetExitKey(KEY_NULL); // Disable default exit key (ESC) - not used until exit scene is created
-    SetTargetFPS(60); // Set target FPS for the game loop
+    SetExitKey(KEY_NULL); // Disable default exit key (ESC) - not used until exit scene is created
+    SetTargetFPS(60);     // Set target FPS for the game loop
     target_texture = LoadRenderTexture(game_settings.target_width, game_settings.target_height);
-    scene_manager_change_scene(&scene_manager, &gameplay_scene);
+    scene_manager_change_scene(&scene_manager, &logo_screen_scene);
 }
 
 void update_game(float delta_time)

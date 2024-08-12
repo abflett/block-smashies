@@ -22,6 +22,7 @@ void load_settings(const char *filename)
 
     game_settings.target_width = 320;
     game_settings.target_height = 180;
+    game_settings.logo_screen_time = 4.0f;
     game_settings.exitWindow = false;
 
     json_value_free(root_value);
@@ -48,12 +49,14 @@ void set_default_settings(void)
     game_settings.fullscreen = false;
     game_settings.volume = 1.0f;
     game_settings.exitWindow = false;
+    game_settings.target_width = 320;
+    game_settings.target_height = 180;
+    game_settings.logo_screen_time = 4.0f;
 }
 
 void init_game_from_settings(const char *settings_file)
 {
     load_settings(settings_file);
-
     InitWindow(game_settings.screen_width, game_settings.screen_height, "Block Smashies");
 
     // Todo: Allow other available full screen resolutions other then native

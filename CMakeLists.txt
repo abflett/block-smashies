@@ -15,6 +15,7 @@ set(SourceFiles
     src/high_score.c
     src/play_state_manager.c
     src/playing_state.c
+    src/playing_menu_state.c
 )
 
 # Include directories

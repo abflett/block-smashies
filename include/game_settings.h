@@ -10,7 +10,7 @@ typedef struct
     bool exitWindow;
     int target_width;
     int target_height;
-    // Add more settings as needed
+    float logo_screen_time;
 } GameSettings;
 
 extern GameSettings game_settings;

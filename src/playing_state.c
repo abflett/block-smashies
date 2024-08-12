@@ -3,7 +3,7 @@
 #include "scene_manager.h"
 #include "raylib.h"
 #include "high_score.h"
-#include "main_menu.h"
+#include "playing_menu_state.h"
 #include <math.h>
 #include <stdio.h>
 
@@ -161,9 +161,9 @@ void playing_state_update(float delta_time)
     }
 
     // // Switch to the main menu scene if ENTER is pressed
-    if (IsKeyPressed(KEY_ENTER))
+    if (IsKeyPressed(KEY_ESCAPE))
     {
-        scene_manager.next_scene = &main_menu_scene;
+        play_state_manager.next_state = &playing_menu_state;
     }
 }
 

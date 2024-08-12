@@ -7,6 +7,7 @@
     "play_state_manager.h": "c",
     "play_state.h": "c",
     "playing_state.h": "c",
-    "main_menu.h": "c"
+    "main_menu.h": "c",
+    "game_settings.h": "c"
   }
 }

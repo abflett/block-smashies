@@ -18,7 +18,7 @@ void title_screen_init(void)
 
 void title_screen_update(float delta_time)
 {
-    if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
+    if (GetKeyPressed() != 0 || IsGestureDetected(GESTURE_TAP))
     {
         scene_manager.next_scene = &main_menu_scene;
     }
@@ -26,7 +26,7 @@ void title_screen_update(float delta_time)
 
 void title_screen_render(void)
 {
-    DrawText("Title Screen", 5, 5, 8, WHITE);
+    DrawText("Title Screen - (Animation for the Title Screen)", 5, 5, 8, WHITE);
     DrawText("Press ENTER to Main Menu", 5, 16, 8, WHITE);
 }
 
