@@ -19,12 +19,14 @@ include_directories(include)
 
 # Add raylib as a subdirectory
 add_subdirectory(external/raylib)
+add_subdirectory(external/parson)
 
 # Create the BlockSmashies executable
 add_executable(BlockSmashies ${SourceFiles})
 
 # Link with raylib
 target_link_libraries(BlockSmashies PUBLIC raylib)
+target_link_libraries(BlockSmashies PUBLIC parson)
 
 # Set build types
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release;MinSizeRel;RelWithDebInfo" CACHE STRING "" FORCE)
