@@ -33,6 +33,8 @@ static float game_time;
 HighScore high_scores[10];
 int count = 0;
 
+Texture2D ball_texture;
+
 PlayState playing_state = {
     .init = playing_state_init,
     .update = playing_state_update,
@@ -42,6 +44,7 @@ PlayState playing_state = {
 
 void playing_state_init(void)
 {
+    ball_texture = LoadTexture("ball.png");
     // Load high scores from file
     load_high_scores("high_scores.json", high_scores, &count);
 
@@ -192,9 +195,8 @@ void playing_state_render(void)
         DrawText(high_score_text, 5, 10 * i + 16, 8, LIGHTGRAY);
     }
 
-    // Draw the paddle and ball
     DrawRectangle((int)paddle_x, paddle_y, paddle_size_x, paddle_size_y, RED);
-    DrawCircleV(ball_position, ball_radius, GREEN); // Draw the ball
+    DrawTextureEx(ball_texture, ball_position, 1.0f, 0.5f, WHITE);
 }
 
 void playing_state_cleanup(void)
