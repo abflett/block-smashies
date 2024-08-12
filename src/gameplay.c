@@ -21,7 +21,6 @@ PlayStateManager play_state_manager;
 
 void gameplay_init(void)
 {
-    // Initialize PlayStateManager
     play_state_manager_change_state(&play_state_manager, &playing_state);
 }
 
@@ -39,5 +38,8 @@ void gameplay_render(void)
 
 void gameplay_cleanup(void)
 {
-    // Cleanup resources used by the gameplay scene
+    if (play_state_manager.current_state && play_state_manager.current_state->cleanup)
+    {
+        play_state_manager.current_state->cleanup();
+    }
 }
