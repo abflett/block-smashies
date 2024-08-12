@@ -1,5 +1,5 @@
 #ifndef PLAY_STATE_MANAGER_H
-#define PLAY_STATE_H
+#define PLAY_STATE_MANAGER_H
 
 #include "play_state.h"
 
