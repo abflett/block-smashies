@@ -1,4 +1,5 @@
 #include "scene_manager.h"
+#include "scene.h"
 #include <stddef.h>
 
 void scene_manager_change_scene(SceneManager *manager, Scene *new_scene)

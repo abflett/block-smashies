@@ -13,6 +13,8 @@ set(SourceFiles
     src/logo_screen.c
     src/game_settings.c
     src/high_score.c
+    src/play_state_manager.c
+    src/playing_state.c
 )
 
 # Include directories

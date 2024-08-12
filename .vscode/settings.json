@@ -3,6 +3,7 @@
     "raylib.h": "c",
     "gameplay.h": "c",
     "scene_manager.h": "c",
-    "logo_screen.h": "c"
+    "logo_screen.h": "c",
+    "play_state_manager.h": "c"
   }
 }
