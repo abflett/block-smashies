@@ -3,6 +3,7 @@
 #include "scene_manager.h"
 #include "logo_screen.h"
 #include "gameplay.h"
+#include "game_settings.h"
 
 SceneManager scene_manager;
 
