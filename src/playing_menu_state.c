@@ -7,7 +7,7 @@
 #include "logo_screen.h"
 
 extern PlayStateManager play_state_manager;
-extern SceneManager scene_manager;
+// extern SceneManager scene_manager;
 
 PlayState playing_menu_state = {
     .init = playing_menu_state_init,

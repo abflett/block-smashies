@@ -7,10 +7,12 @@ typedef struct SceneManager
 {
     Scene *current_scene;
     Scene *next_scene;
+
+    void (*change_scene)(Scene *new_scene);
+    void (*update_scene)(float delta_time);
+    void (*render_scene)(void);
 } SceneManager;
 
-void scene_manager_change_scene(SceneManager *manager, Scene *new_scene);
-void scene_manager_update(SceneManager *manager, float delta_time);
-void scene_manager_render(SceneManager *manager);
+extern SceneManager scene_manager;
 
 #endif

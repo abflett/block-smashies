@@ -2,38 +2,37 @@
 #include "scene.h"
 #include <stddef.h>
 
-void scene_manager_change_scene(SceneManager *manager, Scene *new_scene)
+void change_scene_global(Scene *new_scene)
 {
-    if (manager->current_scene && manager->current_scene->cleanup)
-    {
-        manager->current_scene->cleanup();
-    }
+    if (scene_manager.current_scene && scene_manager.current_scene->cleanup)
+        scene_manager.current_scene->cleanup();
 
-    manager->current_scene = new_scene;
-    if (manager->current_scene && manager->current_scene->init)
-    {
-        manager->current_scene->init();
-    }
+    scene_manager.current_scene = new_scene;
+    if (scene_manager.current_scene && scene_manager.current_scene->init)
+        scene_manager.current_scene->init();
 }
 
-void scene_manager_update(SceneManager *manager, float delta_time)
+void update_scene_global(float delta_time)
 {
-    if (manager->next_scene)
+    if (scene_manager.next_scene)
     {
-        scene_manager_change_scene(manager, manager->next_scene);
-        manager->next_scene = NULL; // Clear the next_scene pointer
+        change_scene_global(scene_manager.next_scene);
+        scene_manager.next_scene = NULL;
     }
 
-    if (manager->current_scene && manager->current_scene->update)
-    {
-        manager->current_scene->update(delta_time);
-    }
+    if (scene_manager.current_scene && scene_manager.current_scene->update)
+        scene_manager.current_scene->update(delta_time);
 }
 
-void scene_manager_render(SceneManager *manager)
+void render_scene_global(void)
 {
-    if (manager->current_scene && manager->current_scene->render)
-    {
-        manager->current_scene->render();
-    }
+    if (scene_manager.current_scene && scene_manager.current_scene->render)
+        scene_manager.current_scene->render();
 }
+
+SceneManager scene_manager = {
+    .current_scene = NULL,
+    .next_scene = NULL,
+    .change_scene = change_scene_global,
+    .update_scene = update_scene_global,
+    .render_scene = render_scene_global};

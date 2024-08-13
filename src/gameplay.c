@@ -1,10 +1,10 @@
 #include "gameplay.h"
-#include "scene_manager.h"
+// #include "scene_manager.h"
 #include "playing_state.h"
 #include "play_state_manager.h"
 #include "main_menu.h"
 
-extern SceneManager scene_manager;
+// extern SceneManager scene_manager;
 
 Scene gameplay_scene = {
     .init = gameplay_init,

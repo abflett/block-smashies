@@ -3,7 +3,7 @@
 #include "scene_manager.h"
 #include "main_menu.h"
 
-extern SceneManager scene_manager;
+// extern SceneManager scene_manager;
 
 Scene title_screen_scene = {
     .init = title_screen_init,

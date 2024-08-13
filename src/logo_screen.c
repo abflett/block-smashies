@@ -4,7 +4,7 @@
 #include "title_screen.h"
 #include "game_settings.h"
 
-extern SceneManager scene_manager;
+// extern SceneManager scene_manager;
 
 Scene logo_screen_scene = {
     .init = logo_screen_init,

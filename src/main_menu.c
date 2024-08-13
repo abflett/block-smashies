@@ -4,7 +4,7 @@
 #include "gameplay.h"
 #include "game_settings.h"
 
-extern SceneManager scene_manager;
+// extern SceneManager scene_manager;
 
 Scene main_menu_scene = {
     .init = main_menu_init,
