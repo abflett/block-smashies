@@ -3,7 +3,7 @@
 #include "play_state_manager.h"
 #include "playing_state.h"
 #include "scene_manager.h"
-#include "logo_screen.h"
+#include "logo_scene.h"
 
 PlayState playing_menu_state = {
     .init = playing_menu_state_init,
@@ -20,7 +20,7 @@ void playing_menu_state_update(float delta_time)
 {
     if (IsKeyPressed(KEY_ESCAPE))
     {
-        scene_manager.next_scene = &logo_screen_scene;
+        scene_manager.next_scene = &logo_scene;
     }
 
     if (IsKeyPressed(KEY_ENTER))

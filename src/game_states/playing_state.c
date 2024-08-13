@@ -40,7 +40,7 @@ PlayState playing_state = {
 
 void playing_state_init(void)
 {
-    ball_texture = LoadTexture("ball.png");
+    ball_texture = LoadTexture("assets/textures/ball.png");
     // Load high scores from file
     load_high_scores("high_scores.json", high_scores, &count);
 

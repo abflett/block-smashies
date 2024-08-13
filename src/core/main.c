@@ -2,7 +2,7 @@
 #include "main.h"
 #include "game_settings.h"
 #include "scene_manager.h"
-#include "logo_screen.h"
+#include "logo_scene.h"
 #include "gameplay.h"
 
 RenderTexture2D target_texture; // Render texture target
@@ -28,7 +28,7 @@ void init_game(void)
     SetExitKey(KEY_NULL); // Disable default exit key (ESC) - not used until exit scene is created
     SetTargetFPS(60);     // Set target FPS for the game loop
     target_texture = LoadRenderTexture(game_settings.target_width, game_settings.target_height);
-    scene_manager.change_scene(&logo_screen_scene);
+    scene_manager.change_scene(&logo_scene);
 }
 
 void update_game(float delta_time)
