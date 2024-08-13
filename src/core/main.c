@@ -4,6 +4,7 @@
 #include "scene_manager.h"
 #include "logo_scene.h"
 #include "gameplay_scene.h"
+#include "playing_state.h"
 
 RenderTexture2D target_texture; // Render texture target
 
@@ -24,9 +25,8 @@ int main(void)
 
 void init_game(void)
 {
+    SetTraceLogLevel(LOG_ALL);
     init_game_from_settings("settings.json");
-    SetExitKey(KEY_NULL); // Disable default exit key (ESC) - not used until exit scene is created
-    SetTargetFPS(60);     // Set target FPS for the game loop
     target_texture = LoadRenderTexture(game_settings.target_width, game_settings.target_height);
     scene_manager.change(&logo_scene);
 }
@@ -35,18 +35,27 @@ void update_game(float delta_time)
 {
     scene_manager.update(delta_time);
 
-    if (WindowShouldClose())
+    if ((IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL)) && IsKeyPressed(KEY_C) || WindowShouldClose())
+    {
+        // Ensure cleanup is done before exiting
+        if (playing_state.cleanup)
+        {
+            game_settings.is_paused = false; // Reset the pause flag
+            playing_state.cleanup();         // Call cleanup
+        }
         game_settings.exitWindow = true;
+    }
 }
 
 void draw_game(void)
 {
-
+    // Draw the current scene to the render texture
     BeginTextureMode(target_texture);
     ClearBackground(BLACK);
     scene_manager.render();
     EndTextureMode();
 
+    // Draw the render texture to the screen with scaling
     BeginDrawing();
     {
         ClearBackground(BLACK);

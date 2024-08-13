@@ -4,26 +4,26 @@ project(BlockSmashies VERSION 0.1)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-# Add third-party subdirectories
+# Third-party subdirectories
 add_subdirectory(external/raylib)
 add_subdirectory(external/parson)
 
 # Include directories
 include_directories(
-    "include/core"
-    "include/scenes"
-    "include/game_states"
-    "external/parson"
+    ${PROJECT_SOURCE_DIR}/include/core
+    ${PROJECT_SOURCE_DIR}/include/scenes
+    ${PROJECT_SOURCE_DIR}/include/game_states
+    ${PROJECT_SOURCE_DIR}/external/parson
 )
 
-# Add source files for the core module
+# Source files for the core module
 set(CORE_SRC
     src/core/main.c
     src/core/game_settings.c
     src/core/high_score.c
 )
 
-# Add source files for scenes
+# Source files for scenes
 set(SCENES_SRC
     src/scenes/scene_manager.c
     src/scenes/main_menu_scene.c
@@ -32,7 +32,7 @@ set(SCENES_SRC
     src/scenes/logo_scene.c
 )
 
-# Add source files for game states
+# Source files for game states
 set(GAME_STATES_SRC
     src/game_states/game_state_manager.c
     src/game_states/pause_menu_state.c
@@ -46,10 +46,8 @@ add_executable(BlockSmashies
     ${CORE_SRC}
     )
 
-
-# Link with raylib
-target_link_libraries(BlockSmashies PUBLIC raylib)
-target_link_libraries(BlockSmashies PUBLIC parson)
+# Link with libraries
+target_link_libraries(BlockSmashies PUBLIC raylib parson)
 
 # Custom command to copy assets directory to the build directory
 add_custom_command(TARGET BlockSmashies POST_BUILD
@@ -60,26 +58,17 @@ add_custom_command(TARGET BlockSmashies POST_BUILD
 # Set build types
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release;MinSizeRel;RelWithDebInfo" CACHE STRING "" FORCE)
 
-# MSVC-specific settings
+# compiler specific settings
 if (MSVC)
-    # Use Multi-Processor Compilation
     add_compile_options(/MP)
-
-    # Set MSVC-specific flags for each build type
     target_compile_options(BlockSmashies PRIVATE
-        $<$<CONFIG:Debug>:/Od /Zi>           # Disable optimization, include debug info
-        $<$<CONFIG:Release>:/O2 /DNDEBUG>    # Full optimization, no debug info
-        $<$<CONFIG:MinSizeRel>:/O1>          # Optimize for size
-        $<$<CONFIG:RelWithDebInfo>:/O2 /Zi>  # Full optimization, include debug info
+        $<$<CONFIG:Debug>:/Od /Zi>
+        $<$<CONFIG:Release>:/O2 /DNDEBUG>
+        $<$<CONFIG:MinSizeRel>:/O1>
+        $<$<CONFIG:RelWithDebInfo>:/O2 /Zi>
     )
-
-    # Warnings as errors for stricter code (optional)
-    target_compile_options(BlockSmashies PRIVATE /W3 /WX)
-    
-    # Disable specific MSVC warnings (optional)
-    target_compile_options(BlockSmashies PRIVATE /wd4996)
+    target_compile_options(BlockSmashies PRIVATE /W3 /WX /wd4996)
 else()
-    # GCC/Clang-specific flags
     target_compile_options(BlockSmashies PRIVATE
         $<$<CONFIG:Debug>:-g -O0>
         $<$<CONFIG:Release>:-O3 -DNDEBUG>

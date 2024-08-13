@@ -2,8 +2,11 @@
 #include <math.h>
 #include "raylib.h"
 #include "playing_state.h"
+#include "game_settings.h"
 #include "game_state_manager.h"
 #include "pause_menu_state.h"
+#include "scene_manager.h"
+#include "logo_scene.h"
 #include "high_score.h"
 
 // Static variables, scoped only to this file
@@ -25,6 +28,7 @@ static float ball_radius;
 static int player_lives;
 static int player_score;
 static float game_time;
+static bool reset_game = false;
 
 HighScore high_scores[10];
 int count = 0;
@@ -40,35 +44,54 @@ GameState playing_state = {
 
 void playing_state_init(void)
 {
-    ball_texture = LoadTexture("assets/textures/ball.png");
-    // Load high scores from file
-    load_high_scores("high_scores.json", high_scores, &count);
+    if (reset_game)
+    {
+        // Reset game-specific variables without reloading resources
+        paddle_x = 150.0f;
+        paddle_y = 170;
+        speed = 0.0f;
+        ball_position = (Vector2){160.0f, 90.0f};   // Start in the middle of the screen
+        ball_velocity = (Vector2){100.0f, -100.0f}; // Initial velocity
+        ball_radius = 1.5f;
 
-    // Add a new high score
-    add_high_score(high_scores, &count, "Adam", 1000000);
+        reset_game = false; // Reset the flag after use
+    }
+    else if (!game_settings.is_paused)
+    {
+        // Full initialization, including resource loading
+        ball_texture = LoadTexture("assets/textures/ball.png");
 
-    // Save high scores to file
-    save_high_scores("high_scores.json", high_scores, count);
+        // Load high scores from file
+        load_high_scores("high_scores.json", high_scores, &count);
 
-    // Resetting paddle variables
-    paddle_x = 150.0f;
-    paddle_y = 170;
-    paddle_size_x = 20;
-    paddle_size_y = 5;
-    speed = 0.0f;
-    acceleration = 500.0f;
-    max_speed = 300.0f;
-    friction = 0.95f;
+        // Add a new high score
+        add_high_score(high_scores, &count, "Adam", 1000000);
 
-    // Initialize ball properties
-    ball_position = (Vector2){160.0f, 90.0f};   // Start in the middle of the screen
-    ball_velocity = (Vector2){100.0f, -100.0f}; // Initial velocity
-    ball_radius = 1.5f;
+        // Save high scores to file
+        save_high_scores("high_scores.json", high_scores, count);
 
-    // Initialize game status variables
-    player_lives = 3;
-    player_score = 0;
-    game_time = 0.0f;
+        // Full initialization logic
+        paddle_x = 150.0f;
+        paddle_y = 170;
+        paddle_size_x = 20;
+        paddle_size_y = 5;
+        speed = 0.0f;
+        acceleration = 500.0f;
+        max_speed = 300.0f;
+        friction = 0.95f;
+
+        ball_position = (Vector2){160.0f, 90.0f};   // Start in the middle of the screen
+        ball_velocity = (Vector2){100.0f, -100.0f}; // Initial velocity
+        ball_radius = 1.5f;
+
+        player_lives = 3;
+        player_score = 0;
+        game_time = 0.0f;
+    }
+    else
+    {
+        game_settings.is_paused = false;
+    }
 }
 
 void playing_state_update(float delta_time)
@@ -146,10 +169,12 @@ void playing_state_update(float delta_time)
     if (ball_position.y + ball_radius > 180)
     {
         player_lives--;
+        reset_game = true;
         if (player_lives <= 0)
         {
-            // Game over logic here (for now, just reset the game)
-            playing_state_init();
+            // Game over logic here
+            playing_state_cleanup();
+            scene_manager.change(&logo_scene);
         }
         else
         {
@@ -162,6 +187,7 @@ void playing_state_update(float delta_time)
     // // Switch to the main menu scene if ENTER is pressed
     if (IsKeyPressed(KEY_ESCAPE))
     {
+        game_settings.is_paused = true;
         game_state_manager.next_state = &pause_menu_state;
     }
 }
@@ -197,4 +223,10 @@ void playing_state_render(void)
 
 void playing_state_cleanup(void)
 {
+    if (game_settings.is_paused)
+        return;
+
+    TraceLog(LOG_INFO, "playing_state_cleanup() called");
+
+    UnloadTexture(ball_texture);
 }

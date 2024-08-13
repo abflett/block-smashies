@@ -4,6 +4,7 @@
 #include "playing_state.h"
 #include "scene_manager.h"
 #include "logo_scene.h"
+#include "game_settings.h"
 
 GameState pause_menu_state = {
     .init = pause_menu_state_init,
@@ -20,6 +21,12 @@ void pause_menu_state_update(float delta_time)
 {
     if (IsKeyPressed(KEY_ESCAPE))
     {
+        if (playing_state.cleanup)
+        {
+            game_settings.is_paused = false;
+            playing_state.cleanup();
+        }
+
         scene_manager.next_scene = &logo_scene;
     }
 

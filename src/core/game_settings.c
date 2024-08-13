@@ -24,6 +24,7 @@ void load_settings(const char *filename)
     game_settings.target_height = 180;
     game_settings.logo_screen_time = 4.0f;
     game_settings.exitWindow = false;
+    game_settings.is_paused = false;
 
     json_value_free(root_value);
 }
@@ -52,12 +53,15 @@ void set_default_settings(void)
     game_settings.target_width = 320;
     game_settings.target_height = 180;
     game_settings.logo_screen_time = 4.0f;
+    game_settings.is_paused = false;
 }
 
 void init_game_from_settings(const char *settings_file)
 {
     load_settings(settings_file);
     InitWindow(game_settings.screen_width, game_settings.screen_height, "Block Smashies");
+    SetExitKey(KEY_NULL); // Disable default exit key (ESC) - not used until exit scene is created
+    SetTargetFPS(60);     // Set target FPS for the game loop
 
     // Todo: Allow other available full screen resolutions other then native
     if (game_settings.fullscreen)

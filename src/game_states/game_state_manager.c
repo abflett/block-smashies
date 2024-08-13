@@ -1,15 +1,19 @@
 #include <stddef.h>
+#include "raylib.h"
 #include "game_state_manager.h"
 #include "game_state.h"
 
 void change_state(GameState *new_state)
 {
+
     if (game_state_manager.current_state && game_state_manager.current_state->cleanup)
     {
+        TraceLog(LOG_INFO, "game_state_manager - cleanup condition - change_state(GameState *new_state) called");
         game_state_manager.current_state->cleanup();
     }
 
     game_state_manager.current_state = new_state;
+
     if (game_state_manager.current_state && game_state_manager.current_state->init)
     {
         game_state_manager.current_state->init();

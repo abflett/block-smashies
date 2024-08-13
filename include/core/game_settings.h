@@ -1,6 +1,8 @@
 #ifndef GAME_SETTINGS_H
 #define GAME_SETTINGS_H
 
+#include <stdbool.h>
+
 typedef struct
 {
     int screen_width;
@@ -11,6 +13,7 @@ typedef struct
     int target_width;
     int target_height;
     float logo_screen_time;
+    bool is_paused;
 } GameSettings;
 
 extern GameSettings game_settings;
