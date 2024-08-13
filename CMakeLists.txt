@@ -26,9 +26,9 @@ set(CORE_SRC
 # Add source files for scenes
 set(SCENES_SRC
     src/scenes/scene_manager.c
-    src/scenes/main_menu.c
-    src/scenes/gameplay.c
-    src/scenes/title_screen.c
+    src/scenes/main_menu_scene.c
+    src/scenes/gameplay_scene.c
+    src/scenes/title_scene.c
     src/scenes/logo_scene.c
 )
 

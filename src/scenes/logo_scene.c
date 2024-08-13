@@ -2,7 +2,7 @@
 #include "logo_scene.h"
 #include "game_settings.h"
 #include "scene_manager.h"
-#include "title_screen.h"
+#include "title_scene.h"
 
 Scene logo_scene = {
     .init = logo_scene_init,
@@ -24,7 +24,7 @@ void logo_scene_update(float delta_time)
 
     if (GetKeyPressed() != 0 || IsGestureDetected(GESTURE_TAP) || elapsed_time >= game_settings.logo_screen_time)
     {
-        scene_manager.next_scene = &title_screen_scene;
+        scene_manager.next_scene = &title_scene;
     }
 }
 

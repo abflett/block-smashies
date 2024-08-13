@@ -1,22 +1,22 @@
 #include "raylib.h"
-#include "main_menu.h"
+#include "main_menu_scene.h"
 #include "game_settings.h"
 #include "scene_manager.h"
-#include "gameplay.h"
+#include "gameplay_scene.h"
 
 Scene main_menu_scene = {
-    .init = main_menu_init,
-    .update = main_menu_update,
-    .render = main_menu_render,
-    .cleanup = main_menu_cleanup,
+    .init = main_menu_scene_init,
+    .update = main_menu_scene_update,
+    .render = main_menu_scene_render,
+    .cleanup = main_menu_scene_cleanup,
 };
 
-void main_menu_init(void)
+void main_menu_scene_init(void)
 {
     // Initialize the main menu scene
 }
 
-void main_menu_update(float delta_time)
+void main_menu_scene_update(float delta_time)
 {
     if (IsKeyPressed(KEY_ENTER))
     {
@@ -29,7 +29,7 @@ void main_menu_update(float delta_time)
     }
 }
 
-void main_menu_render(void)
+void main_menu_scene_render(void)
 {
     DrawText("New Game", 5, 16, 8, WHITE);
     DrawText("Continue", 5, 32, 8, DARKGRAY);
@@ -39,7 +39,7 @@ void main_menu_render(void)
     DrawText("Exit", 5, 96, 8, LIGHTGRAY);
 }
 
-void main_menu_cleanup(void)
+void main_menu_scene_cleanup(void)
 {
     // Cleanup resources used by the main menu
 }

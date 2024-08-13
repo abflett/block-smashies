@@ -3,7 +3,7 @@
 #include "game_settings.h"
 #include "scene_manager.h"
 #include "logo_scene.h"
-#include "gameplay.h"
+#include "gameplay_scene.h"
 
 RenderTexture2D target_texture; // Render texture target
 
