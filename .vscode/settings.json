@@ -8,6 +8,8 @@
     "play_state.h": "c",
     "playing_state.h": "c",
     "main_menu.h": "c",
-    "game_settings.h": "c"
+    "game_settings.h": "c",
+    "high_score.h": "c",
+    "title_screen.h": "c"
   }
 }

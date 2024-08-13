@@ -1,6 +1,6 @@
 #include "raylib.h"
-#include "game_settings.h"
 #include "parson.h"
+#include "game_settings.h"
 
 GameSettings game_settings;
 

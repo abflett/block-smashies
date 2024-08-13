@@ -1,13 +1,11 @@
 #include "raylib.h"
 #include "playing_menu_state.h"
-#include "playing_state.h"
 #include "play_state_manager.h"
+#include "playing_state.h"
 #include "scene_manager.h"
-#include "raylib.h"
 #include "logo_screen.h"
 
 extern PlayStateManager play_state_manager;
-// extern SceneManager scene_manager;
 
 PlayState playing_menu_state = {
     .init = playing_menu_state_init,

@@ -1,10 +1,8 @@
-#include "main_menu.h"
 #include "raylib.h"
+#include "main_menu.h"
+#include "game_settings.h"
 #include "scene_manager.h"
 #include "gameplay.h"
-#include "game_settings.h"
-
-// extern SceneManager scene_manager;
 
 Scene main_menu_scene = {
     .init = main_menu_init,

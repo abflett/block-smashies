@@ -1,11 +1,10 @@
+#include <stdio.h>
+#include <math.h>
+#include "raylib.h"
 #include "playing_state.h"
 #include "play_state_manager.h"
-// #include "scene_manager.h"
-#include "raylib.h"
 #include "high_score.h"
 #include "playing_menu_state.h"
-#include <math.h>
-#include <stdio.h>
 
 extern PlayStateManager play_state_manager;
 // extern SceneManager scene_manager;

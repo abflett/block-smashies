@@ -1,10 +1,8 @@
-#include "logo_screen.h"
 #include "raylib.h"
+#include "logo_screen.h"
+#include "game_settings.h"
 #include "scene_manager.h"
 #include "title_screen.h"
-#include "game_settings.h"
-
-// extern SceneManager scene_manager;
 
 Scene logo_screen_scene = {
     .init = logo_screen_init,
@@ -24,12 +22,7 @@ void logo_screen_update(float delta_time)
 {
     elapsed_time += delta_time; // Increment elapsed time by delta_time
 
-    if (elapsed_time >= game_settings.logo_screen_time) // Check if 2 seconds have passed
-    {
-        scene_manager.next_scene = &title_screen_scene; // Schedule transition to main_menu_scene
-    }
-
-    if (GetKeyPressed() != 0 || IsGestureDetected(GESTURE_TAP))
+    if (GetKeyPressed() != 0 || IsGestureDetected(GESTURE_TAP) || elapsed_time >= game_settings.logo_screen_time)
     {
         scene_manager.next_scene = &title_screen_scene;
     }

@@ -1,9 +1,9 @@
 #include "raylib.h"
 #include "main.h"
+#include "game_settings.h"
 #include "scene_manager.h"
 #include "logo_screen.h"
 #include "gameplay.h"
-#include "game_settings.h"
 
 RenderTexture2D target_texture; // Render texture target
 
@@ -29,13 +29,11 @@ void init_game(void)
     SetTargetFPS(60);     // Set target FPS for the game loop
     target_texture = LoadRenderTexture(game_settings.target_width, game_settings.target_height);
     scene_manager.change_scene(&logo_screen_scene);
-    // scene_manager_change_scene(&scene_manager, &logo_screen_scene);
 }
 
 void update_game(float delta_time)
 {
     scene_manager.update_scene(delta_time);
-    // scene_manager_update(&scene_manager, delta_time);
 
     if (WindowShouldClose())
         game_settings.exitWindow = true;
@@ -47,7 +45,6 @@ void draw_game(void)
     BeginTextureMode(target_texture);
     ClearBackground(BLACK);
     scene_manager.render_scene();
-    // scene_manager_render(&scene_manager);
     EndTextureMode();
 
     BeginDrawing();

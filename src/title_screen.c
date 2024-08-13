@@ -1,9 +1,7 @@
-#include "title_screen.h"
 #include "raylib.h"
+#include "title_screen.h"
 #include "scene_manager.h"
 #include "main_menu.h"
-
-// extern SceneManager scene_manager;
 
 Scene title_screen_scene = {
     .init = title_screen_init,
@@ -32,5 +30,4 @@ void title_screen_render(void)
 
 void title_screen_cleanup(void)
 {
-    // Cleanup resources used by the main menu
 }

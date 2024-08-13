@@ -1,9 +1,7 @@
-// high_score.c
-
-#include "high_score.h"
-#include "parson.h"
 #include <string.h>
 #include <stdio.h>
+#include "parson.h"
+#include "high_score.h"
 
 #define MAX_HIGH_SCORES 10
 

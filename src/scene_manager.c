@@ -1,6 +1,6 @@
+#include <stddef.h>
 #include "scene_manager.h"
 #include "scene.h"
-#include <stddef.h>
 
 void change_scene_global(Scene *new_scene)
 {

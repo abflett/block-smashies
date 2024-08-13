@@ -1,6 +1,6 @@
-#include "play_state.h"
-#include "play_state_manager.h"
 #include <stddef.h>
+#include "play_state_manager.h"
+#include "play_state.h"
 
 void play_state_manager_change_state(PlayStateManager *manager, PlayState *new_state)
 {
