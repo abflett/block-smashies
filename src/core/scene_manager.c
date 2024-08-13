@@ -2,7 +2,7 @@
 #include "scene_manager.h"
 #include "scene.h"
 
-void change_scene_global(Scene *new_scene)
+void change_scene(Scene *new_scene)
 {
     if (scene_manager.current_scene && scene_manager.current_scene->cleanup)
         scene_manager.current_scene->cleanup();
@@ -12,11 +12,11 @@ void change_scene_global(Scene *new_scene)
         scene_manager.current_scene->init();
 }
 
-void update_scene_global(float delta_time)
+void update_scene(float delta_time)
 {
     if (scene_manager.next_scene)
     {
-        change_scene_global(scene_manager.next_scene);
+        change_scene(scene_manager.next_scene);
         scene_manager.next_scene = NULL;
     }
 
@@ -24,7 +24,7 @@ void update_scene_global(float delta_time)
         scene_manager.current_scene->update(delta_time);
 }
 
-void render_scene_global(void)
+void render_scene(void)
 {
     if (scene_manager.current_scene && scene_manager.current_scene->render)
         scene_manager.current_scene->render();
@@ -33,6 +33,6 @@ void render_scene_global(void)
 SceneManager scene_manager = {
     .current_scene = NULL,
     .next_scene = NULL,
-    .change_scene = change_scene_global,
-    .update_scene = update_scene_global,
-    .render_scene = render_scene_global};
+    .change = change_scene,
+    .update = update_scene,
+    .render = render_scene};

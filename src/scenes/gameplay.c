@@ -1,5 +1,5 @@
 #include "gameplay.h"
-#include "play_state_manager.h"
+#include "game_state_manager.h"
 #include "playing_state.h"
 
 Scene gameplay_scene = {
@@ -11,25 +11,25 @@ Scene gameplay_scene = {
 
 void gameplay_init(void)
 {
-    play_state_manager.change_state(&playing_state);
+    game_state_manager.change(&playing_state);
 }
 
 void gameplay_update(float delta_time)
 {
 
-    play_state_manager.update_state(delta_time);
+    game_state_manager.update(delta_time);
 }
 
 void gameplay_render(void)
 {
 
-    play_state_manager.render_state();
+    game_state_manager.render();
 }
 
 void gameplay_cleanup(void)
 {
-    if (play_state_manager.current_state && play_state_manager.current_state->cleanup)
+    if (game_state_manager.current_state && game_state_manager.current_state->cleanup)
     {
-        play_state_manager.current_state->cleanup();
+        game_state_manager.current_state->cleanup();
     }
 }

@@ -28,12 +28,12 @@ void init_game(void)
     SetExitKey(KEY_NULL); // Disable default exit key (ESC) - not used until exit scene is created
     SetTargetFPS(60);     // Set target FPS for the game loop
     target_texture = LoadRenderTexture(game_settings.target_width, game_settings.target_height);
-    scene_manager.change_scene(&logo_scene);
+    scene_manager.change(&logo_scene);
 }
 
 void update_game(float delta_time)
 {
-    scene_manager.update_scene(delta_time);
+    scene_manager.update(delta_time);
 
     if (WindowShouldClose())
         game_settings.exitWindow = true;
@@ -44,7 +44,7 @@ void draw_game(void)
 
     BeginTextureMode(target_texture);
     ClearBackground(BLACK);
-    scene_manager.render_scene();
+    scene_manager.render();
     EndTextureMode();
 
     BeginDrawing();

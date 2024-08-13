@@ -2,8 +2,8 @@
 #include <math.h>
 #include "raylib.h"
 #include "playing_state.h"
-#include "play_state_manager.h"
-#include "playing_menu_state.h"
+#include "game_state_manager.h"
+#include "pause_menu_state.h"
 #include "high_score.h"
 
 // Static variables, scoped only to this file
@@ -31,7 +31,7 @@ int count = 0;
 
 Texture2D ball_texture;
 
-PlayState playing_state = {
+GameState playing_state = {
     .init = playing_state_init,
     .update = playing_state_update,
     .render = playing_state_render,
@@ -162,7 +162,7 @@ void playing_state_update(float delta_time)
     // // Switch to the main menu scene if ENTER is pressed
     if (IsKeyPressed(KEY_ESCAPE))
     {
-        play_state_manager.next_state = &playing_menu_state;
+        game_state_manager.next_state = &pause_menu_state;
     }
 }
 

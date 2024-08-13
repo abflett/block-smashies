@@ -34,8 +34,8 @@ set(SCENES_SRC
 
 # Add source files for game states
 set(GAME_STATES_SRC
-    src/game_states/play_state_manager.c
-    src/game_states/playing_menu_state.c
+    src/game_states/game_state_manager.c
+    src/game_states/pause_menu_state.c
     src/game_states/playing_state.c
 )
 

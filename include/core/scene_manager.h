@@ -8,9 +8,9 @@ typedef struct SceneManager
     Scene *current_scene;
     Scene *next_scene;
 
-    void (*change_scene)(Scene *new_scene);
-    void (*update_scene)(float delta_time);
-    void (*render_scene)(void);
+    void (*change)(Scene *new_scene);
+    void (*update)(float delta_time);
+    void (*render)(void);
 } SceneManager;
 
 extern SceneManager scene_manager;

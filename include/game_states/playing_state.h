@@ -1,9 +1,9 @@
 #ifndef PLAYING_STATE_H
 #define PLAYING_STATE_H
 
-#include "play_state.h"
+#include "game_state.h"
 
-extern PlayState playing_state;
+extern GameState playing_state;
 
 void playing_state_init(void);
 void playing_state_update(float delta_time);
