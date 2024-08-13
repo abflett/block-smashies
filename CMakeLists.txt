@@ -19,13 +19,13 @@ include_directories(
 # Add source files for the core module
 set(CORE_SRC
     src/core/main.c
-    src/core/scene_manager.c
     src/core/game_settings.c
     src/core/high_score.c
 )
 
 # Add source files for scenes
 set(SCENES_SRC
+    src/scenes/scene_manager.c
     src/scenes/main_menu.c
     src/scenes/gameplay.c
     src/scenes/title_screen.c
