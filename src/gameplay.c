@@ -9,23 +9,21 @@ Scene gameplay_scene = {
     .cleanup = gameplay_cleanup,
 };
 
-PlayStateManager play_state_manager;
-
 void gameplay_init(void)
 {
-    play_state_manager_change_state(&play_state_manager, &playing_state);
+    play_state_manager.change_state(&playing_state);
 }
 
 void gameplay_update(float delta_time)
 {
 
-    play_state_manager_update(&play_state_manager, delta_time);
+    play_state_manager.update_state(delta_time);
 }
 
 void gameplay_render(void)
 {
 
-    play_state_manager_render(&play_state_manager);
+    play_state_manager.render_state();
 }
 
 void gameplay_cleanup(void)

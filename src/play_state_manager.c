@@ -2,38 +2,45 @@
 #include "play_state_manager.h"
 #include "play_state.h"
 
-void play_state_manager_change_state(PlayStateManager *manager, PlayState *new_state)
+void change_state_global(PlayState *new_state)
 {
-    if (manager->current_state && manager->current_state->cleanup)
+    if (play_state_manager.current_state && play_state_manager.current_state->cleanup)
     {
-        manager->current_state->cleanup();
+        play_state_manager.current_state->cleanup();
     }
 
-    manager->current_state = new_state;
-    if (manager->current_state && manager->current_state->init)
+    play_state_manager.current_state = new_state;
+    if (play_state_manager.current_state && play_state_manager.current_state->init)
     {
-        manager->current_state->init();
+        play_state_manager.current_state->init();
     }
 }
 
-void play_state_manager_update(PlayStateManager *manager, float delta_time)
+void update_state_global(float delta_time)
 {
-    if (manager->next_state)
+    if (play_state_manager.next_state)
     {
-        play_state_manager_change_state(manager, manager->next_state);
-        manager->next_state = NULL; // Clear the next_state pointer
+        change_state_global(play_state_manager.next_state);
+        play_state_manager.next_state = NULL; // Clear the next_state pointer
     }
 
-    if (manager->current_state && manager->current_state->update)
+    if (play_state_manager.current_state && play_state_manager.current_state->update)
     {
-        manager->current_state->update(delta_time);
+        play_state_manager.current_state->update(delta_time);
     }
 }
 
-void play_state_manager_render(PlayStateManager *manager)
+void render_state_global(void)
 {
-    if (manager->current_state && manager->current_state->render)
+    if (play_state_manager.current_state && play_state_manager.current_state->render)
     {
-        manager->current_state->render();
+        play_state_manager.current_state->render();
     }
 }
+
+PlayStateManager play_state_manager = {
+    .current_state = NULL,
+    .next_state = NULL,
+    .change_state = change_state_global,
+    .update_state = update_state_global,
+    .render_state = render_state_global};

@@ -3,11 +3,8 @@
 #include "raylib.h"
 #include "playing_state.h"
 #include "play_state_manager.h"
-#include "high_score.h"
 #include "playing_menu_state.h"
-
-extern PlayStateManager play_state_manager;
-// extern SceneManager scene_manager;
+#include "high_score.h"
 
 // Static variables, scoped only to this file
 static float paddle_x;

@@ -7,10 +7,12 @@ typedef struct PlayStateManager
 {
     PlayState *current_state;
     PlayState *next_state;
+
+    void (*change_state)(PlayState *new_state);
+    void (*update_state)(float delta_time);
+    void (*render_state)(void);
 } PlayStateManager;
 
-void play_state_manager_change_state(PlayStateManager *manager, PlayState *new_state);
-void play_state_manager_update(PlayStateManager *manager, float delta_time);
-void play_state_manager_render(PlayStateManager *manager);
+extern PlayStateManager play_state_manager;
 
 #endif

@@ -5,8 +5,6 @@
 #include "scene_manager.h"
 #include "logo_screen.h"
 
-extern PlayStateManager play_state_manager;
-
 PlayState playing_menu_state = {
     .init = playing_menu_state_init,
     .update = playing_menu_state_update,
