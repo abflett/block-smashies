@@ -48,6 +48,7 @@ set(GAME_SRC
     src/game/paddle.c
     src/game/ball.c
     src/game/game_status.c
+    src/game/collision.c
 )
 
 # Create the BlockSmashies executable
