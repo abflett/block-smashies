@@ -27,6 +27,7 @@ Block Smashies is a modern take on the classic Arkanoid-inspired brick-breaking 
 - **Raylib:** A simple and easy-to-use library for graphics, used for rendering the game.
 - **Parson:** A lightweight JSON library in C for reading and writing configuration files and game settings.
 - **PhysFS (Planned):** A library to manage virtual file systems, which will be used for packaging assets and dynamic game data.
+- **uthash:** A simple and efficient hash table library for C, used for managing and retrieving resources quickly within the game. It provides fast lookups and insertions, making it ideal for handling in-game assets and settings.
 
 ## How to Build
 

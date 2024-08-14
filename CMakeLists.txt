@@ -14,6 +14,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/include/scenes
     ${PROJECT_SOURCE_DIR}/include/game_states
     ${PROJECT_SOURCE_DIR}/external/parson
+    ${PROJECT_SOURCE_DIR}/external/uthash/src
 )
 
 # Source files for the core module

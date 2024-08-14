@@ -1,28 +1,27 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include "uthash.h"
 #include "raylib.h"
 #include "parson.h"
 #include "resource_manager.h"
 
-// Dummy implementations of the helper functions
 static void add_texture(TextureResource *texture)
 {
     TraceLog(LOG_INFO, "add_texture(TextureResource *texture) called");
-
-    resource_manager.texture_count++;
-    resource_manager.textures = realloc(resource_manager.textures, sizeof(TextureResource) * resource_manager.texture_count);
-    resource_manager.textures[resource_manager.texture_count - 1] = *texture;
+    HASH_ADD_KEYPTR(hh, resource_manager.textures, texture->id, strlen(texture->id), texture);
 }
 
 static void add_subtexture(Subtexture *subtexture)
 {
-    // Placeholder implementation
+    TraceLog(LOG_INFO, "add_subtexture(Subtexture *subtexture) called");
+    HASH_ADD_KEYPTR(hh, resource_manager.subtextures, subtexture->id, strlen(subtexture->id), subtexture);
 }
 
 static void add_animation(Animation *animation)
 {
-    // Placeholder implementation
+    TraceLog(LOG_INFO, "add_animation(Animation *animation) called");
+    HASH_ADD_KEYPTR(hh, resource_manager.animations, animation->id, strlen(animation->id), animation);
 }
 
 void rm_load_resource_file(const char *file)
@@ -42,24 +41,23 @@ void rm_load_resource_file(const char *file)
         const char *file = json_object_get_string(texture_obj, "file");
         const char *type = json_object_get_string(texture_obj, "type");
 
-        TraceLog(LOG_INFO, id);
-        TraceLog(LOG_INFO, file);
-        TraceLog(LOG_INFO, type);
+        TraceLog(LOG_INFO, "Texture ID: %s", id);
+        TraceLog(LOG_INFO, "File: %s", file);
+        TraceLog(LOG_INFO, "Type: %s", type);
 
         if (strcmp(type, "single") == 0)
         {
             // Load single texture
             TextureResource *texture = malloc(sizeof(TextureResource));
-            texture->id = strdup(id);
+            texture->id = strdup(id); // Copy string to avoid dangling pointer
             texture->texture = LoadTexture(file);
-            // Add to resource manager (assume a function add_texture exists)
             add_texture(texture);
         }
         else if (strcmp(type, "atlas") == 0)
         {
             // Load texture atlas
             TextureResource *atlas_texture = malloc(sizeof(TextureResource));
-            atlas_texture->id = id;
+            atlas_texture->id = strdup(id); // Copy string to avoid dangling pointer
             atlas_texture->texture = LoadTexture(file);
             add_texture(atlas_texture);
 
@@ -68,17 +66,16 @@ void rm_load_resource_file(const char *file)
             for (size_t j = 0; j < json_array_get_count(subtextures_array); j++)
             {
                 JSON_Object *subtexture_obj = json_array_get_object(subtextures_array, j);
-                const char *id = json_object_get_string(subtexture_obj, "id");
+                const char *sub_id = json_object_get_string(subtexture_obj, "id");
                 JSON_Object *rect_obj = json_object_get_object(subtexture_obj, "rect");
 
                 Subtexture *subtexture = malloc(sizeof(Subtexture));
-                subtexture->id = id;
+                subtexture->id = strdup(sub_id); // Copy string to avoid dangling pointer
                 subtexture->rect.x = (float)json_object_get_number(rect_obj, "x");
                 subtexture->rect.y = (float)json_object_get_number(rect_obj, "y");
                 subtexture->rect.width = (float)json_object_get_number(rect_obj, "w");
                 subtexture->rect.height = (float)json_object_get_number(rect_obj, "h");
                 subtexture->texture_resource = atlas_texture;
-                // Add subtexture to resource manager or texture atlas
                 add_subtexture(subtexture);
             }
 
@@ -87,12 +84,12 @@ void rm_load_resource_file(const char *file)
             for (size_t j = 0; j < json_array_get_count(animations_array); j++)
             {
                 JSON_Object *animation_obj = json_array_get_object(animations_array, j);
-                const char *id = json_object_get_string(animation_obj, "id");
+                const char *anim_id = json_object_get_string(animation_obj, "id");
                 int frame_count = (int)json_object_get_number(animation_obj, "frame_count");
                 int framerate = (int)json_object_get_number(animation_obj, "framerate");
 
                 Animation *animation = malloc(sizeof(Animation));
-                animation->id = id;
+                animation->id = strdup(anim_id); // Copy string to avoid dangling pointer
                 animation->frame_count = frame_count;
                 animation->framerate = framerate;
                 animation->subtexture_frames = malloc(sizeof(Subtexture) * frame_count);
@@ -112,7 +109,6 @@ void rm_load_resource_file(const char *file)
 
                     animation->subtexture_frames[k] = *frame;
                 }
-                // Add animation to resource manager or texture atlas
                 add_animation(animation);
             }
         }
@@ -124,37 +120,33 @@ void rm_load_resource_file(const char *file)
 TextureResource *rm_get_texture(const char *id)
 {
     TraceLog(LOG_INFO, "Searching for texture with id: %s", id);
+    TextureResource *texture = NULL;
+    HASH_FIND_STR(resource_manager.textures, id, texture);
 
-    // Iterate through the textures array
-    for (int i = 0; i < resource_manager.texture_count; i++)
+    if (texture)
     {
-        TraceLog(LOG_INFO, "Comparing with texture id: %s", resource_manager.textures[i].id);
-
-        // Compare the current texture's id with the provided id
-        if (strcmp(resource_manager.textures[i].id, id) == 0)
-        {
-            TraceLog(LOG_INFO, "Texture found with id: %s", id);
-            // If a match is found, return the pointer to the TextureResource
-            return &resource_manager.textures[i];
-        }
+        TraceLog(LOG_INFO, "Texture found with id: %s", id);
+        return texture;
     }
-
-    TraceLog(LOG_WARNING, "Texture with id '%s' not found", id);
-
-    // If no match is found, return NULL
-    return NULL;
+    else
+    {
+        TraceLog(LOG_WARNING, "Texture with id '%s' not found", id);
+        return NULL;
+    }
 }
 
 Subtexture *rm_get_subtexture(const char *id)
 {
-    // Placeholder return
-    return NULL;
+    Subtexture *subtexture = NULL;
+    HASH_FIND_STR(resource_manager.subtextures, id, subtexture);
+    return subtexture;
 }
 
 Animation *rm_get_animation(const char *id)
 {
-    // Placeholder return
-    return NULL;
+    Animation *animation = NULL;
+    HASH_FIND_STR(resource_manager.animations, id, animation);
+    return animation;
 }
 
 void rm_cleanup(void)
@@ -162,28 +154,33 @@ void rm_cleanup(void)
     TraceLog(LOG_INFO, "rm_cleanup(void) called");
 
     // Free all textures
-    for (int i = 0; i < resource_manager.texture_count; i++)
+    TextureResource *texture, *tmp_texture;
+    HASH_ITER(hh, resource_manager.textures, texture, tmp_texture)
     {
-        // Unload the texture from Raylib
-        TraceLog(LOG_INFO, "Unloading Texture Id: %s", resource_manager.textures[i].id);
-
-        UnloadTexture(resource_manager.textures[i].texture);
+        UnloadTexture(texture->texture);
+        HASH_DEL(resource_manager.textures, texture);
+        free((char *)texture->id); // Free duplicated string
+        free(texture);
     }
-    free(resource_manager.textures); // Free the array of TextureResource
 
-    free(resource_manager.subtextures); // Free the array of Subtexture
+    // Free all subtextures
+    Subtexture *subtexture, *tmp_subtexture;
+    HASH_ITER(hh, resource_manager.subtextures, subtexture, tmp_subtexture)
+    {
+        HASH_DEL(resource_manager.subtextures, subtexture);
+        free((char *)subtexture->id); // Free duplicated string
+        free(subtexture);
+    }
 
     // Free all animations and their frames
-    for (int i = 0; i < resource_manager.animation_count; i++)
+    Animation *animation, *tmp_animation;
+    HASH_ITER(hh, resource_manager.animations, animation, tmp_animation)
     {
-        free(resource_manager.animations[i].subtexture_frames); // Free the array of Subtexture frames
+        free(animation->subtexture_frames);
+        HASH_DEL(resource_manager.animations, animation);
+        free((char *)animation->id); // Free duplicated string
+        free(animation);
     }
-    free(resource_manager.animations); // Free the array of Animation
-
-    // Reset counts and pointers to NULL
-    resource_manager.texture_count = 0;
-    resource_manager.subtexture_count = 0;
-    resource_manager.animation_count = 0;
 
     resource_manager.textures = NULL;
     resource_manager.subtextures = NULL;
@@ -197,8 +194,5 @@ ResourceManager resource_manager = {
     .get_animation = rm_get_animation,
     .cleanup = rm_cleanup,
     .textures = NULL,
-    .texture_count = 0,
     .subtextures = NULL,
-    .subtexture_count = 0,
-    .animations = NULL,
-    .animation_count = 0};
+    .animations = NULL};
