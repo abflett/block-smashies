@@ -13,6 +13,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/include/core
     ${PROJECT_SOURCE_DIR}/include/scenes
     ${PROJECT_SOURCE_DIR}/include/game_states
+    ${PROJECT_SOURCE_DIR}/include/game
     ${PROJECT_SOURCE_DIR}/external/parson
     ${PROJECT_SOURCE_DIR}/external/uthash/src
 )
@@ -41,11 +42,17 @@ set(GAME_STATES_SRC
     src/game_states/playing_state.c
 )
 
+# Source files for game
+set(GAME_SRC
+    src/game/paddle.c
+)
+
 # Create the BlockSmashies executable
 add_executable(BlockSmashies
     ${SCENES_SRC}
     ${GAME_STATES_SRC}
     ${CORE_SRC}
+    ${GAME_SRC}
     )
 
 # Link with libraries

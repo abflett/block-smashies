@@ -33,8 +33,10 @@ void rm_load_resource_file(const char *file)
     JSON_Object *root_object = json_value_get_object(root_value);
     JSON_Array *textures_array = json_object_get_array(root_object, "textures");
 
+    TraceLog(LOG_INFO, "Textures Count: %d", (int)json_array_get_count(textures_array));
+
     // Iterate through textures
-    for (size_t i = 0; i < json_array_get_count(textures_array); i++)
+    for (size_t i = 0; i < (int)json_array_get_count(textures_array); i++)
     {
         JSON_Object *texture_obj = json_array_get_object(textures_array, i);
         const char *id = json_object_get_string(texture_obj, "id");

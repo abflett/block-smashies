@@ -4,6 +4,11 @@
       "id": "ball",
       "file": "assets/textures/ball.png",
       "type": "single"
+    },
+    {
+      "id": "paddle",
+      "file": "assets/textures/paddle.png",
+      "type": "single"
     }
   ]
 }

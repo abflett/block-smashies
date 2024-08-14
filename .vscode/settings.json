@@ -2,6 +2,10 @@
   "files.associations": {
     "game_state_manager.h": "c",
     "game_settings.h": "c",
-    "resource_manager.h": "c"
+    "resource_manager.h": "c",
+    "playing_state.h": "c",
+    "ios": "c",
+    "xstring": "c",
+    "pause_menu_state.h": "c"
   }
 }
