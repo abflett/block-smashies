@@ -1,0 +1,35 @@
+"resources": {
+    "textures": [
+      {
+        "id": "background",
+        "file": "assets/textures/background.png",
+        "type": "single"
+      },
+      {
+        "id": "mixed_texture_atlas",
+        "type": "atlas",
+        "file": "assets/textures/mixed_texture_atlas.png",
+        "subtextures": [
+          {
+            "name": "background_tile",
+            "rect": { "x": 0, "y": 0, "w": 32, "h": 32 }
+          },
+          {
+            "name": "button",
+            "rect": { "x": 32, "y": 0, "w": 64, "h": 32 }
+          }
+        ],
+        "animations": [
+          {
+            "name": "character_idle",
+            "frames": [
+              { "rect": { "x": 0, "y": 32, "w": 32, "h": 32 } },
+              { "rect": { "x": 32, "y": 32, "w": 32, "h": 32 } }
+            ],
+            "frame_count": 2,
+            "framerate": 10
+          }
+        ]
+      }
+    ]
+}

@@ -1,0 +1,9 @@
+{
+  "textures": [
+    {
+      "id": "ball",
+      "file": "assets/textures/ball.png",
+      "type": "single"
+    }
+  ]
+}

@@ -21,6 +21,7 @@ set(CORE_SRC
     src/core/main.c
     src/core/game_settings.c
     src/core/high_score.c
+    src/core/resource_manager.c
 )
 
 # Source files for scenes

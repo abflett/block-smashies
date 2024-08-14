@@ -12,17 +12,17 @@
         "file": "assets/textures/mixed_texture_atlas.png",
         "subtextures": [
           {
-            "name": "background_tile",
+            "id": "background_tile",
             "rect": { "x": 0, "y": 0, "w": 32, "h": 32 }
           },
           {
-            "name": "button",
+            "id": "button",
             "rect": { "x": 32, "y": 0, "w": 64, "h": 32 }
           }
         ],
         "animations": [
           {
-            "name": "character_idle",
+            "id": "character_idle",
             "frames": [
               { "rect": { "x": 0, "y": 32, "w": 32, "h": 32 } },
               { "rect": { "x": 32, "y": 32, "w": 32, "h": 32 } }
@@ -62,12 +62,12 @@
         "file": "assets/audio/sound_effects_atlas.mp3",
         "sounds": [
           {
-            "name": "explosion",
+            "id": "explosion",
             "start_time": "1:23.45",
             "end_time": "1:24.32"
           },
           {
-            "name": "jump",
+            "id": "jump",
             "start_time": "0:12.00",
             "end_time": "0:12.75"
           }

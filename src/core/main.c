@@ -5,6 +5,7 @@
 #include "logo_scene.h"
 #include "gameplay_scene.h"
 #include "playing_state.h"
+#include "resource_manager.h"
 
 RenderTexture2D target_texture; // Render texture target
 
@@ -28,6 +29,7 @@ void init_game(void)
     SetTraceLogLevel(LOG_ALL);
     init_game_from_settings("settings.json");
     target_texture = LoadRenderTexture(game_settings.target_width, game_settings.target_height);
+    resource_manager.load_resource_file("assets/config/resources.json");
     scene_manager.change(&logo_scene);
 }
 
@@ -42,6 +44,7 @@ void update_game(float delta_time)
         {
             game_settings.is_paused = false; // Reset the pause flag
             playing_state.cleanup();         // Call cleanup
+            resource_manager.cleanup();
         }
         game_settings.exitWindow = true;
     }
