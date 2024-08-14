@@ -1,0 +1,78 @@
+{
+  "resources": {
+    "textures": [
+      {
+        "id": "background",
+        "file": "assets/textures/background.png",
+        "type": "single"
+      },
+      {
+        "id": "mixed_texture_atlas",
+        "type": "atlas",
+        "file": "assets/textures/mixed_texture_atlas.png",
+        "subtextures": [
+          {
+            "name": "background_tile",
+            "rect": { "x": 0, "y": 0, "w": 32, "h": 32 }
+          },
+          {
+            "name": "button",
+            "rect": { "x": 32, "y": 0, "w": 64, "h": 32 }
+          }
+        ],
+        "animations": [
+          {
+            "name": "character_idle",
+            "frames": [
+              { "rect": { "x": 0, "y": 32, "w": 32, "h": 32 } },
+              { "rect": { "x": 32, "y": 32, "w": 32, "h": 32 } }
+            ],
+            "frame_count": 2,
+            "framerate": 10
+          }
+        ]
+      }
+    ],
+    "fonts": [
+      {
+        "id": "main_font",
+        "file": "assets/fonts/main_font.ttf",
+        "size": 24
+      },
+      {
+        "id": "title_font",
+        "file": "assets/fonts/title_font.ttf",
+        "size": 48
+      }
+    ],
+    "audio": [
+      {
+        "id": "background_music",
+        "file": "assets/audio/background_music.ogg",
+        "type": "music"
+      },
+      {
+        "id": "button_click",
+        "file": "assets/audio/button_click.wav",
+        "type": "sound"
+      },
+      {
+        "id": "sound_effects_atlas",
+        "type": "sound_atlas",
+        "file": "assets/audio/sound_effects_atlas.mp3",
+        "sounds": [
+          {
+            "name": "explosion",
+            "start_time": "1:23.45",
+            "end_time": "1:24.32"
+          },
+          {
+            "name": "jump",
+            "start_time": "0:12.00",
+            "end_time": "0:12.75"
+          }
+        ]
+      }
+    ]
+  }
+}
