@@ -7,6 +7,7 @@
     "ios": "c",
     "xstring": "c",
     "pause_menu_state.h": "c",
-    "high_score.h": "c"
+    "high_score.h": "c",
+    "game_status.h": "c"
   }
 }
