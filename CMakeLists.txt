@@ -45,6 +45,7 @@ set(GAME_STATES_SRC
 # Source files for game
 set(GAME_SRC
     src/game/paddle.c
+    src/game/ball.c
 )
 
 # Create the BlockSmashies executable
