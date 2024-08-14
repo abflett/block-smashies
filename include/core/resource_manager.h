@@ -12,21 +12,19 @@ typedef struct ResourceManager
     Animation *(*get_animation)(const char *id);     // Get an animation by its ID
     void (*cleanup)(void);                           // Clean up all loaded resources
 
-    // Internal storage (e.g., arrays or hash maps for resources)
-    TextureResource *textures;
-    int texture_count;
-    Subtexture *subtextures;
-    int subtexture_count;
-    Animation *animations;
-    int animation_count;
-    // Add other resource types as needed
+    // Internal storage using hash tables for fast lookups
+    TextureResource *textures; // Hash table of textures
+    Subtexture *subtextures;   // Hash table of subtextures
+    Animation *animations;     // Hash table of animations
 
 } ResourceManager;
 
+// Function declarations
 static void add_texture(TextureResource *texture);
 static void add_subtexture(Subtexture *subtexture);
 static void add_animation(Animation *animation);
 
 // Declare an extern instance of ResourceManager
 extern ResourceManager resource_manager;
-#endif
+
+#endif // RESOURCE_MANAGER_H
