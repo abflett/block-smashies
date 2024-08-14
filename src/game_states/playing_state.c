@@ -9,16 +9,10 @@
 #include "logo_scene.h"
 #include "high_score.h"
 #include "resource_manager.h"
+#include "paddle.h"
 
-// Static variables, scoped only to this file
-static float paddle_x;
-static int paddle_y;
-static int paddle_size_x;
-static int paddle_size_y;
-static float speed;
-static float acceleration;
-static float max_speed;
-static float friction;
+// Paddle instance
+static Paddle paddle;
 
 // Ball properties
 static Texture2D ball_texture;
@@ -35,8 +29,6 @@ static bool reset_game = false;
 HighScore high_scores[10];
 int count = 0;
 
-// Texture2D ball_texture;
-
 GameState playing_state = {
     .init = playing_state_init,
     .update = playing_state_update,
@@ -49,9 +41,8 @@ void playing_state_init(void)
     if (reset_game)
     {
         // Reset game-specific variables without reloading resources
-        paddle_x = 150.0f;
-        paddle_y = 170;
-        speed = 0.0f;
+        paddle.reset(&paddle);
+
         ball_position = (Vector2){160.0f, 90.0f};   // Start in the middle of the screen
         ball_velocity = (Vector2){100.0f, -100.0f}; // Initial velocity
         ball_radius = 1.5f;
@@ -61,6 +52,8 @@ void playing_state_init(void)
     else if (!game_settings.is_paused)
     {
         // Full initialization, including resource loading
+        paddle = create_paddle();
+
         ball_texture = resource_manager.get_texture("ball")->texture;
 
         // Load high scores from file
@@ -73,15 +66,6 @@ void playing_state_init(void)
         save_high_scores("high_scores.json", high_scores, count);
 
         // Full initialization logic
-        paddle_x = 150.0f;
-        paddle_y = 170;
-        paddle_size_x = 20;
-        paddle_size_y = 5;
-        speed = 0.0f;
-        acceleration = 500.0f;
-        max_speed = 300.0f;
-        friction = 0.95f;
-
         ball_position = (Vector2){160.0f, 90.0f};   // Start in the middle of the screen
         ball_velocity = (Vector2){100.0f, -100.0f}; // Initial velocity
         ball_radius = 1.5f;
@@ -101,36 +85,7 @@ void playing_state_update(float delta_time)
     // Update game time
     game_time += delta_time;
 
-    // Update paddle speed based on input
-    if (IsKeyDown(KEY_A))
-    {
-        speed -= acceleration * delta_time;
-        if (speed < -max_speed)
-            speed = -max_speed;
-    }
-    if (IsKeyDown(KEY_D))
-    {
-        speed += acceleration * delta_time;
-        if (speed > max_speed)
-            speed = max_speed;
-    }
-
-    // Apply friction when no keys are pressed
-    if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D))
-    {
-        speed *= friction;
-        if (fabs(speed) < 0.01f)
-            speed = 0.0f; // Stop movement if speed is very low
-    }
-
-    // Update paddle position
-    paddle_x += speed * delta_time;
-
-    // Keep paddle within screen bounds
-    if (paddle_x < 0)
-        paddle_x = 0;
-    if (paddle_x + paddle_size_x > 320)
-        paddle_x = 320.0f - paddle_size_x;
+    paddle.update(&paddle, delta_time);
 
     // Update ball position
     ball_position.x += ball_velocity.x * delta_time;
@@ -147,20 +102,20 @@ void playing_state_update(float delta_time)
     }
 
     // Ball collision with paddle
-    if (ball_position.y + ball_radius >= paddle_y &&
-        ball_position.x >= paddle_x &&
-        ball_position.x <= paddle_x + paddle_size_x)
+    if (ball_position.y + ball_radius >= paddle.position.y &&
+        ball_position.x >= paddle.position.x &&
+        ball_position.x <= paddle.position.x + paddle.size.x)
     {
-        ball_velocity.y *= -1;                    // Reverse vertical direction
-        ball_position.y = paddle_y - ball_radius; // Prevent the ball from sticking to the paddle
+        ball_velocity.y *= -1;                             // Reverse vertical direction
+        ball_position.y = paddle.position.y - ball_radius; // Prevent the ball from sticking to the paddle
 
         // Adjust the ball's x-velocity based on the paddle's speed
-        ball_velocity.x += speed * 0.5f; // Scale the influence of the paddle's speed
+        ball_velocity.x += paddle.speed * 0.5f; // Scale the influence of the paddle's speed
 
         // Ensure the ball's x-velocity doesn't exceed a certain maximum
-        if (fabs(ball_velocity.x) > max_speed)
+        if (fabs(ball_velocity.x) > paddle.max_speed)
         {
-            ball_velocity.x = (ball_velocity.x > 0) ? max_speed : -max_speed;
+            ball_velocity.x = (ball_velocity.x > 0) ? paddle.max_speed : -paddle.max_speed;
         }
 
         // Increase score when the ball hits the paddle
@@ -168,7 +123,7 @@ void playing_state_update(float delta_time)
     }
 
     // Ball falls below the paddle (you can add life loss or game over logic here)
-    if (ball_position.y + ball_radius > 180)
+    if (ball_position.y + ball_radius > game_settings.target_height)
     {
         player_lives--;
         reset_game = true;
@@ -217,7 +172,7 @@ void playing_state_render(void)
         DrawText(high_score_text, 5, 10 * i + 16, 8, LIGHTGRAY);
     }
 
-    DrawRectangle((int)paddle_x, paddle_y, paddle_size_x, paddle_size_y, RED);
+    paddle.render(&paddle);
     DrawTextureEx(ball_texture, ball_position, 1.0f, 0.5f, WHITE);
 }
 
