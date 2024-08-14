@@ -165,6 +165,8 @@ void rm_cleanup(void)
     for (int i = 0; i < resource_manager.texture_count; i++)
     {
         // Unload the texture from Raylib
+        TraceLog(LOG_INFO, "Unloading Texture Id: %s", resource_manager.textures[i].id);
+
         UnloadTexture(resource_manager.textures[i].texture);
     }
     free(resource_manager.textures); // Free the array of TextureResource
