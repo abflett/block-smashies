@@ -6,13 +6,24 @@
 #include "game_state_manager.h"
 #include "game_over_state.h"
 #include "pause_menu_state.h"
-#include "game_status.h"
+#include "scene_manager.h"
+#include "logo_scene.h"
+#include "high_score.h"
+#include "resource_manager.h"
 #include "paddle.h"
 #include "ball.h"
 
 static Paddle paddle;
 static Ball ball;
-static GameStatus game_status;
+
+// Game status variables
+static int player_lives;
+static int player_score;
+static float game_time;
+static bool reset_game = false;
+
+HighScore high_scores[10];
+int count = 0;
 
 GameState playing_state = {
     .init = playing_state_init,
@@ -26,8 +37,21 @@ void playing_state_init(void)
     if (!game_settings.is_paused)
     {
         paddle = create_paddle();
-        ball = create_ball((Vector2){160.0f, 90.0f});
-        game_status = create_game_status();
+        ball = create_ball((Vector2){160.0f, 90.0f}); // Initialize ball at the center of the screen
+
+        // Load high scores from file
+        load_high_scores("high_scores.json", high_scores, &count);
+
+        // Add a new high score
+        add_high_score(high_scores, &count, "Adam", 1000000);
+
+        // Save high scores to file
+        save_high_scores("high_scores.json", high_scores, count);
+
+        // Initialize game status variables
+        player_lives = 3;
+        player_score = 0;
+        game_time = 0.0f;
     }
     else
     {
@@ -69,8 +93,7 @@ void playing_state_update(float delta_time)
         if (game_status.lives <= 0)
         {
             playing_state_cleanup();
-            game_status.reset(&game_status);
-            game_state_manager.change(&game_over_state);
+            scene_manager.change(&logo_scene);
         }
         else
         {
@@ -88,7 +111,27 @@ void playing_state_update(float delta_time)
 
 void playing_state_render(void)
 {
-    game_status.render(&game_status);
+    char score_text[20];
+    snprintf(score_text, sizeof(score_text), "%d", player_score);
+    DrawText(score_text, 5, 5, 8, LIGHTGRAY);
+
+    char time_text[20];
+    int minutes = (int)(game_time / 60);
+    float seconds = game_time - minutes * 60;
+    snprintf(time_text, sizeof(time_text), "%d:%04.2f", minutes, seconds);
+    DrawText(time_text, 145, 5, 8, LIGHTGRAY);
+
+    char lives_text[20];
+    snprintf(lives_text, sizeof(lives_text), "<3 %d", player_lives);
+    DrawText(lives_text, 295, 5, 8, LIGHTGRAY);
+
+    char high_score_text[50];
+    for (int i = 0; i < count; ++i)
+    {
+        snprintf(high_score_text, sizeof(high_score_text), "%s - %d", high_scores[i].username, high_scores[i].score);
+        DrawText(high_score_text, 5, 10 * i + 16, 8, LIGHTGRAY);
+    }
+
     paddle.render(&paddle);
     ball.render(&ball);
 }
