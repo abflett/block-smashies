@@ -7,11 +7,10 @@
 #include "game_over_state.h"
 #include "pause_menu_state.h"
 #include "game_status.h"
-#include "paddle.h"
-#include "ball.h"
+#include "entities.h"
 
-static Paddle paddle;
-static Ball ball;
+Entities entities;
+
 static GameStatus game_status;
 
 GameState playing_state = {
@@ -25,8 +24,11 @@ void playing_state_init(void)
 {
     if (!game_settings.is_paused)
     {
-        paddle = create_paddle();
-        ball = create_ball((Vector2){160.0f, 90.0f});
+        entities.paddle = create_paddle();
+        entities.ball = create_ball((Vector2){160.0f, 90.0f});
+
+        // paddle = create_paddle();
+        // ball = create_ball((Vector2){160.0f, 90.0f});
         game_status = create_game_status();
     }
     else
@@ -38,24 +40,24 @@ void playing_state_init(void)
 void playing_state_update(float delta_time)
 {
     game_status.update(&game_status, delta_time);
-    paddle.update(&paddle, delta_time);
-    ball.update(&ball, delta_time);
+    entities.paddle.update(&entities.paddle, delta_time);
+    entities.ball.update(&entities.ball, delta_time);
 
     // Ball collision with paddle
-    if (ball.position.y + ball.radius >= paddle.position.y &&
-        ball.position.x >= paddle.position.x &&
-        ball.position.x <= paddle.position.x + paddle.size.x)
+    if (entities.ball.position.y + entities.ball.radius >= entities.paddle.position.y &&
+        entities.ball.position.x >= entities.paddle.position.x &&
+        entities.ball.position.x <= entities.paddle.position.x + entities.paddle.size.x)
     {
-        ball.velocity.y *= -1;                             // Reverse vertical direction
-        ball.position.y = paddle.position.y - ball.radius; // Prevent the ball from sticking to the paddle
+        entities.ball.velocity.y *= -1;                             // Reverse vertical direction
+        entities.ball.position.y = entities.paddle.position.y - entities.ball.radius; // Prevent the ball from sticking to the paddle
 
         // Adjust the ball's x-velocity based on the paddle's speed
-        ball.velocity.x += paddle.speed * 0.5f; // Scale the influence of the paddle's speed
+        entities.ball.velocity.x += entities.paddle.speed * 0.5f; // Scale the influence of the paddle's speed
 
         // Ensure the ball's x-velocity doesn't exceed a certain maximum
-        if (fabs(ball.velocity.x) > paddle.max_speed)
+        if (fabs(entities.ball.velocity.x) > entities.paddle.max_speed)
         {
-            ball.velocity.x = (ball.velocity.x > 0) ? paddle.max_speed : -paddle.max_speed;
+            entities.ball.velocity.x = (entities.ball.velocity.x > 0) ? entities.paddle.max_speed : -entities.paddle.max_speed;
         }
 
         // Increase score when the ball hits the paddle
@@ -63,7 +65,7 @@ void playing_state_update(float delta_time)
     }
 
     // Ball falls below the screen (you can add life loss or game over logic here)
-    if (ball.position.y > game_settings.target_height)
+    if (entities.ball.position.y > game_settings.target_height)
     {
         game_status.lives--;
         if (game_status.lives <= 0)
@@ -74,8 +76,8 @@ void playing_state_update(float delta_time)
         }
         else
         {
-            ball.reset(&ball, (Vector2){160.0f, 90.0f});
-            paddle.reset(&paddle);
+            entities.ball.reset(&entities.ball, (Vector2){160.0f, 90.0f});
+            entities.paddle.reset(&entities.paddle);
         }
     }
 
@@ -89,8 +91,8 @@ void playing_state_update(float delta_time)
 void playing_state_render(void)
 {
     game_status.render(&game_status);
-    paddle.render(&paddle);
-    ball.render(&ball);
+    entities.paddle.render(&entities.paddle);
+    entities.ball.render(&entities.ball);
 }
 
 void playing_state_cleanup(void)

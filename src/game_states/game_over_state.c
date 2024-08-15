@@ -3,6 +3,7 @@
 #include "scene_manager.h"
 #include "logo_scene.h"
 #include "high_score.h"
+#include "game_status.h"
 
 HighScore high_scores[10];
 int count = 0;
@@ -20,7 +21,7 @@ void game_over_state_init(void)
     load_high_scores("high_scores.json", high_scores, &count);
 
     // Add a new high score
-    add_high_score(high_scores, &count, "Adam", 1000000);
+    add_high_score(high_scores, &count, "Player 1", 1);
 
     // Save high scores to file
     save_high_scores("high_scores.json", high_scores, count);
