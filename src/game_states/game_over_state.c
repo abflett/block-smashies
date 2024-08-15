@@ -39,7 +39,7 @@ void game_over_state_render(void)
     char high_score_text[50];
     for (int i = 0; i < count; ++i)
     {
-        snprintf(high_score_text, sizeof(high_score_text), "%s - %d", high_scores[i].username, high_scores[i].score);
+        snprintf(high_score_text, sizeof(high_score_text), "%.38s - %.8d", high_scores[i].username, high_scores[i].score);
         DrawText(high_score_text, 5, 10 * i + 16, 8, LIGHTGRAY);
     }
 }
