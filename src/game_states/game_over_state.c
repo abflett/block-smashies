@@ -87,8 +87,8 @@ static void state_render(void)
 {
     if (adding_player_score)
     {
-        DrawText("Enter your name:", 5, 5, 20, LIGHTGRAY);
-        DrawText(player_name, 5, 40, 20, WHITE);  // Render the current inputted name
+        DrawText("Enter your name:", 5, 5, 8, LIGHTGRAY);
+        DrawText(player_name, 5, 10 + 5, 8, WHITE);  // Render the current inputted name
     }
     else
     {
@@ -96,7 +96,7 @@ static void state_render(void)
         for (int i = 0; i < count; ++i)
         {
             snprintf(high_score_text, sizeof(high_score_text), "%.38s - %d", high_scores[i].username, high_scores[i].score);
-            DrawText(high_score_text, 5, 10 * i + 16, 8, LIGHTGRAY);
+            DrawText(high_score_text, 5, 10 * i + 5, 8, LIGHTGRAY);
         }
     }
 }
