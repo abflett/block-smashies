@@ -60,7 +60,7 @@ void init_game_from_settings(const char *settings_file)
 {
     load_settings(settings_file);
     InitWindow(game_settings.screen_width, game_settings.screen_height, "Block Smashies");
-    SetExitKey(KEY_NULL); // Disable default exit key (ESC) - not used until exit scene is created
+    SetExitKey(KEY_NULL); // Disable default exit key (ESC)
     SetTargetFPS(60);     // Set target FPS for the game loop
 
     // Todo: Allow other available full screen resolutions other then native

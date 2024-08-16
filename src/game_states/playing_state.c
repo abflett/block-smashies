@@ -13,7 +13,7 @@ Entities entities;
 
 static GameStatus game_status;
 
-void playing_state_init(void)
+static void state_init(void)
 {
     if (!game_settings.is_paused)
     {
@@ -28,14 +28,14 @@ void playing_state_init(void)
     }
 }
 
-void playing_state_cleanup(void)
+static void state_cleanup(void)
 {
     if (game_settings.is_paused)
         return;
-    TraceLog(LOG_INFO, "playing_state_cleanup() called");
+    TraceLog(LOG_INFO, "state_cleanup() called");
 }
 
-void playing_state_update(float delta_time)
+static void state_update(float delta_time)
 {
     game_status.update(&game_status, delta_time);
     entities.paddle.update(&entities.paddle, delta_time);
@@ -68,7 +68,7 @@ void playing_state_update(float delta_time)
         game_status.lives--;
         if (game_status.lives <= 0)
         {
-            playing_state_cleanup();
+            state_cleanup();
             game_status.reset(&game_status);
             game_state_manager.change(&game_over_state);
         }
@@ -86,7 +86,7 @@ void playing_state_update(float delta_time)
     }
 }
 
-void playing_state_render(void)
+static void state_render(void)
 {
     game_status.render(&game_status);
     entities.paddle.render(&entities.paddle);
@@ -94,8 +94,8 @@ void playing_state_render(void)
 }
 
 GameState playing_state = {
-    .init = playing_state_init,
-    .update = playing_state_update,
-    .render = playing_state_render,
-    .cleanup = playing_state_cleanup,
+    .init = state_init,
+    .update = state_update,
+    .render = state_render,
+    .cleanup = state_cleanup,
 };

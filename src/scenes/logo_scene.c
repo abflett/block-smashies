@@ -4,16 +4,14 @@
 #include "scene_manager.h"
 #include "title_scene.h"
 
-
-
 static float elapsed_time = 0.0f; // Variable to track elapsed time
 
-void logo_scene_init(void)
+static void scene_init(void)
 {
     elapsed_time = 0.0f;
 }
 
-void logo_scene_update(float delta_time)
+static void scene_update(float delta_time)
 {
     elapsed_time += delta_time; // Increment elapsed time by delta_time
 
@@ -23,20 +21,20 @@ void logo_scene_update(float delta_time)
     }
 }
 
-void logo_scene_render(void)
+static void scene_render(void)
 {
     DrawText("Logo Screen - (Slide show before the title screen)", 5, 5, 8, WHITE);
     DrawText("Press ENTER to Title Screen", 5, 16, 8, WHITE);
 }
 
-void logo_scene_cleanup(void)
+static void scene_cleanup(void)
 {
     // Cleanup resources used by the main menu
 }
 
 Scene logo_scene = {
-    .init = logo_scene_init,
-    .update = logo_scene_update,
-    .render = logo_scene_render,
-    .cleanup = logo_scene_cleanup,
+    .init = scene_init,
+    .update = scene_update,
+    .render = scene_render,
+    .cleanup = scene_cleanup,
 };

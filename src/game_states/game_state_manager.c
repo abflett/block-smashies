@@ -5,10 +5,8 @@
 
 void change_state(GameState *new_state)
 {
-
     if (game_state_manager.current_state && game_state_manager.current_state->cleanup)
     {
-        TraceLog(LOG_INFO, "game_state_manager - cleanup condition - change_state(GameState *new_state) called");
         game_state_manager.current_state->cleanup();
     }
 

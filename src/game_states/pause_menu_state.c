@@ -6,13 +6,11 @@
 #include "logo_scene.h"
 #include "game_settings.h"
 
-
-
-void pause_menu_state_init(void)
+static void state_init(void)
 {
 }
 
-void pause_menu_state_update(float delta_time)
+static void state_update(float delta_time)
 {
     if (IsKeyPressed(KEY_ESCAPE))
     {
@@ -31,19 +29,19 @@ void pause_menu_state_update(float delta_time)
     }
 }
 
-void pause_menu_state_render(void)
+static void state_render(void)
 {
     ClearBackground(BLACK);
     DrawText("Menu, Escape to exit or Enter to continue playing!", 5, 10, 8, LIGHTGRAY);
 }
 
-void pause_menu_state_cleanup(void)
+static void state_cleanup(void)
 {
 }
 
 GameState pause_menu_state = {
-    .init = pause_menu_state_init,
-    .update = pause_menu_state_update,
-    .render = pause_menu_state_render,
-    .cleanup = pause_menu_state_cleanup,
+    .init = state_init,
+    .update = state_update,
+    .render = state_render,
+    .cleanup = state_cleanup,
 };

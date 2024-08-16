@@ -5,12 +5,10 @@
 #include "high_score.h"
 #include "game_status.h"
 
-HighScore high_scores[10];
-int count = 0;
+static HighScore high_scores[10];
+static int count = 0;
 
-
-
-void game_over_state_init(void)
+static void state_init(void)
 {
     // Load high scores from file
     load_high_scores("high_scores.json", high_scores, &count);
@@ -22,7 +20,7 @@ void game_over_state_init(void)
     save_high_scores("high_scores.json", high_scores, count);
 }
 
-void game_over_state_update(float delta_time)
+static void state_update(float delta_time)
 {
     if (IsKeyPressed(KEY_ENTER))
     {
@@ -30,7 +28,7 @@ void game_over_state_update(float delta_time)
     }
 }
 
-void game_over_state_render(void)
+static void state_render(void)
 {
     char high_score_text[50];
     for (int i = 0; i < count; ++i)
@@ -40,14 +38,14 @@ void game_over_state_render(void)
     }
 }
 
-void game_over_state_cleanup(void)
+static void state_cleanup(void)
 {
 }
 
 
 GameState game_over_state = {
-    .init = game_over_state_init,
-    .update = game_over_state_update,
-    .render = game_over_state_render,
-    .cleanup = game_over_state_cleanup,
+    .init = state_init,
+    .update = state_update,
+    .render = state_render,
+    .cleanup = state_cleanup,
 };

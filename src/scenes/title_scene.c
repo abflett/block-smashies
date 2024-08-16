@@ -3,11 +3,11 @@
 #include "scene_manager.h"
 #include "main_menu_scene.h"
 
-void title_scene_init(void)
+static void scene_init(void)
 {
 }
 
-void title_scene_update(float delta_time)
+static void scene_update(float delta_time)
 {
     if (GetKeyPressed() != 0 || IsGestureDetected(GESTURE_TAP))
     {
@@ -15,19 +15,19 @@ void title_scene_update(float delta_time)
     }
 }
 
-void title_scene_render(void)
+static void scene_render(void)
 {
     DrawText("Title Screen - (Animation for the Title Screen)", 5, 5, 8, WHITE);
     DrawText("Press ENTER to Main Menu", 5, 16, 8, WHITE);
 }
 
-void title_scene_cleanup(void)
+static void scene_cleanup(void)
 {
 }
 
 Scene title_scene = {
-    .init = title_scene_init,
-    .update = title_scene_update,
-    .render = title_scene_render,
-    .cleanup = title_scene_cleanup,
+    .init = scene_init,
+    .update = scene_update,
+    .render = scene_render,
+    .cleanup = scene_cleanup,
 };

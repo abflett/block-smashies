@@ -4,12 +4,12 @@
 #include "scene_manager.h"
 #include "gameplay_scene.h"
 
-void main_menu_scene_init(void)
+static void scene_init(void)
 {
     // Initialize the main menu scene
 }
 
-void main_menu_scene_update(float delta_time)
+static void scene_update(float delta_time)
 {
     if (IsKeyPressed(KEY_ENTER))
     {
@@ -22,7 +22,7 @@ void main_menu_scene_update(float delta_time)
     }
 }
 
-void main_menu_scene_render(void)
+static void scene_render(void)
 {
     DrawText("New Game", 5, 16, 8, WHITE);
     DrawText("Continue", 5, 32, 8, DARKGRAY);
@@ -32,14 +32,14 @@ void main_menu_scene_render(void)
     DrawText("Exit", 5, 96, 8, LIGHTGRAY);
 }
 
-void main_menu_scene_cleanup(void)
+static void scene_cleanup(void)
 {
     // Cleanup resources used by the main menu
 }
 
 Scene main_menu_scene = {
-    .init = main_menu_scene_init,
-    .update = main_menu_scene_update,
-    .render = main_menu_scene_render,
-    .cleanup = main_menu_scene_cleanup,
+    .init = scene_init,
+    .update = scene_update,
+    .render = scene_render,
+    .cleanup = scene_cleanup,
 };
