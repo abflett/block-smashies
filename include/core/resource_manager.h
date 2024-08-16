@@ -19,11 +19,6 @@ typedef struct ResourceManager
 
 } ResourceManager;
 
-// Function declarations
-static void add_texture(TextureResource *texture);
-static void add_subtexture(Subtexture *subtexture);
-static void add_animation(Animation *animation);
-
 // Declare an extern instance of ResourceManager
 extern ResourceManager resource_manager;
 

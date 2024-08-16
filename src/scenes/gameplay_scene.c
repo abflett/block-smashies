@@ -9,13 +9,11 @@ static void scene_init(void)
 
 static void scene_update(float delta_time)
 {
-
     game_state_manager.update(delta_time);
 }
 
 static void scene_render(void)
 {
-
     game_state_manager.render();
 }
 
