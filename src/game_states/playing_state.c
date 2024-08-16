@@ -17,7 +17,6 @@ static void state_init(int argc, va_list args)
     {
         entities.paddle = create_paddle();
         entities.ball = create_ball((Vector2){160.0f, 90.0f});
-
         game_status = create_game_status();
     }
     else
