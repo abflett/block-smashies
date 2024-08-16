@@ -3,7 +3,7 @@
 
 static void scene_init(void)
 {
-    game_state_manager.change(game_state_manager.states.playing);
+    game_state_manager.change(game_state_manager.states.playing, 0);
 }
 
 static void scene_update(float delta_time)

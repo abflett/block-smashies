@@ -11,7 +11,7 @@ Entities entities;
 
 static GameStatus game_status;
 
-static void state_init(void)
+static void state_init(int argc, va_list args)
 {
     if (!game_settings.is_paused)
     {
@@ -67,8 +67,8 @@ static void state_update(float delta_time)
         if (game_status.lives <= 0)
         {
             state_cleanup();
-            game_status.reset(&game_status);
-            game_state_manager.change(game_state_manager.states.game_over);
+            TraceLog(LOG_INFO, "set the score %d", game_status.score);
+            game_state_manager.change(game_state_manager.states.game_over, 1, &game_status.score);
         }
         else
         {
@@ -80,7 +80,7 @@ static void state_update(float delta_time)
     if (IsKeyPressed(KEY_ESCAPE))
     {
         game_settings.is_paused = true;
-        game_state_manager.next_state = game_state_manager.states.pause_menu;
+        game_state_manager.change(game_state_manager.states.pause_menu, 0);
     }
 }
 

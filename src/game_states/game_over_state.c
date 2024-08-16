@@ -1,3 +1,4 @@
+#include <stdarg.h>
 #include "raylib.h"
 #include "game_over_state.h"
 #include "scene_manager.h"
@@ -7,13 +8,15 @@
 static HighScore high_scores[10];
 static int count = 0;
 
-static void state_init(void)
+static void state_init(int argc, va_list args)
 {
+    int *score = va_arg(args, int *);
+
     // Load high scores from file
     load_high_scores("high_scores.json", high_scores, &count);
 
     // Add a new high score
-    add_high_score(high_scores, &count, "Player 1", 1);
+    add_high_score(high_scores, &count, "Player 1", *score);
 
     // Save high scores to file
     save_high_scores("high_scores.json", high_scores, count);
