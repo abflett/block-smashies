@@ -2,6 +2,12 @@
 #include "scene_manager.h"
 #include "scene.h"
 
+// scenes
+#include "gameplay_scene.h"
+#include "title_scene.h"
+#include "main_menu_scene.h"
+#include "logo_scene.h"
+
 void change_scene(Scene *new_scene)
 {
     if (scene_manager.current_scene && scene_manager.current_scene->cleanup)
@@ -33,6 +39,11 @@ void render_scene(void)
 SceneManager scene_manager = {
     .current_scene = NULL,
     .next_scene = NULL,
+    .scenes.logo = &logo_scene,
+    .scenes.title = &title_scene,
+    .scenes.main_menu = &main_menu_scene,
+    .scenes.gameplay = &gameplay_scene,
     .change = change_scene,
     .update = update_scene,
-    .render = render_scene};
+    .render = render_scene
+};

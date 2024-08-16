@@ -2,7 +2,6 @@
 #include "logo_scene.h"
 #include "game_settings.h"
 #include "scene_manager.h"
-#include "title_scene.h"
 
 static float elapsed_time = 0.0f; // Variable to track elapsed time
 
@@ -17,7 +16,7 @@ static void scene_update(float delta_time)
 
     if (GetKeyPressed() != 0 || IsGestureDetected(GESTURE_TAP) || elapsed_time >= game_settings.logo_screen_time)
     {
-        scene_manager.next_scene = &title_scene;
+        scene_manager.next_scene = scene_manager.scenes.title;
     }
 }
 

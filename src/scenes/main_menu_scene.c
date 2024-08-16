@@ -2,7 +2,6 @@
 #include "main_menu_scene.h"
 #include "game_settings.h"
 #include "scene_manager.h"
-#include "gameplay_scene.h"
 
 static void scene_init(void)
 {
@@ -13,7 +12,7 @@ static void scene_update(float delta_time)
 {
     if (IsKeyPressed(KEY_ENTER))
     {
-        scene_manager.next_scene = &gameplay_scene;
+        scene_manager.next_scene = scene_manager.scenes.gameplay;
     }
 
     if (IsKeyPressed(KEY_ESCAPE))

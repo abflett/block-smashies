@@ -1,7 +1,6 @@
 #include "raylib.h"
 #include "game_over_state.h"
 #include "scene_manager.h"
-#include "logo_scene.h"
 #include "high_score.h"
 #include "game_status.h"
 
@@ -24,7 +23,7 @@ static void state_update(float delta_time)
 {
     if (IsKeyPressed(KEY_ENTER))
     {
-        scene_manager.change(&logo_scene);
+        scene_manager.change(scene_manager.scenes.logo);
     }
 }
 

@@ -3,7 +3,6 @@
 #include "game_state_manager.h"
 #include "playing_state.h"
 #include "scene_manager.h"
-#include "logo_scene.h"
 #include "game_settings.h"
 
 static void state_init(void)
@@ -20,7 +19,7 @@ static void state_update(float delta_time)
             playing_state.cleanup();
         }
 
-        scene_manager.next_scene = &logo_scene;
+        scene_manager.next_scene = scene_manager.scenes.logo;
     }
 
     if (IsKeyPressed(KEY_ENTER))

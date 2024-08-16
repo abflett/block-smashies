@@ -2,8 +2,6 @@
 #include "main.h"
 #include "game_settings.h"
 #include "scene_manager.h"
-#include "logo_scene.h"
-#include "gameplay_scene.h"
 #include "playing_state.h"
 #include "resource_manager.h"
 
@@ -30,7 +28,7 @@ void init_game(void)
     init_game_from_settings("settings.json");
     target_texture = LoadRenderTexture(game_settings.target_width, game_settings.target_height);
     resource_manager.load_resource_file("assets/config/resources.json");
-    scene_manager.change(&logo_scene);
+    scene_manager.change(scene_manager.scenes.logo);
 }
 
 void update_game(float delta_time)

@@ -1,7 +1,6 @@
 #include "raylib.h"
 #include "title_scene.h"
 #include "scene_manager.h"
-#include "main_menu_scene.h"
 
 static void scene_init(void)
 {
@@ -11,7 +10,7 @@ static void scene_update(float delta_time)
 {
     if (GetKeyPressed() != 0 || IsGestureDetected(GESTURE_TAP))
     {
-        scene_manager.next_scene = &main_menu_scene;
+        scene_manager.next_scene = scene_manager.scenes.main_menu;
     }
 }
 
