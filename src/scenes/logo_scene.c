@@ -4,12 +4,7 @@
 #include "scene_manager.h"
 #include "title_scene.h"
 
-Scene logo_scene = {
-    .init = logo_scene_init,
-    .update = logo_scene_update,
-    .render = logo_scene_render,
-    .cleanup = logo_scene_cleanup,
-};
+
 
 static float elapsed_time = 0.0f; // Variable to track elapsed time
 
@@ -38,3 +33,10 @@ void logo_scene_cleanup(void)
 {
     // Cleanup resources used by the main menu
 }
+
+Scene logo_scene = {
+    .init = logo_scene_init,
+    .update = logo_scene_update,
+    .render = logo_scene_render,
+    .cleanup = logo_scene_cleanup,
+};

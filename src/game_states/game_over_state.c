@@ -8,12 +8,7 @@
 HighScore high_scores[10];
 int count = 0;
 
-GameState game_over_state = {
-    .init = game_over_state_init,
-    .update = game_over_state_update,
-    .render = game_over_state_render,
-    .cleanup = game_over_state_cleanup,
-};
+
 
 void game_over_state_init(void)
 {
@@ -48,3 +43,11 @@ void game_over_state_render(void)
 void game_over_state_cleanup(void)
 {
 }
+
+
+GameState game_over_state = {
+    .init = game_over_state_init,
+    .update = game_over_state_update,
+    .render = game_over_state_render,
+    .cleanup = game_over_state_cleanup,
+};

@@ -13,13 +13,6 @@ Entities entities;
 
 static GameStatus game_status;
 
-GameState playing_state = {
-    .init = playing_state_init,
-    .update = playing_state_update,
-    .render = playing_state_render,
-    .cleanup = playing_state_cleanup,
-};
-
 void playing_state_init(void)
 {
     if (!game_settings.is_paused)
@@ -27,14 +20,19 @@ void playing_state_init(void)
         entities.paddle = create_paddle();
         entities.ball = create_ball((Vector2){160.0f, 90.0f});
 
-        // paddle = create_paddle();
-        // ball = create_ball((Vector2){160.0f, 90.0f});
         game_status = create_game_status();
     }
     else
     {
         game_settings.is_paused = false;
     }
+}
+
+void playing_state_cleanup(void)
+{
+    if (game_settings.is_paused)
+        return;
+    TraceLog(LOG_INFO, "playing_state_cleanup() called");
 }
 
 void playing_state_update(float delta_time)
@@ -95,9 +93,9 @@ void playing_state_render(void)
     entities.ball.render(&entities.ball);
 }
 
-void playing_state_cleanup(void)
-{
-    if (game_settings.is_paused)
-        return;
-    TraceLog(LOG_INFO, "playing_state_cleanup() called");
-}
+GameState playing_state = {
+    .init = playing_state_init,
+    .update = playing_state_update,
+    .render = playing_state_render,
+    .cleanup = playing_state_cleanup,
+};

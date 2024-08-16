@@ -6,12 +6,7 @@
 #include "logo_scene.h"
 #include "game_settings.h"
 
-GameState pause_menu_state = {
-    .init = pause_menu_state_init,
-    .update = pause_menu_state_update,
-    .render = pause_menu_state_render,
-    .cleanup = pause_menu_state_cleanup,
-};
+
 
 void pause_menu_state_init(void)
 {
@@ -45,3 +40,10 @@ void pause_menu_state_render(void)
 void pause_menu_state_cleanup(void)
 {
 }
+
+GameState pause_menu_state = {
+    .init = pause_menu_state_init,
+    .update = pause_menu_state_update,
+    .render = pause_menu_state_render,
+    .cleanup = pause_menu_state_cleanup,
+};

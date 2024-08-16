@@ -3,13 +3,6 @@
 #include "scene_manager.h"
 #include "main_menu_scene.h"
 
-Scene title_scene = {
-    .init = title_scene_init,
-    .update = title_scene_update,
-    .render = title_scene_render,
-    .cleanup = title_scene_cleanup,
-};
-
 void title_scene_init(void)
 {
 }
@@ -31,3 +24,10 @@ void title_scene_render(void)
 void title_scene_cleanup(void)
 {
 }
+
+Scene title_scene = {
+    .init = title_scene_init,
+    .update = title_scene_update,
+    .render = title_scene_render,
+    .cleanup = title_scene_cleanup,
+};

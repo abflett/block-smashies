@@ -2,12 +2,6 @@
 #include "game_state_manager.h"
 #include "playing_state.h"
 
-Scene gameplay_scene = {
-    .init = gameplay_scene_init,
-    .update = gameplay_scene_update,
-    .render = gameplay_scene_render,
-    .cleanup = gameplay_scene_cleanup,
-};
 
 void gameplay_scene_init(void)
 {
@@ -33,3 +27,10 @@ void gameplay_scene_cleanup(void)
         game_state_manager.current_state->cleanup();
     }
 }
+
+Scene gameplay_scene = {
+    .init = gameplay_scene_init,
+    .update = gameplay_scene_update,
+    .render = gameplay_scene_render,
+    .cleanup = gameplay_scene_cleanup,
+};

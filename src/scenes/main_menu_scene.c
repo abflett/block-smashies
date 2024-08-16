@@ -4,13 +4,6 @@
 #include "scene_manager.h"
 #include "gameplay_scene.h"
 
-Scene main_menu_scene = {
-    .init = main_menu_scene_init,
-    .update = main_menu_scene_update,
-    .render = main_menu_scene_render,
-    .cleanup = main_menu_scene_cleanup,
-};
-
 void main_menu_scene_init(void)
 {
     // Initialize the main menu scene
@@ -43,3 +36,10 @@ void main_menu_scene_cleanup(void)
 {
     // Cleanup resources used by the main menu
 }
+
+Scene main_menu_scene = {
+    .init = main_menu_scene_init,
+    .update = main_menu_scene_update,
+    .render = main_menu_scene_render,
+    .cleanup = main_menu_scene_cleanup,
+};
