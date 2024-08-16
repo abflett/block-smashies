@@ -3,10 +3,19 @@
 
 #include "game_state.h"
 
+typedef struct GameStates
+{
+    GameState *playing;
+    GameState *pause_menu;
+    GameState *game_over;
+} GameStates;
+
 typedef struct GameStateManager
 {
     GameState *current_state;
     GameState *next_state;
+
+    GameStates states;
 
     void (*change)(GameState *new_state);
     void (*update)(float delta_time);

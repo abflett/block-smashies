@@ -4,8 +4,6 @@
 #include "playing_state.h"
 #include "game_settings.h"
 #include "game_state_manager.h"
-#include "game_over_state.h"
-#include "pause_menu_state.h"
 #include "game_status.h"
 #include "entities.h"
 
@@ -70,7 +68,7 @@ static void state_update(float delta_time)
         {
             state_cleanup();
             game_status.reset(&game_status);
-            game_state_manager.change(&game_over_state);
+            game_state_manager.change(game_state_manager.states.game_over);
         }
         else
         {
@@ -82,7 +80,7 @@ static void state_update(float delta_time)
     if (IsKeyPressed(KEY_ESCAPE))
     {
         game_settings.is_paused = true;
-        game_state_manager.next_state = &pause_menu_state;
+        game_state_manager.next_state = game_state_manager.states.pause_menu;
     }
 }
 

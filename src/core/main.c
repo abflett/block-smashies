@@ -2,7 +2,6 @@
 #include "main.h"
 #include "game_settings.h"
 #include "scene_manager.h"
-#include "playing_state.h"
 #include "resource_manager.h"
 
 RenderTexture2D target_texture; // Render texture target
@@ -37,13 +36,7 @@ void update_game(float delta_time)
 
     if ((IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL)) && IsKeyPressed(KEY_C) || WindowShouldClose())
     {
-        // Ensure cleanup is done before exiting
-        if (playing_state.cleanup)
-        {
-            game_settings.is_paused = false; // Reset the pause flag
-            playing_state.cleanup();         // Call cleanup
-            resource_manager.cleanup();
-        }
+        resource_manager.cleanup();
         game_settings.exitWindow = true;
     }
 }
@@ -76,6 +69,8 @@ void close_game(void)
     {
         scene_manager.current_scene->cleanup();
     }
+
+    // Todo: cleanup with game_state_manager
 
     UnloadRenderTexture(target_texture);
     CloseWindow();

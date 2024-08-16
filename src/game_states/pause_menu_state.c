@@ -1,7 +1,6 @@
 #include "raylib.h"
 #include "pause_menu_state.h"
 #include "game_state_manager.h"
-#include "playing_state.h"
 #include "scene_manager.h"
 #include "game_settings.h"
 
@@ -13,10 +12,10 @@ static void state_update(float delta_time)
 {
     if (IsKeyPressed(KEY_ESCAPE))
     {
-        if (playing_state.cleanup)
+        if (game_state_manager.states.playing->cleanup)
         {
             game_settings.is_paused = false;
-            playing_state.cleanup();
+            game_state_manager.states.playing->cleanup();
         }
 
         scene_manager.next_scene = scene_manager.scenes.logo;
@@ -24,7 +23,7 @@ static void state_update(float delta_time)
 
     if (IsKeyPressed(KEY_ENTER))
     {
-        game_state_manager.next_state = &playing_state;
+        game_state_manager.next_state = game_state_manager.states.playing;
     }
 }
 

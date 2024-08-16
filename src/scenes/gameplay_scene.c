@@ -1,10 +1,9 @@
 #include "gameplay_scene.h"
 #include "game_state_manager.h"
-#include "playing_state.h"
 
 static void scene_init(void)
 {
-    game_state_manager.change(&playing_state);
+    game_state_manager.change(game_state_manager.states.playing);
 }
 
 static void scene_update(float delta_time)
