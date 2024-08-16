@@ -31,7 +31,8 @@ void reset_ball(Ball *ball, Vector2 initial_position)
 // Function to render the ball
 void render_ball(Ball *ball)
 {
-    DrawTexture(ball->texture, (int)(ball->position.x - ball->radius), (int)(ball->position.y - ball->radius), WHITE);
+    DrawTextureEx(ball->texture, ball->position, 0.0f, 0.5f, WHITE);
+    // DrawTexture(ball->texture, (int)(ball->position.x - ball->radius), (int)(ball->position.y - ball->radius), WHITE);
 }
 
 // Function to create and initialize a ball
