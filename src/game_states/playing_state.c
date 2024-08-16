@@ -67,8 +67,7 @@ static void state_update(float delta_time)
         if (game_status.lives <= 0)
         {
             state_cleanup();
-            TraceLog(LOG_INFO, "set the score %d", game_status.score);
-            game_state_manager.change(game_state_manager.states.game_over, 1, &game_status.score);
+            game_state_manager.change(game_state_manager.states.game_over, 1, game_status.score);
         }
         else
         {
