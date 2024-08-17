@@ -175,6 +175,8 @@ void rm_cleanup(void)
     resource_manager.textures = NULL;
     resource_manager.subtextures = NULL;
     resource_manager.animations = NULL;
+
+    TraceLog(LOG_INFO, "[Cleanup] - resource_manager - Success");
 }
 
 ResourceManager resource_manager = {

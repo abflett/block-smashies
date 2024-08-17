@@ -13,7 +13,12 @@ static void state_init(int argc, va_list args)
         entities.add_paddle(&entities, create_paddle());
         entities.add_ball(&entities, create_ball((Vector2){160.0f, 160.0f}));
         entities.add_ball(&entities, create_ball((Vector2){160.0f, 170.0f}));
-        entities.add_brick(&entities, create_brick((Vector2){100.0f, 50.0f}));
+
+        int brick_row = 10;
+        for (int i = 0; i < brick_row; i++)
+        {
+            entities.add_brick(&entities, create_brick((Vector2){(float)i * 24 + 2, 50.0f}));
+        }
     }
     else
     {
@@ -27,6 +32,7 @@ static void state_cleanup(void)
     {
         entities.cleanup(&entities);
         game_settings.is_paused = false;
+        TraceLog(LOG_INFO, "[Cleanup] - playing_state - Success");
     }
 }
 

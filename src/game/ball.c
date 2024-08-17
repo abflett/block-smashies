@@ -5,7 +5,6 @@
 #include "resource_manager.h"
 #include "game_settings.h"
 
-
 static void update_ball(Ball *ball, Entities *entities, float delta_time)
 {
     ball->position.x += ball->velocity.x * ball->speed_multiplier * delta_time;
@@ -21,15 +20,15 @@ static void update_ball(Ball *ball, Entities *entities, float delta_time)
         ball->velocity.y *= -1;
     }
 
-    for (int i = 0; i < kv_size(entities->paddles); i++) {
+    for (int i = 0; i < kv_size(entities->paddles); i++)
+    {
         Paddle *paddle = &kv_A(entities->paddles, i);
-        if (paddle->active) {
+        if (paddle->active)
+        {
             bool collision = CheckCollisionCircleRec(ball->position, ball->radius, paddle->get_hitbox(paddle));
             if (collision)
             {
-                TraceLog(LOG_INFO, "Paddle %d X Position: %f", i, paddle->position.x);
-
-                ball->velocity.y *= -1; // Reverse vertical direction
+                ball->velocity.y *= -1;                               // Reverse vertical direction
                 ball->position.y = paddle->position.y - ball->radius; // Prevent the ball from sticking to the paddle
 
                 // Adjust the ball's x-velocity based on the paddle's speed
@@ -51,15 +50,18 @@ static void update_ball(Ball *ball, Entities *entities, float delta_time)
 
                 // Count the remaining active balls
                 int active_balls = 0;
-                for (int j = 0; j < kv_size(entities->balls); j++) {
+                for (int j = 0; j < kv_size(entities->balls); j++)
+                {
                     Ball *other_ball = &kv_A(entities->balls, j);
-                    if (other_ball->active) {
+                    if (other_ball->active)
+                    {
                         active_balls++;
                     }
                 }
 
                 // additional logic if last active ball.
-                if (active_balls == 0) {
+                if (active_balls == 0)
+                {
                     entities->game_status.lives--;
                     ball->reset(ball, (Vector2){160.0f, 90.0f});
                     paddle->reset(paddle);
@@ -79,7 +81,7 @@ static void reset_ball(Ball *ball, Vector2 initial_position)
 static void render_ball(Ball *ball)
 {
     // draw larger ball and resize down for subpixel drawing effect
-    DrawTextureEx(ball->texture, ball->position, 0.0f, 0.5f, WHITE);
+    DrawTextureEx(ball->texture, (Vector2){ball->position.x - ball->radius, ball->position.y - ball->radius}, 0.0f, 0.5f, WHITE);
 }
 
 Ball create_ball(Vector2 initial_position)
