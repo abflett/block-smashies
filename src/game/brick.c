@@ -62,7 +62,7 @@ static void render_brick(Brick *brick)
     if (brick->active)
     {
         // DrawTexture(brick->texture, (int)brick->position.x, (int)brick->position.y, WHITE);
-        DrawRectangle(brick->position.x, brick->position.y, 20, 5, RED);
+        DrawRectangle((int)brick->position.x, (int)brick->position.y, 20, 5, RED);
     }
 }
 
