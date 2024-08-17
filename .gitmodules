@@ -7,3 +7,6 @@
 [submodule "external/uthash"]
 	path = external/uthash
 	url = https://github.com/troydhanson/uthash.git
+[submodule "external/klib"]
+	path = external/klib
+	url = https://github.com/attractivechaos/klib.git
