@@ -13,6 +13,7 @@ static void state_init(int argc, va_list args)
         entities.add_paddle(&entities, create_paddle());
         entities.add_ball(&entities, create_ball((Vector2){160.0f, 160.0f}));
         entities.add_ball(&entities, create_ball((Vector2){160.0f, 170.0f}));
+        entities.add_brick(&entities, create_brick((Vector2){100.0f, 50.0f}));
     }
     else
     {

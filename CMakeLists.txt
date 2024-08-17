@@ -48,6 +48,7 @@ set(GAME_STATES_SRC
 set(GAME_SRC
     src/game/paddle.c
     src/game/ball.c
+    src/game/brick.c
     src/game/game_status.c
     src/game/entities.c
 )
