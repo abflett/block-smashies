@@ -49,7 +49,6 @@ set(GAME_SRC
     src/game/paddle.c
     src/game/ball.c
     src/game/game_status.c
-    src/game/collision.c
     src/game/entities.c
 )
 
