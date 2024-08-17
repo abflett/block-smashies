@@ -13,6 +13,7 @@ typedef struct Ball
     Vector2 velocity;
     float radius;
     float speed_multiplier;
+    int power;
     bool active;
     void (*update)(struct Ball *ball, struct Entities *entities, float delta_time);
     void (*reset)(struct Ball *ball, Vector2 initial_position);

@@ -92,6 +92,7 @@ Ball create_ball(Vector2 initial_position)
     ball.position = initial_position;
     ball.velocity = (Vector2){100.0f, -100.0f};
     ball.speed_multiplier = 1.0f;
+    ball.power = 1;
     ball.active = true;
     ball.update = update_ball;
     ball.reset = reset_ball;

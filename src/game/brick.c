@@ -13,7 +13,7 @@ static void update_brick(Brick *brick, struct Entities *entities, float delta_ti
             bool collision = CheckCollisionCircleRec(ball->position, ball->radius, hitbox);
             if (collision)
             {
-                brick->health--;
+                brick->health -= ball->power;
 
                 // Check where the ball hit the brick
                 float ball_center_x = ball->position.x;
@@ -76,7 +76,7 @@ Brick create_brick(Vector2 initial_position)
     Brick brick;
     // brick.texture = LoadTexture("brick.png");  // Load the brick texture (make sure to manage texture unloading later)
     brick.position = initial_position;
-    brick.health = 1;
+    brick.health = 2;
     brick.active = true;
     brick.update = update_brick;
     brick.render = render_brick;
