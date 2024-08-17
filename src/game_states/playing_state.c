@@ -1,11 +1,6 @@
-#include <stdio.h>
-#include <math.h>
-#include "raylib.h"
-#include "kvec.h"
 #include "playing_state.h"
 #include "game_settings.h"
 #include "game_state_manager.h"
-#include "game_status.h"
 #include "entities.h"
 
 static Entities entities;
@@ -16,7 +11,8 @@ static void state_init(int argc, va_list args)
     {
         entities = create_entities();
         entities.add_paddle(&entities, create_paddle());
-        entities.add_ball(&entities, create_ball((Vector2){160.0f, 90.0f}));
+        entities.add_ball(&entities, create_ball((Vector2){160.0f, 160.0f}));
+        entities.add_ball(&entities, create_ball((Vector2){160.0f, 170.0f}));
     }
     else
     {
@@ -37,43 +33,9 @@ static void state_update(float delta_time)
 {
     entities.update(&entities, delta_time);
 
-    // Example collision detection for the first ball and paddle
-    Ball *ball = &kv_A(entities.balls, 0);
-    Paddle *paddle = &kv_A(entities.paddles, 0);
-
-    if (ball->position.y + ball->radius >= paddle->position.y &&
-        ball->position.x >= paddle->position.x &&
-        ball->position.x <= paddle->position.x + paddle->size.x)
+    if (entities.game_status.lives <= 0)
     {
-        ball->velocity.y *= -1; // Reverse vertical direction
-        ball->position.y = paddle->position.y - ball->radius; // Prevent the ball from sticking to the paddle
-
-        // Adjust the ball's x-velocity based on the paddle's speed
-        ball->velocity.x += paddle->speed * 0.5f; // Scale the influence of the paddle's speed
-
-        // Ensure the ball's x-velocity doesn't exceed a certain maximum
-        if (fabs(ball->velocity.x) > paddle->max_speed)
-        {
-            ball->velocity.x = (ball->velocity.x > 0) ? paddle->max_speed : -paddle->max_speed;
-        }
-
-        // Increase score when the ball hits the paddle
-        entities.game_status.score += 10;
-    }
-
-    // Ball falls below the screen (you can add life loss or game over logic here)
-    if (ball->position.y > game_settings.target_height)
-    {
-        entities.game_status.lives--;
-        if  (entities.game_status.lives <= 0)
-        {
-            game_state_manager.change(game_state_manager.states.game_over, 1, entities.game_status.score);
-        }
-        else
-        {
-            ball->reset(ball, (Vector2){160.0f, 90.0f});
-            paddle->reset(paddle);
-        }
+        game_state_manager.change(game_state_manager.states.game_over, 1, entities.game_status.score);
     }
 
     if (IsKeyPressed(KEY_ESCAPE))

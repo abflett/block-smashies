@@ -46,6 +46,12 @@ static void render_paddle(Paddle *paddle)
     DrawTexture(paddle->texture, (int)paddle->position.x, (int)paddle->position.y, WHITE);
 }
 
+static Rectangle get_hitbox_func (Paddle *paddle)
+{
+    Rectangle rect = {paddle->position.x, paddle->position.y, paddle->size.x, paddle->size.y};
+    return rect;
+}
+
 Paddle create_paddle(void)
 {
     Paddle paddle;
@@ -59,6 +65,7 @@ Paddle create_paddle(void)
     paddle.update = update_paddle;
     paddle.reset = reset_paddle;
     paddle.render = render_paddle;
+    paddle.get_hitbox = get_hitbox_func;
     paddle.active = true;
 
     return paddle;

@@ -16,6 +16,7 @@ typedef struct Paddle
     void (*update)(struct Paddle *paddle, float delta_time);
     void (*reset)(struct Paddle *paddle);
     void (*render)(struct Paddle *paddle); // Corrected function signature
+    Rectangle (*get_hitbox)(struct Paddle *paddle);
     bool active;
 } Paddle;
 

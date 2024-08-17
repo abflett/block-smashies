@@ -4,6 +4,18 @@
 #include "paddle.h"
 
 static void add_ball_func(Entities *entities, Ball ball) {
+    // Check for an inactive ball slot first
+    for (int i = 0; i < kv_size(entities->balls); i++) {
+        Ball *existing_ball = &kv_A(entities->balls, i);
+        if (!existing_ball->active) {
+            // Reuse this inactive slot
+            *existing_ball = ball; // Todo: reset ball instead of creating a new;
+            existing_ball->active = true;
+            return;
+        }
+    }
+
+    // If no inactive slot was found, add a new ball to the array
     kv_push(Ball, entities->balls, ball);
 }
 
