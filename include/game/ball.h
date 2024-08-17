@@ -13,10 +13,10 @@ typedef struct Ball
     Vector2 velocity;
     float radius;
     float speed_multiplier;
+    bool active;
     void (*update)(struct Ball *ball, struct Entities *entities, float delta_time);
     void (*reset)(struct Ball *ball, Vector2 initial_position);
     void (*render)(struct Ball *ball);
-    bool active;
 } Ball;
 
 Ball create_ball(Vector2 initial_position);

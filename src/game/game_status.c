@@ -2,22 +2,19 @@
 #include "raylib.h"
 #include "game_status.h"
 
-// Update game status (e.g., increment game time)
-void update_game_status(GameStatus *status, float delta_time)
+static void update_game_status(GameStatus *status, float delta_time)
 {
     status->game_time += delta_time;
 }
 
-// Reset game status to initial values
-void reset_game_status(GameStatus *status)
+static void reset_game_status(GameStatus *status)
 {
     status->score = 0;
     status->lives = 1;
     status->game_time = 0.0f;
 }
 
-// Render game status on screen
-void render_game_status(const GameStatus *status)
+static void render_game_status(const GameStatus *status)
 {
     char score_text[20];
     snprintf(score_text, sizeof(score_text), "%d", status->score);
@@ -34,7 +31,6 @@ void render_game_status(const GameStatus *status)
     DrawText(lives_text, 295, 5, 8, LIGHTGRAY);
 }
 
-// Initialize game status
 GameStatus create_game_status(void)
 {
     GameStatus status;

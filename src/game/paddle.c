@@ -10,8 +10,7 @@
 #define FRICTION 0.95f
 #define BOTTOM_PADDING 5
 
-// Update paddle position
-void update_paddle(Paddle *paddle, float delta_time)
+static void update_paddle(Paddle *paddle, float delta_time)
 {
     if (IsKeyDown(KEY_LEFT))
     {
@@ -27,31 +26,26 @@ void update_paddle(Paddle *paddle, float delta_time)
             paddle->speed = paddle->max_speed;
     }
 
-    // Apply friction and update position
     paddle->speed *= paddle->friction;
     paddle->position.x += paddle->speed * delta_time;
 
-    // Ensure paddle stays within screen boundaries
     if (paddle->position.x < 0)
         paddle->position.x = 0;
     if (paddle->position.x + paddle->size.x > game_settings.target_width)
         paddle->position.x = game_settings.target_width - paddle->size.x;
 }
 
-// Reset paddle to initial state
-void reset_paddle(Paddle *paddle)
+static void reset_paddle(Paddle *paddle)
 {
     paddle->position = (Vector2){(game_settings.target_width / 2) - (paddle->size.x / 2), game_settings.target_height - paddle->size.y - BOTTOM_PADDING}; // Reset to initial position
     paddle->speed = DEFAULT_SPEED;
 }
 
-// Render the paddle
-void render_paddle(Paddle *paddle)
+static void render_paddle(Paddle *paddle)
 {
     DrawTexture(paddle->texture, (int)paddle->position.x, (int)paddle->position.y, WHITE);
 }
 
-// Initialize the paddle
 Paddle create_paddle(void)
 {
     Paddle paddle;

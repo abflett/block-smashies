@@ -10,21 +10,13 @@
 
 static Entities entities;
 
-static GameStatus game_status;
-
 static void state_init(int argc, va_list args)
 {
     if (!game_settings.is_paused)
     {
-        // Initialize the entities if not already initialized
         entities = create_entities();
         entities.add_paddle(&entities, create_paddle());
-
-        // Add a ball to the entities
         entities.add_ball(&entities, create_ball((Vector2){160.0f, 90.0f}));
-
-        // Initialize the game status
-        game_status = create_game_status();
     }
     else
     {
@@ -34,11 +26,7 @@ static void state_init(int argc, va_list args)
 
 static void state_cleanup(void)
 {
-    if (game_settings.is_paused)
-    {
-        return;
-    }
-    else
+    if (!game_settings.is_paused)
     {
         entities.cleanup(&entities);
         game_settings.is_paused = false;
@@ -47,7 +35,6 @@ static void state_cleanup(void)
 
 static void state_update(float delta_time)
 {
-    game_status.update(&game_status, delta_time);
     entities.update(&entities, delta_time);
 
     // Example collision detection for the first ball and paddle
@@ -71,16 +58,16 @@ static void state_update(float delta_time)
         }
 
         // Increase score when the ball hits the paddle
-        game_status.score += 10;
+        entities.game_status.score += 10;
     }
 
     // Ball falls below the screen (you can add life loss or game over logic here)
     if (ball->position.y > game_settings.target_height)
     {
-        game_status.lives--;
-        if (game_status.lives <= 0)
+        entities.game_status.lives--;
+        if  (entities.game_status.lives <= 0)
         {
-            game_state_manager.change(game_state_manager.states.game_over, 1, game_status.score);
+            game_state_manager.change(game_state_manager.states.game_over, 1, entities.game_status.score);
         }
         else
         {
@@ -98,7 +85,6 @@ static void state_update(float delta_time)
 
 static void state_render(void)
 {
-    game_status.render(&game_status);
     entities.render(&entities);
 }
 

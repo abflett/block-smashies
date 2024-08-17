@@ -3,16 +3,17 @@
 
 #include "paddle.h"
 #include "ball.h"
+#include "game_status.h"
 #include "kvec.h"
 
 typedef kvec_t(Ball) BallVector;
 typedef kvec_t(Paddle) PaddleVector;
 
 typedef struct Entities {
-    BallVector balls;       // Dynamic array of balls
-    PaddleVector paddles;   // Dynamic array of paddles
+    BallVector balls;
+    PaddleVector paddles;
+    GameStatus game_status;
 
-    // Function pointers for entity operations
     void (*add_ball)(struct Entities *entities, Ball ball);
     void (*add_paddle)(struct Entities *entities, Paddle paddle);
     void (*remove_ball)(struct Entities *entities, int index);

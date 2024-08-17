@@ -3,24 +3,21 @@
 #include "resource_manager.h"
 #include "game_settings.h"
 
-// Function to update the ball's position and handle collisions
-void update_ball(Ball *ball, Entities *entities, float delta_time)
+
+static void update_ball(Ball *ball, Entities *entities, float delta_time)
 {
-    // Update ball position based on its velocity
     ball->position.x += ball->velocity.x * ball->speed_multiplier * delta_time;
     ball->position.y += ball->velocity.y * ball->speed_multiplier * delta_time;
 
-    // Ball collision with screen bounds
     if (ball->position.x - ball->radius <= 0 || ball->position.x + ball->radius >= game_settings.target_width)
     {
-        ball->velocity.x *= -1; // Reverse horizontal direction
+        ball->velocity.x *= -1;
     }
     if (ball->position.y - ball->radius <= 0)
     {
-        ball->velocity.y *= -1; // Reverse vertical direction
+        ball->velocity.y *= -1;
     }
 
-    // Iterate over paddles and log their x position
     for (int i = 0; i < kv_size(entities->paddles); i++) {
         Paddle *paddle = &kv_A(entities->paddles, i);
         if (paddle->active) {
@@ -29,34 +26,31 @@ void update_ball(Ball *ball, Entities *entities, float delta_time)
     }
 }
 
-// Function to reset the ball's position and velocity
-void reset_ball(Ball *ball, Vector2 initial_position)
+static void reset_ball(Ball *ball, Vector2 initial_position)
 {
     ball->position = initial_position;
-    ball->velocity = (Vector2){100.0f, -100.0f}; // Reset to default velocity
-    ball->speed_multiplier = 1.0f;               // Reset speed multiplier
+    ball->velocity = (Vector2){100.0f, -100.0f};
+    ball->speed_multiplier = 1.0f;
 }
 
-// Function to render the ball
-void render_ball(Ball *ball)
+static void render_ball(Ball *ball)
 {
+    // draw larger ball and resize down for subpixel drawing effect
     DrawTextureEx(ball->texture, ball->position, 0.0f, 0.5f, WHITE);
-    // DrawTexture(ball->texture, (int)(ball->position.x - ball->radius), (int)(ball->position.y - ball->radius), WHITE);
 }
 
-// Function to create and initialize a ball
 Ball create_ball(Vector2 initial_position)
 {
     Ball ball;
     ball.texture = resource_manager.get_texture("ball")->texture;
-    ball.radius = ball.texture.width / 2.0f; // Assuming the ball is circular
+    ball.radius = ball.texture.width / 2.0f; // Todo: check as the texture is scaled down.
     ball.position = initial_position;
-    ball.velocity = (Vector2){100.0f, -100.0f}; // Example initial velocity
+    ball.velocity = (Vector2){100.0f, -100.0f};
     ball.speed_multiplier = 1.0f;
+    ball.active = true;
     ball.update = update_ball;
     ball.reset = reset_ball;
     ball.render = render_ball;
-    ball.active = true;
 
     return ball;
 }
