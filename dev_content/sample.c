@@ -36,8 +36,7 @@ static void state_cleanup(void)
 {
     if (game_settings.is_paused)
         return;
-    TraceLog(LOG_INFO, "state_cleanup() called");
-        // Clean up entities if necessary
+
     entities.cleanup(&entities);
 }
 
@@ -99,7 +98,6 @@ static void state_render(void)
 {
     game_status.render(&game_status);
 
-    // Render all entities
     entities.render(&entities);
 }
 

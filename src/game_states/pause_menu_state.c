@@ -6,6 +6,7 @@
 
 static void state_init(int argc, va_list args)
 {
+    game_settings.is_paused = true;
 }
 
 static void state_update(float delta_time)
@@ -14,7 +15,6 @@ static void state_update(float delta_time)
     {
         if (game_state_manager.states.playing->cleanup)
         {
-            game_settings.is_paused = false;
             game_state_manager.states.playing->cleanup();
         }
 

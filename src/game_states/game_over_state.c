@@ -11,7 +11,7 @@
 static HighScore high_scores[10];
 static int count;
 static int score;
-static char player_name[MAX_NAME_LENGTH + 1] = "";  // +1 for the null terminator
+static char player_name[MAX_NAME_LENGTH + 1] = "Player";  // +1 for the null terminator
 static bool adding_player_score;
 
 // Function to update the player's score entry

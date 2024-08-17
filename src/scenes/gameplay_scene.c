@@ -1,5 +1,8 @@
+#include "raylib.h"
 #include "gameplay_scene.h"
 #include "game_state_manager.h"
+#include "game_settings.h"
+
 
 static void scene_init(void)
 {
@@ -21,6 +24,16 @@ static void scene_cleanup(void)
     if (game_state_manager.current_state && game_state_manager.current_state->cleanup)
     {
         game_state_manager.current_state->cleanup();
+    }
+
+    // cleanup the playing state if playing state paused
+    if (game_settings.is_paused)
+    {
+        game_settings.is_paused = false;
+        if(game_state_manager.states.playing->cleanup)
+        {
+            game_state_manager.states.playing->cleanup();
+        }
     }
 }
 

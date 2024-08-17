@@ -8,32 +8,25 @@
 
 static void add_texture(TextureResource *texture)
 {
-    TraceLog(LOG_INFO, "add_texture(TextureResource *texture) called");
     HASH_ADD_KEYPTR(hh, resource_manager.textures, texture->id, strlen(texture->id), texture);
 }
 
 static void add_subtexture(Subtexture *subtexture)
 {
-    TraceLog(LOG_INFO, "add_subtexture(Subtexture *subtexture) called");
     HASH_ADD_KEYPTR(hh, resource_manager.subtextures, subtexture->id, strlen(subtexture->id), subtexture);
 }
 
 static void add_animation(Animation *animation)
 {
-    TraceLog(LOG_INFO, "add_animation(Animation *animation) called");
     HASH_ADD_KEYPTR(hh, resource_manager.animations, animation->id, strlen(animation->id), animation);
 }
 
 void rm_load_resource_file(const char *file)
 {
-    TraceLog(LOG_INFO, "rm_load_resource_file(const char *file) called");
-
     // Parse the JSON file
     JSON_Value *root_value = json_parse_file(file);
     JSON_Object *root_object = json_value_get_object(root_value);
     JSON_Array *textures_array = json_object_get_array(root_object, "textures");
-
-    TraceLog(LOG_INFO, "Textures Count: %d", (int)json_array_get_count(textures_array));
 
     // Iterate through textures
     for (size_t i = 0; i < (int)json_array_get_count(textures_array); i++)
@@ -43,9 +36,9 @@ void rm_load_resource_file(const char *file)
         const char *file = json_object_get_string(texture_obj, "file");
         const char *type = json_object_get_string(texture_obj, "type");
 
-        TraceLog(LOG_INFO, "Texture ID: %s", id);
-        TraceLog(LOG_INFO, "File: %s", file);
-        TraceLog(LOG_INFO, "Type: %s", type);
+        // TraceLog(LOG_INFO, "Texture ID: %s", id);
+        // TraceLog(LOG_INFO, "File: %s", file);
+        // TraceLog(LOG_INFO, "Type: %s", type);
 
         if (strcmp(type, "single") == 0)
         {
@@ -121,18 +114,15 @@ void rm_load_resource_file(const char *file)
 
 TextureResource *rm_get_texture(const char *id)
 {
-    TraceLog(LOG_INFO, "Searching for texture with id: %s", id);
     TextureResource *texture = NULL;
     HASH_FIND_STR(resource_manager.textures, id, texture);
 
     if (texture)
     {
-        TraceLog(LOG_INFO, "Texture found with id: %s", id);
         return texture;
     }
     else
     {
-        TraceLog(LOG_WARNING, "Texture with id '%s' not found", id);
         return NULL;
     }
 }
@@ -153,8 +143,6 @@ Animation *rm_get_animation(const char *id)
 
 void rm_cleanup(void)
 {
-    TraceLog(LOG_INFO, "rm_cleanup(void) called");
-
     // Free all textures
     TextureResource *texture, *tmp_texture;
     HASH_ITER(hh, resource_manager.textures, texture, tmp_texture)

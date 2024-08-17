@@ -20,11 +20,11 @@ void update_ball(Ball *ball, Entities *entities, float delta_time)
         ball->velocity.y *= -1; // Reverse vertical direction
     }
 
-        // Iterate over paddles and log their x position
+    // Iterate over paddles and log their x position
     for (int i = 0; i < kv_size(entities->paddles); i++) {
         Paddle *paddle = &kv_A(entities->paddles, i);
         if (paddle->active) {
-            TraceLog(LOG_INFO, "Paddle %d X Position: %f", i, paddle->position.x);
+            //TraceLog(LOG_INFO, "Paddle %d X Position: %f", i, paddle->position.x);
         }
     }
 }

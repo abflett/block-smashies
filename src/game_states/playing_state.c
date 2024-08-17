@@ -35,17 +35,19 @@ static void state_init(int argc, va_list args)
 static void state_cleanup(void)
 {
     if (game_settings.is_paused)
+    {
         return;
-    TraceLog(LOG_INFO, "state_cleanup() called");
-        // Clean up entities if necessary
-    //entities.cleanup(&entities);
+    }
+    else
+    {
+        entities.cleanup(&entities);
+        game_settings.is_paused = false;
+    }
 }
 
 static void state_update(float delta_time)
 {
     game_status.update(&game_status, delta_time);
-
-    // Update all entities
     entities.update(&entities, delta_time);
 
     // Example collision detection for the first ball and paddle

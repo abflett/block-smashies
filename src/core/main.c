@@ -70,8 +70,6 @@ void close_game(void)
         scene_manager.current_scene->cleanup();
     }
 
-    // Todo: cleanup with game_state_manager
-
     UnloadRenderTexture(target_texture);
     CloseWindow();
 }
