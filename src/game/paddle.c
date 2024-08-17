@@ -65,6 +65,7 @@ Paddle create_paddle(void)
     paddle.update = update_paddle;
     paddle.reset = reset_paddle;
     paddle.render = render_paddle;
+    paddle.active = true;
 
     return paddle;
 }

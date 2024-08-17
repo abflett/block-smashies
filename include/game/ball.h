@@ -1,7 +1,10 @@
 #ifndef BALL_H
 #define BALL_H
 
+#include <stdbool.h>
 #include "raylib.h"
+
+struct Entities;
 
 typedef struct Ball
 {
@@ -10,9 +13,10 @@ typedef struct Ball
     Vector2 velocity;
     float radius;
     float speed_multiplier;
-    void (*update)(struct Ball *ball, float delta_time);
+    void (*update)(struct Ball *ball, struct Entities *entities, float delta_time);
     void (*reset)(struct Ball *ball, Vector2 initial_position);
     void (*render)(struct Ball *ball);
+    bool active;
 } Ball;
 
 Ball create_ball(Vector2 initial_position);

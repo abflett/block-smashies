@@ -1,9 +1,10 @@
 #include "ball.h"
+#include "entities.h"
 #include "resource_manager.h"
 #include "game_settings.h"
 
 // Function to update the ball's position and handle collisions
-void update_ball(Ball *ball, float delta_time)
+void update_ball(Ball *ball, Entities *entities, float delta_time)
 {
     // Update ball position based on its velocity
     ball->position.x += ball->velocity.x * ball->speed_multiplier * delta_time;
@@ -17,6 +18,14 @@ void update_ball(Ball *ball, float delta_time)
     if (ball->position.y - ball->radius <= 0)
     {
         ball->velocity.y *= -1; // Reverse vertical direction
+    }
+
+        // Iterate over paddles and log their x position
+    for (int i = 0; i < kv_size(entities->paddles); i++) {
+        Paddle *paddle = &kv_A(entities->paddles, i);
+        if (paddle->active) {
+            TraceLog(LOG_INFO, "Paddle %d X Position: %f", i, paddle->position.x);
+        }
     }
 }
 
@@ -47,6 +56,7 @@ Ball create_ball(Vector2 initial_position)
     ball.update = update_ball;
     ball.reset = reset_ball;
     ball.render = render_ball;
+    ball.active = true;
 
     return ball;
 }

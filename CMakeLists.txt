@@ -16,6 +16,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/include/game
     ${PROJECT_SOURCE_DIR}/external/parson
     ${PROJECT_SOURCE_DIR}/external/uthash/src
+    ${PROJECT_SOURCE_DIR}/external/klib
 )
 
 # Source files for the core module
@@ -49,6 +50,7 @@ set(GAME_SRC
     src/game/ball.c
     src/game/game_status.c
     src/game/collision.c
+    src/game/entities.c
 )
 
 # Create the BlockSmashies executable

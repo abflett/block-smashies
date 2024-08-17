@@ -1,6 +1,7 @@
 #ifndef PADDLE_H
 #define PADDLE_H
 
+#include <stdbool.h>
 #include "raylib.h"
 
 typedef struct Paddle
@@ -15,6 +16,7 @@ typedef struct Paddle
     void (*update)(struct Paddle *paddle, float delta_time);
     void (*reset)(struct Paddle *paddle);
     void (*render)(struct Paddle *paddle); // Corrected function signature
+    bool active;
 } Paddle;
 
 Paddle create_paddle(void);

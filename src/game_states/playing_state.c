@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <math.h>
 #include "raylib.h"
+#include "kvec.h"
 #include "playing_state.h"
 #include "game_settings.h"
 #include "game_state_manager.h"
 #include "game_status.h"
 #include "entities.h"
 
-Entities entities;
+static Entities entities;
 
 static GameStatus game_status;
 
@@ -15,8 +16,14 @@ static void state_init(int argc, va_list args)
 {
     if (!game_settings.is_paused)
     {
-        entities.paddle = create_paddle();
-        entities.ball = create_ball((Vector2){160.0f, 90.0f});
+        // Initialize the entities if not already initialized
+        entities = create_entities();
+        entities.add_paddle(&entities, create_paddle());
+
+        // Add a ball to the entities
+        entities.add_ball(&entities, create_ball((Vector2){160.0f, 90.0f}));
+
+        // Initialize the game status
         game_status = create_game_status();
     }
     else
@@ -30,29 +37,35 @@ static void state_cleanup(void)
     if (game_settings.is_paused)
         return;
     TraceLog(LOG_INFO, "state_cleanup() called");
+        // Clean up entities if necessary
+    //entities.cleanup(&entities);
 }
 
 static void state_update(float delta_time)
 {
     game_status.update(&game_status, delta_time);
-    entities.paddle.update(&entities.paddle, delta_time);
-    entities.ball.update(&entities.ball, delta_time);
 
-    // Ball collision with paddle
-    if (entities.ball.position.y + entities.ball.radius >= entities.paddle.position.y &&
-        entities.ball.position.x >= entities.paddle.position.x &&
-        entities.ball.position.x <= entities.paddle.position.x + entities.paddle.size.x)
+    // Update all entities
+    entities.update(&entities, delta_time);
+
+    // Example collision detection for the first ball and paddle
+    Ball *ball = &kv_A(entities.balls, 0);
+    Paddle *paddle = &kv_A(entities.paddles, 0);
+
+    if (ball->position.y + ball->radius >= paddle->position.y &&
+        ball->position.x >= paddle->position.x &&
+        ball->position.x <= paddle->position.x + paddle->size.x)
     {
-        entities.ball.velocity.y *= -1;                             // Reverse vertical direction
-        entities.ball.position.y = entities.paddle.position.y - entities.ball.radius; // Prevent the ball from sticking to the paddle
+        ball->velocity.y *= -1; // Reverse vertical direction
+        ball->position.y = paddle->position.y - ball->radius; // Prevent the ball from sticking to the paddle
 
         // Adjust the ball's x-velocity based on the paddle's speed
-        entities.ball.velocity.x += entities.paddle.speed * 0.5f; // Scale the influence of the paddle's speed
+        ball->velocity.x += paddle->speed * 0.5f; // Scale the influence of the paddle's speed
 
         // Ensure the ball's x-velocity doesn't exceed a certain maximum
-        if (fabs(entities.ball.velocity.x) > entities.paddle.max_speed)
+        if (fabs(ball->velocity.x) > paddle->max_speed)
         {
-            entities.ball.velocity.x = (entities.ball.velocity.x > 0) ? entities.paddle.max_speed : -entities.paddle.max_speed;
+            ball->velocity.x = (ball->velocity.x > 0) ? paddle->max_speed : -paddle->max_speed;
         }
 
         // Increase score when the ball hits the paddle
@@ -60,18 +73,17 @@ static void state_update(float delta_time)
     }
 
     // Ball falls below the screen (you can add life loss or game over logic here)
-    if (entities.ball.position.y > game_settings.target_height)
+    if (ball->position.y > game_settings.target_height)
     {
         game_status.lives--;
         if (game_status.lives <= 0)
         {
-            state_cleanup();
             game_state_manager.change(game_state_manager.states.game_over, 1, game_status.score);
         }
         else
         {
-            entities.ball.reset(&entities.ball, (Vector2){160.0f, 90.0f});
-            entities.paddle.reset(&entities.paddle);
+            ball->reset(ball, (Vector2){160.0f, 90.0f});
+            paddle->reset(paddle);
         }
     }
 
@@ -85,8 +97,7 @@ static void state_update(float delta_time)
 static void state_render(void)
 {
     game_status.render(&game_status);
-    entities.paddle.render(&entities.paddle);
-    entities.ball.render(&entities.ball);
+    entities.render(&entities);
 }
 
 GameState playing_state = {
