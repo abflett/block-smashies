@@ -25,6 +25,7 @@ void load_settings(const char *filename)
     game_settings.logo_screen_time = 4.0f;
     game_settings.exitWindow = false;
     game_settings.is_paused = false;
+    game_settings.play_area = (Rectangle){104, 16, 200, 156};
 
     json_value_free(root_value);
 }
@@ -54,6 +55,7 @@ void set_default_settings(void)
     game_settings.target_height = 180;
     game_settings.logo_screen_time = 4.0f;
     game_settings.is_paused = false;
+    game_settings.play_area = (Rectangle){104, 16, 200, 156};
 }
 
 void init_game_from_settings(const char *settings_file)

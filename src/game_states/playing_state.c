@@ -16,8 +16,9 @@ static void state_init(int argc, va_list args)
 
         entities = create_entities();
         entities.add_paddle(&entities, create_paddle());
-        entities.add_ball(&entities, create_ball((Vector2){160.0f, 160.0f}));
-        entities.add_ball(&entities, create_ball((Vector2){160.0f, 170.0f}));
+        Paddle *first_paddle = &kv_A(entities.paddles, 0);
+        entities.add_ball(&entities, create_ball((Vector2){first_paddle->position.x + (first_paddle->size.x / 2), first_paddle->position.y - 3}));
+        entities.add_ball(&entities, create_ball((Vector2){first_paddle->position.x + (first_paddle->size.x / 2), first_paddle->position.y - 7}));
 
         int brick_row = 10;
         int brick_column = 10;
@@ -65,7 +66,7 @@ static void state_update(float delta_time)
     if (IsKeyPressed(KEY_ESCAPE))
     {
         game_settings.is_paused = true;
-        game_state_manager.change(game_state_manager.states.pause_menu, 0);
+        game_state_manager.change(game_state_manager.states.pause_menu, 1, &entities);
     }
 }
 

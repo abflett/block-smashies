@@ -1,12 +1,19 @@
 #include "raylib.h"
 #include "pause_menu_state.h"
 #include "game_state_manager.h"
+#include "resource_manager.h"
 #include "scene_manager.h"
 #include "game_settings.h"
+#include "entities.h"
+#include "resource_manager.h"
+
+Entities *entities;
+Texture2D background;
 
 static void state_init(int argc, va_list args)
 {
-    game_settings.is_paused = true;
+    background = resource_manager.get_texture("gameplay-bg")->texture;
+    entities = va_arg(args, Entities *);
 }
 
 static void state_update(float delta_time)
@@ -29,8 +36,27 @@ static void state_update(float delta_time)
 
 static void state_render(void)
 {
-    ClearBackground(BLACK);
-    DrawText("Menu, Escape to exit or Enter to continue playing!", 5, 10, 8, LIGHTGRAY);
+    DrawTexture(background, 0, 0, WHITE);
+    entities->render(entities);
+
+    DrawRectangle(0, game_settings.target_height / 2 - 40, game_settings.target_width, 80, (Color){0, 0, 0, 170});
+    // Text to be drawn
+    const char *text = "'Escape' to exit\n'Enter' to continue playing!";
+
+    // Font size
+    int fontSize = 8;
+
+    // Measure the width of the text
+    int textWidth = MeasureText(text, fontSize);
+
+    // Calculate the position to center the text horizontally
+    int posX = (game_settings.target_width - textWidth) / 2;
+
+    // Calculate the position to center the text vertically (within the rectangle)
+    int posY = (game_settings.target_height / 2) - (fontSize / 2) - fontSize;
+
+    // Draw the text at the calculated position
+    DrawText(text, posX, posY, fontSize, LIGHTGRAY);
 }
 
 static void state_cleanup(void)

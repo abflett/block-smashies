@@ -2,6 +2,7 @@
 #define GAME_SETTINGS_H
 
 #include <stdbool.h>
+#include <raylib.h>
 
 typedef struct
 {
@@ -14,6 +15,7 @@ typedef struct
     int target_height;
     float logo_screen_time;
     bool is_paused;
+    Rectangle play_area;
 } GameSettings;
 
 extern GameSettings game_settings;

@@ -10,12 +10,12 @@ static void update_ball(Ball *ball, Entities *entities, float delta_time)
     ball->position.x += ball->velocity.x * ball->speed_multiplier * delta_time;
     ball->position.y += ball->velocity.y * ball->speed_multiplier * delta_time;
 
-    if (ball->position.x - ball->radius <= 0 || ball->position.x + ball->radius >= game_settings.target_width)
+    if (ball->position.x - ball->radius <= game_settings.play_area.x || ball->position.x + ball->radius >= game_settings.play_area.width + game_settings.play_area.x)
     {
         ball->velocity.x *= -1;
     }
 
-    if (ball->position.y - ball->radius <= 0)
+    if (ball->position.y - ball->radius <= game_settings.play_area.y)
     {
         ball->velocity.y *= -1;
     }
@@ -44,7 +44,7 @@ static void update_ball(Ball *ball, Entities *entities, float delta_time)
                 entities->game_status.score += 10;
             }
 
-            if (ball->position.y > game_settings.target_height)
+            if (ball->position.y > game_settings.play_area.height + game_settings.play_area.y)
             {
                 ball->active = false;
 
