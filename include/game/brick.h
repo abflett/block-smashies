@@ -8,7 +8,7 @@ struct Entities;
 
 typedef struct Brick
 {
-    //Texture2D texture;
+    Texture2D texture;
     Vector2 position;
     int health;
     bool active;

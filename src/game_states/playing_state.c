@@ -14,13 +14,13 @@ static void state_init(int argc, va_list args)
         entities.add_ball(&entities, create_ball((Vector2){160.0f, 160.0f}));
         entities.add_ball(&entities, create_ball((Vector2){160.0f, 170.0f}));
 
-        int brick_row = 10;
+        int brick_row = 6;
         int brick_column = 10;
 
         float margin_left = 50.0f;
         float margin_top = 20.0f;
-        float row_spacing = 20.0f + 2; // Horizontal spacing (width of the brick + any gap)
-        float col_spacing = 5.0f + 2;  // Vertical spacing (height of the brick + any gap)
+        float row_spacing = 20.0f; // Horizontal spacing (width of the brick + any gap)
+        float col_spacing = 8.0f;  // Vertical spacing (height of the brick + any gap)
 
         for (int col = 0; col < brick_row; col++)
         {

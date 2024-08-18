@@ -9,6 +9,11 @@
       "id": "paddle",
       "file": "assets/textures/paddle.png",
       "type": "single"
+    },
+    {
+      "id": "greenbrick",
+      "file": "assets/textures/greenbrick.png",
+      "type": "single"
     }
   ]
 }

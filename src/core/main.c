@@ -4,6 +4,9 @@
 #include "scene_manager.h"
 #include "resource_manager.h"
 
+#define CLEAR_COLOR \
+    (Color) { 46, 34, 47, 255 }
+
 RenderTexture2D target_texture; // Render texture target
 
 int main(void)
@@ -45,14 +48,14 @@ void draw_game(void)
 {
     // Draw the current scene to the render texture
     BeginTextureMode(target_texture);
-    ClearBackground(BLACK);
+    ClearBackground(CLEAR_COLOR);
     scene_manager.render();
     EndTextureMode();
 
     // Draw the render texture to the screen with scaling
     BeginDrawing();
     {
-        ClearBackground(BLACK);
+        // ClearBackground(BLACK);
         DrawTexturePro(target_texture.texture,
                        (Rectangle){0, 0, (float)game_settings.target_width, -(float)game_settings.target_height},
                        (Rectangle){0, 0, (float)game_settings.screen_width, (float)game_settings.screen_height},
