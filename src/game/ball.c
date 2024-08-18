@@ -90,7 +90,7 @@ Ball create_ball(Vector2 initial_position)
     ball.texture = resource_manager.get_texture("ball")->texture;
     ball.radius = ball.texture.width / 4.0f; // Todo: check as the texture is scaled down.
     ball.position = initial_position;
-    ball.velocity = (Vector2){100.0f, -100.0f};
+    ball.velocity = (Vector2){40.0f, -40.0f};
     ball.speed_multiplier = 1.0f;
     ball.power = 1;
     ball.active = true;

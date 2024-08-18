@@ -1,24 +1,29 @@
+#include "raylib.h"
 #include "playing_state.h"
 #include "game_settings.h"
 #include "game_state_manager.h"
 #include "entities.h"
+#include "resource_manager.h"
 
 static Entities entities;
+static Texture2D background;
 
 static void state_init(int argc, va_list args)
 {
     if (!game_settings.is_paused)
     {
+        background = resource_manager.get_texture("gameplay-bg")->texture;
+
         entities = create_entities();
         entities.add_paddle(&entities, create_paddle());
         entities.add_ball(&entities, create_ball((Vector2){160.0f, 160.0f}));
         entities.add_ball(&entities, create_ball((Vector2){160.0f, 170.0f}));
 
-        int brick_row = 6;
+        int brick_row = 10;
         int brick_column = 10;
 
-        float margin_left = 50.0f;
-        float margin_top = 20.0f;
+        float margin_left = 104.0f;
+        float margin_top = 16.0f;
         float row_spacing = 20.0f; // Horizontal spacing (width of the brick + any gap)
         float col_spacing = 8.0f;  // Vertical spacing (height of the brick + any gap)
 
@@ -66,6 +71,7 @@ static void state_update(float delta_time)
 
 static void state_render(void)
 {
+    DrawTexture(background, 0, 0, WHITE);
     entities.render(&entities);
 }
 

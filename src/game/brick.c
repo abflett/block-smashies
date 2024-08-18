@@ -77,7 +77,7 @@ Brick create_brick(Vector2 initial_position)
     Brick brick;
     brick.texture = resource_manager.get_texture("greenbrick")->texture; // Load the brick texture (make sure to manage texture unloading later)
     brick.position = initial_position;
-    brick.health = 2;
+    brick.health = 1;
     brick.active = true;
     brick.update = update_brick;
     brick.render = render_brick;

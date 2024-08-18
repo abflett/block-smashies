@@ -1,5 +1,4 @@
 #include "raylib.h"
-#include "main.h"
 #include "game_settings.h"
 #include "scene_manager.h"
 #include "resource_manager.h"
@@ -7,33 +6,17 @@
 #define CLEAR_COLOR \
     (Color) { 46, 34, 47, 255 }
 
-RenderTexture2D target_texture; // Render texture target
+RenderTexture2D target_texture;
 
-int main(void)
+static init_game(void)
 {
-    init_game();
-
-    while (!game_settings.exitWindow)
-    {
-        float delta_time = GetFrameTime();
-        update_game(delta_time);
-        draw_game();
-    }
-
-    close_game();
-    return 0;
-}
-
-void init_game(void)
-{
-    SetTraceLogLevel(LOG_ALL);
     init_game_from_settings("settings.json");
     target_texture = LoadRenderTexture(game_settings.target_width, game_settings.target_height);
     resource_manager.load_resource_file("assets/config/resources.json");
     scene_manager.change(scene_manager.scenes.logo);
 }
 
-void update_game(float delta_time)
+static void update_game(float delta_time)
 {
     scene_manager.update(delta_time);
 
@@ -44,7 +27,7 @@ void update_game(float delta_time)
     }
 }
 
-void draw_game(void)
+static void draw_game(void)
 {
     // Draw the current scene to the render texture
     BeginTextureMode(target_texture);
@@ -66,7 +49,7 @@ void draw_game(void)
     EndDrawing();
 }
 
-void close_game(void)
+static void close_game(void)
 {
     if (scene_manager.current_scene && scene_manager.current_scene->cleanup)
     {
@@ -75,4 +58,19 @@ void close_game(void)
 
     UnloadRenderTexture(target_texture);
     CloseWindow();
+}
+
+int main(void)
+{
+    init_game();
+
+    while (!game_settings.exitWindow)
+    {
+        float delta_time = GetFrameTime();
+        update_game(delta_time);
+        draw_game();
+    }
+
+    close_game();
+    return 0;
 }
