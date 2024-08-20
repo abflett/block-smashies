@@ -46,6 +46,7 @@ set(GAME_STATES_SRC
 
 # Source files for game
 set(GAME_SRC
+    src/game/player.c
     src/game/paddle.c
     src/game/ball.c
     src/game/brick.c

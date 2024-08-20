@@ -4,6 +4,7 @@
 #include "game_state_manager.h"
 #include "entities.h"
 #include "resource_manager.h"
+#include "player.h"
 
 static Entities entities;
 static Texture2D background;
@@ -13,10 +14,12 @@ static void state_init(int argc, va_list args)
     if (!game_settings.is_paused)
     {
         background = resource_manager.get_texture("gameplay-bg")->texture;
+        Player player1 = create_new_player("Player 1");
+        Player player2 = create_new_player("Player 2");
 
         entities = create_entities();
-        entities.add_paddle(&entities, create_paddle(1));
-        entities.add_paddle(&entities, create_paddle(2));
+        entities.add_paddle(&entities, create_paddle(1, player1));
+        entities.add_paddle(&entities, create_paddle(2, player2));
         Paddle *first_paddle = &kv_A(entities.paddles, 0);
         entities.add_ball(&entities, create_ball((Vector2){first_paddle->position.x + (first_paddle->size.x / 2), first_paddle->position.y - 3}));
         entities.add_ball(&entities, create_ball((Vector2){first_paddle->position.x + (first_paddle->size.x / 2), first_paddle->position.y - 7}));
@@ -24,8 +27,6 @@ static void state_init(int argc, va_list args)
         int brick_row = 10;
         int brick_column = 10;
 
-        float margin_left = 104.0f;
-        float margin_top = 16.0f;
         float row_spacing = 20.0f; // Horizontal spacing (width of the brick + any gap)
         float col_spacing = 8.0f;  // Vertical spacing (height of the brick + any gap)
 
@@ -34,8 +35,8 @@ static void state_init(int argc, va_list args)
             for (int row = 0; row < brick_column; row++)
             {
                 entities.add_brick(&entities, create_brick((Vector2){
-                                                  row * row_spacing + margin_left,
-                                                  col * col_spacing + margin_top}));
+                                                  row * row_spacing + game_settings.play_area.x,
+                                                  col * col_spacing + game_settings.play_area.y}));
             }
         }
     }
