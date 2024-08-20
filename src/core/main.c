@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include "time.h"
 #include "game_settings.h"
 #include "scene_manager.h"
 #include "resource_manager.h"
@@ -62,6 +63,7 @@ static void close_game(void)
 
 int main(void)
 {
+    srand((unsigned int)time(NULL));
     init_game();
 
     while (!game_settings.exitWindow)

@@ -1,12 +1,16 @@
 #include <stdlib.h>
+#include <time.h>
 #include "entities.h"
 #include "ball.h"
 #include "paddle.h"
 #include "brick.h"
 #include "player.h"
 
-static void add_ball_func(Entities *entities, Player *player)
+static void add_ball_func(Entities *entities, Player *player, Paddle *paddle)
 {
+
+    float random_x = -50.0f + ((float)rand() / RAND_MAX) * 100.0f;
+
     // Check for an inactive ball slot first
     for (int i = 0; i < kv_size(entities->balls); i++)
     {
@@ -14,13 +18,13 @@ static void add_ball_func(Entities *entities, Player *player)
         if (!existing_ball->active)
         {
             // Reuse this inactive slot
-            *existing_ball = create_ball(player);
+            *existing_ball = create_ball(player, (Vector2){paddle->position.x + (paddle->size.x / 2), paddle->position.y - 2}, (Vector2){random_x, -50});
             return;
         }
     }
 
     // If no inactive slot was found, add a new ball to the array
-    kv_push(Ball, entities->balls, create_ball(player));
+    kv_push(Ball, entities->balls, create_ball(player, (Vector2){paddle->position.x + (paddle->size.x / 2), paddle->position.y - 2}, (Vector2){random_x, -50}));
 }
 
 static void add_paddle_func(Entities *entities, Player *player)

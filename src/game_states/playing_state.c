@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include "kvec.h"
 #include "playing_state.h"
 #include "game_settings.h"
 #include "game_state_manager.h"
@@ -9,18 +10,27 @@
 static Entities entities;
 static Texture2D *background;
 static Player player;
+static bool is_hold;
 
 static void state_init(int argc, va_list args)
 {
+
     if (!game_settings.is_paused)
     {
+        is_hold = true;
+
         background = &resource_manager.get_texture("gameplay-bg")->texture;
         player = create_new_player("Player 1");
         entities = create_entities();
 
         entities.add_paddle(&entities, &player);
         entities.add_paddle(&entities, &player);
-        entities.add_ball(&entities, &player);
+
+        Paddle *paddle = &kv_A(entities.paddles, 0); // player1 paddle
+        for (int i = 0; i < 1000; i++)
+        {
+            entities.add_ball(&entities, &player, paddle);
+        }
 
         int brick_row = 10;
         int brick_column = 10;
@@ -56,17 +66,21 @@ static void state_cleanup(void)
 
 static void state_update(float delta_time)
 {
-    entities.update(&entities, delta_time);
-
-    if (entities.game_status.lives <= 0)
+    if (!is_hold || IsKeyPressed(KEY_SPACE))
     {
-        game_state_manager.change(game_state_manager.states.game_over, 1, entities.game_status.score);
-    }
+        is_hold = false;
+        entities.update(&entities, delta_time);
 
-    if (IsKeyPressed(KEY_ESCAPE))
-    {
-        game_settings.is_paused = true;
-        game_state_manager.change(game_state_manager.states.pause_menu, 1, &entities);
+        if (entities.game_status.lives <= 0)
+        {
+            game_state_manager.change(game_state_manager.states.game_over, 1, entities.game_status.score);
+        }
+
+        if (IsKeyPressed(KEY_ESCAPE))
+        {
+            game_settings.is_paused = true;
+            game_state_manager.change(game_state_manager.states.pause_menu, 1, &entities);
+        }
     }
 }
 

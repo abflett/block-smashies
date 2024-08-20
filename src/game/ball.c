@@ -31,16 +31,20 @@ static void update_ball(Ball *ball, Entities *entities, float delta_time)
             bool collision = CheckCollisionCircleRec(ball->position, ball->radius, paddle->get_hitbox(paddle));
             if (collision)
             {
-                ball->velocity.y *= -1;                               // Reverse vertical direction
-                ball->position.y = paddle->position.y - ball->radius; // Prevent the ball from sticking to the paddle
+                ball->velocity.y *= -1;
+                ball->position.y = paddle->position.y - ball->radius;
 
                 // Adjust the ball's x-velocity based on the paddle's speed
-                ball->velocity.x += paddle->speed * 0.5f; // Scale the influence of the paddle's speed
+                if (paddle->speed > 0.0f)
+                    ball->velocity.x += paddle->speed * 0.5f; // Scale the influence of the paddle's speed
 
                 // Ensure the ball's x-velocity doesn't exceed a certain maximum
                 if (fabs(ball->velocity.x) > *paddle->max_speed)
                 {
-                    ball->velocity.x = (ball->velocity.x > 0) ? *paddle->max_speed : -*paddle->max_speed;
+                    if (fabs(ball->velocity.x) > *paddle->max_speed)
+                    {
+                        ball->velocity.x = (ball->velocity.x > 0) ? *paddle->max_speed : -(*paddle->max_speed);
+                    }
                 }
 
                 // Increase score when the ball hits the paddle
@@ -77,7 +81,7 @@ static void update_ball(Ball *ball, Entities *entities, float delta_time)
 static void reset_ball(Ball *ball, Vector2 initial_position)
 {
     ball->position = initial_position;
-    ball->velocity = (Vector2){100.0f, -100.0f};
+    ball->velocity = (Vector2){50.0f, -50.0f};
     *ball->speed_multiplier = 1.0f;
 }
 
@@ -87,13 +91,13 @@ static void render_ball(Ball *ball)
     DrawTextureEx(ball->texture, (Vector2){ball->position.x - ball->radius, ball->position.y - ball->radius}, 0.0f, 0.5f, WHITE);
 }
 
-Ball create_ball(Player *player)
+Ball create_ball(Player *player, Vector2 position, Vector2 velocity)
 {
     Ball ball;
     ball.texture = resource_manager.get_texture("ball")->texture;
     ball.radius = ball.texture.width / 4.0f; // Todo: check as the texture is scaled down.
-    ball.position = (Vector2){150.0f, 40.0f};
-    ball.velocity = (Vector2){40.0f, -40.0f};
+    ball.position = position;
+    ball.velocity = velocity;
     ball.speed_multiplier = &player->ball.speed_multiplier;
     ball.power = &player->ball.power;
     ball.phase_nova = &player->perks.phase_shift;

@@ -19,7 +19,7 @@ typedef struct Entities
     BrickVector bricks;
     GameStatus game_status;
 
-    void (*add_ball)(struct Entities *entities, Player *player);
+    void (*add_ball)(struct Entities *entities, Player *player, Paddle *paddle);
     void (*add_paddle)(struct Entities *entities, Player *player);
     void (*add_brick)(struct Entities *entities, Brick brick);
     void (*remove_ball)(struct Entities *entities, int index);

@@ -23,6 +23,6 @@ typedef struct Ball
     void (*render)(struct Ball *ball);
 } Ball;
 
-Ball create_ball(Player *player);
+Ball create_ball(Player *player, Vector2 position, Vector2 velocity);
 
 #endif
