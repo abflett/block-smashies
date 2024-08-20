@@ -1,15 +1,16 @@
 #include <stdbool.h>
 #include <math.h>
+#include "raylib.h"
+#include "raymath.h"
 #include "ball.h"
 #include "entities.h"
 #include "resource_manager.h"
 #include "game_settings.h"
 #include "player.h"
+#include "ext_collision.h"
 
 static void update_ball(Ball *ball, Entities *entities, float delta_time)
 {
-    TraceLog(LOG_INFO, "Speed Multiplier: %f", *ball->speed_multiplier);
-
     ball->position.x += ball->velocity.x * *ball->speed_multiplier * delta_time;
     ball->position.y += ball->velocity.y * *ball->speed_multiplier * delta_time;
 
@@ -29,7 +30,21 @@ static void update_ball(Ball *ball, Entities *entities, float delta_time)
         Paddle *paddle = &kv_A(entities->paddles, i);
         if (paddle->active)
         {
-            bool collision = CheckCollisionCircleRec(ball->position, ball->radius, paddle->get_hitbox(paddle));
+            PointLine point_line = check_collision_thick_line_rect(
+                ball->position,
+                Vector2Add(
+                    ball->position,
+                    (Vector2){
+                        ball->velocity.x * *ball->speed_multiplier * delta_time,
+                        ball->velocity.y * *ball->speed_multiplier * delta_time}),
+                ball->radius,
+                paddle->get_hitbox(paddle));
+            if (point_line.collision)
+            {
+                TraceLog(LOG_INFO, "Gonna colide with paddle, remaining line: %f", point_line.line);
+            }
+
+            bool collision = point_line.collision; // CheckCollisionCircleRec(ball->position, ball->radius, paddle->get_hitbox(paddle));
             if (collision)
             {
                 ball->velocity.y *= -1;
