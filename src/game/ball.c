@@ -96,6 +96,8 @@ Ball create_ball(Player *player)
     ball.velocity = (Vector2){40.0f, -40.0f};
     ball.speed_multiplier = &player->ball.speed_multiplier;
     ball.power = &player->ball.power;
+    ball.phase_nova = &player->perks.phase_shift;
+    ball.super_nova = &player->perks.super_nova;
     ball.active = true;
     ball.update = update_ball;
     ball.reset = reset_ball;

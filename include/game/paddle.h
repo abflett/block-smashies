@@ -18,6 +18,9 @@ typedef struct Paddle
     float *charge;
     float *booster_str;
     float *pulse_str;
+    float *phase_shift;
+    bool *time_manipulation;
+    bool *orb_shot;
     void (*update)(struct Paddle *paddle, float delta_time);
     void (*reset)(struct Paddle *paddle);
     void (*render)(struct Paddle *paddle);

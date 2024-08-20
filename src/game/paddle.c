@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdbool.h>
 #include "paddle.h"
 #include "raylib.h"
 #include "resource_manager.h"
@@ -92,6 +93,9 @@ Paddle create_paddle(int player_num, Player *player)
     paddle.charge = &player->paddle.charge;
     paddle.booster_str = &player->paddle.booster_str;
     paddle.pulse_str = &player->paddle.pulse_str;
+    paddle.phase_shift = &player->perks.phase_shift;
+    paddle.time_manipulation = &player->perks.time_manipulation;
+    paddle.orb_shot = &player->perks.orb_shot;
     paddle.update = update_paddle;
     paddle.reset = reset_paddle;
     paddle.render = render_paddle;

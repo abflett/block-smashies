@@ -15,6 +15,8 @@ typedef struct Ball
     float radius;
     float *speed_multiplier;
     int *power;
+    float *phase_nova;
+    float *super_nova;
     bool active;
     void (*update)(struct Ball *ball, struct Entities *entities, float delta_time);
     void (*reset)(struct Ball *ball, Vector2 initial_position);
