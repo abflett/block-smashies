@@ -8,6 +8,7 @@ Player create_new_player(const char *name)
     // Set the player's name
     strncpy(new_player.name, name, sizeof(new_player.name) - 1);
     new_player.name[sizeof(new_player.name) - 1] = '\0'; // Ensure null termination
+    new_player.lives = 3;                                // Starting lives
 
     // Initialize player progress
     new_player.operation_complete = 0;
@@ -21,7 +22,6 @@ Player create_new_player(const char *name)
     new_player.paddle.charge = 0.0f;
     new_player.paddle.booster_str = 1.0f;
     new_player.paddle.pulse_str = 1.0f;
-    new_player.paddle.lives = 3; // Starting lives
 
     // Initialize ball attributes
     new_player.ball.speed_multiplier = 1.0f;

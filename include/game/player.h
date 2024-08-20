@@ -11,7 +11,6 @@ typedef struct
     float charge;
     float booster_str;
     float pulse_str;
-    int lives;
 } PaddleAttributes;
 
 typedef struct
@@ -35,6 +34,7 @@ typedef struct Player
     int operation_complete;
     int mission_complete;
     int currency;
+    int lives;
 
     PaddleAttributes paddle;
     BallAttributes ball;

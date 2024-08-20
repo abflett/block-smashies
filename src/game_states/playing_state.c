@@ -7,14 +7,14 @@
 #include "player.h"
 
 static Entities entities;
-static Texture2D background;
+static Texture2D *background;
 static Player player;
 
 static void state_init(int argc, va_list args)
 {
     if (!game_settings.is_paused)
     {
-        background = resource_manager.get_texture("gameplay-bg")->texture;
+        background = &resource_manager.get_texture("gameplay-bg")->texture;
         player = create_new_player("Player 1");
         entities = create_entities();
 
@@ -72,7 +72,7 @@ static void state_update(float delta_time)
 
 static void state_render(void)
 {
-    DrawTexture(background, 0, 0, WHITE);
+    DrawTexture(*background, 0, 0, WHITE);
     entities.render(&entities);
 }
 

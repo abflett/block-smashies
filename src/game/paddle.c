@@ -6,9 +6,6 @@
 #include "player.h"
 
 #define DEFAULT_SPEED 0.0f
-#define ACCELERATION 700.0f
-#define MAX_SPEED 300.0f
-#define FRICTION 0.95f
 #define BOTTOM_PADDING 5
 
 static void handle_player_input(Paddle *paddle, float delta_time, int key_left, int key_right)
@@ -51,11 +48,13 @@ static void update_paddle(Paddle *paddle, float delta_time)
     if (paddle->position.x < game_settings.play_area.x)
     {
         paddle->position.x = game_settings.play_area.x;
+        paddle->speed = DEFAULT_SPEED;
     }
 
     if (paddle->position.x + paddle->size.x > (game_settings.play_area.width + game_settings.play_area.x))
     {
         paddle->position.x = (game_settings.play_area.width + game_settings.play_area.x) - paddle->size.x;
+        paddle->speed = DEFAULT_SPEED;
     }
 }
 
@@ -90,6 +89,9 @@ Paddle create_paddle(int player_num, Player *player)
     paddle.acceleration = &player->paddle.acceleration;
     paddle.max_speed = &player->paddle.max_speed;
     paddle.friction = &player->paddle.friction;
+    paddle.charge = &player->paddle.charge;
+    paddle.booster_str = &player->paddle.booster_str;
+    paddle.pulse_str = &player->paddle.pulse_str;
     paddle.update = update_paddle;
     paddle.reset = reset_paddle;
     paddle.render = render_paddle;

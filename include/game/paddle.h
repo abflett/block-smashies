@@ -15,6 +15,9 @@ typedef struct Paddle
     float *acceleration;
     float *max_speed;
     float *friction;
+    float *charge;
+    float *booster_str;
+    float *pulse_str;
     void (*update)(struct Paddle *paddle, float delta_time);
     void (*reset)(struct Paddle *paddle);
     void (*render)(struct Paddle *paddle);
