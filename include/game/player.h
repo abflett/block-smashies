@@ -42,6 +42,6 @@ typedef struct Player
 
 } Player;
 
-Player create_new_player(const char *name)
+Player create_new_player(const char *name);
 
 #endif
