@@ -25,6 +25,7 @@ set(CORE_SRC
     src/core/game_settings.c
     src/core/high_score.c
     src/core/resource_manager.c
+    src/core/ext_collision.c
 )
 
 # Source files for scenes
