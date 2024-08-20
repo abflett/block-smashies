@@ -5,7 +5,7 @@
 #include "brick.h"
 #include "player.h"
 
-static void add_ball_func(Entities *entities, Ball ball)
+static void add_ball_func(Entities *entities, Player *player)
 {
     // Check for an inactive ball slot first
     for (int i = 0; i < kv_size(entities->balls); i++)
@@ -14,14 +14,13 @@ static void add_ball_func(Entities *entities, Ball ball)
         if (!existing_ball->active)
         {
             // Reuse this inactive slot
-            *existing_ball = ball; // Todo: reset ball instead of creating a new;
-            existing_ball->active = true;
+            *existing_ball = create_ball(player);
             return;
         }
     }
 
     // If no inactive slot was found, add a new ball to the array
-    kv_push(Ball, entities->balls, ball);
+    kv_push(Ball, entities->balls, create_ball(player));
 }
 
 static void add_paddle_func(Entities *entities, Player *player)
@@ -31,8 +30,8 @@ static void add_paddle_func(Entities *entities, Player *player)
         Paddle *paddle = &kv_A(entities->paddles, i);
         if (!paddle->active)
         {
-            *paddle = create_paddle(i + 1, player); // Assign to the existing Paddle struct
-            return;                                 // Exit the function after reusing an inactive paddle
+            *paddle = create_paddle(i + 1, player);
+            return;
         }
     }
 
@@ -41,20 +40,17 @@ static void add_paddle_func(Entities *entities, Player *player)
 
 static void add_brick_func(Entities *entities, Brick brick)
 {
-    // Check for an inactive brick slot first
     for (int i = 0; i < kv_size(entities->bricks); i++)
     {
         Brick *existing_brick = &kv_A(entities->bricks, i);
         if (!existing_brick->active)
         {
-            // Reuse this inactive slot
-            *existing_brick = brick; // Replace the inactive brick with the new brick data
+            *existing_brick = brick;
             existing_brick->active = true;
             return;
         }
     }
 
-    // If no inactive slot was found, add a new brick to the array
     kv_push(Brick, entities->bricks, brick);
 }
 

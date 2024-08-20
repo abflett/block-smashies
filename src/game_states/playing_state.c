@@ -20,7 +20,7 @@ static void state_init(int argc, va_list args)
 
         entities.add_paddle(&entities, &player);
         entities.add_paddle(&entities, &player);
-        entities.add_ball(&entities, create_ball(&player));
+        entities.add_ball(&entities, &player);
 
         int brick_row = 10;
         int brick_column = 10;
