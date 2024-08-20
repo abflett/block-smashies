@@ -1,5 +1,5 @@
-// ext_collision.c
 #include "raylib.h"
+#include "raymath.h"
 #include "ext_collision.h"
 
 static Edges rect_to_ext_edges(Rectangle rectangle, float radius)
@@ -31,7 +31,7 @@ static void point_line(PointLine *result, Vector2 line_start, Vector2 line_end, 
 {
     Vector2 collisionPoint;
 
-    if (check_collision_lines(line_start, line_end, edge_start, edge_end, &collisionPoint))
+    if (CheckCollisionLines(line_start, line_end, edge_start, edge_end, &collisionPoint))
     {
         float distance = Vector2Length(Vector2Subtract(line_start, collisionPoint));
         if (distance < *closestDistance)
