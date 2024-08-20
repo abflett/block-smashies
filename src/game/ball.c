@@ -4,11 +4,14 @@
 #include "entities.h"
 #include "resource_manager.h"
 #include "game_settings.h"
+#include "player.h"
 
 static void update_ball(Ball *ball, Entities *entities, float delta_time)
 {
-    ball->position.x += ball->velocity.x * ball->speed_multiplier * delta_time;
-    ball->position.y += ball->velocity.y * ball->speed_multiplier * delta_time;
+    TraceLog(LOG_INFO, "Speed Multiplier: %f", *ball->speed_multiplier);
+
+    ball->position.x += ball->velocity.x * *ball->speed_multiplier * delta_time;
+    ball->position.y += ball->velocity.y * *ball->speed_multiplier * delta_time;
 
     if (ball->position.x - ball->radius <= game_settings.play_area.x || ball->position.x + ball->radius >= game_settings.play_area.width + game_settings.play_area.x)
     {
@@ -35,9 +38,9 @@ static void update_ball(Ball *ball, Entities *entities, float delta_time)
                 ball->velocity.x += paddle->speed * 0.5f; // Scale the influence of the paddle's speed
 
                 // Ensure the ball's x-velocity doesn't exceed a certain maximum
-                if (fabs(ball->velocity.x) > paddle->max_speed)
+                if (fabs(ball->velocity.x) > *paddle->max_speed)
                 {
-                    ball->velocity.x = (ball->velocity.x > 0) ? paddle->max_speed : -paddle->max_speed;
+                    ball->velocity.x = (ball->velocity.x > 0) ? *paddle->max_speed : -*paddle->max_speed;
                 }
 
                 // Increase score when the ball hits the paddle
@@ -75,7 +78,7 @@ static void reset_ball(Ball *ball, Vector2 initial_position)
 {
     ball->position = initial_position;
     ball->velocity = (Vector2){100.0f, -100.0f};
-    ball->speed_multiplier = 1.0f;
+    *ball->speed_multiplier = 1.0f;
 }
 
 static void render_ball(Ball *ball)
@@ -84,15 +87,15 @@ static void render_ball(Ball *ball)
     DrawTextureEx(ball->texture, (Vector2){ball->position.x - ball->radius, ball->position.y - ball->radius}, 0.0f, 0.5f, WHITE);
 }
 
-Ball create_ball(Vector2 initial_position)
+Ball create_ball(Player *player)
 {
     Ball ball;
     ball.texture = resource_manager.get_texture("ball")->texture;
     ball.radius = ball.texture.width / 4.0f; // Todo: check as the texture is scaled down.
-    ball.position = initial_position;
+    ball.position = (Vector2){150.0f, 40.0f};
     ball.velocity = (Vector2){40.0f, -40.0f};
-    ball.speed_multiplier = 1.0f;
-    ball.power = 1;
+    ball.speed_multiplier = &player->ball.speed_multiplier;
+    ball.power = &player->ball.power;
     ball.active = true;
     ball.update = update_ball;
     ball.reset = reset_ball;

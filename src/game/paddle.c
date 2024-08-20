@@ -15,16 +15,16 @@ static void handle_player_input(Paddle *paddle, float delta_time, int key_left, 
 {
     if (IsKeyDown(key_left))
     {
-        paddle->speed -= paddle->acceleration * delta_time;
-        if (paddle->speed < -paddle->max_speed)
-            paddle->speed = -paddle->max_speed;
+        paddle->speed -= *paddle->acceleration * delta_time;
+        if (paddle->speed < -*paddle->max_speed)
+            paddle->speed = -*paddle->max_speed;
     }
 
     if (IsKeyDown(key_right))
     {
-        paddle->speed += paddle->acceleration * delta_time;
-        if (paddle->speed > paddle->max_speed)
-            paddle->speed = paddle->max_speed;
+        paddle->speed += *paddle->acceleration * delta_time;
+        if (paddle->speed > *paddle->max_speed)
+            paddle->speed = *paddle->max_speed;
     }
 }
 
@@ -45,7 +45,7 @@ static void update_paddle(Paddle *paddle, float delta_time)
         break;
     }
 
-    paddle->speed *= paddle->friction;
+    paddle->speed *= *paddle->friction;
     paddle->position.x += paddle->speed * delta_time;
 
     if (paddle->position.x < game_settings.play_area.x)
@@ -77,7 +77,7 @@ static Rectangle get_hitbox_func(Paddle *paddle)
     return (Rectangle){paddle->position.x, paddle->position.y, paddle->size.x, paddle->size.y};
 }
 
-Paddle create_paddle(int player_num, Player player)
+Paddle create_paddle(int player_num, Player *player)
 {
     Paddle paddle;
     paddle.texture = resource_manager.get_texture("paddle")->texture;
@@ -87,9 +87,9 @@ Paddle create_paddle(int player_num, Player player)
         ((game_settings.play_area.width) / 2) - (paddle.size.x / 2) + game_settings.play_area.x,
         (game_settings.play_area.height) - paddle.size.y + game_settings.play_area.y - BOTTOM_PADDING};
     paddle.speed = DEFAULT_SPEED;
-    paddle.acceleration = player.paddle.acceleration;
-    paddle.max_speed = player.paddle.max_speed;
-    paddle.friction = player.paddle.friction;
+    paddle.acceleration = &player->paddle.acceleration;
+    paddle.max_speed = &player->paddle.max_speed;
+    paddle.friction = &player->paddle.friction;
     paddle.update = update_paddle;
     paddle.reset = reset_paddle;
     paddle.render = render_paddle;

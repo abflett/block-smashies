@@ -12,16 +12,16 @@ typedef struct Paddle
     Vector2 size;
     int player_num;
     float speed;
-    float acceleration;
-    float max_speed;
-    float friction;
+    float *acceleration;
+    float *max_speed;
+    float *friction;
     void (*update)(struct Paddle *paddle, float delta_time);
     void (*reset)(struct Paddle *paddle);
-    void (*render)(struct Paddle *paddle); // Corrected function signature
+    void (*render)(struct Paddle *paddle);
     Rectangle (*get_hitbox)(struct Paddle *paddle);
     bool active;
 } Paddle;
 
-Paddle create_paddle(int player_num, Player player);
+Paddle create_paddle(int player_num, Player *player);
 
 #endif

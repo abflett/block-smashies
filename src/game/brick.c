@@ -14,7 +14,7 @@ static void update_brick(Brick *brick, struct Entities *entities, float delta_ti
             bool collision = CheckCollisionCircleRec(ball->position, ball->radius, hitbox);
             if (collision)
             {
-                brick->health -= ball->power;
+                brick->health -= *ball->power;
 
                 // Check where the ball hit the brick
                 float ball_center_x = ball->position.x;
