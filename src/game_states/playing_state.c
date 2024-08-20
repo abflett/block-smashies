@@ -15,7 +15,8 @@ static void state_init(int argc, va_list args)
         background = resource_manager.get_texture("gameplay-bg")->texture;
 
         entities = create_entities();
-        entities.add_paddle(&entities, create_paddle());
+        entities.add_paddle(&entities, create_paddle(1));
+        entities.add_paddle(&entities, create_paddle(2));
         Paddle *first_paddle = &kv_A(entities.paddles, 0);
         entities.add_ball(&entities, create_ball((Vector2){first_paddle->position.x + (first_paddle->size.x / 2), first_paddle->position.y - 3}));
         entities.add_ball(&entities, create_ball((Vector2){first_paddle->position.x + (first_paddle->size.x / 2), first_paddle->position.y - 7}));

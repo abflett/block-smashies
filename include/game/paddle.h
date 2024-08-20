@@ -9,6 +9,7 @@ typedef struct Paddle
     Texture2D texture;
     Vector2 position;
     Vector2 size;
+    int player;
     float speed;
     float acceleration;
     float max_speed;
@@ -20,6 +21,6 @@ typedef struct Paddle
     bool active;
 } Paddle;
 
-Paddle create_paddle(void);
+Paddle create_paddle(int player);
 
 #endif
