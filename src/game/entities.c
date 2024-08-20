@@ -8,23 +8,19 @@
 
 static void add_ball_func(Entities *entities, Player *player, Paddle *paddle)
 {
-
     float random_x = -50.0f + ((float)rand() / RAND_MAX) * 100.0f;
 
-    // Check for an inactive ball slot first
     for (int i = 0; i < kv_size(entities->balls); i++)
     {
         Ball *existing_ball = &kv_A(entities->balls, i);
         if (!existing_ball->active)
         {
-            // Reuse this inactive slot
             *existing_ball = create_ball(player, (Vector2){paddle->position.x + (paddle->size.x / 2), paddle->position.y - 2}, (Vector2){random_x, -50});
             return;
         }
     }
 
-    // If no inactive slot was found, add a new ball to the array
-    kv_push(Ball, entities->balls, create_ball(player, (Vector2){paddle->position.x + (paddle->size.x / 2), paddle->position.y - 2}, (Vector2){random_x, -50}));
+    kv_push(Ball, entities->balls, create_ball(player, (Vector2){paddle->position.x + (paddle->size.x / 2), paddle->position.y - 2}, (Vector2){random_x, -200}));
 }
 
 static void add_paddle_func(Entities *entities, Player *player)

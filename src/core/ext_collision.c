@@ -27,33 +27,31 @@ static Edges rect_to_ext_edges(Rectangle rectangle, float radius)
     return (Edges){leftEdge, rightEdge, topEdge, bottomEdge};
 }
 
-static void point_line(PointLine *result, Vector2 line_start, Vector2 line_end, Vector2 edge_start, Vector2 edge_end, float *closestDistance)
+static void check_collision_with_edge(CollisionResult *result, Vector2 line_start, Vector2 line_end, Edge edge, CollisionSide side)
 {
     Vector2 collisionPoint;
-
-    if (CheckCollisionLines(line_start, line_end, edge_start, edge_end, &collisionPoint))
+    if (CheckCollisionLines(line_start, line_end, edge.start, edge.end, &collisionPoint))
     {
         float distance = Vector2Length(Vector2Subtract(line_start, collisionPoint));
-        if (distance < *closestDistance)
+        if (distance < result->remaining_line)
         {
-            *closestDistance = distance;
-            result->collision = true;
+            result->collided = true;
             result->point = collisionPoint;
-            result->line = Vector2Length(Vector2Subtract(line_end, collisionPoint));
+            result->remaining_line = Vector2Length(Vector2Subtract(line_end, collisionPoint));
+            result->side = side;
         }
     }
 }
 
-PointLine check_collision_thick_line_rect(Vector2 line_start, Vector2 line_end, float radius, Rectangle rect)
+CollisionResult check_collision_thick_line_rect(Vector2 line_start, Vector2 line_end, float radius, Rectangle rect)
 {
-    PointLine result = {false, {0, 0}, -1.0f};
+    CollisionResult result = {false, {0, 0}, 2000.0f, SIDE_NONE};
     Edges edges = rect_to_ext_edges(rect, radius);
-    float closestDistance = 1920.0f; // Set to a large number initially
 
-    point_line(&result, line_start, line_end, edges.left.start, edges.left.end, &closestDistance);
-    point_line(&result, line_start, line_end, edges.right.start, edges.right.end, &closestDistance);
-    point_line(&result, line_start, line_end, edges.top.start, edges.top.end, &closestDistance);
-    point_line(&result, line_start, line_end, edges.bottom.start, edges.bottom.end, &closestDistance);
+    check_collision_with_edge(&result, line_start, line_end, edges.left, SIDE_LEFT);
+    check_collision_with_edge(&result, line_start, line_end, edges.right, SIDE_RIGHT);
+    check_collision_with_edge(&result, line_start, line_end, edges.top, SIDE_TOP);
+    check_collision_with_edge(&result, line_start, line_end, edges.bottom, SIDE_BOTTOM);
 
     return result;
 }

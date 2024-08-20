@@ -4,6 +4,15 @@
 #include "raylib.h"
 #include "stdbool.h"
 
+typedef enum CollisionSide
+{
+    SIDE_NONE,
+    SIDE_LEFT,
+    SIDE_RIGHT,
+    SIDE_TOP,
+    SIDE_BOTTOM
+} CollisionSide;
+
 typedef struct Edge
 {
     Vector2 start;
@@ -18,13 +27,14 @@ typedef struct Edges
     Edge bottom;
 } Edges;
 
-typedef struct PointLine
+typedef struct CollisionResult
 {
-    bool collision; // has collided
-    Vector2 point;  // point of collision
-    float line;     // remaining line after subracting from point of collision
-} PointLine;
+    bool collided;        // has collided
+    Vector2 point;        // point of collision
+    float remaining_line; // remaining line after subracting from point of collision
+    CollisionSide side;   // which side was collided with
+} CollisionResult;
 
-PointLine check_collision_thick_line_rect(Vector2 line_start, Vector2 line_end, float radius, Rectangle rect);
+CollisionResult check_collision_thick_line_rect(Vector2 line_start, Vector2 line_end, float radius, Rectangle rect);
 
 #endif
