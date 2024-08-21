@@ -17,6 +17,7 @@ typedef struct Ball
     int *power;
     float *phase_nova;
     float *super_nova;
+    float *max_speed;
     bool active;
     void (*update)(struct Ball *ball, struct Entities *entities, float delta_time);
     void (*reset)(struct Ball *ball, Vector2 initial_position);

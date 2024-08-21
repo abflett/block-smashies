@@ -17,6 +17,7 @@ typedef struct
 {
     float speed_multiplier;
     int power;
+    float max_speed;
 } BallAttributes;
 
 typedef struct

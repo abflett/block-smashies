@@ -27,7 +27,7 @@ static void state_init(int argc, va_list args)
         entities.add_paddle(&entities, &player);
 
         Paddle *paddle = &kv_A(entities.paddles, 0); // player1 paddle
-        for (int i = 0; i < 500; i++)
+        for (int i = 0; i < 2000; i++)
         {
             entities.add_ball(&entities, &player, paddle);
         }

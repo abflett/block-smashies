@@ -5,57 +5,7 @@
 
 static void update_brick(Brick *brick, struct Entities *entities, float delta_time)
 {
-    for (int i = 0; i < kv_size(entities->balls); i++)
-    {
-        Ball *ball = &kv_A(entities->balls, i);
-        if (ball->active)
-        {
-            Rectangle hitbox = brick->get_hitbox(brick);
-            bool collision = CheckCollisionCircleRec(ball->position, ball->radius, hitbox);
-            if (collision)
-            {
-                brick->health -= *ball->power;
-
-                // Check where the ball hit the brick
-                float ball_center_x = ball->position.x;
-                float ball_center_y = ball->position.y;
-
-                // Check if the ball hit the top or bottom of the brick
-                if (ball_center_y < hitbox.y || ball_center_y > hitbox.y + hitbox.height)
-                {
-                    ball->velocity.y *= -1; // Reverse the ball's vertical direction
-                }
-                // Check if the ball hit the left or right side of the brick
-                else if (ball_center_x < hitbox.x || ball_center_x > hitbox.x + hitbox.width)
-                {
-                    ball->velocity.x *= -1; // Reverse the ball's horizontal direction
-                }
-
-                // Optional: Adjust the ball's position slightly to prevent "sticking"
-                if (ball_center_y < hitbox.y)
-                {
-                    ball->position.y = hitbox.y - ball->radius;
-                }
-                else if (ball_center_y > hitbox.y + hitbox.height)
-                {
-                    ball->position.y = hitbox.y + hitbox.height + ball->radius;
-                }
-                else if (ball_center_x < hitbox.x)
-                {
-                    ball->position.x = hitbox.x - ball->radius;
-                }
-                else if (ball_center_x > hitbox.x + hitbox.width)
-                {
-                    ball->position.x = hitbox.x + hitbox.width + ball->radius;
-                }
-
-                if (brick->health <= 0)
-                {
-                    brick->active = false;
-                }
-            }
-        }
-    }
+    
 }
 
 static void render_brick(Brick *brick)

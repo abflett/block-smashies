@@ -15,12 +15,12 @@ static void add_ball_func(Entities *entities, Player *player, Paddle *paddle)
         Ball *existing_ball = &kv_A(entities->balls, i);
         if (!existing_ball->active)
         {
-            *existing_ball = create_ball(player, (Vector2){paddle->position.x + (paddle->size.x / 2), paddle->position.y - 2}, (Vector2){random_x, -50});
+            *existing_ball = create_ball(player, (Vector2){paddle->position.x + (paddle->size.x / 2), paddle->position.y - 2}, (Vector2){random_x, -100});
             return;
         }
     }
 
-    kv_push(Ball, entities->balls, create_ball(player, (Vector2){paddle->position.x + (paddle->size.x / 2), paddle->position.y - 2}, (Vector2){random_x, -200}));
+    kv_push(Ball, entities->balls, create_ball(player, (Vector2){paddle->position.x + (paddle->size.x / 2), paddle->position.y - 2}, (Vector2){random_x, -100}));
 }
 
 static void add_paddle_func(Entities *entities, Player *player)

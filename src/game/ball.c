@@ -56,6 +56,50 @@ static void handle_wall_collisions(Ball *ball)
     }
 }
 
+static void handle_brick_collisions(Ball *ball, Brick *brick, Entities *entities, float delta_time)
+{
+    CollisionResult collision_result = check_collision_thick_line_rect(
+        ball->position,
+        Vector2Add(
+            ball->position,
+            (Vector2){
+                ball->velocity.x * *ball->speed_multiplier * delta_time,
+                ball->velocity.y * *ball->speed_multiplier * delta_time}),
+        ball->radius,
+        brick->get_hitbox(brick));
+
+    if (collision_result.collided)
+    {
+        switch (collision_result.side)
+        {
+        case SIDE_LEFT:
+            ball->velocity.x *= -1;
+            break;
+
+        case SIDE_RIGHT:
+            ball->velocity.x *= -1;
+            break;
+
+        case SIDE_TOP:
+            ball->velocity.y *= -1;
+            break;
+
+        case SIDE_BOTTOM:
+            ball->velocity.y *= -1;
+            break;
+
+        default:
+            break;
+        }
+
+        brick->health -= *ball->power;
+        if (brick->health <= 0)
+        {
+            brick->active = false;
+        }
+    }
+}
+
 static void update_ball(Ball *ball, Entities *entities, float delta_time)
 {
     ball->position.x += ball->velocity.x * *ball->speed_multiplier * delta_time;
@@ -71,6 +115,16 @@ static void update_ball(Ball *ball, Entities *entities, float delta_time)
         if (paddle->active)
         {
             handle_ball_paddle_collision(ball, paddle, entities, delta_time);
+        }
+    }
+
+    // handle brick collisions
+    for (int i = 0; i < kv_size(entities->bricks); i++)
+    {
+        Brick *brick = &kv_A(entities->bricks, i);
+        if (brick->active)
+        {
+            handle_brick_collisions(ball, brick, entities, delta_time);
         }
     }
 
@@ -104,7 +158,7 @@ static void update_ball(Ball *ball, Entities *entities, float delta_time)
 static void reset_ball(Ball *ball, Vector2 initial_position)
 {
     ball->position = initial_position;
-    ball->velocity = (Vector2){50.0f, -50.0f};
+    ball->velocity = (Vector2){*ball->max_speed, -(*ball->max_speed)};
     *ball->speed_multiplier = 1.0f;
 }
 
@@ -125,6 +179,7 @@ Ball create_ball(Player *player, Vector2 position, Vector2 velocity)
     ball.power = &player->ball.power;
     ball.phase_nova = &player->perks.phase_shift;
     ball.super_nova = &player->perks.super_nova;
+    ball.max_speed = &player->ball.max_speed;
     ball.active = true;
     ball.update = update_ball;
     ball.reset = reset_ball;
