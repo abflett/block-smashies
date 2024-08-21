@@ -9,50 +9,82 @@
 #include "player.h"
 #include "ext_collision.h"
 
-static void handle_ball_paddle_collision(Ball *ball, Entities *entities, float delta_time)
+static bool handle_ball_paddle_collision(Ball *ball, Entities *entities, float delta_time)
 {
-    // Handle paddle collisions
+    bool not_collided = true;
+    Vector2 ball_end = Vector2Add(ball->position,
+                                  (Vector2){ball->velocity.x * (*ball->speed_multiplier) * delta_time,
+                                            ball->velocity.y * (*ball->speed_multiplier) * delta_time});
+
     for (int i = 0; i < kv_size(entities->paddles); i++)
     {
         Paddle *paddle = &kv_A(entities->paddles, i);
         if (paddle->active)
         {
-            CollisionResult collision_result = check_collision_thick_line_rect(
-                ball->position,
-                Vector2Add(
-                    ball->position,
-                    (Vector2){
-                        ball->velocity.x * *ball->speed_multiplier * delta_time,
-                        ball->velocity.y * *ball->speed_multiplier * delta_time}),
-                ball->radius,
-                paddle->get_hitbox(paddle));
+            CollisionResult collision_result = check_collision_thick_line_rect(ball->position,
+                                                                               ball_end,
+                                                                               ball->radius,
+                                                                               paddle->get_hitbox(paddle));
 
             if (collision_result.collided)
             {
-                TraceLog(LOG_INFO, "Gonna collide with paddle, remaining line: %f", collision_result.remaining_line);
+                Vector2 ball_step = Vector2Subtract(ball->position, ball_end);
+                Vector2 ball_start_collision_point = Vector2Subtract(ball->position, collision_result.point);
+                TraceLog(LOG_INFO, "Ball step x%f, y%f", ball_step.x, ball_step.y);
+                TraceLog(LOG_INFO, "coll step x%f, y%f", ball_start_collision_point.x, ball_start_collision_point.y);
 
-                ball->velocity.y *= -1;
-                ball->position.y = paddle->position.y - ball->radius;
+                TraceLog(LOG_INFO, "ball collided with paddle, remaining line: %f, collision point.x: %f, point.y %f, side %d", collision_result.remaining_line, collision_result.point.x, collision_result.point.y, (int)collision_result.side);
+
+                // Adjust the ball's velocity based on the collision side
+                // If the collision side is the top, reverse the Y velocity
+                if (collision_result.side == SIDE_TOP)
+                {
+                    ball->velocity.y *= -1;
+                    ball->position.y = paddle->position.y - ball->radius - 0.1f; // Set the position to just above the paddle
+                }
+                else if (collision_result.side == SIDE_LEFT || collision_result.side == SIDE_RIGHT)
+                {
+                    ball->velocity.x *= -1;
+                    // Optional: adjust the Y position slightly to avoid sinking into the paddle
+                    // ball->position.y = collision_result.point.y - ball->radius;
+                }
 
                 // Adjust the ball's x-velocity based on the paddle's speed
                 if (paddle->speed > 0.0f)
                     ball->velocity.x += paddle->speed * 0.5f; // Scale the influence of the paddle's speed
 
                 // Ensure the ball's x-velocity doesn't exceed a certain maximum
-                if (fabs(ball->velocity.x) > *paddle->max_speed)
+                if (fabs(ball->velocity.x) > *ball->max_speed)
                 {
-                    ball->velocity.x = (ball->velocity.x > 0) ? *paddle->max_speed : -(*paddle->max_speed);
+                    ball->velocity.x = (ball->velocity.x > 0) ? *ball->max_speed : -(*ball->max_speed);
                 }
+
+                // Adjust the ball's position based on the collision point and remaining movement
+                Vector2 remaining_movement = Vector2Scale(
+                    Vector2Normalize(ball->velocity),
+                    collision_result.remaining_line);
+
+                ball->position = Vector2Add(collision_result.point, remaining_movement);
 
                 // Increase score when the ball hits the paddle
                 entities->game_status.score += 10;
+                not_collided = false;
             }
         }
     }
+
+    return not_collided;
 }
 
 static void handle_brick_collisions(Ball *ball, Entities *entities, float delta_time)
 {
+    Vector2 ball_end = Vector2Add(ball->position,
+                                  (Vector2){ball->velocity.x * (*ball->speed_multiplier) * delta_time,
+                                            ball->velocity.y * (*ball->speed_multiplier) * delta_time});
+
+    Ball collided_balls[3];
+    CollisionResult collision_results[3];
+
     for (int i = 0; i < kv_size(entities->bricks); i++)
     {
         Brick *brick = &kv_A(entities->bricks, i);
@@ -60,11 +92,7 @@ static void handle_brick_collisions(Ball *ball, Entities *entities, float delta_
         {
             CollisionResult collision_result = check_collision_thick_line_rect(
                 ball->position,
-                Vector2Add(
-                    ball->position,
-                    (Vector2){
-                        ball->velocity.x * *ball->speed_multiplier * delta_time,
-                        ball->velocity.y * *ball->speed_multiplier * delta_time}),
+                ball_end,
                 ball->radius,
                 brick->get_hitbox(brick));
 
@@ -140,14 +168,23 @@ static void handle_out_of_bounds(Ball *ball, Entities *entities)
 
 static void update_ball(Ball *ball, Entities *entities, float delta_time)
 {
-    ball->position.x += ball->velocity.x * *ball->speed_multiplier * delta_time;
-    ball->position.y += ball->velocity.y * *ball->speed_multiplier * delta_time;
+
+    bool not_collided = true;
 
     // handle paddle collisions
-    handle_ball_paddle_collision(ball, entities, delta_time);
+
+    if (not_collided)
+        not_collided = handle_ball_paddle_collision(ball, entities, delta_time);
 
     // handle brick collisions
-    handle_brick_collisions(ball, entities, delta_time);
+    if (not_collided)
+    {
+        ball->position.x += ball->velocity.x * *ball->speed_multiplier * delta_time;
+        ball->position.y += ball->velocity.y * *ball->speed_multiplier * delta_time;
+    }
+
+    if (not_collided)
+        handle_brick_collisions(ball, entities, delta_time);
 
     // Handle wall collisions
     handle_wall_collisions(ball);
