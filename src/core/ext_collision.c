@@ -6,23 +6,23 @@ static Edges rect_to_ext_edges(Rectangle rectangle, float radius)
 {
     // Left Edge
     Edge leftEdge = (Edge){
-        (Vector2){rectangle.x, rectangle.y - radius},
-        (Vector2){rectangle.x, rectangle.y + rectangle.height + radius}};
+        (Vector2){rectangle.x - radius, rectangle.y - radius},
+        (Vector2){rectangle.x - radius, rectangle.y + rectangle.height + radius}};
 
     // Right Edge
     Edge rightEdge = (Edge){
-        (Vector2){rectangle.x + rectangle.width, rectangle.y - radius},
-        (Vector2){rectangle.x + rectangle.width, rectangle.y + rectangle.height + radius}};
+        (Vector2){rectangle.x + rectangle.width + radius, rectangle.y - radius},
+        (Vector2){rectangle.x + rectangle.width + radius, rectangle.y + rectangle.height + radius}};
 
     // Top Edge
     Edge topEdge = (Edge){
-        (Vector2){rectangle.x - radius, rectangle.y},
-        (Vector2){rectangle.x + rectangle.width + radius, rectangle.y}};
+        (Vector2){rectangle.x - radius, rectangle.y - radius},
+        (Vector2){rectangle.x + rectangle.width + radius, rectangle.y - radius}};
 
     // Bottom Edge
     Edge bottomEdge = (Edge){
-        (Vector2){rectangle.x - radius, rectangle.y + rectangle.height},
-        (Vector2){rectangle.x + rectangle.width + radius, rectangle.y + rectangle.height}};
+        (Vector2){rectangle.x - radius, rectangle.y + rectangle.height + radius},
+        (Vector2){rectangle.x + rectangle.width + radius, rectangle.y + rectangle.height + radius}};
 
     return (Edges){leftEdge, rightEdge, topEdge, bottomEdge};
 }
