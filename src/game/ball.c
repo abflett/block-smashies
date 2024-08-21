@@ -9,42 +9,96 @@
 #include "player.h"
 #include "ext_collision.h"
 
-static void handle_ball_paddle_collision(Ball *ball, Paddle *paddle, Entities *entities, float delta_time)
+static void handle_ball_paddle_collision(Ball *ball, Entities *entities, float delta_time)
 {
-    CollisionResult collision_result = check_collision_thick_line_rect(
-        ball->position,
-        Vector2Add(
-            ball->position,
-            (Vector2){
-                ball->velocity.x * *ball->speed_multiplier * delta_time,
-                ball->velocity.y * *ball->speed_multiplier * delta_time}),
-        ball->radius,
-        paddle->get_hitbox(paddle));
-
-    if (collision_result.collided)
+    // Handle paddle collisions
+    for (int i = 0; i < kv_size(entities->paddles); i++)
     {
-        TraceLog(LOG_INFO, "Gonna collide with paddle, remaining line: %f", collision_result.remaining_line);
-
-        ball->velocity.y *= -1;
-        ball->position.y = paddle->position.y - ball->radius;
-
-        // Adjust the ball's x-velocity based on the paddle's speed
-        if (paddle->speed > 0.0f)
-            ball->velocity.x += paddle->speed * 0.5f; // Scale the influence of the paddle's speed
-
-        // Ensure the ball's x-velocity doesn't exceed a certain maximum
-        if (fabs(ball->velocity.x) > *paddle->max_speed)
+        Paddle *paddle = &kv_A(entities->paddles, i);
+        if (paddle->active)
         {
-            ball->velocity.x = (ball->velocity.x > 0) ? *paddle->max_speed : -(*paddle->max_speed);
-        }
+            CollisionResult collision_result = check_collision_thick_line_rect(
+                ball->position,
+                Vector2Add(
+                    ball->position,
+                    (Vector2){
+                        ball->velocity.x * *ball->speed_multiplier * delta_time,
+                        ball->velocity.y * *ball->speed_multiplier * delta_time}),
+                ball->radius,
+                paddle->get_hitbox(paddle));
 
-        // Increase score when the ball hits the paddle
-        entities->game_status.score += 10;
+            if (collision_result.collided)
+            {
+                TraceLog(LOG_INFO, "Gonna collide with paddle, remaining line: %f", collision_result.remaining_line);
+
+                ball->velocity.y *= -1;
+                ball->position.y = paddle->position.y - ball->radius;
+
+                // Adjust the ball's x-velocity based on the paddle's speed
+                if (paddle->speed > 0.0f)
+                    ball->velocity.x += paddle->speed * 0.5f; // Scale the influence of the paddle's speed
+
+                // Ensure the ball's x-velocity doesn't exceed a certain maximum
+                if (fabs(ball->velocity.x) > *paddle->max_speed)
+                {
+                    ball->velocity.x = (ball->velocity.x > 0) ? *paddle->max_speed : -(*paddle->max_speed);
+                }
+
+                // Increase score when the ball hits the paddle
+                entities->game_status.score += 10;
+            }
+        }
+    }
+}
+
+static void handle_brick_collisions(Ball *ball, Entities *entities, float delta_time)
+{
+    for (int i = 0; i < kv_size(entities->bricks); i++)
+    {
+        Brick *brick = &kv_A(entities->bricks, i);
+        if (brick->active)
+        {
+            CollisionResult collision_result = check_collision_thick_line_rect(
+                ball->position,
+                Vector2Add(
+                    ball->position,
+                    (Vector2){
+                        ball->velocity.x * *ball->speed_multiplier * delta_time,
+                        ball->velocity.y * *ball->speed_multiplier * delta_time}),
+                ball->radius,
+                brick->get_hitbox(brick));
+
+            if (collision_result.collided)
+            {
+                switch (collision_result.side)
+                {
+                case SIDE_LEFT:
+                case SIDE_RIGHT:
+                    ball->velocity.x *= -1;
+                    break;
+
+                case SIDE_TOP:
+                case SIDE_BOTTOM:
+                    ball->velocity.y *= -1;
+                    break;
+
+                default:
+                    break;
+                }
+
+                brick->health -= *ball->power;
+                if (brick->health <= 0)
+                {
+                    brick->active = false;
+                }
+            }
+        }
     }
 }
 
 static void handle_wall_collisions(Ball *ball)
 {
+    // Todo: move ball
     if (ball->position.x - ball->radius <= game_settings.play_area.x || ball->position.x + ball->radius >= game_settings.play_area.width + game_settings.play_area.x)
     {
         ball->velocity.x *= -1;
@@ -56,79 +110,8 @@ static void handle_wall_collisions(Ball *ball)
     }
 }
 
-static void handle_brick_collisions(Ball *ball, Brick *brick, Entities *entities, float delta_time)
+static void handle_out_of_bounds(Ball *ball, Entities *entities)
 {
-    CollisionResult collision_result = check_collision_thick_line_rect(
-        ball->position,
-        Vector2Add(
-            ball->position,
-            (Vector2){
-                ball->velocity.x * *ball->speed_multiplier * delta_time,
-                ball->velocity.y * *ball->speed_multiplier * delta_time}),
-        ball->radius,
-        brick->get_hitbox(brick));
-
-    if (collision_result.collided)
-    {
-        switch (collision_result.side)
-        {
-        case SIDE_LEFT:
-            ball->velocity.x *= -1;
-            break;
-
-        case SIDE_RIGHT:
-            ball->velocity.x *= -1;
-            break;
-
-        case SIDE_TOP:
-            ball->velocity.y *= -1;
-            break;
-
-        case SIDE_BOTTOM:
-            ball->velocity.y *= -1;
-            break;
-
-        default:
-            break;
-        }
-
-        brick->health -= *ball->power;
-        if (brick->health <= 0)
-        {
-            brick->active = false;
-        }
-    }
-}
-
-static void update_ball(Ball *ball, Entities *entities, float delta_time)
-{
-    ball->position.x += ball->velocity.x * *ball->speed_multiplier * delta_time;
-    ball->position.y += ball->velocity.y * *ball->speed_multiplier * delta_time;
-
-    // Handle wall collisions
-    handle_wall_collisions(ball);
-
-    // Handle paddle collisions
-    for (int i = 0; i < kv_size(entities->paddles); i++)
-    {
-        Paddle *paddle = &kv_A(entities->paddles, i);
-        if (paddle->active)
-        {
-            handle_ball_paddle_collision(ball, paddle, entities, delta_time);
-        }
-    }
-
-    // handle brick collisions
-    for (int i = 0; i < kv_size(entities->bricks); i++)
-    {
-        Brick *brick = &kv_A(entities->bricks, i);
-        if (brick->active)
-        {
-            handle_brick_collisions(ball, brick, entities, delta_time);
-        }
-    }
-
-    // Check if the ball is out of bounds
     if (ball->position.y > game_settings.play_area.height + game_settings.play_area.y)
     {
         ball->active = false;
@@ -144,7 +127,7 @@ static void update_ball(Ball *ball, Entities *entities, float delta_time)
             }
         }
 
-        // Additional logic if last active ball
+        // Additional logic if last active ball Todo: move death logic or reset out of this check.
         if (active_balls == 0)
         {
             entities->game_status.lives--;
@@ -153,6 +136,24 @@ static void update_ball(Ball *ball, Entities *entities, float delta_time)
             first_paddle->reset(first_paddle);
         }
     }
+}
+
+static void update_ball(Ball *ball, Entities *entities, float delta_time)
+{
+    ball->position.x += ball->velocity.x * *ball->speed_multiplier * delta_time;
+    ball->position.y += ball->velocity.y * *ball->speed_multiplier * delta_time;
+
+    // handle paddle collisions
+    handle_ball_paddle_collision(ball, entities, delta_time);
+
+    // handle brick collisions
+    handle_brick_collisions(ball, entities, delta_time);
+
+    // Handle wall collisions
+    handle_wall_collisions(ball);
+
+    // Check if the ball is out of bounds
+    handle_out_of_bounds(ball, entities);
 }
 
 static void reset_ball(Ball *ball, Vector2 initial_position)
