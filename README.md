@@ -85,7 +85,6 @@ To build Block Smashies, you need to have a C compiler and CMake installed. Foll
    ```bash
    git clone --recursive https://github.com/abflett/block-smashies.git
    cd block-smashies
-
    ```
 
 2. Create a build directory and navigate to it:
@@ -93,26 +92,28 @@ To build Block Smashies, you need to have a C compiler and CMake installed. Foll
    ```bash
    mkdir build
    cd build
-
    ```
 
 3. Run CMake to configure the project:
 
    ```bash
    cmake ..
-
    ```
 
 4. Compile the project:
 
    ```bash
    cmake --build .
-
    ```
 
 5. Run the game:
    ```bash
    ./BlockSmashies
+   ```
+
+**Debian/Ubuntu Dependencies**
+   ```bash
+  sudo apt install build-essential git libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev cmake ninja-build
    ```
 
 ## Contributing
