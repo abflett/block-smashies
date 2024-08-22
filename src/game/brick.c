@@ -17,7 +17,7 @@ static void render_brick(Brick *brick)
 
 static Rectangle get_brick_hitbox(Brick *brick)
 {
-    return (Rectangle){brick->position.x, brick->position.y, brick->texture.width, brick->texture.height};
+    return (Rectangle){brick->position.x, brick->position.y, (float)brick->texture.width, (float)brick->texture.height};
 }
 
 Brick create_brick(Vector2 initial_position)

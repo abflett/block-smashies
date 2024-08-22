@@ -48,7 +48,7 @@ static void add_paddle_func(Entities *entities, Player *player)
 
     // If no inactive paddle found, create a new one
     Paddle *new_paddle = malloc(sizeof(Paddle));
-    *new_paddle = create_paddle(kv_size(entities->paddles) + 1, player);
+    *new_paddle = create_paddle((int)kv_size(entities->paddles) + 1, player);
     kv_push(Paddle *, entities->paddles, new_paddle); // Push the pointer to kvec
 }
 

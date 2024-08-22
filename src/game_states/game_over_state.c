@@ -11,7 +11,7 @@
 static HighScore high_scores[10];
 static int count;
 static int score;
-static char player_name[MAX_NAME_LENGTH + 1] = "Player";  // +1 for the null terminator
+static char player_name[MAX_NAME_LENGTH + 1] = "Player"; // +1 for the null terminator
 static bool adding_player_score;
 
 // Function to update the player's score entry
@@ -25,12 +25,12 @@ static void update_player_score(float delta_time)
         // NOTE: Only allow printable characters
         if ((key >= 32) && (key <= 125) && (strlen(player_name) < MAX_NAME_LENGTH))
         {
-            int len = strlen(player_name);
+            int len = (int)strlen(player_name);
             player_name[len] = (char)key;
-            player_name[len + 1] = '\0';  // Add null terminator
+            player_name[len + 1] = '\0'; // Add null terminator
         }
 
-        key = GetCharPressed();  // Check for more characters pressed
+        key = GetCharPressed(); // Check for more characters pressed
     }
 
     // Handle backspace
@@ -88,7 +88,7 @@ static void state_render(void)
     if (adding_player_score)
     {
         DrawText("Enter your name:", 5, 5, 8, LIGHTGRAY);
-        DrawText(player_name, 5, 10 + 5, 8, WHITE);  // Render the current inputted name
+        DrawText(player_name, 5, 10 + 5, 8, WHITE); // Render the current inputted name
     }
     else
     {
