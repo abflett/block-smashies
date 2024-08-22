@@ -7,7 +7,7 @@
 
 typedef struct
 {
-    char username[256];
+    char username[10];
     int score;
 } HighScore;
 

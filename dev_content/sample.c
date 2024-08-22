@@ -48,14 +48,14 @@ static void state_update(float delta_time)
     entities.update(&entities, delta_time);
 
     // Example collision detection for the first ball and paddle
-    Ball *ball = &kv_A(entities.balls, 0);
-    Paddle *paddle = &kv_A(entities.paddles, 0);
+    Ball *ball = kv_A(entities.balls, 0);
+    Paddle *paddle = kv_A(entities.paddles, 0);
 
     if (ball->position.y + ball->radius >= paddle->position.y &&
         ball->position.x >= paddle->position.x &&
         ball->position.x <= paddle->position.x + paddle->size.x)
     {
-        ball->velocity.y *= -1; // Reverse vertical direction
+        ball->velocity.y *= -1;                               // Reverse vertical direction
         ball->position.y = paddle->position.y - ball->radius; // Prevent the ball from sticking to the paddle
 
         // Adjust the ball's x-velocity based on the paddle's speed

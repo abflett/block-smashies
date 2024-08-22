@@ -9,7 +9,7 @@
 
 RenderTexture2D target_texture;
 
-static init_game(void)
+static void init_game(void)
 {
     init_game_from_settings("settings.json");
     target_texture = LoadRenderTexture(game_settings.target_width, game_settings.target_height);
@@ -39,7 +39,6 @@ static void draw_game(void)
     // Draw the render texture to the screen with scaling
     BeginDrawing();
     {
-        // ClearBackground(BLACK);
         DrawTexturePro(target_texture.texture,
                        (Rectangle){0, 0, (float)game_settings.target_width, -(float)game_settings.target_height},
                        (Rectangle){0, 0, (float)game_settings.screen_width, (float)game_settings.screen_height},

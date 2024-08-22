@@ -3,7 +3,8 @@
 
 #include "scene.h"
 
-typedef struct GameScenes {
+typedef struct GameScenes
+{
     Scene *gameplay;
     Scene *logo;
     Scene *main_menu;

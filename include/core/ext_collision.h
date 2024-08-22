@@ -35,6 +35,6 @@ typedef struct CollisionResult
     CollisionSide side;   // which side was collided with
 } CollisionResult;
 
-CollisionResult check_collision_thick_line_rect(Vector2 line_start, Vector2 line_end, float radius, Rectangle rect);
+CollisionResult check_collision_thick_line_rect(Vector2 line_start, Vector2 line_end, float radius, Rectangle rectangle);
 
 #endif

@@ -46,10 +46,13 @@ void save_settings(const char *filename)
 
 void set_default_settings(void)
 {
+    // save in file
     game_settings.screen_width = 1280;
     game_settings.screen_height = 720;
     game_settings.fullscreen = false;
     game_settings.volume = 1.0f;
+
+    // variables
     game_settings.exitWindow = false;
     game_settings.target_width = 320;
     game_settings.target_height = 180;

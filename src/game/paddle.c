@@ -80,8 +80,14 @@ static Rectangle get_hitbox_func(Paddle *paddle)
 Paddle create_paddle(int player_num, Player *player)
 {
     Paddle paddle;
+
+    TraceLog(LOG_INFO, "Created Paddle Texture Width: %d", resource_manager.get_texture("paddle")->texture.width);
+
     paddle.texture = resource_manager.get_texture("paddle")->texture;
     paddle.size = (Vector2){(float)paddle.texture.width, (float)paddle.texture.height};
+
+    TraceLog(LOG_INFO, "Paddle Size X: %f, Size Y: %f", paddle.size.x, paddle.size.y);
+
     paddle.player_num = player_num;
     paddle.position = (Vector2){
         ((game_settings.play_area.width) / 2) - (paddle.size.x / 2) + game_settings.play_area.x,

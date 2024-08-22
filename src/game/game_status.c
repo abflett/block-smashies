@@ -16,17 +16,17 @@ static void reset_game_status(GameStatus *status)
 
 static void render_game_status(const GameStatus *status)
 {
-    char time_text[20];
+    char time_text[21];
     int minutes = (int)(status->game_time / 60);
     float seconds = status->game_time - minutes * 60;
     snprintf(time_text, sizeof(time_text), "%d:%04.2f", minutes, seconds);
     DrawText(time_text, 18, 14, 8, LIGHTGRAY);
 
-    char score_text[20];
+    char score_text[21];
     snprintf(score_text, sizeof(score_text), "%d", status->score);
     DrawText(score_text, 19, 28, 8, LIGHTGRAY);
 
-    char lives_text[20];
+    char lives_text[21];
     snprintf(lives_text, sizeof(lives_text), "<3 %d", status->lives);
     DrawText(lives_text, 19, 42, 8, LIGHTGRAY);
 }

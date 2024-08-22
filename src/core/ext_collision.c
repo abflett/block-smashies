@@ -48,15 +48,10 @@ static void check_collision_with_edge(CollisionResult *result, Vector2 line_star
     }
 }
 
-CollisionResult check_collision_thick_line_rect(Vector2 line_start, Vector2 line_end, float radius, Rectangle rect)
+CollisionResult check_collision_thick_line_rect(Vector2 line_start, Vector2 line_end, float radius, Rectangle rectangle)
 {
-
-    float edge_distance = Vector2Length(Vector2Subtract((Vector2){rect.x, rect.y}, (Vector2){rect.width + rect.x, rect.height + rect.y}));
-    TraceLog(LOG_INFO, "edge_distance: %f", rect.width);
-
-    // TraceLog(LOG_INFO, "radius: %f", radius);
     CollisionResult result = {false, {0, 0}, 360.0f, SIDE_NONE};
-    Edges edges = rect_to_ext_edges(rect, radius);
+    Edges edges = rect_to_ext_edges(rectangle, radius);
 
     check_collision_with_edge(&result, line_start, line_end, edges.left, SIDE_LEFT);
     check_collision_with_edge(&result, line_start, line_end, edges.right, SIDE_RIGHT);

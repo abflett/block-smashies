@@ -18,7 +18,7 @@ static bool handle_ball_paddle_collision(Ball *ball, Entities *entities, float d
 
     for (int i = 0; i < kv_size(entities->paddles); i++)
     {
-        Paddle *paddle = &kv_A(entities->paddles, i);
+        Paddle *paddle = kv_A(entities->paddles, i);
         if (paddle->active)
         {
             CollisionResult collision_result = check_collision_thick_line_rect(ball->position,
@@ -31,14 +31,13 @@ static bool handle_ball_paddle_collision(Ball *ball, Entities *entities, float d
                 if (collision_result.side == SIDE_TOP || collision_result.side == SIDE_BOTTOM)
                 {
                     ball->velocity.y *= -1;
-                    ball->position.y = paddle->position.y - ball->radius - 0.1f; // Set the position to just above the paddle
                 }
                 else if (collision_result.side == SIDE_LEFT || collision_result.side == SIDE_RIGHT)
                 {
                     ball->velocity.x *= -1;
                 }
 
-                if (paddle->speed > 0.0f)
+                if (fabs(paddle->speed) > 0.0f)
                     ball->velocity.x += paddle->speed * 0.5f; // Scale the influence of the paddle's speed
 
                 if (fabs(ball->velocity.x) > *ball->max_speed)
@@ -72,7 +71,8 @@ static void handle_brick_collisions(Ball *ball, Entities *entities, float delta_
 
     for (int i = 0; i < kv_size(entities->bricks); i++)
     {
-        Brick *brick = &kv_A(entities->bricks, i);
+
+        Brick *brick = kv_A(entities->bricks, i);
         if (brick->active)
         {
             CollisionResult collision_result = check_collision_thick_line_rect(
@@ -112,14 +112,22 @@ static void handle_brick_collisions(Ball *ball, Entities *entities, float delta_
 static void handle_wall_collisions(Ball *ball)
 {
     // Todo: move ball
-    if (ball->position.x - ball->radius <= game_settings.play_area.x || ball->position.x + ball->radius >= game_settings.play_area.width + game_settings.play_area.x)
+    if (ball->position.x - ball->radius <= game_settings.play_area.x)
     {
         ball->velocity.x *= -1;
+        ball->position.x = game_settings.play_area.x + ball->radius;
+    }
+
+    if (ball->position.x + ball->radius >= game_settings.play_area.width + game_settings.play_area.x)
+    {
+        ball->velocity.x *= -1;
+        ball->position.x = game_settings.play_area.width + game_settings.play_area.x - ball->radius;
     }
 
     if (ball->position.y - ball->radius <= game_settings.play_area.y)
     {
         ball->velocity.y *= -1;
+        ball->position.y = game_settings.play_area.y + ball->radius;
     }
 }
 
@@ -128,24 +136,21 @@ static void handle_out_of_bounds(Ball *ball, Entities *entities)
     if (ball->position.y > game_settings.play_area.height + game_settings.play_area.y)
     {
         ball->active = false;
-
-        // Count the remaining active balls
         int active_balls = 0;
         for (int j = 0; j < kv_size(entities->balls); j++)
         {
-            Ball *other_ball = &kv_A(entities->balls, j);
+            Ball *other_ball = kv_A(entities->balls, j);
             if (other_ball->active)
             {
                 active_balls++;
             }
         }
 
-        // Additional logic if last active ball Todo: move death logic or reset out of this check.
         if (active_balls == 0)
         {
             entities->game_status.lives--;
             ball->reset(ball, (Vector2){160.0f, 90.0f});
-            Paddle *first_paddle = &kv_A(entities->paddles, 0);
+            Paddle *first_paddle = kv_A(entities->paddles, 0);
             first_paddle->reset(first_paddle);
         }
     }
@@ -156,12 +161,9 @@ static void update_ball(Ball *ball, Entities *entities, float delta_time)
 
     bool not_collided = true;
 
-    // handle paddle collisions
-
     if (not_collided)
         not_collided = handle_ball_paddle_collision(ball, entities, delta_time);
 
-    // handle brick collisions
     if (not_collided)
     {
         ball->position.x += ball->velocity.x * *ball->speed_multiplier * delta_time;
@@ -171,10 +173,7 @@ static void update_ball(Ball *ball, Entities *entities, float delta_time)
     if (not_collided)
         handle_brick_collisions(ball, entities, delta_time);
 
-    // Handle wall collisions
     handle_wall_collisions(ball);
-
-    // Check if the ball is out of bounds
     handle_out_of_bounds(ball, entities);
 }
 

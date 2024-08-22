@@ -5,7 +5,6 @@
 
 static void update_brick(Brick *brick, struct Entities *entities, float delta_time)
 {
-    
 }
 
 static void render_brick(Brick *brick)
@@ -13,7 +12,6 @@ static void render_brick(Brick *brick)
     if (brick->active)
     {
         DrawTexture(brick->texture, (int)brick->position.x, (int)brick->position.y, WHITE);
-        // DrawRectangle((int)brick->position.x, (int)brick->position.y, 20, 5, RED);
     }
 }
 
