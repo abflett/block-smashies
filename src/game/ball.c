@@ -28,16 +28,7 @@ static bool handle_ball_paddle_collision(Ball *ball, Entities *entities, float d
 
             if (collision_result.collided)
             {
-                Vector2 ball_step = Vector2Subtract(ball->position, ball_end);
-                Vector2 ball_start_collision_point = Vector2Subtract(ball->position, collision_result.point);
-                TraceLog(LOG_INFO, "Ball step x%f, y%f", ball_step.x, ball_step.y);
-                TraceLog(LOG_INFO, "coll step x%f, y%f", ball_start_collision_point.x, ball_start_collision_point.y);
-
-                TraceLog(LOG_INFO, "ball collided with paddle, remaining line: %f, collision point.x: %f, point.y %f, side %d", collision_result.remaining_line, collision_result.point.x, collision_result.point.y, (int)collision_result.side);
-
-                // Adjust the ball's velocity based on the collision side
-                // If the collision side is the top, reverse the Y velocity
-                if (collision_result.side == SIDE_TOP)
+                if (collision_result.side == SIDE_TOP || collision_result.side == SIDE_BOTTOM)
                 {
                     ball->velocity.y *= -1;
                     ball->position.y = paddle->position.y - ball->radius - 0.1f; // Set the position to just above the paddle
@@ -45,28 +36,22 @@ static bool handle_ball_paddle_collision(Ball *ball, Entities *entities, float d
                 else if (collision_result.side == SIDE_LEFT || collision_result.side == SIDE_RIGHT)
                 {
                     ball->velocity.x *= -1;
-                    // Optional: adjust the Y position slightly to avoid sinking into the paddle
-                    // ball->position.y = collision_result.point.y - ball->radius;
                 }
 
-                // Adjust the ball's x-velocity based on the paddle's speed
                 if (paddle->speed > 0.0f)
                     ball->velocity.x += paddle->speed * 0.5f; // Scale the influence of the paddle's speed
 
-                // Ensure the ball's x-velocity doesn't exceed a certain maximum
                 if (fabs(ball->velocity.x) > *ball->max_speed)
                 {
                     ball->velocity.x = (ball->velocity.x > 0) ? *ball->max_speed : -(*ball->max_speed);
                 }
 
-                // Adjust the ball's position based on the collision point and remaining movement
                 Vector2 remaining_movement = Vector2Scale(
                     Vector2Normalize(ball->velocity),
                     collision_result.remaining_line);
 
                 ball->position = Vector2Add(collision_result.point, remaining_movement);
 
-                // Increase score when the ball hits the paddle
                 entities->game_status.score += 10;
                 not_collided = false;
             }
