@@ -28,13 +28,9 @@ static bool handle_ball_paddle_collision(Ball *ball, Entities *entities, float d
 
             if (collision_result.collided)
             {
-                if (collision_result.side == SIDE_TOP || collision_result.side == SIDE_BOTTOM)
+                if (collision_result.side == SIDE_TOP)
                 {
                     ball->velocity.y *= -1;
-                }
-                else if (collision_result.side == SIDE_LEFT || collision_result.side == SIDE_RIGHT)
-                {
-                    ball->velocity.x *= -1;
                 }
 
                 if (fabs(paddle->speed) > 0.0f)

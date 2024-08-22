@@ -27,9 +27,8 @@ static void state_init(int argc, va_list args)
         // entities.add_paddle(&entities, &player);
 
         Paddle *paddle = kv_A(entities.paddles, 0); // player1 paddle
-        // TraceLog(LOG_INFO, "From Add playing_state entities Paddle size.x: %f", paddle->size.x);
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 10; i++)
         {
             entities.add_ball(&entities, &player, paddle);
         }
