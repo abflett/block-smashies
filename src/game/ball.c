@@ -60,18 +60,19 @@ static bool handle_ball_paddle_collision(Ball *ball, Entities *entities, float d
     return not_collided;
 }
 
-static void handle_brick_collisions(Ball *ball, Entities *entities, float delta_time)
+static bool handle_brick_collisions(Ball *ball, Entities *entities, float delta_time)
 {
+    bool not_collided = true;
     Vector2 ball_end = Vector2Add(ball->position,
                                   (Vector2){ball->velocity.x * (*ball->speed_multiplier) * delta_time,
                                             ball->velocity.y * (*ball->speed_multiplier) * delta_time});
 
-    Ball collided_balls[3];
-    CollisionResult collision_results[3];
+    Brick *collided_bricks[10]; // Allow up to 10 simultaneous collisions
+    CollisionResult collision_results[10];
+    int collision_count = 0;
 
     for (int i = 0; i < kv_size(entities->bricks); i++)
     {
-
         Brick *brick = kv_A(entities->bricks, i);
         if (brick->active)
         {
@@ -81,37 +82,66 @@ static void handle_brick_collisions(Ball *ball, Entities *entities, float delta_
                 ball->radius,
                 brick->get_hitbox(brick));
 
-            if (collision_result.collided)
+            if (collision_result.collided && collision_count < 10)
             {
-                switch (collision_result.side)
-                {
-                case SIDE_LEFT:
-                case SIDE_RIGHT:
-                    ball->velocity.x *= -1;
-                    break;
-
-                case SIDE_TOP:
-                case SIDE_BOTTOM:
-                    ball->velocity.y *= -1;
-                    break;
-
-                default:
-                    break;
-                }
-
-                brick->health -= *ball->power;
-                if (brick->health <= 0)
-                {
-                    brick->active = false;
-                }
+                collided_bricks[collision_count] = brick;
+                collision_results[collision_count] = collision_result;
+                collision_count++;
             }
         }
     }
+
+    if (collision_count == 0)
+        return true; // No collisions detected
+
+    int closest = 0;
+    float closest_line = 320.0f; // Use a value representing the max distance in your game
+    for (int i = 0; i < collision_count; i++)
+    {
+        float temp_line = collision_results[i].remaining_line;
+        if (temp_line < closest_line)
+        {
+            closest_line = temp_line;
+            closest = i;
+        }
+    }
+
+    // Handle the closest collision (e.g., reflect ball, deactivate brick)
+    Brick *closest_brick = collided_bricks[closest];
+    CollisionResult closest_collision = collision_results[closest];
+
+    closest_brick->health -= *ball->power;
+    if (closest_brick->health <= 0)
+    {
+        closest_brick->active = false;
+    }
+
+    // move ball by the remaining_line magnitude and velocity unit based on the side of collision
+    // closest_collision.remaining_line - remaining length/magnitude
+    // ball->velocity - need to convert to a velocity unit for the new position
+    switch (closest_collision.side)
+    {
+    case SIDE_LEFT:
+    case SIDE_RIGHT:
+        ball->velocity.x *= -1;
+        break;
+
+    case SIDE_TOP:
+    case SIDE_BOTTOM:
+        ball->velocity.y *= -1;
+        break;
+
+    default:
+        break;
+    }
+
+    Vector2 velocity_unit = Vector2Normalize(ball->velocity);
+    ball->position = Vector2Add(closest_collision.point, Vector2Scale(velocity_unit, closest_collision.remaining_line));
+    return false;
 }
 
 static void handle_wall_collisions(Ball *ball)
 {
-    // Todo: move ball
     if (ball->position.x - ball->radius <= game_settings.play_area.x)
     {
         ball->velocity.x *= -1;
@@ -165,13 +195,13 @@ static void update_ball(Ball *ball, Entities *entities, float delta_time)
         not_collided = handle_ball_paddle_collision(ball, entities, delta_time);
 
     if (not_collided)
+        not_collided = handle_brick_collisions(ball, entities, delta_time);
+
+    if (not_collided)
     {
         ball->position.x += ball->velocity.x * *ball->speed_multiplier * delta_time;
         ball->position.y += ball->velocity.y * *ball->speed_multiplier * delta_time;
     }
-
-    if (not_collided)
-        handle_brick_collisions(ball, entities, delta_time);
 
     handle_wall_collisions(ball);
     handle_out_of_bounds(ball, entities);

@@ -29,13 +29,13 @@ static void state_init(int argc, va_list args)
         Paddle *paddle = kv_A(entities.paddles, 0); // player1 paddle
         // TraceLog(LOG_INFO, "From Add playing_state entities Paddle size.x: %f", paddle->size.x);
 
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 5; i++)
         {
             entities.add_ball(&entities, &player, paddle);
         }
 
         int brick_row = 5;
-        int brick_column = 10;
+        int brick_column = 8;
 
         float row_spacing = 20.0f; // Horizontal spacing (width of the brick + any gap)
         float col_spacing = 8.0f;  // Vertical spacing (height of the brick + any gap)
@@ -45,8 +45,8 @@ static void state_init(int argc, va_list args)
             for (int row = 0; row < brick_column; row++)
             {
                 entities.add_brick(&entities, create_brick((Vector2){
-                                                  row * row_spacing + game_settings.play_area.x,
-                                                  col * col_spacing + game_settings.play_area.y}));
+                                                  row * row_spacing + game_settings.play_area.x + 20,
+                                                  col * col_spacing + game_settings.play_area.y + 16}));
             }
         }
     }
