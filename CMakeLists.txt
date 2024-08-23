@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.28)
 project(BlockSmashies VERSION 0.1)
 
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # Third-party subdirectories
 add_subdirectory(external/raylib)
 add_subdirectory(external/parson)
+add_subdirectory(external/box2d)
 
 # Include directories
 include_directories(
@@ -17,6 +18,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/external/parson
     ${PROJECT_SOURCE_DIR}/external/uthash/src
     ${PROJECT_SOURCE_DIR}/external/klib
+    ${PROJECT_SOURCE_DIR}/external/box2d/include
 )
 
 # Source files for the core module
@@ -64,7 +66,7 @@ add_executable(BlockSmashies
     )
 
 # Link with libraries
-target_link_libraries(BlockSmashies PUBLIC raylib parson)
+target_link_libraries(BlockSmashies PUBLIC raylib parson box2d)
 
 # Custom command to copy assets directory to the build directory
 add_custom_command(TARGET BlockSmashies POST_BUILD

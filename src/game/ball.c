@@ -102,7 +102,6 @@ static bool handle_brick_collisions(Ball *ball, Entities *entities, float delta_
         }
     }
 
-    // Handle the closest collision (e.g., reflect ball, deactivate brick)
     Brick *closest_brick = collided_bricks[closest];
     CollisionResult closest_collision = collision_results[closest];
 
@@ -112,9 +111,6 @@ static bool handle_brick_collisions(Ball *ball, Entities *entities, float delta_
         closest_brick->active = false;
     }
 
-    // move ball by the remaining_line magnitude and velocity unit based on the side of collision
-    // closest_collision.remaining_line - remaining length/magnitude
-    // ball->velocity - need to convert to a velocity unit for the new position
     switch (closest_collision.side)
     {
     case SIDE_LEFT:

@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include "box2d/box2d.h"
 #include "kvec.h"
 #include "playing_state.h"
 #include "game_settings.h"
@@ -12,8 +13,36 @@ static Texture2D *background;
 static Player player;
 static bool is_hold;
 
+// Box2D
+b2WorldId worldId;
+b2BodyId groundId;
+b2BodyId bodyId;
+
 static void state_init(int argc, va_list args)
 {
+    // Box2D
+    b2WorldDef worldDef = b2DefaultWorldDef();
+    worldDef.gravity = (b2Vec2){0.0f, -10.0f};
+    worldId = b2CreateWorld(&worldDef);
+
+    b2BodyDef groundBodyDef = b2DefaultBodyDef();
+    groundBodyDef.position = (b2Vec2){0.0f, -170.0f};
+    groundId = b2CreateBody(worldId, &groundBodyDef);
+
+    b2Polygon groundBox = b2MakeBox(250.0f, 10.0f);
+    b2ShapeDef groundShapeDef = b2DefaultShapeDef();
+    b2CreatePolygonShape(groundId, &groundShapeDef, &groundBox);
+
+    b2BodyDef bodyDef = b2DefaultBodyDef();
+    bodyDef.type = b2_dynamicBody;
+    bodyDef.position = (b2Vec2){50.0f, 4.0f};
+    bodyId = b2CreateBody(worldId, &bodyDef);
+
+    b2Polygon dynamicBox = b2MakeBox(10.0f, 10.0f);
+    b2ShapeDef shapeDef = b2DefaultShapeDef();
+    shapeDef.density = 1.0f;
+    shapeDef.friction = 0.3f;
+    b2CreatePolygonShape(bodyId, &shapeDef, &dynamicBox);
 
     if (!game_settings.is_paused)
     {
@@ -59,9 +88,12 @@ static void state_cleanup(void)
 {
     if (!game_settings.is_paused)
     {
-        entities.cleanup(&entities);
-        game_settings.is_paused = false;
         TraceLog(LOG_INFO, "[Cleanup] - playing_state - Success");
+        entities.cleanup(&entities);
+
+        b2DestroyBody(bodyId);
+        b2DestroyBody(groundId);
+        b2DestroyWorld(worldId);
     }
 }
 
@@ -76,12 +108,23 @@ static void state_update(float delta_time)
         {
             game_state_manager.change(game_state_manager.states.game_over, 1, entities.game_status.score);
         }
+    }
 
-        if (IsKeyPressed(KEY_ESCAPE))
-        {
-            game_settings.is_paused = true;
-            game_state_manager.change(game_state_manager.states.pause_menu, 1, &entities);
-        }
+    static float accumulator = 0.0f;
+    float timeStep = 1.0f / 60.0f;
+    accumulator += delta_time;
+    while (accumulator >= timeStep)
+    {
+        int subStepCount = 4;
+        b2World_Step(worldId, timeStep, subStepCount);
+        accumulator -= timeStep;
+    }
+
+    if (IsKeyPressed(KEY_ESCAPE))
+    {
+        game_settings.is_paused = true;
+        game_state_manager.change(game_state_manager.states.pause_menu, 1, &entities);
+        return;
     }
 }
 
@@ -89,6 +132,12 @@ static void state_render(void)
 {
     DrawTexture(*background, 0, 0, WHITE);
     entities.render(&entities);
+
+    b2Vec2 position_b = b2Body_GetPosition(bodyId);
+    b2Vec2 position_g = b2Body_GetPosition(groundId);
+
+    DrawRectangle((int)position_b.x, (int)position_b.y * -1, 10, 10, RED);
+    DrawRectangle((int)position_g.x, (int)position_g.y * -1 - 10, 250, 10, BLUE);
 }
 
 GameState playing_state = {
