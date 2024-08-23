@@ -15,34 +15,13 @@ static bool is_hold;
 
 // Box2D
 b2WorldId worldId;
-b2BodyId groundId;
-b2BodyId bodyId;
 
 static void state_init(int argc, va_list args)
 {
     // Box2D
     b2WorldDef worldDef = b2DefaultWorldDef();
-    worldDef.gravity = (b2Vec2){0.0f, -10.0f};
+    worldDef.gravity = (b2Vec2){0.0f, 0.0f};
     worldId = b2CreateWorld(&worldDef);
-
-    b2BodyDef groundBodyDef = b2DefaultBodyDef();
-    groundBodyDef.position = (b2Vec2){0.0f, -170.0f};
-    groundId = b2CreateBody(worldId, &groundBodyDef);
-
-    b2Polygon groundBox = b2MakeBox(250.0f, 10.0f);
-    b2ShapeDef groundShapeDef = b2DefaultShapeDef();
-    b2CreatePolygonShape(groundId, &groundShapeDef, &groundBox);
-
-    b2BodyDef bodyDef = b2DefaultBodyDef();
-    bodyDef.type = b2_dynamicBody;
-    bodyDef.position = (b2Vec2){50.0f, 4.0f};
-    bodyId = b2CreateBody(worldId, &bodyDef);
-
-    b2Polygon dynamicBox = b2MakeBox(10.0f, 10.0f);
-    b2ShapeDef shapeDef = b2DefaultShapeDef();
-    shapeDef.density = 1.0f;
-    shapeDef.friction = 0.3f;
-    b2CreatePolygonShape(bodyId, &shapeDef, &dynamicBox);
 
     if (!game_settings.is_paused)
     {
@@ -53,13 +32,12 @@ static void state_init(int argc, va_list args)
         entities = create_entities();
 
         entities.add_paddle(&entities, &player);
-        // entities.add_paddle(&entities, &player);
 
         Paddle *paddle = kv_A(entities.paddles, 0); // player1 paddle
 
         for (int i = 0; i < 10; i++)
         {
-            entities.add_ball(&entities, &player, paddle);
+            entities.add_ball(&entities, &player, worldId, paddle);
         }
 
         int brick_row = 5;
@@ -90,9 +68,6 @@ static void state_cleanup(void)
     {
         TraceLog(LOG_INFO, "[Cleanup] - playing_state - Success");
         entities.cleanup(&entities);
-
-        b2DestroyBody(bodyId);
-        b2DestroyBody(groundId);
         b2DestroyWorld(worldId);
     }
 }
@@ -132,12 +107,6 @@ static void state_render(void)
 {
     DrawTexture(*background, 0, 0, WHITE);
     entities.render(&entities);
-
-    b2Vec2 position_b = b2Body_GetPosition(bodyId);
-    b2Vec2 position_g = b2Body_GetPosition(groundId);
-
-    DrawRectangle((int)position_b.x, (int)position_b.y * -1, 10, 10, RED);
-    DrawRectangle((int)position_g.x, (int)position_g.y * -1 - 10, 250, 10, BLUE);
 }
 
 GameState playing_state = {

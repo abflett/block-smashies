@@ -1,6 +1,7 @@
 #ifndef ENTITIES_H
 #define ENTITIES_H
 
+#include "box2d/box2d.h"
 #include "paddle.h"
 #include "ball.h"
 #include "brick.h"
@@ -19,7 +20,7 @@ typedef struct Entities
     BrickVector bricks;
     GameStatus game_status;
 
-    void (*add_ball)(struct Entities *entities, Player *player, Paddle *paddle);
+    void (*add_ball)(struct Entities *entities, Player *player, b2WorldId world_id, Paddle *paddle);
     void (*add_paddle)(struct Entities *entities, Player *player);
     void (*add_brick)(struct Entities *entities, Brick brick);
     void (*update)(struct Entities *entities, float delta_time);

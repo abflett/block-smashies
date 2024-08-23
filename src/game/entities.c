@@ -1,12 +1,13 @@
 #include <stdlib.h>
 #include <time.h>
+#include "box2d/box2d.h"
 #include "entities.h"
 #include "ball.h"
 #include "paddle.h"
 #include "brick.h"
 #include "player.h"
 
-static void add_ball_func(Entities *entities, Player *player, Paddle *paddle)
+static void add_ball_func(Entities *entities, Player *player, b2WorldId world_id, Paddle *paddle)
 {
     float random_x = -50.0f + ((float)rand() / RAND_MAX) * 100.0f;
 
@@ -16,20 +17,20 @@ static void add_ball_func(Entities *entities, Player *player, Paddle *paddle)
         Ball *existing_ball = kv_A(entities->balls, i);
         if (!existing_ball->active)
         {
-            *existing_ball = create_ball(player,
-                                         (Vector2){paddle->position.x + (paddle->size.x / 2),
-                                                   paddle->position.y - 3},
-                                         (Vector2){random_x, -100});
+            *existing_ball = create_ball(player, world_id,
+                                         (b2Vec2){paddle->position.x + (paddle->size.x / 2),
+                                                  paddle->position.y - 3},
+                                         (b2Vec2){random_x, -100});
             return;
         }
     }
 
     // If no inactive ball found, create a new one
     Ball *new_ball = malloc(sizeof(Ball));
-    *new_ball = create_ball(player,
-                            (Vector2){paddle->position.x + (paddle->size.x / 2),
-                                      paddle->position.y - 3},
-                            (Vector2){random_x, -100});
+    *new_ball = create_ball(player, world_id,
+                            (b2Vec2){paddle->position.x + (paddle->size.x / 2),
+                                     paddle->position.y - 3},
+                            (b2Vec2){random_x, -100});
     kv_push(Ball *, entities->balls, new_ball); // Push the pointer to kvec
 }
 

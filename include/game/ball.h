@@ -3,27 +3,29 @@
 
 #include <stdbool.h>
 #include "raylib.h"
+#include "box2d/box2d.h"
 #include "player.h"
 
 struct Entities;
 
 typedef struct Ball
 {
-    Texture2D texture;
-    Vector2 position;
-    Vector2 velocity;
+    bool active;
+    b2BodyId body;
+    Texture2D *texture;
+
     float radius;
-    float *speed_multiplier;
+
     int *power;
     float *phase_nova;
     float *super_nova;
     float *max_speed;
-    bool active;
+
     void (*update)(struct Ball *ball, struct Entities *entities, float delta_time);
-    void (*reset)(struct Ball *ball, Vector2 initial_position);
     void (*render)(struct Ball *ball);
+    void (*clean_up)(struct Ball *ball);
 } Ball;
 
-Ball create_ball(Player *player, Vector2 position, Vector2 velocity);
+Ball create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity);
 
 #endif
