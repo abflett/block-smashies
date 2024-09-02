@@ -62,5 +62,8 @@ Ball create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 vel
     // Apply initial velocity
     b2Body_SetLinearVelocity(ball.body, velocity);
 
+    // Set the user data to associate this Ball with its Box2D body
+    b2Body_SetUserData(ball.body, &ball);
+
     return ball;
 }
