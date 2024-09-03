@@ -72,8 +72,8 @@ Take your gaming experience to the next level with these advanced features:
 ## Libraries and Tools Used
 
 - **Raylib:** A simple and easy-to-use library for graphics, used for rendering the game.
-- **box2d:** A...
-- **klib:** A...
+- **box2d:**  A popular physics engine for simulating 2D rigid body physics. In Block Smashies, it is used to handle the physical interactions between the Orb Weapon, blocks, and other dynamic objects, providing realistic collision detection, momentum, and bounce effects that enhance the gameplay experience.
+- **klib:** Specifically used for kvec, a dynamic array implementation in C. kvec provides a simple yet powerful way to manage dynamic arrays, which are used in Block Smashies to efficiently store and manipulate collections of game elements like entities, scores, and other data that require dynamic resizing.
 - **Parson:** A lightweight JSON library in C for reading and writing configuration files and game settings.
 - **PhysFS (Planned):** A library to manage virtual file systems, which will be used for packaging assets and dynamic game data.
 - **uthash:** A simple and efficient hash table library for C, used for managing and retrieving resources quickly within the game. It provides fast lookups and insertions, making it ideal for handling in-game assets and settings.
