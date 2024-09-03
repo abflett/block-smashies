@@ -72,6 +72,8 @@ Take your gaming experience to the next level with these advanced features:
 ## Libraries and Tools Used
 
 - **Raylib:** A simple and easy-to-use library for graphics, used for rendering the game.
+- **box2d:** A...
+- **klib:** A...
 - **Parson:** A lightweight JSON library in C for reading and writing configuration files and game settings.
 - **PhysFS (Planned):** A library to manage virtual file systems, which will be used for packaging assets and dynamic game data.
 - **uthash:** A simple and efficient hash table library for C, used for managing and retrieving resources quickly within the game. It provides fast lookups and insertions, making it ideal for handling in-game assets and settings.
@@ -111,7 +113,7 @@ To build Block Smashies, you need to have a C compiler and CMake installed. Foll
    ./BlockSmashies
    ```
 
-**Debian/Ubuntu Dependencies**
+**Debian/Ubuntu Build Dependencies**
    ```bash
   sudo apt install build-essential git libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev cmake ninja-build
    ```
