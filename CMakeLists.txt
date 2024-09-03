@@ -55,6 +55,7 @@ set(GAME_SRC
     src/game/brick.c
     src/game/game_status.c
     src/game/entities.c
+    src/game/wall_edges.c
 )
 
 # Create the BlockSmashies executable
