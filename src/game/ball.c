@@ -7,6 +7,9 @@
 #include "game_settings.h"
 #include "player.h"
 
+#define BALL_CATEGORY 0x0002
+#define BALL_COLLIDE_WITH 0xFFFF // Collides with everything else except balls
+
 static void update_ball(Ball *ball, Entities *entities, float delta_time)
 {
 }
@@ -58,8 +61,9 @@ Ball create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 vel
     circle_def.friction = 0.0f;    // Low friction for a smooth ball
     circle_def.restitution = 1.0f; // High restitution for bouncing
 
-    // circle_def.filter.categoryBits = 0xFFFF;
-    // circle_def.filter.maskBits = 0xFFFF;
+    // Set up the filter to prevent ball-to-ball collisions
+    circle_def.filter.categoryBits = BALL_CATEGORY;
+    circle_def.filter.maskBits = BALL_COLLIDE_WITH & ~BALL_CATEGORY; // Collide with everything except other balls
 
     // Attach the shape to the body
     b2CreateCircleShape(ball.body, &circle_def, &circle);
