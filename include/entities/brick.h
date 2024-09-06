@@ -3,20 +3,25 @@
 
 #include <stdbool.h>
 #include "raylib.h"
+#include "box2d/box2d.h"
+#include "entity_type.h"
 
 struct Entities;
 
 typedef struct Brick
 {
-    Texture2D texture;
-    Vector2 position;
-    int health;
+    EntityType type;
+    b2BodyId body;
     bool active;
-    void (*update)(struct Brick *brick, struct Entities *entities, float delta_time);
+
+    Texture2D *texture;
+    b2Vec2 size;
+    int health;
+
     void (*render)(struct Brick *brick);
-    Rectangle (*get_hitbox)(struct Brick *brick);
+    void (*clean_up)(struct Brick *brick);
 } Brick;
 
-Brick create_brick(Vector2 initial_position);
+Brick create_brick(b2WorldId world_id, b2Vec2 position, int health);
 
 #endif

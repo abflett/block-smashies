@@ -22,7 +22,7 @@ typedef struct Entities
 
     void (*add_ball)(struct Entities *entities, Player *player, b2WorldId world_id, Paddle *paddle);
     void (*add_paddle)(struct Entities *entities, Player *player);
-    void (*add_brick)(struct Entities *entities, Brick brick);
+    void (*add_brick)(struct Entities *entities, b2WorldId world_id, b2Vec2 position, int health);
     void (*update)(struct Entities *entities, float delta_time);
     void (*render)(struct Entities *entities);
     void (*cleanup)(struct Entities *entities);

@@ -5,6 +5,7 @@ typedef enum EntityType
 {
     ENTITY_NONE,
     ENTITY_BALL,
+    ENTITY_BRICK,
     ENTITY_PADDLE,
     ENTITY_WALL,
     ENTITY_KILL_BOUNDARY
