@@ -12,6 +12,7 @@ add_subdirectory(external/box2d)
 # Include directories
 include_directories(
     ${PROJECT_SOURCE_DIR}/include/core
+    ${PROJECT_SOURCE_DIR}/include/entities
     ${PROJECT_SOURCE_DIR}/include/scenes
     ${PROJECT_SOURCE_DIR}/include/game_states
     ${PROJECT_SOURCE_DIR}/include/game
@@ -25,8 +26,17 @@ include_directories(
 set(CORE_SRC
     src/core/main.c
     src/core/game_settings.c
-    src/core/high_score.c
     src/core/resource_manager.c
+)
+
+# Source files for entities
+set(ENTITIES_SRC
+    src/entities/paddle.c
+    src/entities/ball.c
+    src/entities/brick.c
+    src/entities/wall_edges.c
+    src/entities/kill_boundary.c
+    src/entities/entities.c
 )
 
 # Source files for scenes
@@ -48,13 +58,9 @@ set(GAME_STATES_SRC
 
 # Source files for game
 set(GAME_SRC
-    src/game/player.c
-    src/game/paddle.c
-    src/game/ball.c
-    src/game/brick.c
     src/game/game_status.c
-    src/game/entities.c
-    src/game/wall_edges.c
+    src/game/player.c
+    src/game/high_score.c
 )
 
 # Create the BlockSmashies executable
@@ -63,7 +69,7 @@ add_executable(BlockSmashies
     ${GAME_STATES_SRC}
     ${CORE_SRC}
     ${GAME_SRC}
-    )
+    ${ENTITIES_SRC})
 
 # Link with libraries
 target_link_libraries(BlockSmashies PUBLIC raylib parson box2d)
