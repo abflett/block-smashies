@@ -10,12 +10,9 @@
 #define BALL_CATEGORY 0x0002
 #define BALL_COLLIDE_WITH 0xFFFF // Collides with everything else except balls
 
-static void update_ball(Ball *ball, Entities *entities, float delta_time)
-{
-}
-
 static void clean_up_ball(Ball *ball)
 {
+    TraceLog(LOG_INFO, "[Cleanup] - Ball [%d] - Success", ball->body.index1);
     b2DestroyBody(ball->body);
 }
 
@@ -39,7 +36,6 @@ Ball create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 vel
     ball.phase_nova = &player->perks.phase_shift;
     ball.super_nova = &player->perks.super_nova;
 
-    ball.update = update_ball;
     ball.render = render_ball;
     ball.clean_up = clean_up_ball;
 

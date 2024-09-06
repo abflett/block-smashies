@@ -10,7 +10,7 @@
 
 static void add_ball_func(Entities *entities, Player *player, b2WorldId world_id, Paddle *paddle)
 {
-    float random_x = -50.0f + ((float)rand() / RAND_MAX) * 100.0f;
+    float random_x = -100.0f + ((float)rand() / RAND_MAX) * 200.0f;
 
     // Check for inactive balls to reuse
     for (int i = 0; i < kv_size(entities->balls); i++)
@@ -77,14 +77,14 @@ static void add_brick_func(Entities *entities, Brick brick)
 
 static void update_entities_func(Entities *entities, float delta_time)
 {
-    for (int i = 0; i < kv_size(entities->balls); i++)
-    {
-        Ball *ball = kv_A(entities->balls, i);
-        if (ball->active)
-        {
-            ball->update(ball, entities, delta_time);
-        }
-    }
+    // for (int i = 0; i < kv_size(entities->balls); i++)
+    // {
+    //     Ball *ball = kv_A(entities->balls, i);
+    //     if (ball->active)
+    //     {
+    //         ball->update(ball, entities, delta_time);
+    //     }
+    // }
 
     for (int i = 0; i < kv_size(entities->paddles); i++)
     {
@@ -142,6 +142,8 @@ static void render_entities_func(Entities *entities)
 
 static void cleanup_entities_func(Entities *entities)
 {
+    // Todo: Check that this is actually cleaning up entities
+    TraceLog(LOG_INFO, "[Cleanup] - Entities - Success");
     // Clean up paddles
     for (size_t i = 0; i < kv_size(entities->paddles); i++)
     {
@@ -152,7 +154,14 @@ static void cleanup_entities_func(Entities *entities)
     // Clean up balls
     for (size_t i = 0; i < kv_size(entities->balls); i++)
     {
-        free(kv_A(entities->balls, i)); // Free each dynamically allocated Ball
+        Ball *ball = kv_A(entities->balls, i);
+        if (ball->clean_up)
+        {
+            ball->clean_up(ball); // Call the clean-up function for each ball
+        }
+        free(ball); // Free the dynamically allocated Ball
+
+        // free(kv_A(entities->balls, i)); // Free each dynamically allocated Ball
     }
     kv_destroy(entities->balls);
 

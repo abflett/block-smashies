@@ -74,6 +74,8 @@ static void state_cleanup(void)
     {
         TraceLog(LOG_INFO, "[Cleanup] - playing_state - Success");
         entities.cleanup(&entities);
+        wall_edges.clean_up(&wall_edges);
+        kill_boundary.clean_up(&kill_boundary);
         b2DestroyWorld(worldId);
     }
 }
