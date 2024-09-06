@@ -27,6 +27,7 @@ static void render_ball(Ball *ball)
 Ball create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity)
 {
     Ball ball;
+    ball.type = ENTITY_BALL;
     ball.active = true;
     ball.texture = &resource_manager.get_texture("ball")->texture;
     ball.radius = ball.texture->width / 4.0f;

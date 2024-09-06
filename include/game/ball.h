@@ -5,11 +5,13 @@
 #include "raylib.h"
 #include "box2d/box2d.h"
 #include "player.h"
+#include "entity_type.h"
 
 struct Entities;
 
 typedef struct Ball
 {
+    EntityType type;
     bool active;
     b2BodyId body;
     Texture2D *texture;
