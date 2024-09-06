@@ -21,7 +21,7 @@ static void render_ball(Ball *ball)
 
     b2Vec2 position = b2Body_GetPosition(ball->body);
     // draw larger ball and resize down for subpixel drawing effect
-    DrawTextureEx(*ball->texture, (Vector2){position.x - ball->radius, position.y + ball->radius}, 0.0f, 0.5f, WHITE);
+    DrawTextureEx(*ball->texture, (Vector2){position.x - ball->radius, game_settings.target_height - (position.y + ball->radius)}, 0.0f, 0.5f, WHITE);
 }
 
 Ball create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity)
@@ -44,6 +44,7 @@ Ball create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 vel
     b2BodyDef bodyDef = b2DefaultBodyDef();
     bodyDef.type = b2_dynamicBody;
     bodyDef.position = position; // Initial position in the Box2D world
+    bodyDef.isBullet = true;
     ball.body = b2CreateBody(world_id, &bodyDef);
 
     // Define the circle shape for the ball
@@ -56,6 +57,9 @@ Ball create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 vel
     circle_def.density = 1.0f;
     circle_def.friction = 0.0f;    // Low friction for a smooth ball
     circle_def.restitution = 1.0f; // High restitution for bouncing
+
+    // circle_def.filter.categoryBits = 0xFFFF;
+    // circle_def.filter.maskBits = 0xFFFF;
 
     // Attach the shape to the body
     b2CreateCircleShape(ball.body, &circle_def, &circle);

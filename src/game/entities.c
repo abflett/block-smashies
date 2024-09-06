@@ -6,6 +6,7 @@
 #include "paddle.h"
 #include "brick.h"
 #include "player.h"
+#include "game_settings.h"
 
 static void add_ball_func(Entities *entities, Player *player, b2WorldId world_id, Paddle *paddle)
 {
@@ -19,8 +20,8 @@ static void add_ball_func(Entities *entities, Player *player, b2WorldId world_id
         {
             *existing_ball = create_ball(player, world_id,
                                          (b2Vec2){paddle->position.x + (paddle->size.x / 2),
-                                                  paddle->position.y - 3},
-                                         (b2Vec2){random_x, -100});
+                                                  game_settings.target_height - (paddle->position.y - 3)},
+                                         (b2Vec2){random_x, 400});
             return;
         }
     }
@@ -29,8 +30,8 @@ static void add_ball_func(Entities *entities, Player *player, b2WorldId world_id
     Ball *new_ball = malloc(sizeof(Ball));
     *new_ball = create_ball(player, world_id,
                             (b2Vec2){paddle->position.x + (paddle->size.x / 2),
-                                     paddle->position.y - 3},
-                            (b2Vec2){random_x, -100});
+                                     game_settings.target_height - (paddle->position.y - 3)},
+                            (b2Vec2){random_x, 400});
     kv_push(Ball *, entities->balls, new_ball); // Push the pointer to kvec
 }
 

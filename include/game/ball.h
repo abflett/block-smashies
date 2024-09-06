@@ -12,10 +12,10 @@ struct Entities;
 typedef struct Ball
 {
     EntityType type;
-    bool active;
     b2BodyId body;
-    Texture2D *texture;
+    bool active;
 
+    Texture2D *texture;
     float radius;
 
     int *power;

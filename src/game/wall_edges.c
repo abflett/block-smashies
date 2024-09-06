@@ -1,48 +1,38 @@
 #include "wall_edges.h"
-#include "box2d/box2d.h"
+#include "game_settings.h" // To access game_settings.play_area
 
-static void create_edge(b2WorldId world_id, b2BodyId *body, b2Vec2 start, b2Vec2 end)
+static void clean_up_edges(WallEdges *walls)
 {
-    b2BodyDef bodyDef = b2DefaultBodyDef();
-    bodyDef.type = b2_staticBody;
-    *body = b2CreateBody(world_id, &bodyDef);
-
-    // Define the edge shape
-    b2Segment edgeSegment;
-    edgeSegment.point1 = start;
-    edgeSegment.point2 = end;
-
-    b2ShapeDef edge_def = b2DefaultShapeDef();
-    edge_def.density = 0.0f;
-    edge_def.friction = 0.0f;
-
-    b2CreateEdgeShape(*body, &edge_def, &edgeSegment);
+    b2DestroyBody(walls->body);
 }
 
-static void clean_up_edges(struct WallEdges *walls)
-{
-    b2DestroyBody(walls->left_wall);
-    b2DestroyBody(walls->right_wall);
-    b2DestroyBody(walls->top_wall);
-}
-
-WallEdges create_wall_edges(b2WorldId world_id, Rectangle play_area)
+WallEdges create_wall_edges(b2WorldId world_id)
 {
     WallEdges walls;
-    walls.bounds = play_area;
 
-    // Create the left, right, and top edges
-    create_edge(world_id, &walls.left_wall,
-                (b2Vec2){play_area.x, play_area.y},
-                (b2Vec2){play_area.x, play_area.y + play_area.height});
+    // Create a static body for the walls
+    b2BodyDef bodyDef = b2DefaultBodyDef();
+    bodyDef.type = b2_staticBody;
+    walls.body = b2CreateBody(world_id, &bodyDef);
 
-    create_edge(world_id, &walls.right_wall,
-                (b2Vec2){play_area.x + play_area.width, play_area.y},
-                (b2Vec2){play_area.x + play_area.width, play_area.y + play_area.height});
+    // Define the vertices of the walls (left, top, right) based on play_area from game_settings
+    Rectangle play_area = game_settings.play_area;
+    b2Vec2 vertices[4];
+    vertices[0] = (b2Vec2){play_area.x, game_settings.target_height - (play_area.y + play_area.height)};                   // Bottom-left (left wall start)
+    vertices[1] = (b2Vec2){play_area.x, game_settings.target_height - play_area.y};                                        // Top-left (left wall end, top wall start)
+    vertices[2] = (b2Vec2){play_area.x + play_area.width, game_settings.target_height - play_area.y};                      // Top-right (top wall end, right wall start)
+    vertices[3] = (b2Vec2){play_area.x + play_area.width, game_settings.target_height - (play_area.y + play_area.height)}; // Bottom-right (right wall end)
+    int count = sizeof(vertices) / sizeof(vertices[0]);
 
-    create_edge(world_id, &walls.top_wall,
-                (b2Vec2){play_area.x, play_area.y},
-                (b2Vec2){play_area.x + play_area.width, play_area.y});
+    // Define the chain shape with the vertices
+    b2ChainDef chain = b2DefaultChainDef();
+    chain.points = vertices;
+    chain.isLoop = true;
+    chain.count = count;
+    chain.friction = 0.0f;
+    chain.restitution = 1.0f;
+
+    b2CreateChain(walls.body, &chain);
 
     walls.clean_up = clean_up_edges;
 

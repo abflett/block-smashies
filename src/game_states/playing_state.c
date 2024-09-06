@@ -7,11 +7,13 @@
 #include "entities.h"
 #include "resource_manager.h"
 #include "player.h"
+#include "wall_edges.h"
 
 static Entities entities;
 static Texture2D *background;
 static Player player;
 static bool is_hold;
+static WallEdges wall_edges;
 
 // Box2D
 b2WorldId worldId;
@@ -22,6 +24,7 @@ static void state_init(int argc, va_list args)
     b2WorldDef worldDef = b2DefaultWorldDef();
     worldDef.gravity = (b2Vec2){0.0f, 0.0f};
     worldId = b2CreateWorld(&worldDef);
+    wall_edges = create_wall_edges(worldId);
 
     if (!game_settings.is_paused)
     {
