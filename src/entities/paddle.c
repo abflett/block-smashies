@@ -32,11 +32,17 @@ static void update_paddle(Paddle *paddle, float delta_time)
     }
 
     // Apply upward bounce when W is pressed
-    if (IsKeyPressed(KEY_W) && paddle->force_timer <= 0.0f)
+    if (IsKeyPressed(KEY_W) && paddle->force_timer <= 0.0f && paddle->force_active_timer <= 0)
     {
         b2Body_Disable(paddle->constraint);
         paddle->force_timer = 0.09f;
+        paddle->force_active_timer = 2.0f;
         b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){0.0f, BOUNCE_FORCE}, b2Body_GetWorldCenterOfMass(paddle->body), true);
+    }
+
+    if (paddle->force_active_timer > 0.0f)
+    {
+        paddle->force_active_timer -= delta_time;
     }
 
     if (paddle->force_timer > 0.0f)
@@ -69,6 +75,7 @@ Paddle create_paddle(int player_num, Player *player, b2WorldId world_id)
     paddle.size = (b2Vec2){(float)paddle.texture->width, (float)paddle.texture->height};
     paddle.player_num = player_num;
     paddle.force_timer = 0.0f;
+    paddle.force_active_timer = 0.0f;
 
     // used in later development for power ups but for now ignore
     paddle.acceleration = &player->paddle.acceleration;

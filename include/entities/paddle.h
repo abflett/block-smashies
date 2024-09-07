@@ -19,6 +19,7 @@ typedef struct Paddle
 
     int player_num;
     float force_timer;
+    float force_active_timer;
 
     float *acceleration;
     float *max_speed;
