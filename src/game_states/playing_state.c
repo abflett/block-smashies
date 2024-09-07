@@ -34,16 +34,16 @@ static void state_init(int argc, va_list args)
         player = create_new_player("Player 1");
         entities = create_entities();
 
-        entities.add_paddle(&entities, &player);
+        entities.add_paddle(&entities, &player, worldId);
 
         Paddle *paddle = kv_A(entities.paddles, 0); // player1 paddle
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 1; i++)
         {
             entities.add_ball(&entities, &player, worldId, paddle);
         }
 
-                int brick_row = 12;
+        int brick_row = 12;
         int brick_column = 12;
         float row_spacing = 18.0f; // Horizontal spacing (width of the brick + any gap)
         float col_spacing = 8.0f;  // Vertical spacing (height of the brick + any gap)

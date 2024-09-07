@@ -3,15 +3,23 @@
 
 #include <stdbool.h>
 #include "raylib.h"
+#include "box2d/box2d.h"
 #include "player.h"
+#include "entity_type.h"
 
 typedef struct Paddle
 {
-    Texture2D texture;
-    Vector2 position;
-    Vector2 size;
+    EntityType type;
+    b2BodyId body;
+    b2BodyId constraint;
+    bool active;
+
+    Texture2D *texture;
+    b2Vec2 size;
+
     int player_num;
-    float speed;
+    float force_timer;
+
     float *acceleration;
     float *max_speed;
     float *friction;
@@ -21,13 +29,12 @@ typedef struct Paddle
     float *phase_shift;
     bool *time_manipulation;
     bool *orb_shot;
+
     void (*update)(struct Paddle *paddle, float delta_time);
-    void (*reset)(struct Paddle *paddle);
     void (*render)(struct Paddle *paddle);
-    Rectangle (*get_hitbox)(struct Paddle *paddle);
-    bool active;
+    void (*clean_up)(struct Paddle *paddle);
 } Paddle;
 
-Paddle create_paddle(int player_num, Player *player);
+Paddle create_paddle(int player_num, Player *player, b2WorldId world_id);
 
 #endif

@@ -23,6 +23,7 @@ typedef struct Ball
     float *super_nova;
     float *max_speed;
 
+    void (*update)(struct Ball *ball, float delta_time);
     void (*render)(struct Ball *ball);
     void (*clean_up)(struct Ball *ball);
 } Ball;

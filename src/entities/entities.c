@@ -12,6 +12,8 @@ static void add_ball_func(Entities *entities, Player *player, b2WorldId world_id
 {
     float random_x = -100.0f + ((float)rand() / RAND_MAX) * 200.0f;
 
+    b2Vec2 paddle_position = b2Body_GetPosition(paddle->body);
+
     // Check for inactive balls to reuse
     for (int i = 0; i < kv_size(entities->balls); i++)
     {
@@ -19,9 +21,9 @@ static void add_ball_func(Entities *entities, Player *player, b2WorldId world_id
         if (!existing_ball->active)
         {
             *existing_ball = create_ball(player, world_id,
-                                         (b2Vec2){paddle->position.x + (paddle->size.x / 2),
-                                                  game_settings.target_height - (paddle->position.y - 3)},
-                                         (b2Vec2){random_x, 100});
+                                         (b2Vec2){paddle_position.x + (paddle->size.x / 2),
+                                                  (paddle_position.y + 3)},
+                                         (b2Vec2){random_x, 50});
             return;
         }
     }
@@ -29,28 +31,29 @@ static void add_ball_func(Entities *entities, Player *player, b2WorldId world_id
     // If no inactive ball found, create a new one
     Ball *new_ball = malloc(sizeof(Ball));
     *new_ball = create_ball(player, world_id,
-                            (b2Vec2){paddle->position.x + (paddle->size.x / 2),
-                                     game_settings.target_height - (paddle->position.y - 3)},
-                            (b2Vec2){random_x, 100});
+                            (b2Vec2){paddle_position.x + (paddle->size.x / 2),
+                                     (paddle_position.y + 3)},
+                            (b2Vec2){random_x, 50});
     kv_push(Ball *, entities->balls, new_ball); // Push the pointer to kvec
 }
 
-static void add_paddle_func(Entities *entities, Player *player)
+static void add_paddle_func(Entities *entities, Player *player, b2WorldId world_id)
 {
+    // Todo: check active paddles before setting the player count
     // Check for inactive paddles to reuse
     for (int i = 0; i < kv_size(entities->paddles); i++)
     {
         Paddle *paddle = kv_A(entities->paddles, i);
         if (!paddle->active)
         {
-            *paddle = create_paddle(i + 1, player);
+            *paddle = create_paddle(i + 1, player, world_id);
             return;
         }
     }
 
     // If no inactive paddle found, create a new one
     Paddle *new_paddle = malloc(sizeof(Paddle));
-    *new_paddle = create_paddle((int)kv_size(entities->paddles) + 1, player);
+    *new_paddle = create_paddle((int)kv_size(entities->paddles) + 1, player, world_id);
     kv_push(Paddle *, entities->paddles, new_paddle); // Push the pointer to kvec
 }
 
@@ -77,15 +80,6 @@ static void add_brick_func(Entities *entities, b2WorldId world_id, b2Vec2 positi
 
 static void update_entities_func(Entities *entities, float delta_time)
 {
-    // for (int i = 0; i < kv_size(entities->balls); i++)
-    // {
-    //     Ball *ball = kv_A(entities->balls, i);
-    //     if (ball->active)
-    //     {
-    //         ball->update(ball, entities, delta_time);
-    //     }
-    // }
-
     for (int i = 0; i < kv_size(entities->paddles); i++)
     {
         Paddle *paddle = kv_A(entities->paddles, i);
@@ -95,14 +89,14 @@ static void update_entities_func(Entities *entities, float delta_time)
         }
     }
 
-    // for (int i = 0; i < kv_size(entities->bricks); i++)
-    // {
-    //     Brick *brick = kv_A(entities->bricks, i);
-    //     if (brick->active)
-    //     {
-    //         brick->update(brick, entities, delta_time);
-    //     }
-    // }
+    for (int i = 0; i < kv_size(entities->balls); i++)
+    {
+        Ball *paddle = kv_A(entities->balls, i);
+        if (paddle->active)
+        {
+            paddle->update(paddle, delta_time);
+        }
+    }
 
     entities->game_status.update(&entities->game_status, delta_time);
 }
@@ -141,12 +135,15 @@ static void render_entities_func(Entities *entities)
 
 static void cleanup_entities_func(Entities *entities)
 {
-    // Todo: Check that this is actually cleaning up entities
-    TraceLog(LOG_INFO, "[Cleanup] - Entities - Success");
     // Clean up paddles
     for (size_t i = 0; i < kv_size(entities->paddles); i++)
     {
-        free(kv_A(entities->paddles, i)); // Free each dynamically allocated Paddle
+        Paddle *paddle = kv_A(entities->paddles, i);
+        if (paddle->clean_up)
+        {
+            paddle->clean_up(paddle);
+        }
+        free(paddle);
     }
     kv_destroy(entities->paddles); // Destroy the kvec itself
 
@@ -156,7 +153,7 @@ static void cleanup_entities_func(Entities *entities)
         Ball *ball = kv_A(entities->balls, i);
         if (ball->clean_up)
         {
-            ball->clean_up(ball); // Call the clean-up function for each ball
+            ball->clean_up(ball);
         }
         free(ball);
     }
@@ -168,9 +165,9 @@ static void cleanup_entities_func(Entities *entities)
         Brick *brick = kv_A(entities->bricks, i);
         if (brick->clean_up)
         {
-            brick->clean_up(brick); // Call the clean-up function for each ball
+            brick->clean_up(brick);
         }
-        free(brick); // Free each dynamically allocated Brick
+        free(brick);
     }
     kv_destroy(entities->bricks);
 }

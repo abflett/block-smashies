@@ -9,6 +9,7 @@
 
 #define BALL_CATEGORY 0x0002
 #define BALL_COLLIDE_WITH 0xFFFF // Collides with everything else except balls
+#define MAX_VELOCITY 100.0f
 
 static void clean_up_ball(Ball *ball)
 {
@@ -22,6 +23,31 @@ static void render_ball(Ball *ball)
     b2Vec2 position = b2Body_GetPosition(ball->body);
     // draw larger ball and resize down for subpixel drawing effect
     DrawTextureEx(*ball->texture, (Vector2){position.x - ball->radius, game_settings.target_height - (position.y + ball->radius)}, 0.0f, 0.5f, WHITE);
+}
+
+static void update_ball(Ball *ball, float delta_time)
+{
+    b2Vec2 velocity = b2Body_GetLinearVelocity(ball->body);
+    // Cap horizontal velocity
+    if (velocity.x > MAX_VELOCITY)
+    {
+        velocity.x = MAX_VELOCITY;
+    }
+    else if (velocity.x < -MAX_VELOCITY)
+    {
+        velocity.x = -MAX_VELOCITY;
+    }
+
+    if (velocity.y > MAX_VELOCITY)
+    {
+        velocity.y = MAX_VELOCITY;
+    }
+    else if (velocity.y < -MAX_VELOCITY)
+    {
+        velocity.y = -MAX_VELOCITY;
+    }
+
+    b2Body_SetLinearVelocity(ball->body, velocity);
 }
 
 Ball create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity)
@@ -38,6 +64,7 @@ Ball create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 vel
 
     ball.render = render_ball;
     ball.clean_up = clean_up_ball;
+    ball.update = update_ball;
 
     // Create the Box2D body definition
     b2BodyDef bodyDef = b2DefaultBodyDef();
@@ -53,8 +80,8 @@ Ball create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 vel
 
     // Define the physical properties of the ball (density, friction, etc.)
     b2ShapeDef circle_def = b2DefaultShapeDef();
-    circle_def.density = 1.0f;
-    circle_def.friction = 0.0f;    // Low friction for a smooth ball
+    circle_def.density = 0.01f;
+    circle_def.friction = 10.0f;   // Low friction for a smooth ball
     circle_def.restitution = 1.0f; // High restitution for bouncing
 
     // Set up the filter to prevent ball-to-ball collisions
