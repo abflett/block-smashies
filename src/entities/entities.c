@@ -21,18 +21,16 @@ static void add_ball_func(Entities *entities, Player *player, b2WorldId world_id
         if (!existing_ball->active)
         {
             existing_ball = create_ball(player, world_id,
-                                         (b2Vec2){paddle_position.x + (paddle->size.x / 2),
-                                                  (paddle_position.y + 3)},
-                                         (b2Vec2){random_x, 50});
+                                        (b2Vec2){paddle_position.x, paddle_position.y + 3},
+                                        (b2Vec2){random_x, 50});
             return;
         }
     }
 
     // If no inactive ball found, create a new one
     Ball *new_ball = create_ball(player, world_id,
-                            (b2Vec2){paddle_position.x + (paddle->size.x / 2),
-                                     (paddle_position.y + 3)},
-                            (b2Vec2){random_x, 50});
+                                 (b2Vec2){paddle_position.x, paddle_position.y + 3},
+                                 (b2Vec2){random_x, 50});
     kv_push(Ball *, entities->balls, new_ball); // Push the pointer to kvec
 }
 
