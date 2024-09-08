@@ -5,6 +5,7 @@
 void update_game_context(GameContext *context, float delta_time)
 {
     context->entities.update(&context->entities, delta_time);
+    // context->game_status.update(&context->game_status, delta_time);
 
     // box2d physics
     static float accumulator = 0.0f;
@@ -22,6 +23,7 @@ void update_game_context(GameContext *context, float delta_time)
 void render_game_context(GameContext *context)
 {
     DrawTexture(*context->background, 0, 0, WHITE);
+    // context->game_status.render(&context->game_status);
     context->entities.render(&context->entities);
 }
 

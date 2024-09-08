@@ -56,10 +56,10 @@ static void state_update(float delta_time)
         context->is_hold = false;
         context->update(context, delta_time);
 
-        if (context->entities.game_status.lives <= 0)
-        {
-            game_state_manager.change(game_state_manager.states.game_over, 1, context->entities.game_status.score);
-        }
+        // if (context->game_status.lives <= 0)
+        // {
+        //     game_state_manager.change(game_state_manager.states.game_over, 1, context->game_status.score);
+        // }
     }
 
     if (IsKeyPressed(KEY_ESCAPE))

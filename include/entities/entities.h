@@ -5,7 +5,6 @@
 #include "paddle.h"
 #include "ball.h"
 #include "brick.h"
-#include "game_status.h"
 #include "kvec.h"
 #include "player.h"
 #include "wall_edges.h"
@@ -20,7 +19,6 @@ typedef struct Entities
     BallVector balls;
     PaddleVector paddles;
     BrickVector bricks;
-    GameStatus game_status;
     WallEdges *wall_edges;
     KillBoundary *kill_boundary;
 

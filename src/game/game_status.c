@@ -10,7 +10,7 @@ static void update_game_status(GameStatus *status, float delta_time)
 static void reset_game_status(GameStatus *status)
 {
     status->score = 0;
-    status->lives = 1;
+    status->lives = 3;
     status->game_time = 0.0f;
 }
 
@@ -35,7 +35,7 @@ GameStatus create_game_status(void)
 {
     GameStatus status;
     status.score = 0;
-    status.lives = 1;
+    status.lives = 3;
     status.game_time = 0.0f;
     status.update = update_game_status;
     status.reset = reset_game_status;
