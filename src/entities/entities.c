@@ -20,7 +20,7 @@ static void add_ball_func(Entities *entities, Player *player, b2WorldId world_id
         Ball *existing_ball = kv_A(entities->balls, i);
         if (!existing_ball->active)
         {
-            *existing_ball = create_ball(player, world_id,
+            existing_ball = create_ball(player, world_id,
                                          (b2Vec2){paddle_position.x + (paddle->size.x / 2),
                                                   (paddle_position.y + 3)},
                                          (b2Vec2){random_x, 50});
@@ -29,8 +29,7 @@ static void add_ball_func(Entities *entities, Player *player, b2WorldId world_id
     }
 
     // If no inactive ball found, create a new one
-    Ball *new_ball = malloc(sizeof(Ball));
-    *new_ball = create_ball(player, world_id,
+    Ball *new_ball = create_ball(player, world_id,
                             (b2Vec2){paddle_position.x + (paddle->size.x / 2),
                                      (paddle_position.y + 3)},
                             (b2Vec2){random_x, 50});
@@ -46,14 +45,13 @@ static void add_paddle_func(Entities *entities, Player *player, b2WorldId world_
         Paddle *paddle = kv_A(entities->paddles, i);
         if (!paddle->active)
         {
-            *paddle = create_paddle(i + 1, player, world_id);
+            paddle = create_paddle(i + 1, player, world_id);
             return;
         }
     }
 
     // If no inactive paddle found, create a new one
-    Paddle *new_paddle = malloc(sizeof(Paddle));
-    *new_paddle = create_paddle((int)kv_size(entities->paddles) + 1, player, world_id);
+    Paddle *new_paddle = create_paddle((int)kv_size(entities->paddles) + 1, player, world_id);
     kv_push(Paddle *, entities->paddles, new_paddle); // Push the pointer to kvec
 }
 
@@ -65,16 +63,14 @@ static void add_brick_func(Entities *entities, b2WorldId world_id, b2Vec2 positi
         Brick *existing_brick = kv_A(entities->bricks, i);
         if (!existing_brick->active)
         {
-            *existing_brick = create_brick(world_id, position, health);
+            existing_brick = create_brick(world_id, position, health);
             existing_brick->active = true;
             return;
         }
     }
 
     // If no inactive brick found, create a new one
-    Brick *new_brick = malloc(sizeof(Brick));
-    *new_brick = create_brick(world_id, position, health);
-    new_brick->active = true;
+    Brick *new_brick = create_brick(world_id, position, health);
     kv_push(Brick *, entities->bricks, new_brick); // Push the pointer to kvec
 }
 
@@ -143,7 +139,6 @@ static void cleanup_entities_func(Entities *entities)
         {
             paddle->clean_up(paddle);
         }
-        free(paddle);
     }
     kv_destroy(entities->paddles); // Destroy the kvec itself
 
@@ -155,7 +150,6 @@ static void cleanup_entities_func(Entities *entities)
         {
             ball->clean_up(ball);
         }
-        free(ball);
     }
     kv_destroy(entities->balls);
 
@@ -167,7 +161,6 @@ static void cleanup_entities_func(Entities *entities)
         {
             brick->clean_up(brick);
         }
-        free(brick);
     }
     kv_destroy(entities->bricks);
 }

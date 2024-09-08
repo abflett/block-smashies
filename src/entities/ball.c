@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdlib.h>
 #include "raylib.h"
 #include "box2d/box2d.h"
 #include "ball.h"
@@ -15,6 +16,7 @@ static void clean_up_ball(Ball *ball)
 {
     TraceLog(LOG_INFO, "[Cleanup] - Ball [%d] - Success", ball->body.index1);
     b2DestroyBody(ball->body);
+    free(ball);
 }
 
 static void render_ball(Ball *ball)
@@ -50,33 +52,30 @@ static void update_ball(Ball *ball, float delta_time)
     b2Body_SetLinearVelocity(ball->body, velocity);
 }
 
-Ball create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity)
+Ball *create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity)
 {
-    Ball ball;
-    ball.type = ENTITY_BALL;
-    ball.active = true;
-    ball.texture = &resource_manager.get_texture("ball")->texture;
-    ball.radius = ball.texture->width / 4.0f;
+    Ball *ball = (Ball *)malloc(sizeof(Ball));
 
-    ball.power = &player->ball.power;
-    ball.phase_nova = &player->perks.phase_shift;
-    ball.super_nova = &player->perks.super_nova;
+    ball->type = ENTITY_BALL;
+    ball->active = true;
+    ball->texture = &resource_manager.get_texture("ball")->texture;
+    ball->radius = ball->texture->width / 4.0f;
 
-    ball.render = render_ball;
-    ball.clean_up = clean_up_ball;
-    ball.update = update_ball;
+    ball->power = &player->ball.power;
+    ball->phase_nova = &player->perks.phase_shift;
+    ball->super_nova = &player->perks.super_nova;
 
     // Create the Box2D body definition
     b2BodyDef bodyDef = b2DefaultBodyDef();
     bodyDef.type = b2_dynamicBody;
     bodyDef.position = position; // Initial position in the Box2D world
     bodyDef.isBullet = true;
-    ball.body = b2CreateBody(world_id, &bodyDef);
+    ball->body = b2CreateBody(world_id, &bodyDef);
 
     // Define the circle shape for the ball
     b2Circle circle;
-    circle.center = (b2Vec2){0, 0};             // This is an offset from the body's position
-    circle.radius = ball.texture->width / 4.0f; // Texture width is the diameter, so radius is half
+    circle.center = (b2Vec2){0, 0};              // This is an offset from the body's position
+    circle.radius = ball->texture->width / 4.0f; // Texture width is the diameter, so radius is half
 
     // Define the physical properties of the ball (density, friction, etc.)
     b2ShapeDef circle_def = b2DefaultShapeDef();
@@ -89,13 +88,13 @@ Ball create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 vel
     circle_def.filter.maskBits = BALL_COLLIDE_WITH & ~BALL_CATEGORY; // Collide with everything except other balls
 
     // Attach the shape to the body
-    b2CreateCircleShape(ball.body, &circle_def, &circle);
+    b2CreateCircleShape(ball->body, &circle_def, &circle);
+    b2Body_SetLinearVelocity(ball->body, velocity);
 
-    // Apply initial velocity
-    b2Body_SetLinearVelocity(ball.body, velocity);
+    ball->render = render_ball;
+    ball->clean_up = clean_up_ball;
+    ball->update = update_ball;
 
-    // Set the user data to associate this Ball with its Box2D body
-    b2Body_SetUserData(ball.body, &ball);
-
+    b2Body_SetUserData(ball->body, ball);
     return ball;
 }

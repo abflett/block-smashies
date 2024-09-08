@@ -22,6 +22,6 @@ typedef struct Brick
     void (*clean_up)(struct Brick *brick);
 } Brick;
 
-Brick create_brick(b2WorldId world_id, b2Vec2 position, int health);
+Brick *create_brick(b2WorldId world_id, b2Vec2 position, int health);
 
 #endif

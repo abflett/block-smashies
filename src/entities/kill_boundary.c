@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "kill_boundary.h"
 #include "game_settings.h"
 
@@ -6,16 +7,17 @@
 static void clean_up_kill_boundary(KillBoundary *kill_boundary)
 {
     b2DestroyBody(kill_boundary->body);
+    free(kill_boundary);
 }
 
-KillBoundary create_kill_boundary(b2WorldId world_id)
+KillBoundary *create_kill_boundary(b2WorldId world_id)
 {
-    KillBoundary kill_boundary;
-
+    KillBoundary *kill_boundary = (KillBoundary *)malloc(sizeof(KillBoundary));
+    kill_boundary->type = ENTITY_KILL_BOUNDARY;
     // Create a static body for the kill boundary
     b2BodyDef bodyDef = b2DefaultBodyDef();
     bodyDef.type = b2_staticBody;
-    kill_boundary.body = b2CreateBody(world_id, &bodyDef);
+    kill_boundary->body = b2CreateBody(world_id, &bodyDef);
 
     Rectangle play_area = game_settings.play_area;
     b2Segment bottom_segment;
@@ -28,10 +30,12 @@ KillBoundary create_kill_boundary(b2WorldId world_id)
     segment_def.restitution = 1.0f; // Bouncy effect, if needed
 
     // Create the segment shape (kill boundary) attached to the body
-    b2CreateSegmentShape(kill_boundary.body, &segment_def, &bottom_segment);
+    b2CreateSegmentShape(kill_boundary->body, &segment_def, &bottom_segment);
 
     // Assign the clean-up function
-    kill_boundary.clean_up = clean_up_kill_boundary;
+    kill_boundary->clean_up = clean_up_kill_boundary;
+
+    b2Body_SetUserData(kill_boundary->body, kill_boundary);
 
     return kill_boundary;
 }

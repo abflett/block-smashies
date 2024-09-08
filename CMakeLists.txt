@@ -12,6 +12,7 @@ add_subdirectory(external/box2d)
 # Include directories
 include_directories(
     ${PROJECT_SOURCE_DIR}/include/core
+    ${PROJECT_SOURCE_DIR}/include/collisions
     ${PROJECT_SOURCE_DIR}/include/entities
     ${PROJECT_SOURCE_DIR}/include/scenes
     ${PROJECT_SOURCE_DIR}/include/game_states
@@ -27,6 +28,10 @@ set(CORE_SRC
     src/core/main.c
     src/core/game_settings.c
     src/core/resource_manager.c
+)
+
+set(COLLISIONS_SRC
+    src/collisions/collision_manager.c
 )
 
 # Source files for entities
@@ -69,7 +74,8 @@ add_executable(BlockSmashies
     ${GAME_STATES_SRC}
     ${CORE_SRC}
     ${GAME_SRC}
-    ${ENTITIES_SRC})
+    ${ENTITIES_SRC}
+    ${COLLISIONS_SRC})
 
 # Link with libraries
 target_link_libraries(BlockSmashies PUBLIC raylib parson box2d)

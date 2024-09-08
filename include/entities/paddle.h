@@ -36,6 +36,6 @@ typedef struct Paddle
     void (*clean_up)(struct Paddle *paddle);
 } Paddle;
 
-Paddle create_paddle(int player_num, Player *player, b2WorldId world_id);
+Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id);
 
 #endif

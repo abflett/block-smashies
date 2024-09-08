@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdlib.h>
 #include "paddle.h"
 #include "raylib.h"
 #include "resource_manager.h"
@@ -15,6 +16,9 @@ static void clean_up_paddle(Paddle *paddle)
 {
     TraceLog(LOG_INFO, "[Cleanup] - Paddle [%d] - Success", paddle->body.index1);
     b2DestroyBody(paddle->body);
+    TraceLog(LOG_INFO, "[Cleanup] - Ball [%d] - Success", paddle->constraint.index1);
+    b2DestroyBody(paddle->constraint);
+    free(paddle);
 }
 
 static void update_paddle(Paddle *paddle, float delta_time)
@@ -65,65 +69,65 @@ static void render_paddle(Paddle *paddle)
     DrawTextureEx(*paddle->texture, (Vector2){position.x - (paddle->size.x / 2), game_settings.target_height - (position.y + (paddle->size.y / 2))}, 0.0f, 1.0f, WHITE);
 }
 
-Paddle create_paddle(int player_num, Player *player, b2WorldId world_id)
+Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
 {
-    Paddle paddle;
-    paddle.type = ENTITY_PADDLE;
-    paddle.active = true;
+    Paddle *paddle = (Paddle *)malloc(sizeof(Paddle));
+    paddle->type = ENTITY_PADDLE;
+    paddle->active = true;
 
-    paddle.texture = &resource_manager.get_texture("paddle")->texture;
-    paddle.size = (b2Vec2){(float)paddle.texture->width, (float)paddle.texture->height};
-    paddle.player_num = player_num;
-    paddle.force_timer = 0.0f;
-    paddle.force_active_timer = 0.0f;
+    paddle->texture = &resource_manager.get_texture("paddle")->texture;
+    paddle->size = (b2Vec2){(float)paddle->texture->width, (float)paddle->texture->height};
+    paddle->player_num = player_num;
+    paddle->force_timer = 0.0f;
+    paddle->force_active_timer = 0.0f;
 
     // used in later development for power ups but for now ignore
-    paddle.acceleration = &player->paddle.acceleration;
-    paddle.max_speed = &player->paddle.max_speed;
-    paddle.friction = &player->paddle.friction;
-    paddle.charge = &player->paddle.charge;
-    paddle.booster_str = &player->paddle.booster_str;
-    paddle.pulse_str = &player->paddle.pulse_str;
-    paddle.phase_shift = &player->perks.phase_shift;
-    paddle.time_manipulation = &player->perks.time_manipulation;
-    paddle.orb_shot = &player->perks.orb_shot;
+    paddle->acceleration = &player->paddle.acceleration;
+    paddle->max_speed = &player->paddle.max_speed;
+    paddle->friction = &player->paddle.friction;
+    paddle->charge = &player->paddle.charge;
+    paddle->booster_str = &player->paddle.booster_str;
+    paddle->pulse_str = &player->paddle.pulse_str;
+    paddle->phase_shift = &player->perks.phase_shift;
+    paddle->time_manipulation = &player->perks.time_manipulation;
+    paddle->orb_shot = &player->perks.orb_shot;
 
     b2BodyDef body_def = b2DefaultBodyDef();
     body_def.type = b2_dynamicBody;
     body_def.position = (b2Vec2){(game_settings.play_area.width / 2) + game_settings.play_area.x, PADDLE_HEIGHT};
     body_def.linearDamping = 3.0f;
     body_def.isBullet = true;
-    paddle.body = b2CreateBody(world_id, &body_def);
+    paddle->body = b2CreateBody(world_id, &body_def);
 
-    b2Polygon paddle_box = b2MakeBox(paddle.size.x * 0.5f, paddle.size.y * 0.5f);
+    b2Polygon paddle_box = b2MakeBox(paddle->size.x * 0.5f, paddle->size.y * 0.5f);
 
     b2ShapeDef paddle_shape_def = b2DefaultShapeDef();
     paddle_shape_def.density = 0.01f;
     paddle_shape_def.friction = 10.0f;
     paddle_shape_def.restitution = 1.2f; // High restitution for bouncing
 
-    b2CreatePolygonShape(paddle.body, &paddle_shape_def, &paddle_box);
+    b2CreatePolygonShape(paddle->body, &paddle_shape_def, &paddle_box);
 
     // Create a static reference body for the prismatic joint
     b2BodyDef static_body_def = b2DefaultBodyDef();
     static_body_def.type = b2_staticBody;
     static_body_def.position = (b2Vec2){(game_settings.play_area.width / 2) + game_settings.play_area.x, PADDLE_HEIGHT}; // Static reference point
-    paddle.constraint = b2CreateBody(world_id, &static_body_def);
+    paddle->constraint = b2CreateBody(world_id, &static_body_def);
 
     // First Prismatic Joint: Constrain movement to the X-axis
     b2PrismaticJointDef x_joint_def = b2DefaultPrismaticJointDef();
-    x_joint_def.bodyIdA = paddle.body;
-    x_joint_def.bodyIdB = paddle.constraint;
+    x_joint_def.bodyIdA = paddle->body;
+    x_joint_def.bodyIdB = paddle->constraint;
     x_joint_def.localAxisA = (b2Vec2){1.0f, 0.0f}; // Constrain to X-axis
     x_joint_def.enableLimit = false;               // No strict limits along X-axis
     x_joint_def.enableMotor = false;
     b2CreatePrismaticJoint(world_id, &x_joint_def);
 
-    b2Body_SetUserData(paddle.body, &paddle);
+    paddle->update = update_paddle;
+    paddle->render = render_paddle;
+    paddle->clean_up = clean_up_paddle;
 
-    paddle.update = update_paddle;
-    paddle.render = render_paddle;
-    paddle.clean_up = clean_up_paddle;
+    b2Body_SetUserData(paddle->body, paddle);
 
     return paddle;
 }

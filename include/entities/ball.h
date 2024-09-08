@@ -28,6 +28,6 @@ typedef struct Ball
     void (*clean_up)(struct Ball *ball);
 } Ball;
 
-Ball create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity);
+Ball *create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity);
 
 #endif

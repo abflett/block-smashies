@@ -9,14 +9,16 @@
 #include "player.h"
 #include "wall_edges.h"
 #include "kill_boundary.h"
+#include "collision_manager.h"
 
 static Entities entities;
 static Texture2D *background;
 static Player player;
 static bool is_hold;
-static WallEdges wall_edges;
-static KillBoundary kill_boundary;
-static b2WorldId worldId;
+static WallEdges *wall_edges;
+static KillBoundary *kill_boundary;
+static b2WorldId world_id;
+static CollisionManager collision_manager;
 
 static void state_init(int argc, va_list args)
 {
@@ -24,9 +26,11 @@ static void state_init(int argc, va_list args)
     {
         b2WorldDef worldDef = b2DefaultWorldDef();
         worldDef.gravity = (b2Vec2){0.0f, 0.0f};
-        worldId = b2CreateWorld(&worldDef);
-        wall_edges = create_wall_edges(worldId);
-        kill_boundary = create_kill_boundary(worldId);
+        world_id = b2CreateWorld(&worldDef);
+        collision_manager = create_collision_manager(world_id);
+
+        wall_edges = create_wall_edges(world_id);
+        kill_boundary = create_kill_boundary(world_id);
 
         is_hold = true;
 
@@ -34,13 +38,13 @@ static void state_init(int argc, va_list args)
         player = create_new_player("Player 1");
         entities = create_entities();
 
-        entities.add_paddle(&entities, &player, worldId);
+        entities.add_paddle(&entities, &player, world_id);
 
         Paddle *paddle = kv_A(entities.paddles, 0); // player1 paddle
 
         for (int i = 0; i < 1; i++)
         {
-            entities.add_ball(&entities, &player, worldId, paddle);
+            entities.add_ball(&entities, &player, world_id, paddle);
         }
 
         int brick_row = 12;
@@ -51,7 +55,7 @@ static void state_init(int argc, va_list args)
         {
             for (int row = 0; row < brick_column; row++)
             {
-                entities.add_brick(&entities, worldId, (b2Vec2){row * row_spacing + game_settings.play_area.x + 10, game_settings.target_height - (col * col_spacing + game_settings.play_area.y + 5)}, 1);
+                entities.add_brick(&entities, world_id, (b2Vec2){row * row_spacing + game_settings.play_area.x + 10, game_settings.target_height - (col * col_spacing + game_settings.play_area.y + 5)}, 1);
             }
         }
     }
@@ -67,9 +71,12 @@ static void state_cleanup(void)
     {
         TraceLog(LOG_INFO, "[Cleanup] - playing_state - Success");
         entities.cleanup(&entities);
-        wall_edges.clean_up(&wall_edges);
-        kill_boundary.clean_up(&kill_boundary);
-        b2DestroyWorld(worldId);
+        TraceLog(LOG_INFO, "[Cleanup] - Wall_Edges [%d] - Success", wall_edges->body.index1);
+        wall_edges->clean_up(wall_edges);
+        TraceLog(LOG_INFO, "[Cleanup] - Kill_Boundry [%d] - Success", kill_boundary->body.index1);
+        kill_boundary->clean_up(kill_boundary);
+
+        b2DestroyWorld(world_id);
     }
 }
 
@@ -88,12 +95,13 @@ static void state_update(float delta_time)
         // box2d physics
         static float accumulator = 0.0f;
         float timeStep = 1.0f / 60.0f;
+        int subStepCount = 4;
         accumulator += delta_time;
         while (accumulator >= timeStep)
         {
-            int subStepCount = 4;
-            b2World_Step(worldId, timeStep, subStepCount);
+            b2World_Step(world_id, timeStep, subStepCount);
             accumulator -= timeStep;
+            collision_manager.process_collisions(&collision_manager);
         }
     }
 
