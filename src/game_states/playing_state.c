@@ -15,8 +15,6 @@ static Entities entities;
 static Texture2D *background;
 static Player player;
 static bool is_hold;
-static WallEdges *wall_edges;
-static KillBoundary *kill_boundary;
 static b2WorldId world_id;
 static CollisionManager collision_manager;
 
@@ -29,15 +27,14 @@ static void state_init(int argc, va_list args)
         world_id = b2CreateWorld(&worldDef);
         collision_manager = create_collision_manager(world_id);
 
-        wall_edges = create_wall_edges(world_id);
-        kill_boundary = create_kill_boundary(world_id);
-
         is_hold = true;
 
         background = &resource_manager.get_texture("gameplay-bg")->texture;
         player = create_new_player("Player 1");
         entities = create_entities();
 
+        entities.add_wall_edges(&entities, world_id);
+        entities.add_kill_boundary(&entities, world_id);
         entities.add_paddle(&entities, &player, world_id);
 
         Paddle *paddle = kv_A(entities.paddles, 0); // player1 paddle
@@ -71,11 +68,6 @@ static void state_cleanup(void)
     {
         TraceLog(LOG_INFO, "[Cleanup] - playing_state - Success");
         entities.cleanup(&entities);
-        TraceLog(LOG_INFO, "[Cleanup] - Wall_Edges [%d] - Success", wall_edges->body.index1);
-        wall_edges->clean_up(wall_edges);
-        TraceLog(LOG_INFO, "[Cleanup] - Kill_Boundry [%d] - Success", kill_boundary->body.index1);
-        kill_boundary->clean_up(kill_boundary);
-
         b2DestroyWorld(world_id);
     }
 }

@@ -149,6 +149,7 @@ void rm_cleanup(void)
     {
         UnloadTexture(texture->texture);
         HASH_DEL(resource_manager.textures, texture);
+        TraceLog(LOG_INFO, "[Cleanup] - Texture [%s] - Success", texture->id);
         free((char *)texture->id); // Free duplicated string
         free(texture);
     }
@@ -158,6 +159,7 @@ void rm_cleanup(void)
     HASH_ITER(hh, resource_manager.subtextures, subtexture, tmp_subtexture)
     {
         HASH_DEL(resource_manager.subtextures, subtexture);
+        TraceLog(LOG_INFO, "[Cleanup] - Subtexture [%s] - Success", subtexture->id);
         free((char *)subtexture->id); // Free duplicated string
         free(subtexture);
     }
@@ -168,6 +170,7 @@ void rm_cleanup(void)
     {
         free(animation->subtexture_frames);
         HASH_DEL(resource_manager.animations, animation);
+        TraceLog(LOG_INFO, "[Cleanup] - Animation [%s] - Success", animation->id);
         free((char *)animation->id); // Free duplicated string
         free(animation);
     }
@@ -175,8 +178,6 @@ void rm_cleanup(void)
     resource_manager.textures = NULL;
     resource_manager.subtextures = NULL;
     resource_manager.animations = NULL;
-
-    TraceLog(LOG_INFO, "[Cleanup] - resource_manager - Success");
 }
 
 ResourceManager resource_manager = {

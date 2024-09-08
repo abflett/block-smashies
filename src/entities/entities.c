@@ -72,6 +72,16 @@ static void add_brick_func(Entities *entities, b2WorldId world_id, b2Vec2 positi
     kv_push(Brick *, entities->bricks, new_brick); // Push the pointer to kvec
 }
 
+static void add_wall_edges_func(Entities *entities, b2WorldId world_id)
+{
+    entities->wall_edges = create_wall_edges(world_id);
+}
+
+static void add_kill_boundary_func(Entities *entities, b2WorldId world_id)
+{
+    entities->kill_boundary = create_kill_boundary(world_id);
+}
+
 static void update_entities_func(Entities *entities, float delta_time)
 {
     for (int i = 0; i < kv_size(entities->paddles); i++)
@@ -129,6 +139,18 @@ static void render_entities_func(Entities *entities)
 
 static void cleanup_entities_func(Entities *entities)
 {
+    // Clean up wall edges
+    if (entities->wall_edges && entities->wall_edges->clean_up)
+    {
+        entities->wall_edges->clean_up(entities->wall_edges);
+    }
+
+    // Clean up kill boundry
+    if (entities->kill_boundary && entities->kill_boundary->clean_up)
+    {
+        entities->kill_boundary->clean_up(entities->kill_boundary);
+    }
+
     // Clean up paddles
     for (size_t i = 0; i < kv_size(entities->paddles); i++)
     {
@@ -174,6 +196,9 @@ Entities create_entities()
     entities.add_ball = add_ball_func;
     entities.add_paddle = add_paddle_func;
     entities.add_brick = add_brick_func;
+    entities.add_wall_edges = add_wall_edges_func;
+    entities.add_kill_boundary = add_kill_boundary_func;
+
     entities.update = update_entities_func;
     entities.render = render_entities_func;
     entities.cleanup = cleanup_entities_func;
