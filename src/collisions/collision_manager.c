@@ -38,6 +38,11 @@ static void begin_contact(b2ShapeId shapeA, b2ShapeId shapeB)
         if (ball != NULL && brick != NULL)
         {
             // ball_brick_collision(ball, brick); // Replace this with your actual collision handling
+            brick->health -= 1;
+            if (brick->health <= 0)
+            {
+                brick->disable(brick);
+            }
             TraceLog(LOG_INFO, "Begin Contact - Ball[%d], Brick[%d]", ball->body.index1, brick->body.index1);
         }
     }

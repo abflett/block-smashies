@@ -59,6 +59,8 @@ Brick *create_brick(b2WorldId world_id, b2Vec2 position, int health)
 
     brick->render = render_brick;
     brick->clean_up = clean_up_brick;
+    brick->disable = disable_brick;
+    brick->reset = reset_brick;
 
     b2Body_SetUserData(brick->body, brick);
 
