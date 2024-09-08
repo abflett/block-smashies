@@ -61,8 +61,7 @@ static void add_brick_func(Entities *entities, b2WorldId world_id, b2Vec2 positi
         Brick *existing_brick = kv_A(entities->bricks, i);
         if (!existing_brick->active)
         {
-            existing_brick = create_brick(world_id, position, health);
-            existing_brick->active = true;
+            existing_brick->reset(existing_brick, position, health);
             return;
         }
     }

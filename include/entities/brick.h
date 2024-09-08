@@ -20,6 +20,8 @@ typedef struct Brick
 
     void (*render)(struct Brick *brick);
     void (*clean_up)(struct Brick *brick);
+    void (*reset)(struct Brick *brick, b2Vec2 position, int health);
+    void (*disable)(struct Brick *brick);
 } Brick;
 
 Brick *create_brick(b2WorldId world_id, b2Vec2 position, int health);
