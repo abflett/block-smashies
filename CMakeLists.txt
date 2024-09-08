@@ -66,6 +66,7 @@ set(GAME_SRC
     src/game/game_status.c
     src/game/player.c
     src/game/high_score.c
+    src/game/game_context.c
 )
 
 # Create the BlockSmashies executable
