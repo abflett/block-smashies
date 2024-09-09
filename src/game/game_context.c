@@ -27,6 +27,7 @@ static void render_game_context(void)
     DrawTexture(*context.background, 0, 0, WHITE);
     context.game_status.render(&context.game_status);
     context.entities.render(&context.entities);
+    DrawTexture(*context.foreground, 0, 0, WHITE);
 }
 
 static void cleanup_game_context(void)
@@ -48,6 +49,7 @@ GameContext *create_game_context(void)
     context.collision_manager = create_collision_manager(context.world_id);
     context.game_status = create_game_status();
     context.background = &resource_manager.get_texture("gameplay-bg")->texture;
+    context.foreground = &resource_manager.get_texture("gameplay-fg")->texture;
     context.player = create_new_player("Player 1");
     context.entities = create_entities();
 

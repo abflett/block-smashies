@@ -11,8 +11,9 @@
 
 typedef struct GameContext
 {
-    Entities entities;                   // All game entities like balls, paddles, bricks, etc.
-    Texture2D *background;               // Background texture for the game
+    Entities entities;     // All game entities like balls, paddles, bricks, etc.
+    Texture2D *background; // Background texture for the game
+    Texture2D *foreground;
     Player player;                       // Player object
     b2WorldId world_id;                  // Box2D physics world ID
     CollisionManager *collision_manager; // Manages collisions between entities
