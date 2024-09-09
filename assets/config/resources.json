@@ -19,6 +19,11 @@
       "id": "gameplay-bg",
       "file": "assets/textures/gameplay-bg.png",
       "type": "single"
+    },
+    {
+      "id": "gameplay-fg",
+      "file": "assets/textures/gameplay-fg.png",
+      "type": "single"
     }
   ]
 }
