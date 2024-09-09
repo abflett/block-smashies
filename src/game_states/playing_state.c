@@ -1,11 +1,10 @@
+#include <stdlib.h>
 #include "raylib.h"
 #include "box2d/box2d.h"
 #include "kvec.h"
 #include "playing_state.h"
 #include "game_settings.h"
 #include "game_state_manager.h"
-#include "entities.h"
-
 #include "game_context.h"
 
 static GameContext *context = NULL;

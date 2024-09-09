@@ -6,8 +6,8 @@
       "type": "single"
     },
     {
-      "id": "paddle",
-      "file": "assets/textures/paddle.png",
+      "id": "ship_base",
+      "file": "assets/textures/ship_base.png",
       "type": "single"
     },
     {
@@ -23,6 +23,11 @@
     {
       "id": "gameplay-fg",
       "file": "assets/textures/gameplay-fg.png",
+      "type": "single"
+    },
+    {
+      "id": "nanite001",
+      "file": "assets/textures/nanite001.png",
       "type": "single"
     }
   ]
