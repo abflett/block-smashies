@@ -33,13 +33,11 @@ void ball_kill_boundary_collision(Ball *ball, KillBoundary *kill_boundary, GameC
         }
         else
         {
+            // get the first paddle;
             Paddle *paddle = kv_A(context->entities.paddles, 0);
-            b2Vec2 paddle_position = b2Body_GetPosition(paddle->body);
-            ball->reset(ball, (b2Vec2){paddle_position.x, 25.0f}, (b2Vec2){0.0f, 75.0f});
+            context->entities.add_ball(&context->entities, &context->player, context->world_id, paddle);
             context->game_status.is_hold = true;
-            // context->entities.add_ball(&context->entities, &context->player, context->world_id, paddle);
-            //  todo reset ball; reset paddle position;
         }
-        }
+    }
     TraceLog(LOG_INFO, "Begin Contact - Ball[%d], KillBoundary[%d]", ball->body.index1, kill_boundary->body.index1);
 }

@@ -19,9 +19,9 @@ static void add_ball_func(Entities *entities, Player *player, b2WorldId world_id
         Ball *existing_ball = kv_A(entities->balls, i);
         if (!existing_ball->active)
         {
-            existing_ball = create_ball(player, world_id,
-                                        (b2Vec2){paddle_position.x, paddle_position.y + 3},
-                                        (b2Vec2){random_x, 50});
+            existing_ball->reset(existing_ball,
+                                 (b2Vec2){paddle_position.x, paddle_position.y + 3},
+                                 (b2Vec2){random_x, 50});
             return;
         }
     }
