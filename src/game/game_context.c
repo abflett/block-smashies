@@ -46,7 +46,6 @@ GameContext *create_game_context(void)
 
     context.world_id = b2CreateWorld(&world_def);
     context.collision_manager = create_collision_manager(context.world_id);
-    context.is_hold = true;
     context.game_status = create_game_status();
     context.background = &resource_manager.get_texture("gameplay-bg")->texture;
     context.player = create_new_player("Player 1");

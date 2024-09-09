@@ -8,7 +8,7 @@
 
 #include "game_context.h"
 
-static GameContext *context;
+static GameContext *context = NULL;
 
 static void state_init(int argc, va_list args)
 {
@@ -51,12 +51,12 @@ static void state_cleanup(void)
 
 static void state_update(float delta_time)
 {
-    if (!context->is_hold || IsKeyPressed(KEY_SPACE))
+    if (!context->game_status.is_hold || IsKeyPressed(KEY_SPACE))
     {
-        context->is_hold = false;
+        context->game_status.is_hold = false;
         context->update(delta_time);
 
-        if (context->game_status.lives <= 0)
+        if (context->game_status.game_over)
         {
             game_state_manager.change(game_state_manager.states.game_over, 1, context->game_status.score);
         }

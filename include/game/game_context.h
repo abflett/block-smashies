@@ -17,7 +17,6 @@ typedef struct GameContext
     b2WorldId world_id;                  // Box2D physics world ID
     CollisionManager *collision_manager; // Manages collisions between entities
     GameStatus game_status;              // Tracks global game state like time, score, is_paused, etc.
-    bool is_hold;
 
     void (*update)(float delta_time);
     void (*render)(void);
