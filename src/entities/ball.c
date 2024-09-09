@@ -94,7 +94,7 @@ Ball *create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 ve
 
     // Define the physical properties of the ball (density, friction, etc.)
     b2ShapeDef circle_def = b2DefaultShapeDef();
-    circle_def.density = 0.01f;
+    circle_def.density = 0.003f;
     circle_def.friction = 10.0f;   // Low friction for a smooth ball
     circle_def.restitution = 1.0f; // High restitution for bouncing
 

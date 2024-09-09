@@ -10,7 +10,7 @@
 #define MOVE_FORCE 500.0f   // Adjust the force for moving the paddle
 #define BOUNCE_FORCE 100.0f // Adjust the force for the bounce
 #define MAX_VELOCITY 300.0f // Maximum velocity for the paddle
-#define PADDLE_HEIGHT 20.f
+#define PADDLE_HEIGHT 16.f
 
 static void clean_up_paddle(Paddle *paddle)
 {
@@ -75,7 +75,7 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
     paddle->type = ENTITY_PADDLE;
     paddle->active = true;
 
-    paddle->texture = &resource_manager.get_texture("paddle")->texture;
+    paddle->texture = &resource_manager.get_texture("ship_base")->texture;
     paddle->size = (b2Vec2){(float)paddle->texture->width, (float)paddle->texture->height};
     paddle->player_num = player_num;
     paddle->force_timer = 0.0f;
@@ -99,10 +99,10 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
     body_def.isBullet = true;
     paddle->body = b2CreateBody(world_id, &body_def);
 
-    b2Polygon paddle_box = b2MakeBox(paddle->size.x * 0.5f, paddle->size.y * 0.5f);
+    b2Polygon paddle_box = b2MakeBox((paddle->size.x * 0.5f) - 3, paddle->size.y * 0.5f);
 
     b2ShapeDef paddle_shape_def = b2DefaultShapeDef();
-    paddle_shape_def.density = 0.01f;
+    paddle_shape_def.density = 0.004f;
     paddle_shape_def.friction = 10.0f;
     paddle_shape_def.restitution = 1.2f; // High restitution for bouncing
 

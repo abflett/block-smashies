@@ -20,14 +20,14 @@ static void add_ball_func(Entities *entities, Player *player, b2WorldId world_id
         if (!existing_ball->active)
         {
             existing_ball->reset(existing_ball,
-                                 (b2Vec2){paddle_position.x, paddle_position.y + 3},
+                                 (b2Vec2){paddle_position.x, paddle_position.y + (paddle->size.y / 2) + 2},
                                  (b2Vec2){random_x, 50});
             return;
         }
     }
 
     Ball *new_ball = create_ball(player, world_id,
-                                 (b2Vec2){paddle_position.x, paddle_position.y + 3},
+                                 (b2Vec2){paddle_position.x, paddle_position.y + (paddle->size.y / 2) + 2},
                                  (b2Vec2){random_x, 50});
     kv_push(Ball *, entities->balls, new_ball);
 }
