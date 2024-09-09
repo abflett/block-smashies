@@ -45,7 +45,7 @@ static void state_cleanup(void)
 {
     if (!game_settings.is_paused)
     {
-        context->cleanup(context);
+        context->cleanup();
     }
 }
 
@@ -54,12 +54,12 @@ static void state_update(float delta_time)
     if (!context->is_hold || IsKeyPressed(KEY_SPACE))
     {
         context->is_hold = false;
-        context->update(context, delta_time);
+        context->update(delta_time);
 
-        // if (context->game_status.lives <= 0)
-        // {
-        //     game_state_manager.change(game_state_manager.states.game_over, 1, context->game_status.score);
-        // }
+        if (context->game_status.lives <= 0)
+        {
+            game_state_manager.change(game_state_manager.states.game_over, 1, context->game_status.score);
+        }
     }
 
     if (IsKeyPressed(KEY_ESCAPE))
@@ -72,7 +72,7 @@ static void state_update(float delta_time)
 
 static void state_render(void)
 {
-    context->render(context);
+    context->render();
 }
 
 GameState playing_state = {

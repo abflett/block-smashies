@@ -19,9 +19,9 @@ typedef struct GameContext
     GameStatus game_status;             // Tracks global game state like time, score, is_paused, etc.
     bool is_hold;
 
-    void (*update)(struct GameContext *context, float delta_time);
-    void (*render)(struct GameContext *context);
-    void (*cleanup)(struct GameContext *context);
+    void (*update)(float delta_time);
+    void (*render)(void);
+    void (*cleanup)(void);
 } GameContext;
 
 // Function declarations for GameContext management (if needed)
