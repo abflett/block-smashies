@@ -5,6 +5,7 @@
 #include "brick.h"
 #include "game_context.h"
 #include "ball_brick_collision.h"
+#include "ball_kill_boundary_collision.h"
 
 CollisionManager collision_manager;
 
@@ -13,25 +14,43 @@ static void begin_contact(b2ShapeId shapeA, b2ShapeId shapeB, GameContext *conte
     b2BodyId bodyA = b2Shape_GetBody(shapeA);
     b2BodyId bodyB = b2Shape_GetBody(shapeB);
 
-    EntityType *typeA = (EntityType *)b2Body_GetUserData(bodyA);
-    EntityType *typeB = (EntityType *)b2Body_GetUserData(bodyB);
+    // Get user data once for each body
+    void *userDataA = b2Body_GetUserData(bodyA);
+    void *userDataB = b2Body_GetUserData(bodyB);
 
-    if (typeA == NULL || typeB == NULL)
+    if (userDataA == NULL || userDataB == NULL)
     {
         TraceLog(LOG_ERROR, "UserData is NULL for one or both bodies");
         return;
     }
 
+    // Cast user data to entity types
+    EntityType *typeA = (EntityType *)userDataA;
+    EntityType *typeB = (EntityType *)userDataB;
+
     // Handle ball-brick collision
     if ((*typeA == ENTITY_BALL && *typeB == ENTITY_BRICK) ||
         (*typeA == ENTITY_BRICK && *typeB == ENTITY_BALL))
     {
-        Ball *ball = (*typeA == ENTITY_BALL) ? (Ball *)b2Body_GetUserData(bodyA) : (Ball *)b2Body_GetUserData(bodyB);
-        Brick *brick = (*typeA == ENTITY_BRICK) ? (Brick *)b2Body_GetUserData(bodyA) : (Brick *)b2Body_GetUserData(bodyB);
+        Ball *ball = (*typeA == ENTITY_BALL) ? (Ball *)userDataA : (Ball *)userDataB;
+        Brick *brick = (*typeA == ENTITY_BRICK) ? (Brick *)userDataA : (Brick *)userDataB;
 
         if (ball != NULL && brick != NULL)
         {
             ball_brick_collision(ball, brick, context);
+        }
+    }
+
+    // Handle ball-kill_boundary collision
+    if ((*typeA == ENTITY_BALL && *typeB == ENTITY_KILL_BOUNDARY) ||
+        (*typeA == ENTITY_KILL_BOUNDARY && *typeB == ENTITY_BALL))
+    {
+        Ball *ball = (*typeA == ENTITY_BALL) ? (Ball *)userDataA : (Ball *)userDataB;
+        KillBoundary *kill_boundary = (*typeA == ENTITY_KILL_BOUNDARY) ? (KillBoundary *)userDataA : (KillBoundary *)userDataB;
+
+        if (ball != NULL && kill_boundary != NULL)
+        {
+            ball_kill_boundary_collision(ball, kill_boundary, context); // Corrected function call
         }
     }
 }

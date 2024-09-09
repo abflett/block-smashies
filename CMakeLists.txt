@@ -33,6 +33,7 @@ set(CORE_SRC
 set(COLLISIONS_SRC
     src/collisions/collision_manager.c
     src/collisions/ball_brick_collision.c
+    src/collisions/ball_kill_boundary_collision.c
 )
 
 # Source files for entities
