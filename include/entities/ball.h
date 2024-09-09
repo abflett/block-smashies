@@ -26,6 +26,8 @@ typedef struct Ball
     void (*update)(struct Ball *ball, float delta_time);
     void (*render)(struct Ball *ball);
     void (*clean_up)(struct Ball *ball);
+    void (*reset)(struct Ball *ball, b2Vec2 position, b2Vec2 velocity);
+    void (*disable)(struct Ball *ball);
 } Ball;
 
 Ball *create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity);

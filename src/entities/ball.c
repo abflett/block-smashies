@@ -27,6 +27,21 @@ static void render_ball(Ball *ball)
     DrawTextureEx(*ball->texture, (Vector2){position.x - ball->radius, game_settings.target_height - (position.y + ball->radius)}, 0.0f, 0.5f, WHITE);
 }
 
+static void reset_ball(Ball *ball, b2Vec2 position, b2Vec2 velocity)
+{
+    ball->active = true;
+    b2Body_Enable(ball->body);
+
+    b2Body_SetTransform(ball->body, position, (b2Rot){0.0f, 1.0f});
+    b2Body_SetLinearVelocity(ball->body, velocity);
+}
+
+static void disable_ball(Ball *ball)
+{
+    ball->active = false;
+    b2Body_Disable(ball->body);
+}
+
 static void update_ball(Ball *ball, float delta_time)
 {
     b2Vec2 velocity = b2Body_GetLinearVelocity(ball->body);
@@ -94,6 +109,8 @@ Ball *create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 ve
     ball->render = render_ball;
     ball->clean_up = clean_up_ball;
     ball->update = update_ball;
+    ball->reset = reset_ball;
+    ball->disable = disable_ball;
 
     b2Body_SetUserData(ball->body, ball);
     return ball;
