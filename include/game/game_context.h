@@ -11,12 +11,12 @@
 
 typedef struct GameContext
 {
-    Entities entities;                  // All game entities like balls, paddles, bricks, etc.
-    Texture2D *background;              // Background texture for the game
-    Player player;                      // Player object
-    b2WorldId world_id;                 // Box2D physics world ID
-    CollisionManager collision_manager; // Manages collisions between entities
-    GameStatus game_status;             // Tracks global game state like time, score, is_paused, etc.
+    Entities entities;                   // All game entities like balls, paddles, bricks, etc.
+    Texture2D *background;               // Background texture for the game
+    Player player;                       // Player object
+    b2WorldId world_id;                  // Box2D physics world ID
+    CollisionManager *collision_manager; // Manages collisions between entities
+    GameStatus game_status;              // Tracks global game state like time, score, is_paused, etc.
     bool is_hold;
 
     void (*update)(float delta_time);

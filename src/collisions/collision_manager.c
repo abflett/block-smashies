@@ -6,6 +6,8 @@
 #include "game_context.h"
 #include "ball_brick_collision.h"
 
+CollisionManager collision_manager;
+
 static void begin_contact(b2ShapeId shapeA, b2ShapeId shapeB, GameContext *context)
 {
     b2BodyId bodyA = b2Shape_GetBody(shapeA);
@@ -44,9 +46,9 @@ static void hit_contact(b2ShapeId shapeA, b2ShapeId shapeB, float approachSpeed)
     // not in use as of yet
 }
 
-static void collision_manager_process_collisions(CollisionManager *collision_manager, GameContext *context)
+static void collision_manager_process_collisions(GameContext *context)
 {
-    b2ContactEvents contactEvents = b2World_GetContactEvents(collision_manager->world);
+    b2ContactEvents contactEvents = b2World_GetContactEvents(collision_manager.world);
 
     for (int i = 0; i < contactEvents.beginCount; ++i)
     {
@@ -67,10 +69,10 @@ static void collision_manager_process_collisions(CollisionManager *collision_man
     }
 }
 
-CollisionManager create_collision_manager(b2WorldId world_id)
+CollisionManager *create_collision_manager(b2WorldId world_id)
 {
-    CollisionManager collision_manager;
+    collision_manager;
     collision_manager.world = world_id;
     collision_manager.process_collisions = collision_manager_process_collisions;
-    return collision_manager;
+    return &collision_manager;
 }

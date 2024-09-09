@@ -18,7 +18,7 @@ static void update_game_context(float delta_time)
     {
         b2World_Step(context.world_id, timeStep, subStepCount);
         accumulator -= timeStep;
-        context.collision_manager.process_collisions(&context.collision_manager, &context);
+        context.collision_manager->process_collisions(&context);
     }
 }
 
