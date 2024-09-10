@@ -44,6 +44,7 @@ set(ENTITIES_SRC
     src/entities/wall_edges.c
     src/entities/kill_boundary.c
     src/entities/entities.c
+    src/entities/nanite.c
 )
 
 # Source files for scenes
