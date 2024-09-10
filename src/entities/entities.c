@@ -11,7 +11,6 @@
 static void add_ball_func(Entities *entities, Player *player, b2WorldId world_id, Paddle *paddle)
 {
     float random_x = -100.0f + ((float)rand() / RAND_MAX) * 200.0f;
-
     b2Vec2 paddle_position = b2Body_GetPosition(paddle->body);
 
     for (int i = 0; i < kv_size(entities->balls); i++)
@@ -37,14 +36,15 @@ static void add_paddle_func(Entities *entities, Player *player, b2WorldId world_
     // Todo: check active paddles before setting the player count
     for (int i = 0; i < kv_size(entities->paddles); i++)
     {
-        Paddle *paddle = kv_A(entities->paddles, i);
-        if (!paddle->active)
+        Paddle *existing_paddle = kv_A(entities->paddles, i);
+        if (!existing_paddle->active)
         {
-            paddle = create_paddle(i + 1, player, world_id);
+            existing_paddle->reset(existing_paddle, 1);
             return;
         }
     }
 
+    // Todo: check active paddles before setting the player count
     Paddle *new_paddle = create_paddle((int)kv_size(entities->paddles) + 1, player, world_id);
     kv_push(Paddle *, entities->paddles, new_paddle);
 }
@@ -63,6 +63,22 @@ static void add_brick_func(Entities *entities, b2WorldId world_id, b2Vec2 positi
 
     Brick *new_brick = create_brick(world_id, position, health);
     kv_push(Brick *, entities->bricks, new_brick);
+}
+
+static void add_nanite_func(Entities *entities, b2WorldId world_id, b2Vec2 position, int currency)
+{
+    for (int i = 0; i < kv_size(entities->nanites); i++)
+    {
+        Nanite *existing_nanite = kv_A(entities->nanites, i);
+        if (!existing_nanite->active)
+        {
+            existing_nanite->reset(existing_nanite, position, currency);
+            return;
+        }
+    }
+
+    Nanite *new_nanite = create_nanite(world_id, position, currency);
+    kv_push(Nanite *, entities->nanites, new_nanite);
 }
 
 static void add_wall_edges_func(Entities *entities, b2WorldId world_id)
@@ -180,6 +196,7 @@ Entities create_entities()
     kv_init(entities.balls);
     kv_init(entities.paddles);
     kv_init(entities.bricks);
+    kv_init(entities.nanites);
 
     entities.add_ball = add_ball_func;
     entities.add_paddle = add_paddle_func;

@@ -9,16 +9,19 @@
 #include "player.h"
 #include "wall_edges.h"
 #include "kill_boundary.h"
+#include "nanite.h"
 
 typedef kvec_t(Ball *) BallVector;
 typedef kvec_t(Paddle *) PaddleVector;
 typedef kvec_t(Brick *) BrickVector;
+typedef kvec_t(Nanite *) NaniteVector;
 
 typedef struct Entities
 {
     BallVector balls;
     PaddleVector paddles;
     BrickVector bricks;
+    NaniteVector nanites;
     WallEdges *wall_edges;
     KillBoundary *kill_boundary;
 
