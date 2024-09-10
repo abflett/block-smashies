@@ -8,6 +8,7 @@
 #include "ball_brick_collision.h"
 #include "ball_kill_boundary_collision.h"
 #include "nanite_paddle_collision.h"
+#include "nanite_kill_boundary_collision.h"
 
 CollisionManager collision_manager;
 
@@ -65,6 +66,18 @@ static void begin_contact(b2ShapeId shapeA, b2ShapeId shapeB, GameContext *conte
         if (nanite != NULL && paddle != NULL)
         {
             nanite_paddle_collision(nanite, paddle, context); // Corrected function call
+        }
+    }
+
+    if ((*typeA == ENTITY_NANITE && *typeB == ENTITY_KILL_BOUNDARY) ||
+        (*typeA == ENTITY_KILL_BOUNDARY && *typeB == ENTITY_NANITE))
+    {
+        Nanite *nanite = (*typeA == ENTITY_NANITE) ? (Nanite *)userDataA : (Nanite *)userDataB;
+        KillBoundary *kill_boundary = (*typeA == ENTITY_PADDLE) ? (KillBoundary *)userDataA : (KillBoundary *)userDataB;
+
+        if (nanite != NULL && kill_boundary != NULL)
+        {
+            nanite_kill_boundary_collision(nanite, kill_boundary, context); // Corrected function call
         }
     }
 }
