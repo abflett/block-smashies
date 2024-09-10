@@ -34,6 +34,8 @@ typedef struct Paddle
     void (*update)(struct Paddle *paddle, float delta_time);
     void (*render)(struct Paddle *paddle);
     void (*clean_up)(struct Paddle *paddle);
+    void (*reset)(struct Paddle *paddle, int player_num);
+    void (*disable)(struct Paddle *paddle);
 } Paddle;
 
 Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id);

@@ -59,8 +59,20 @@ static void update_paddle(Paddle *paddle, float delta_time)
     }
 }
 
-static void reset_paddle(Paddle *paddle)
+static void reset_paddle(Paddle *paddle, int player_num)
 {
+    paddle->active = true;
+    paddle->player_num = player_num;
+    paddle->force_timer = 0.0f;
+    paddle->force_active_timer = 0.0f;
+    b2Body_Enable(paddle->body);
+    b2Body_SetTransform(paddle->body, (b2Vec2){(game_settings.play_area.width / 2) + game_settings.play_area.x, PADDLE_HEIGHT}, (b2Rot){1.0f, 0.0f});
+}
+
+static void disable_paddle(Paddle *paddle)
+{
+    paddle->active = false;
+    b2Body_Disable(paddle->body);
 }
 
 static void render_paddle(Paddle *paddle)
@@ -126,6 +138,8 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
     paddle->update = update_paddle;
     paddle->render = render_paddle;
     paddle->clean_up = clean_up_paddle;
+    paddle->reset = reset_paddle;
+    paddle->disable = disable_paddle;
 
     b2Body_SetUserData(paddle->body, paddle);
 

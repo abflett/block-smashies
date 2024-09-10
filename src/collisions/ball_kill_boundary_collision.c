@@ -35,6 +35,7 @@ void ball_kill_boundary_collision(Ball *ball, KillBoundary *kill_boundary, GameC
         {
             // get the first paddle;
             Paddle *paddle = kv_A(context->entities.paddles, 0);
+            paddle->reset(paddle, paddle->player_num);
             context->entities.add_ball(&context->entities, &context->player, context->world_id, paddle);
             context->game_status.is_hold = true;
         }

@@ -6,10 +6,6 @@ static GameContext context;
 
 static void update_game_context(float delta_time)
 {
-    context.entities.update(&context.entities, delta_time);
-    context.game_status.update(&context.game_status, delta_time);
-
-    // box2d physics
     static float accumulator = 0.0f;
     float timeStep = 1.0f / 60.0f;
     int subStepCount = 4;
@@ -20,6 +16,9 @@ static void update_game_context(float delta_time)
         accumulator -= timeStep;
         context.collision_manager->process_collisions(&context);
     }
+
+    context.entities.update(&context.entities, delta_time);
+    context.game_status.update(&context.game_status, delta_time);
 }
 
 static void render_game_context(void)
