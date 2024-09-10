@@ -116,8 +116,8 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
 
     b2ShapeDef paddle_shape_def = b2DefaultShapeDef();
     paddle_shape_def.density = 0.004f;
-    paddle_shape_def.friction = 10.0f;
-    paddle_shape_def.restitution = 1.2f; // High restitution for bouncing
+    paddle_shape_def.friction = 100.0f;
+    paddle_shape_def.restitution = 1.0f; // High restitution for bouncing
 
     paddle_shape_def.filter.categoryBits = CATEGORY_PADDLE;
     paddle_shape_def.filter.maskBits = PADDLE_COLLIDE_WITH;
