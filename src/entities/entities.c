@@ -5,6 +5,7 @@
 #include "ball.h"
 #include "paddle.h"
 #include "brick.h"
+#include "nanite.h"
 #include "player.h"
 #include "game_settings.h"
 
@@ -67,6 +68,7 @@ static void add_brick_func(Entities *entities, b2WorldId world_id, b2Vec2 positi
 
 static void add_nanite_func(Entities *entities, b2WorldId world_id, b2Vec2 position, int currency)
 {
+    TraceLog(LOG_INFO, "Adding new nanite - world_id: %d, pos.x: %f, pos.y: %f, currency: %d", world_id.index1, position.x, position.y, currency);
     for (int i = 0; i < kv_size(entities->nanites); i++)
     {
         Nanite *existing_nanite = kv_A(entities->nanites, i);
@@ -140,6 +142,15 @@ static void render_entities_func(Entities *entities)
             brick->render(brick);
         }
     }
+
+    for (int i = 0; i < kv_size(entities->nanites); i++)
+    {
+        Nanite *nanite = kv_A(entities->nanites, i);
+        if (nanite->active)
+        {
+            nanite->render(nanite);
+        }
+    }
 }
 
 static void cleanup_entities_func(Entities *entities)
@@ -188,6 +199,17 @@ static void cleanup_entities_func(Entities *entities)
         }
     }
     kv_destroy(entities->bricks);
+
+    // Clean up nanites
+    for (size_t i = 0; i < kv_size(entities->nanites); i++)
+    {
+        Nanite *nanite = kv_A(entities->nanites, i);
+        if (nanite->clean_up)
+        {
+            nanite->clean_up(nanite);
+        }
+    }
+    kv_destroy(entities->nanites);
 }
 
 Entities create_entities()
@@ -201,6 +223,7 @@ Entities create_entities()
     entities.add_ball = add_ball_func;
     entities.add_paddle = add_paddle_func;
     entities.add_brick = add_brick_func;
+    entities.add_nanite = add_nanite_func;
     entities.add_wall_edges = add_wall_edges_func;
     entities.add_kill_boundary = add_kill_boundary_func;
 

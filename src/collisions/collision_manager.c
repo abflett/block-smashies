@@ -3,9 +3,11 @@
 #include "entity_type.h"
 #include "ball.h"
 #include "brick.h"
+#include "nanite.h"
 #include "game_context.h"
 #include "ball_brick_collision.h"
 #include "ball_kill_boundary_collision.h"
+#include "nanite_paddle_collision.h"
 
 CollisionManager collision_manager;
 
@@ -53,6 +55,18 @@ static void begin_contact(b2ShapeId shapeA, b2ShapeId shapeB, GameContext *conte
             ball_kill_boundary_collision(ball, kill_boundary, context); // Corrected function call
         }
     }
+
+    if ((*typeA == ENTITY_NANITE && *typeB == ENTITY_PADDLE) ||
+        (*typeA == ENTITY_PADDLE && *typeB == ENTITY_NANITE))
+    {
+        Nanite *nanite = (*typeA == ENTITY_NANITE) ? (Nanite *)userDataA : (Nanite *)userDataB;
+        Paddle *paddle = (*typeA == ENTITY_PADDLE) ? (Paddle *)userDataA : (Paddle *)userDataB;
+
+        if (nanite != NULL && paddle != NULL)
+        {
+            nanite_paddle_collision(nanite, paddle, context); // Corrected function call
+        }
+    }
 }
 
 static void end_contact(b2ShapeId shapeA, b2ShapeId shapeB)
@@ -90,7 +104,6 @@ static void collision_manager_process_collisions(GameContext *context)
 
 CollisionManager *create_collision_manager(b2WorldId world_id)
 {
-    collision_manager;
     collision_manager.world = world_id;
     collision_manager.process_collisions = collision_manager_process_collisions;
     return &collision_manager;
