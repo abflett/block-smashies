@@ -23,12 +23,12 @@ static void render_game_status(const GameStatus *status)
     snprintf(time_text, sizeof(time_text), "%d:%04.2f", minutes, seconds);
     DrawText(time_text, 18, 14, 8, LIGHTGRAY);
 
-    char score_text[21];
-    snprintf(score_text, sizeof(score_text), "%d", status->score);
-    DrawText(score_text, 19, 28, 8, LIGHTGRAY);
+    char currency_text[21];
+    snprintf(currency_text, sizeof(currency_text), "$ %d", status->currency);
+    DrawText(currency_text, 19, 28, 8, LIGHTGRAY);
 
     char lives_text[21];
-    snprintf(lives_text, sizeof(lives_text), "<3 %d", status->lives);
+    snprintf(lives_text, sizeof(lives_text), "# %d", status->lives);
     DrawText(lives_text, 19, 42, 8, LIGHTGRAY);
 }
 
@@ -36,6 +36,7 @@ GameStatus create_game_status(void)
 {
     GameStatus status;
     status.score = 0;
+    status.currency = 0;
     status.lives = 3;
     status.game_time = 0.0f;
     status.game_over = false;

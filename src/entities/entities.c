@@ -112,6 +112,15 @@ static void update_entities_func(Entities *entities, float delta_time)
             paddle->update(paddle, delta_time);
         }
     }
+
+    for (int i = 0; i < kv_size(entities->nanites); i++)
+    {
+        Nanite *nanite = kv_A(entities->nanites, i);
+        if (nanite->active)
+        {
+            nanite->update(nanite, delta_time);
+        }
+    }
 }
 
 static void render_entities_func(Entities *entities)

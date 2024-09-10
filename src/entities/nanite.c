@@ -7,8 +7,18 @@
 #include "player.h"
 #include "entity_type.h"
 
-#define MOVE_FORCE 100.0f
+#define MOVE_FORCE 20.0f
 // #define MAX_VELOCITY 50.0f
+
+static void update_nanite(Nanite *nanite, float delta_time)
+{
+    b2Vec2 velocity = b2Body_GetLinearVelocity(nanite->body);
+
+    if (velocity.y < 15)
+    {
+        b2Body_SetLinearVelocity(nanite->body, (b2Vec2){velocity.x, -MOVE_FORCE});
+    }
+}
 
 static void clean_up_nanite(Nanite *nanite)
 {
@@ -59,11 +69,16 @@ Nanite *create_nanite(b2WorldId world_id, b2Vec2 position, int currency)
     nanite_shape_def.friction = 0.0f;
     nanite_shape_def.restitution = 1.0f; // High restitution for bouncing
 
+    // Set up the filter to prevent ball-to-ball collisions
+    nanite_shape_def.filter.categoryBits = BALL_CATEGORY;
+    nanite_shape_def.filter.maskBits = BALL_COLLIDE_WITH & ~BALL_CATEGORY; // Collide with everything except other balls
+
     b2CreatePolygonShape(nanite->body, &nanite_shape_def, &nanite_box);
 
     // Set an initial downward velocity to simulate gravity or make nanites fall
     b2Body_SetLinearVelocity(nanite->body, (b2Vec2){0.0f, -MOVE_FORCE});
 
+    nanite->update = update_nanite;
     nanite->render = render_nanite;
     nanite->clean_up = clean_up_nanite;
     nanite->reset = reset_nanite;

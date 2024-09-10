@@ -18,6 +18,7 @@ typedef struct Nanite
     b2Vec2 size;
     int currency;
 
+    void (*update)(struct Nanite *nanite, float delta_time);
     void (*render)(struct Nanite *nanite);
     void (*clean_up)(struct Nanite *nanite);
     void (*reset)(struct Nanite *nanite, b2Vec2 position, int currency);

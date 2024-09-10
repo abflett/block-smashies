@@ -6,6 +6,7 @@
 typedef struct GameStatus
 {
     int score;
+    int currency;
     int lives;
     float game_time;
     bool game_over; // flag true when no more lives

@@ -57,7 +57,7 @@ static void state_update(float delta_time)
 
         if (context->game_status.game_over)
         {
-            game_state_manager.change(game_state_manager.states.game_over, 1, context->game_status.score);
+            game_state_manager.change(game_state_manager.states.game_over, 1, context->game_status.currency);
         }
     }
 
