@@ -6,6 +6,7 @@
 #include "game_settings.h"
 #include "player.h"
 #include "entity_type.h"
+#include "collision_category.h"
 
 #define MOVE_FORCE 500.0f   // Adjust the force for moving the paddle
 #define BOUNCE_FORCE 100.0f // Adjust the force for the bounce
@@ -117,6 +118,9 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
     paddle_shape_def.density = 0.004f;
     paddle_shape_def.friction = 10.0f;
     paddle_shape_def.restitution = 1.2f; // High restitution for bouncing
+
+    paddle_shape_def.filter.categoryBits = CATEGORY_PADDLE;
+    paddle_shape_def.filter.maskBits = PADDLE_COLLIDE_WITH;
 
     b2CreatePolygonShape(paddle->body, &paddle_shape_def, &paddle_box);
 

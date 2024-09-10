@@ -7,9 +7,8 @@
 #include "resource_manager.h"
 #include "game_settings.h"
 #include "player.h"
+#include "collision_category.h"
 
-#define BALL_CATEGORY 0x0002
-#define BALL_COLLIDE_WITH 0xFFFF // Collides with everything else except balls
 #define MAX_VELOCITY 100.0f
 
 static void clean_up_ball(Ball *ball)
@@ -99,8 +98,8 @@ Ball *create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 ve
     circle_def.restitution = 1.0f; // High restitution for bouncing
 
     // Set up the filter to prevent ball-to-ball collisions
-    circle_def.filter.categoryBits = BALL_CATEGORY;
-    circle_def.filter.maskBits = BALL_COLLIDE_WITH & ~BALL_CATEGORY; // Collide with everything except other balls
+    circle_def.filter.categoryBits = CATEGORY_BALL;
+    circle_def.filter.maskBits = BALL_COLLIDE_WITH & ~CATEGORY_BALL; // Collide with everything except other balls
 
     // Attach the shape to the body
     b2CreateCircleShape(ball->body, &circle_def, &circle);

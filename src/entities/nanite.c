@@ -6,6 +6,7 @@
 #include "game_settings.h"
 #include "player.h"
 #include "entity_type.h"
+#include "collision_category.h"
 
 #define MOVE_FORCE 20.0f
 // #define MAX_VELOCITY 50.0f
@@ -70,8 +71,8 @@ Nanite *create_nanite(b2WorldId world_id, b2Vec2 position, int currency)
     nanite_shape_def.restitution = 1.0f; // High restitution for bouncing
 
     // Set up the filter to prevent ball-to-ball collisions
-    nanite_shape_def.filter.categoryBits = BALL_CATEGORY;
-    nanite_shape_def.filter.maskBits = BALL_COLLIDE_WITH & ~BALL_CATEGORY; // Collide with everything except other balls
+    nanite_shape_def.filter.categoryBits = CATEGORY_NANITE;
+    nanite_shape_def.filter.maskBits = NANITE_COLLIDE_WITH;
 
     b2CreatePolygonShape(nanite->body, &nanite_shape_def, &nanite_box);
 

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "kill_boundary.h"
 #include "game_settings.h"
+#include "collision_category.h"
 
 #define BOUNDARY_PADDING 5.0f
 
@@ -29,6 +30,9 @@ KillBoundary *create_kill_boundary(b2WorldId world_id)
     b2ShapeDef segment_def = b2DefaultShapeDef();
     segment_def.friction = 0.0f;
     segment_def.restitution = 1.0f; // Bouncy effect, if needed
+
+    segment_def.filter.categoryBits = CATEGORY_KILL_BOUNDARY;
+    segment_def.filter.maskBits = KILL_BOUNDARY_COLLIDE_WITH; // Collide with everything except other balls
 
     // Create the segment shape (kill boundary) attached to the body
     b2CreateSegmentShape(kill_boundary->body, &segment_def, &bottom_segment);
