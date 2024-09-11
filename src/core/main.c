@@ -23,7 +23,7 @@ static void update_game(float delta_time)
 
     if ((IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL)) && IsKeyPressed(KEY_C) || WindowShouldClose())
     {
-        resource_manager.cleanup();
+
         game_settings.exitWindow = true;
     }
 }
@@ -56,6 +56,7 @@ static void close_game(void)
         scene_manager.current_scene->cleanup();
     }
 
+    resource_manager.cleanup();
     UnloadRenderTexture(target_texture);
     CloseWindow();
 }

@@ -4,7 +4,7 @@
 #include "ball.h"
 #include "brick.h"
 #include "nanite.h"
-#include "game_context.h"
+// #include "game_context.h"
 #include "ball_brick_collision.h"
 #include "ball_kill_boundary_collision.h"
 #include "nanite_paddle_collision.h"
@@ -82,15 +82,15 @@ static void begin_contact(b2ShapeId shapeA, b2ShapeId shapeB, GameContext *conte
     }
 }
 
-static void end_contact(b2ShapeId shapeA, b2ShapeId shapeB)
-{
-    // not in use as of yet
-}
+// static void end_contact(b2ShapeId shapeA, b2ShapeId shapeB)
+// {
+//     // not in use as of yet
+// }
 
-static void hit_contact(b2ShapeId shapeA, b2ShapeId shapeB, float approachSpeed)
-{
-    // not in use as of yet
-}
+// static void hit_contact(b2ShapeId shapeA, b2ShapeId shapeB, float approachSpeed)
+// {
+//     // not in use as of yet
+// }
 
 static void collision_manager_process_collisions(GameContext *context)
 {
@@ -102,17 +102,17 @@ static void collision_manager_process_collisions(GameContext *context)
         begin_contact(beginEvent->shapeIdA, beginEvent->shapeIdB, context);
     }
 
-    for (int i = 0; i < contactEvents.endCount; ++i)
-    {
-        b2ContactEndTouchEvent *endEvent = &contactEvents.endEvents[i];
-        end_contact(endEvent->shapeIdA, endEvent->shapeIdB);
-    }
+    // for (int i = 0; i < contactEvents.endCount; ++i)
+    // {
+    //     b2ContactEndTouchEvent *endEvent = &contactEvents.endEvents[i];
+    //     end_contact(endEvent->shapeIdA, endEvent->shapeIdB);
+    // }
 
-    for (int i = 0; i < contactEvents.hitCount; ++i)
-    {
-        b2ContactHitEvent *hitEvent = &contactEvents.hitEvents[i];
-        hit_contact(hitEvent->shapeIdA, hitEvent->shapeIdB, hitEvent->approachSpeed);
-    }
+    // for (int i = 0; i < contactEvents.hitCount; ++i)
+    // {
+    //     b2ContactHitEvent *hitEvent = &contactEvents.hitEvents[i];
+    //     hit_contact(hitEvent->shapeIdA, hitEvent->shapeIdB, hitEvent->approachSpeed);
+    // }
 }
 
 CollisionManager *create_collision_manager(b2WorldId world_id)
