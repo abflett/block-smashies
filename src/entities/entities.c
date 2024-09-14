@@ -62,7 +62,7 @@ static void add_brick_func(Entities *entities, b2WorldId world_id, b2Vec2 positi
         }
     }
 
-    Brick *new_brick = create_brick(world_id, position, brick_type);
+    Brick *new_brick = create_brick(entities, world_id, position, brick_type);
     kv_push(Brick *, entities->bricks, new_brick);
 }
 

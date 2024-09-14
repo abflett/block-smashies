@@ -4,13 +4,25 @@
 #include "resource_manager.h"
 #include "game_settings.h"
 #include "entity_type.h"
+#include "entities.h"
+
+#define HEALTH_MODIFIER 1
+#define CURRENCY_MODIFIER 1
 
 static const char *brick_type_to_subtexture_map[1][4] = {
     {"dk-brown-brick-01", "dk-brown-brick-02", "dk-brown-brick-03", "dk-brown-brick-04"}};
 
+static const char *brick_type_to_animation_map[1] =
+    {"dk-brown-brick-destroy-animation"};
+
 static float brick_max_health(int brick_type)
 {
-    return (float)(brick_type + 1) * 4;
+    return (float)(brick_type + 1) * HEALTH_MODIFIER;
+}
+
+static int brick_currency(Brick *brick)
+{
+    return (int)(brick->max_health) * CURRENCY_MODIFIER;
 }
 
 static void update_brick(Brick *brick, float delta_time)
@@ -34,24 +46,51 @@ static void update_brick(Brick *brick, float delta_time)
     {
         brick->subtexture = resource_manager.get_subtexture(brick_type_to_subtexture_map[brick->brick_type][subtexture_index]);
     }
+
+    if (brick->is_destroying)
+    {
+        brick->animation_handler->update(brick->animation_handler, delta_time);
+        if (!brick->animation_handler->is_playing)
+        {
+            b2Vec2 position = b2Body_GetPosition(brick->body);
+            brick->active = false;
+            brick->entities->add_nanite(brick->entities, brick->world_id, position, 1);
+        }
+    }
 }
 
 static void clean_up_brick(Brick *brick)
 {
     TraceLog(LOG_INFO, "[Cleanup] - Brick [%d] - Success", brick->body.index1);
     b2DestroyBody(brick->body);
+    brick->animation_handler->cleanup(brick->animation_handler);
     free(brick);
 }
 
 static void render_brick(Brick *brick)
 {
     b2Vec2 position = b2Body_GetPosition(brick->body);
-    DrawTextureRec(brick->subtexture->texture_resource->texture, brick->subtexture->src, (Vector2){position.x - (brick->size.x / 2), game_settings.target_height - (position.y + (brick->size.y / 2))}, WHITE);
+
+    if (brick->animation_handler->is_playing)
+    {
+        brick->animation_handler->render(brick->animation_handler,
+                                         (b2Vec2){position.x - (brick->animation_handler->animation->frames[brick->animation_handler->frame_index].width / 2),
+                                                  position.y + ((brick->animation_handler->animation->frames[brick->animation_handler->frame_index].height / 2))});
+    }
+    else
+    {
+        DrawTextureRec(brick->subtexture->texture_resource->texture,
+                       brick->subtexture->src,
+                       (Vector2){position.x - (brick->size.x / 2),
+                                 game_settings.target_height - (position.y + (brick->size.y / 2))},
+                       WHITE);
+    }
 }
 
 static void disable_brick(Brick *brick)
 {
-    brick->active = false;
+    brick->is_destroying = true;
+    brick->animation_handler->is_playing = true;
     b2Body_Disable(brick->body);
     TraceLog(LOG_INFO, "[Disable] - Brick [%d] disabled.", brick->body.index1);
 }
@@ -66,16 +105,21 @@ static void reset_brick(Brick *brick, b2Vec2 position, BrickType color)
     TraceLog(LOG_INFO, "[Reset] - Brick [%d] reset to new position and health.", brick->body.index1);
 }
 
-Brick *create_brick(b2WorldId world_id, b2Vec2 position, BrickType color)
+Brick *create_brick(Entities *entities, b2WorldId world_id, b2Vec2 position, BrickType brick_type)
 {
     Brick *brick = (Brick *)malloc(sizeof(Brick));
     brick->type = ENTITY_BRICK;
-    brick->brick_type = color;
+    brick->brick_type = brick_type;
     brick->subtexture = resource_manager.get_subtexture(brick_type_to_subtexture_map[brick->brick_type][0]);
     brick->size = (b2Vec2){(float)brick->subtexture->src.width, (float)brick->subtexture->src.height};
     brick->health = brick_max_health(brick->brick_type);
     brick->max_health = brick_max_health(brick->brick_type);
     brick->active = true;
+    brick->is_destroying = false;
+    brick->animation_handler = create_animation_manager(brick_type_to_animation_map[brick->brick_type], ANIMATION_ONCE, 0.05f);
+    brick->animation_handler->is_playing = false;
+    brick->entities = entities;
+    brick->world_id = world_id;
 
     b2BodyDef body_def = b2DefaultBodyDef();
     body_def.type = b2_staticBody;
