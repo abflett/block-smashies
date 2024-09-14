@@ -9,8 +9,9 @@
 #define HEALTH_MODIFIER 1
 #define CURRENCY_MODIFIER 1
 
-static const char *brick_type_to_subtexture_map[1][4] = {
-    {"dk-brown-brick-01", "dk-brown-brick-02", "dk-brown-brick-03", "dk-brown-brick-04"}};
+static char *brick_type_to_subtexture_map[2][4] = {
+    {"dk-brown-brick-01", "dk-brown-brick-02", "dk-brown-brick-03", "dk-brown-brick-04"},
+    {"brown-brick-01", "brown-brick-02", "brown-brick-03", "brown-brick-04"}};
 
 static const char *brick_type_to_animation_map[1] =
     {"dk-brown-brick-destroy-animation"};

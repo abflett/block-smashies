@@ -6,21 +6,6 @@
 #include "parson.h"
 #include "resource_manager.h"
 
-static void add_texture(TextureResource *texture)
-{
-    HASH_ADD_KEYPTR(hh, resource_manager.textures, texture->id, strlen(texture->id), texture);
-}
-
-static void add_subtexture(Subtexture *subtexture)
-{
-    HASH_ADD_KEYPTR(hh, resource_manager.subtextures, subtexture->id, strlen(subtexture->id), subtexture);
-}
-
-static void add_animation(Animation *animation)
-{
-    HASH_ADD_KEYPTR(hh, resource_manager.animations, animation->id, strlen(animation->id), animation);
-}
-
 void rm_load_resource_file(const char *file)
 {
     // Parse the JSON file
@@ -40,16 +25,19 @@ void rm_load_resource_file(const char *file)
         TextureResource *texture = malloc(sizeof(TextureResource));
         texture->id = strdup(id); // Copy string to avoid dangling pointer
         texture->texture = LoadTexture(file);
-        add_texture(texture);
+        HASH_ADD_KEYPTR(hh, resource_manager.textures, texture->id, strlen(texture->id), texture);
     }
 
-    // Iterate subtextures
+    int set_count = 0;
+    BrickSubtextureIdsSet type_set;
+    //  Iterate subtextures
     for (size_t i = 0; i < (int)json_array_get_count(subtextures_array); i++)
     {
         JSON_Object *subtexture_obj = json_array_get_object(subtextures_array, i);
         JSON_Object *src_rect_obj = json_object_get_object(subtexture_obj, "src");
         const char *id = json_object_get_string(subtexture_obj, "id");
         const char *texture_id = json_object_get_string(subtexture_obj, "texture");
+        const char *subtexture_type = json_object_get_string(subtexture_obj, "type");
 
         Subtexture *subtexture = malloc(sizeof(Subtexture));
         subtexture->id = strdup(id); // Copy string to avoid dangling pointer
@@ -58,7 +46,23 @@ void rm_load_resource_file(const char *file)
         subtexture->src.y = (float)json_object_get_number(src_rect_obj, "y");
         subtexture->src.width = (float)json_object_get_number(src_rect_obj, "w");
         subtexture->src.height = (float)json_object_get_number(src_rect_obj, "h");
-        add_subtexture(subtexture);
+
+        // add bricks to list
+        if (strcmp(subtexture_type, "brick") == 0)
+        {
+            type_set.subtexture_ids[set_count] = strdup(subtexture->id);
+            if (set_count == 3)
+            {
+                set_count = 0;
+                kv_push(BrickSubtextureIdsSet, resource_manager.brick_type_sets, type_set);
+            }
+            else
+            {
+                set_count++;
+            }
+        }
+
+        HASH_ADD_KEYPTR(hh, resource_manager.subtextures, subtexture->id, strlen(subtexture->id), subtexture);
     }
 
     // Iterate anitmations
@@ -75,6 +79,11 @@ void rm_load_resource_file(const char *file)
         animation->frame_count = (int)json_array_get_count(frames_array);
         animation->frames = malloc(animation->frame_count * sizeof(Rectangle));
 
+        BrickAnimationId animation_id;
+        animation_id.id = animation->id;
+
+        kv_push(BrickAnimationId, resource_manager.brick_animation_ids, animation_id);
+
         for (int k = 0; k < animation->frame_count; k++)
         {
             JSON_Object *frame_rect_obj = json_array_get_object(frames_array, k);
@@ -88,7 +97,7 @@ void rm_load_resource_file(const char *file)
             animation->frames[k] = frame;
         }
 
-        add_animation(animation);
+        HASH_ADD_KEYPTR(hh, resource_manager.animations, animation->id, strlen(animation->id), animation);
     }
 
     json_value_free(root_value);
@@ -153,6 +162,19 @@ void rm_cleanup(void)
     resource_manager.subtextures = NULL;
     resource_manager.animations = NULL;
     resource_manager.textures = NULL;
+
+    for (size_t i = 0; i < kv_size(resource_manager.brick_type_sets); i++)
+    {
+        BrickSubtextureIdsSet brick_set = kv_A(resource_manager.brick_type_sets, i);
+        for (int j = 0; j < 4; j++)
+        {
+            free(brick_set.subtexture_ids[j]);
+        }
+    }
+    kv_destroy(resource_manager.brick_type_sets);
+
+    // destory the animation ids, Todo: might have to free the id inside the struct
+    kv_destroy(resource_manager.brick_animation_ids);
 }
 
 ResourceManager resource_manager = {
