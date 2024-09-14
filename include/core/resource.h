@@ -16,19 +16,19 @@ typedef struct
 typedef struct
 {
     const char *id;                    // Name of the subtexture
-    Rectangle rect;                    // Source rectangle defining the subtexture in the atlas
     TextureResource *texture_resource; // Pointer to the texture texture resource
+    Rectangle src;                     // Source rectangle defining the subtexture in the atlas
     UT_hash_handle hh;                 // Handle for hash table management
 } Subtexture;
 
 // Structure to represent an animation
 typedef struct
 {
-    const char *id;                // Name of the animation
-    Subtexture *subtexture_frames; // Array of subtextures that make up the animation
-    int frame_count;               // Number of frames in the animation
-    int framerate;                 // Framerate of the animation
-    UT_hash_handle hh;             // Handle for hash table management
+    const char *id; // Name of the animation
+    TextureResource *texture_resource;
+    Rectangle *frames; // Array of textures that make up the animation
+    int frame_count;
+    UT_hash_handle hh; // Handle for hash table management
 } Animation;
 
 #endif // RESOURCE_H

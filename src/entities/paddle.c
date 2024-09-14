@@ -88,7 +88,7 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
     paddle->type = ENTITY_PADDLE;
     paddle->active = true;
 
-    paddle->texture = &resource_manager.get_texture("ship_base")->texture;
+    paddle->texture = &resource_manager.get_texture("ship-base")->texture;
     paddle->size = (b2Vec2){(float)paddle->texture->width, (float)paddle->texture->height};
     paddle->player_num = player_num;
     paddle->force_timer = 0.0f;

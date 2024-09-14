@@ -66,7 +66,7 @@ Nanite *create_nanite(b2WorldId world_id, b2Vec2 position, int currency)
     nanite->active = true;
     nanite->currency = currency;
 
-    nanite->texture = &resource_manager.get_texture("nanite001")->texture;
+    nanite->texture = &resource_manager.get_texture("nanite-01")->texture;
     nanite->size = (b2Vec2){(float)nanite->texture->width, (float)nanite->texture->height};
 
     b2BodyDef body_def = b2DefaultBodyDef();
