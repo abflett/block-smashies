@@ -3,7 +3,7 @@
 #include "game_settings.h"
 #include "collision_category.h"
 
-#define BOUNDARY_PADDING 5.0f
+#define BOUNDARY_PADDING 4.0f
 
 static void clean_up_kill_boundary(KillBoundary *kill_boundary)
 {
