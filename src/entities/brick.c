@@ -15,7 +15,8 @@ static void clean_up_brick(Brick *brick)
 static void render_brick(Brick *brick)
 {
     b2Vec2 position = b2Body_GetPosition(brick->body);
-    DrawTextureEx(*brick->texture, (Vector2){position.x - (brick->size.x / 2), game_settings.target_height - (position.y + (brick->size.y / 2))}, 0.0f, 1.0f, WHITE);
+    //  DrawTextureEx(*brick->texture, (Vector2){position.x - (brick->size.x / 2), game_settings.target_height - (position.y + (brick->size.y / 2))}, 0.0f, 1.0f, WHITE);
+    DrawTextureRec(brick->subtexture->texture_resource->texture, brick->subtexture->src, (Vector2){position.x - (brick->size.x / 2), game_settings.target_height - (position.y + (brick->size.y / 2))}, WHITE);
 }
 
 static void disable_brick(Brick *brick)
@@ -38,8 +39,8 @@ Brick *create_brick(b2WorldId world_id, b2Vec2 position, int health)
 {
     Brick *brick = (Brick *)malloc(sizeof(Brick));
     brick->type = ENTITY_BRICK;
-    brick->texture = &resource_manager.get_texture("greenbrick")->texture;
-    brick->size = (b2Vec2){(float)brick->texture->width, (float)brick->texture->height};
+    brick->subtexture = resource_manager.get_subtexture("dk-brown-brick-02");
+    brick->size = (b2Vec2){(float)brick->subtexture->src.width, (float)brick->subtexture->src.height};
     brick->health = health;
     brick->active = true;
 

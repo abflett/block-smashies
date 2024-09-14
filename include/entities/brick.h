@@ -5,6 +5,7 @@
 #include "raylib.h"
 #include "box2d/box2d.h"
 #include "entity_type.h"
+#include "resource.h"
 
 struct Entities;
 
@@ -14,7 +15,7 @@ typedef struct Brick
     b2BodyId body;
     bool active;
 
-    Texture2D *texture;
+    Subtexture *subtexture;
     b2Vec2 size;
     int health;
 

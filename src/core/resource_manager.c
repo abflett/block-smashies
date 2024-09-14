@@ -49,10 +49,11 @@ void rm_load_resource_file(const char *file)
         JSON_Object *subtexture_obj = json_array_get_object(subtextures_array, i);
         JSON_Object *src_rect_obj = json_object_get_object(subtexture_obj, "src");
         const char *id = json_object_get_string(subtexture_obj, "id");
+        const char *texture_id = json_object_get_string(subtexture_obj, "texture");
 
         Subtexture *subtexture = malloc(sizeof(Subtexture));
         subtexture->id = strdup(id); // Copy string to avoid dangling pointer
-        subtexture->texture_resource = resource_manager.get_texture(id);
+        subtexture->texture_resource = resource_manager.get_texture(texture_id);
         subtexture->src.x = (float)json_object_get_number(src_rect_obj, "x");
         subtexture->src.y = (float)json_object_get_number(src_rect_obj, "y");
         subtexture->src.width = (float)json_object_get_number(src_rect_obj, "w");
@@ -65,12 +66,12 @@ void rm_load_resource_file(const char *file)
     {
         JSON_Object *animation_obj = json_array_get_object(animations_array, i);
         JSON_Array *frames_array = json_object_get_array(animation_obj, "frames");
-
         const char *id = json_object_get_string(animation_obj, "id");
+        const char *texture_id = json_object_get_string(animation_obj, "texture");
 
         Animation *animation = malloc(sizeof(Animation));
         animation->id = strdup(id);
-        animation->texture_resource = resource_manager.get_texture(id);
+        animation->texture_resource = resource_manager.get_texture(texture_id);
         animation->frame_count = (int)json_array_get_count(frames_array);
         animation->frames = malloc(animation->frame_count * sizeof(Rectangle));
 
