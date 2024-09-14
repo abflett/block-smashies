@@ -9,10 +9,6 @@
       "file": "assets/textures/ship-base.png"
     },
     {
-      "id": "greenbrick",
-      "file": "assets/textures/greenbrick.png"
-    },
-    {
       "id": "gameplay-bg",
       "file": "assets/textures/gameplay-bg.png"
     },

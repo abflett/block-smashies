@@ -50,19 +50,19 @@ static void add_paddle_func(Entities *entities, Player *player, b2WorldId world_
     kv_push(Paddle *, entities->paddles, new_paddle);
 }
 
-static void add_brick_func(Entities *entities, b2WorldId world_id, b2Vec2 position, int health)
+static void add_brick_func(Entities *entities, b2WorldId world_id, b2Vec2 position, float health, BrickColor color)
 {
     for (int i = 0; i < kv_size(entities->bricks); i++)
     {
         Brick *existing_brick = kv_A(entities->bricks, i);
         if (!existing_brick->active)
         {
-            existing_brick->reset(existing_brick, position, health);
+            existing_brick->reset(existing_brick, position, health, color);
             return;
         }
     }
 
-    Brick *new_brick = create_brick(world_id, position, health);
+    Brick *new_brick = create_brick(world_id, position, health, color);
     kv_push(Brick *, entities->bricks, new_brick);
 }
 

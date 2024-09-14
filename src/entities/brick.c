@@ -5,6 +5,9 @@
 #include "game_settings.h"
 #include "entity_type.h"
 
+static const char *brick_type_to_subtexture_map[1][4] = {
+    {"dk-brown-brick-01", "dk-brown-brick-02", "dk-brown-brick-03", "dk-brown-brick-04"}};
+
 static void clean_up_brick(Brick *brick)
 {
     TraceLog(LOG_INFO, "[Cleanup] - Brick [%d] - Success", brick->body.index1);
@@ -15,7 +18,6 @@ static void clean_up_brick(Brick *brick)
 static void render_brick(Brick *brick)
 {
     b2Vec2 position = b2Body_GetPosition(brick->body);
-    //  DrawTextureEx(*brick->texture, (Vector2){position.x - (brick->size.x / 2), game_settings.target_height - (position.y + (brick->size.y / 2))}, 0.0f, 1.0f, WHITE);
     DrawTextureRec(brick->subtexture->texture_resource->texture, brick->subtexture->src, (Vector2){position.x - (brick->size.x / 2), game_settings.target_height - (position.y + (brick->size.y / 2))}, WHITE);
 }
 
@@ -26,22 +28,25 @@ static void disable_brick(Brick *brick)
     TraceLog(LOG_INFO, "[Disable] - Brick [%d] disabled.", brick->body.index1);
 }
 
-static void reset_brick(Brick *brick, b2Vec2 position, int health)
+static void reset_brick(Brick *brick, b2Vec2 position, float health, BrickColor color)
 {
     brick->health = health;
+    brick->max_health = health;
     brick->active = true;
     b2Body_Enable(brick->body);
     b2Body_SetTransform(brick->body, position, (b2Rot){0.0f, 1.0f});
     TraceLog(LOG_INFO, "[Reset] - Brick [%d] reset to new position and health.", brick->body.index1);
 }
 
-Brick *create_brick(b2WorldId world_id, b2Vec2 position, int health)
+Brick *create_brick(b2WorldId world_id, b2Vec2 position, float health, BrickColor color)
 {
     Brick *brick = (Brick *)malloc(sizeof(Brick));
     brick->type = ENTITY_BRICK;
-    brick->subtexture = resource_manager.get_subtexture("dk-brown-brick-02");
+    brick->color = color;
+    brick->subtexture = resource_manager.get_subtexture(brick_type_to_subtexture_map[brick->color][0]);
     brick->size = (b2Vec2){(float)brick->subtexture->src.width, (float)brick->subtexture->src.height};
     brick->health = health;
+    brick->max_health = health;
     brick->active = true;
 
     b2BodyDef body_def = b2DefaultBodyDef();
