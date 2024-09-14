@@ -27,7 +27,7 @@ typedef struct Entities
 
     void (*add_ball)(struct Entities *entities, Player *player, b2WorldId world_id, Paddle *paddle);
     void (*add_paddle)(struct Entities *entities, Player *player, b2WorldId world_id);
-    void (*add_brick)(struct Entities *entities, b2WorldId world_id, b2Vec2 position, float health, BrickColor color);
+    void (*add_brick)(struct Entities *entities, b2WorldId world_id, b2Vec2 position, BrickType brick_type);
     void (*add_nanite)(struct Entities *entities, b2WorldId world_id, b2Vec2 position, int currency);
     void (*add_wall_edges)(struct Entities *entities, b2WorldId world_id);
     void (*add_kill_boundary)(struct Entities *entities, b2WorldId world_id);

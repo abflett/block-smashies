@@ -50,19 +50,19 @@ static void add_paddle_func(Entities *entities, Player *player, b2WorldId world_
     kv_push(Paddle *, entities->paddles, new_paddle);
 }
 
-static void add_brick_func(Entities *entities, b2WorldId world_id, b2Vec2 position, float health, BrickColor color)
+static void add_brick_func(Entities *entities, b2WorldId world_id, b2Vec2 position, BrickType brick_type)
 {
     for (int i = 0; i < kv_size(entities->bricks); i++)
     {
         Brick *existing_brick = kv_A(entities->bricks, i);
         if (!existing_brick->active)
         {
-            existing_brick->reset(existing_brick, position, health, color);
+            existing_brick->reset(existing_brick, position, brick_type);
             return;
         }
     }
 
-    Brick *new_brick = create_brick(world_id, position, health, color);
+    Brick *new_brick = create_brick(world_id, position, brick_type);
     kv_push(Brick *, entities->bricks, new_brick);
 }
 
@@ -119,6 +119,15 @@ static void update_entities_func(Entities *entities, float delta_time)
         if (nanite->active)
         {
             nanite->update(nanite, delta_time);
+        }
+    }
+
+    for (int i = 0; i < kv_size(entities->bricks); i++)
+    {
+        Brick *brick = kv_A(entities->bricks, i);
+        if (brick->active)
+        {
+            brick->update(brick, delta_time);
         }
     }
 }

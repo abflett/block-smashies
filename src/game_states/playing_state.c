@@ -30,7 +30,7 @@ static void state_init(int argc, va_list args)
         {
             for (int row = 0; row < brick_column; row++)
             {
-                context->entities.add_brick(&context->entities, context->world_id, (b2Vec2){row * row_spacing + game_settings.play_area.x + 10, game_settings.target_height - (col * col_spacing + game_settings.play_area.y + 5)}, 1, DK_BROWN_BRICK);
+                context->entities.add_brick(&context->entities, context->world_id, (b2Vec2){row * row_spacing + game_settings.play_area.x + 10, game_settings.target_height - (col * col_spacing + game_settings.play_area.y + 5)}, BRICK_DK_BROWN);
             }
         }
     }

@@ -11,8 +11,8 @@ struct Entities;
 
 typedef enum
 {
-    DK_BROWN_BRICK
-} BrickColor;
+    BRICK_DK_BROWN
+} BrickType;
 
 typedef struct Brick
 {
@@ -24,14 +24,15 @@ typedef struct Brick
     b2Vec2 size;
     float health;
     float max_health;
-    BrickColor color;
+    BrickType brick_type;
 
+    void (*update)(struct Brick *brick, float delta_time);
     void (*render)(struct Brick *brick);
     void (*clean_up)(struct Brick *brick);
-    void (*reset)(struct Brick *brick, b2Vec2 position, float health, BrickColor color);
+    void (*reset)(struct Brick *brick, b2Vec2 position, BrickType color);
     void (*disable)(struct Brick *brick);
 } Brick;
 
-Brick *create_brick(b2WorldId world_id, b2Vec2 position, float health, BrickColor color);
+Brick *create_brick(b2WorldId world_id, b2Vec2 position, BrickType color);
 
 #endif
