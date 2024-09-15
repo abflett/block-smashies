@@ -105,6 +105,926 @@
         "w": 18,
         "h": 8
       }
+    },
+    {
+      "id": "dk-orange-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 16,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-orange-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 16,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-orange-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 16,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-orange-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 16,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "orange-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 24,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "orange-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 24,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "orange-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 24,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "orange-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 24,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-orange-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 32,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-orange-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 32,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-orange-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 32,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-orange-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 32,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-red-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 40,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-red-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 40,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-red-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 40,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-red-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 40,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "red-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 48,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "red-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 48,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "red-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 48,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "red-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 48,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "pink-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 56,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "pink-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 56,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "pink-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 56,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "pink-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 56,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-pink-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 64,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-pink-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 64,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-pink-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 64,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-pink-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 64,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "salmon-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 72,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "salmon-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 72,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "salmon-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 72,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "salmon-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 72,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-pink-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 80,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-pink-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 80,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-pink-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 80,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-pink-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 80,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-purple-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 88,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-purple-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 88,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-purple-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 88,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-purple-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 88,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-purple-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 96,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-purple-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 96,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-purple-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 96,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-purple-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 96,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-blue-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 104,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-blue-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 104,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-blue-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 104,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-blue-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 104,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-blue-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 112,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-blue-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 112,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-blue-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 112,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-blue-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 112,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-aqua-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 120,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-aqua-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 120,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-aqua-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 120,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-aqua-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 120,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "aqua-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 128,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "aqua-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 128,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "aqua-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 128,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "aqua-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 128,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-green-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 136,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-green-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 136,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-green-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 136,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-green-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 136,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "green-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 144,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "green-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 144,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "green-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 144,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "green-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 144,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-green-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 152,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-green-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 152,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-green-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 152,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-green-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 152,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "army-green-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 160,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "army-green-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 160,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "army-green-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 160,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "army-green-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 160,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-yellow-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 168,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-yellow-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 168,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-yellow-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 168,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-yellow-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 168,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "yellow-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 176,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "yellow-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 176,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "yellow-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 176,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "yellow-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 176,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-grey-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 184,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-grey-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 184,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-grey-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 184,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "lt-grey-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 184,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-grey-brick-01",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 0,
+        "y": 192,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-grey-brick-02",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 18,
+        "y": 192,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-grey-brick-03",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 36,
+        "y": 192,
+        "w": 18,
+        "h": 8
+      }
+    },
+    {
+      "id": "dk-grey-brick-04",
+      "texture": "bricks-atlas",
+      "src": {
+        "x": 54,
+        "y": 192,
+        "w": 18,
+        "h": 8
+      }
     }
   ],
   "animations": [
@@ -167,6 +1087,696 @@
           "h": 8
         }
       ]
+    },
+    {
+      "id": "dk-orange-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 16,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 16,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 16,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 16,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "orange-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 24,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 24,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 24,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 24,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "lt-orange-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 32,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 32,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 32,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 32,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "dk-red-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 40,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 40,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 40,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 40,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "red-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 48,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 48,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 48,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 48,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "pink-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 56,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 56,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 56,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 56,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "lt-pink-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 64,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 64,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 64,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 64,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "salmon-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 72,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 72,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 72,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 72,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "dk-pink-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 80,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 80,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 80,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 80,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "dk-purple-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 88,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 88,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 88,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 88,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "lt-purple-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 96,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 96,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 96,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 96,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "dk-blue-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 104,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 104,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 104,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 104,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "lt-blue-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 112,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 112,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 112,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 112,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "dk-aqua-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 120,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 120,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 120,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 120,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "aqua-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 128,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 128,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 128,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 128,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "lt-green-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 136,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 136,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 136,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 136,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "green-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 144,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 144,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 144,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 144,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "dk-green-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 152,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 152,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 152,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 152,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "army-green-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 160,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 160,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 160,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 160,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "dk-yellow-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 168,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 168,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 168,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 168,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "yellow-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 176,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 176,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 176,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 176,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "lt-grey-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 184,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 184,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 184,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 184,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    },
+    {
+      "id": "dk-grey-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 192,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 192,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 192,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 192,
+          "w": 18,
+          "h": 8
+        }
+      ]
     }
   ],
   "brick_types": [
@@ -179,6 +1789,246 @@
         "dk-brown-brick-04"
       ],
       "animation": "dk-brown-brick-destroy-animation"
+    },
+    {
+      "type": "brown-brick",
+      "subtextures": [
+        "brown-brick-01",
+        "brown-brick-02",
+        "brown-brick-03",
+        "brown-brick-04"
+      ],
+      "animation": "brown-brick-destroy-animation"
+    },
+    {
+      "type": "dk-orange-brick",
+      "subtextures": [
+        "dk-orange-brick-01",
+        "dk-orange-brick-02",
+        "dk-orange-brick-03",
+        "dk-orange-brick-04"
+      ],
+      "animation": "dk-orange-brick-destroy-animation"
+    },
+    {
+      "type": "orange-brick",
+      "subtextures": [
+        "orange-brick-01",
+        "orange-brick-02",
+        "orange-brick-03",
+        "orange-brick-04"
+      ],
+      "animation": "orange-brick-destroy-animation"
+    },
+    {
+      "type": "lt-orange-brick",
+      "subtextures": [
+        "lt-orange-brick-01",
+        "lt-orange-brick-02",
+        "lt-orange-brick-03",
+        "lt-orange-brick-04"
+      ],
+      "animation": "lt-orange-brick-destroy-animation"
+    },
+    {
+      "type": "dk-red-brick",
+      "subtextures": [
+        "dk-red-brick-01",
+        "dk-red-brick-02",
+        "dk-red-brick-03",
+        "dk-red-brick-04"
+      ],
+      "animation": "dk-red-brick-destroy-animation"
+    },
+    {
+      "type": "red-brick",
+      "subtextures": [
+        "red-brick-01",
+        "red-brick-02",
+        "red-brick-03",
+        "red-brick-04"
+      ],
+      "animation": "red-brick-destroy-animation"
+    },
+    {
+      "type": "pink-brick",
+      "subtextures": [
+        "pink-brick-01",
+        "pink-brick-02",
+        "pink-brick-03",
+        "pink-brick-04"
+      ],
+      "animation": "pink-brick-destroy-animation"
+    },
+    {
+      "type": "lt-pink-brick",
+      "subtextures": [
+        "lt-pink-brick-01",
+        "lt-pink-brick-02",
+        "lt-pink-brick-03",
+        "lt-pink-brick-04"
+      ],
+      "animation": "lt-pink-brick-destroy-animation"
+    },
+    {
+      "type": "salmon-brick",
+      "subtextures": [
+        "salmon-brick-01",
+        "salmon-brick-02",
+        "salmon-brick-03",
+        "salmon-brick-04"
+      ],
+      "animation": "salmon-brick-destroy-animation"
+    },
+    {
+      "type": "dk-pink-brick",
+      "subtextures": [
+        "dk-pink-brick-01",
+        "dk-pink-brick-02",
+        "dk-pink-brick-03",
+        "dk-pink-brick-04"
+      ],
+      "animation": "dk-pink-brick-destroy-animation"
+    },
+    {
+      "type": "dk-purple-brick",
+      "subtextures": [
+        "dk-purple-brick-01",
+        "dk-purple-brick-02",
+        "dk-purple-brick-03",
+        "dk-purple-brick-04"
+      ],
+      "animation": "dk-purple-brick-destroy-animation"
+    },
+    {
+      "type": "lt-purple-brick",
+      "subtextures": [
+        "lt-purple-brick-01",
+        "lt-purple-brick-02",
+        "lt-purple-brick-03",
+        "lt-purple-brick-04"
+      ],
+      "animation": "lt-purple-brick-destroy-animation"
+    },
+    {
+      "type": "dk-blue-brick",
+      "subtextures": [
+        "dk-blue-brick-01",
+        "dk-blue-brick-02",
+        "dk-blue-brick-03",
+        "dk-blue-brick-04"
+      ],
+      "animation": "dk-blue-brick-destroy-animation"
+    },
+    {
+      "type": "lt-blue-brick",
+      "subtextures": [
+        "lt-blue-brick-01",
+        "lt-blue-brick-02",
+        "lt-blue-brick-03",
+        "lt-blue-brick-04"
+      ],
+      "animation": "lt-blue-brick-destroy-animation"
+    },
+    {
+      "type": "dk-aqua-brick",
+      "subtextures": [
+        "dk-aqua-brick-01",
+        "dk-aqua-brick-02",
+        "dk-aqua-brick-03",
+        "dk-aqua-brick-04"
+      ],
+      "animation": "dk-aqua-brick-destroy-animation"
+    },
+    {
+      "type": "aqua-brick",
+      "subtextures": [
+        "aqua-brick-01",
+        "aqua-brick-02",
+        "aqua-brick-03",
+        "aqua-brick-04"
+      ],
+      "animation": "aqua-brick-destroy-animation"
+    },
+    {
+      "type": "lt-green-brick",
+      "subtextures": [
+        "lt-green-brick-01",
+        "lt-green-brick-02",
+        "lt-green-brick-03",
+        "lt-green-brick-04"
+      ],
+      "animation": "lt-green-brick-destroy-animation"
+    },
+    {
+      "type": "green-brick",
+      "subtextures": [
+        "green-brick-01",
+        "green-brick-02",
+        "green-brick-03",
+        "green-brick-04"
+      ],
+      "animation": "green-brick-destroy-animation"
+    },
+    {
+      "type": "dk-green-brick",
+      "subtextures": [
+        "dk-green-brick-01",
+        "dk-green-brick-02",
+        "dk-green-brick-03",
+        "dk-green-brick-04"
+      ],
+      "animation": "dk-green-brick-destroy-animation"
+    },
+    {
+      "type": "army-green-brick",
+      "subtextures": [
+        "army-green-brick-01",
+        "army-green-brick-02",
+        "army-green-brick-03",
+        "army-green-brick-04"
+      ],
+      "animation": "army-green-brick-destroy-animation"
+    },
+    {
+      "type": "dk-yellow-brick",
+      "subtextures": [
+        "dk-yellow-brick-01",
+        "dk-yellow-brick-02",
+        "dk-yellow-brick-03",
+        "dk-yellow-brick-04"
+      ],
+      "animation": "dk-yellow-brick-destroy-animation"
+    },
+    {
+      "type": "yellow-brick",
+      "subtextures": [
+        "yellow-brick-01",
+        "yellow-brick-02",
+        "yellow-brick-03",
+        "yellow-brick-04"
+      ],
+      "animation": "yellow-brick-destroy-animation"
+    },
+    {
+      "type": "lt-grey-brick",
+      "subtextures": [
+        "lt-grey-brick-01",
+        "lt-grey-brick-02",
+        "lt-grey-brick-03",
+        "lt-grey-brick-04"
+      ],
+      "animation": "lt-grey-brick-destroy-animation"
+    },
+    {
+      "type": "dk-grey-brick",
+      "subtextures": [
+        "dk-grey-brick-01",
+        "dk-grey-brick-02",
+        "dk-grey-brick-03",
+        "dk-grey-brick-04"
+      ],
+      "animation": "brown-brick-destroy-animation"
     },
     {
       "type": "brown-brick",

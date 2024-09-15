@@ -26,15 +26,15 @@ static void state_init(int argc, va_list args)
         int brick_column = 12;
         float row_spacing = 18.0f; // Horizontal spacing (width of the brick + any gap)
         float col_spacing = 8.0f;  // Vertical spacing (height of the brick + any gap)
-        int brick_type_counter = 1;
         for (int col = 0; col < brick_row; col++)
         {
-            brick_type_counter++;
             for (int row = 0; row < brick_column; row++)
             {
-                brick_type_counter++;
-                int brick_type = brick_type_counter % 2;
-                context->entities.add_brick(&context->entities, context->world_id, (b2Vec2){row * row_spacing + game_settings.play_area.x + 10, game_settings.target_height - (col * col_spacing + game_settings.play_area.y + 5)}, brick_type);
+                int brick_type = rand() % 50;
+                if (brick_type <= 25)
+                {
+                    context->entities.add_brick(&context->entities, context->world_id, (b2Vec2){row * row_spacing + game_settings.play_area.x + 10, game_settings.target_height - (col * col_spacing + game_settings.play_area.y + 5)}, brick_type);
+                }
             }
         }
     }
