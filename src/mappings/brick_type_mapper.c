@@ -6,15 +6,22 @@ static BrickTypeMapper *mapper = NULL;
 
 static const char *brick_type_to_subtexture_id_func(const int brick_type, const int index)
 {
-    if (index < 0 || index >= 4)
-        return NULL;
-    // BrickSubtextureIdsSet set = kv_A(mapper->subtexture_sets, brick_type).subtexture_ids[index];
-    return kv_A(mapper->subtexture_sets, brick_type).subtexture_ids[index];
+    // Ensure brick_type is non-negative, otherwise default to 0
+    size_t brick_type_mod = (brick_type < 0) ? 0 : (brick_type % kv_size(mapper->subtexture_sets));
+
+    // Ensure index is non-negative, otherwise default to 0, and limit it to 0-3
+    size_t index_mod = (index < 0) ? 0 : (index % 4);
+
+    // Access the correct subtexture ID using the modded index and brick_type
+    return kv_A(mapper->subtexture_sets, brick_type_mod).subtexture_ids[index_mod];
 }
 
 static const char *brick_type_to_animation_id_func(const int brick_type)
 {
-    return kv_A(mapper->animation_ids, brick_type);
+    // Ensure brick_type is non-negative, otherwise default to 0
+    size_t brick_type_mod = (brick_type < 0) ? 0 : (brick_type % kv_size(mapper->subtexture_sets));
+
+    return kv_A(mapper->animation_ids, brick_type_mod);
 }
 
 static void cleanup_brick_type_mapper(void)
