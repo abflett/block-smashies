@@ -8,11 +8,11 @@
 #include "entity_type.h"
 #include "collision_category.h"
 
-#define MOVE_FORCE 500.0f   // Adjust the force for moving the paddle
-#define BOUNCE_FORCE 100.0f // Adjust the force for the bounce
-#define MAX_VELOCITY 300.0f // Maximum velocity for the paddle
 #define PADDLE_HEIGHT 16.f
-#define BOOST_STRENGTH 50.0f
+#define BOOST_TIMER 0.15f
+#define BOOST_ACTIVE_TIMER 1.0f
+#define PULSE_TIMER 0.09f
+#define PULSE_ACTIVE_TIMER 1.0f
 
 static void clean_up_paddle(Paddle *paddle)
 {
@@ -25,21 +25,24 @@ static void clean_up_paddle(Paddle *paddle)
 
 static void update_paddle(Paddle *paddle, float delta_time)
 {
+    // timers
     paddle->boost_timer_left += delta_time;
     paddle->boost_timer_right += delta_time;
+    paddle->boost_active_timer -= delta_time;
+    paddle->pulse_active_timer -= delta_time;
+    paddle->pulse_timer -= delta_time;
 
     // Handle left and right movement
     if (IsKeyDown(KEY_A))
     {
-        // Apply a leftward force
-        b2Body_ApplyForceToCenter(paddle->body, (b2Vec2){-MOVE_FORCE, 0.0f}, true);
+        b2Body_ApplyForceToCenter(paddle->body, (b2Vec2){-*paddle->acceleration, 0.0f}, true);
     }
     if (IsKeyDown(KEY_D))
     {
-        // Apply a rightward force
-        b2Body_ApplyForceToCenter(paddle->body, (b2Vec2){MOVE_FORCE, 0.0f}, true);
+        b2Body_ApplyForceToCenter(paddle->body, (b2Vec2){*paddle->acceleration, 0.0f}, true);
     }
 
+    // start timer for horizontal boosts
     if (IsKeyReleased(KEY_A))
     {
         paddle->boost_timer_left = 0.0f;
@@ -49,41 +52,29 @@ static void update_paddle(Paddle *paddle, float delta_time)
         paddle->boost_timer_right = 0.0f;
     }
 
-    if (paddle->boost_timer_left < 0.3f)
+    // apply boost if sucessfully double pressed the left or right and active timer is expired
+    if (IsKeyDown(KEY_A) && paddle->boost_timer_left < BOOST_TIMER && paddle->boost_active_timer <= 0.0f)
     {
-        if (IsKeyDown(KEY_A))
-        {
-            b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){-BOOST_STRENGTH, 0.0f}, b2Body_GetWorldCenterOfMass(paddle->body), true);
-        }
+        b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){-*paddle->booster_str, 0.0f}, b2Body_GetWorldCenterOfMass(paddle->body), true);
+        paddle->boost_active_timer = BOOST_ACTIVE_TIMER;
+    }
+    if (IsKeyDown(KEY_D) && paddle->boost_timer_right < BOOST_TIMER && paddle->boost_active_timer <= 0.0f)
+    {
+        b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){*paddle->booster_str, 0.0f}, b2Body_GetWorldCenterOfMass(paddle->body), true);
+        paddle->boost_active_timer = BOOST_ACTIVE_TIMER;
     }
 
-    if (paddle->boost_timer_right < 0.3f)
-    {
-        if (IsKeyDown(KEY_D))
-        {
-            b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){BOOST_STRENGTH, 0.0f}, b2Body_GetWorldCenterOfMass(paddle->body), true);
-        }
-    }
-
-    // Apply upward bounce when W is pressed
-    if (IsKeyPressed(KEY_W) && paddle->force_timer <= 0.0f && paddle->force_active_timer <= 0)
+    // Apply upward pulse when up is pressed as long as boost timers are valid
+    if (IsKeyPressed(KEY_W) && paddle->pulse_timer <= 0.0f && paddle->pulse_active_timer <= 0)
     {
         b2Body_Disable(paddle->constraint);
-        paddle->force_timer = 0.09f;
-        paddle->force_active_timer = 2.0f;
-        b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){0.0f, BOUNCE_FORCE}, b2Body_GetWorldCenterOfMass(paddle->body), true);
+        paddle->pulse_timer = PULSE_TIMER;
+        paddle->pulse_active_timer = PULSE_ACTIVE_TIMER;
+        b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){0.0f, *paddle->pulse_str}, b2Body_GetWorldCenterOfMass(paddle->body), true);
     }
 
-    if (paddle->force_active_timer > 0.0f)
-    {
-        paddle->force_active_timer -= delta_time;
-    }
-
-    if (paddle->force_timer > 0.0f)
-    {
-        paddle->force_timer -= delta_time;
-    }
-    else
+    // return paddle back to X constraint after pulse
+    if (paddle->pulse_timer <= 0.0f)
     {
         b2Body_Enable(paddle->constraint);
     }
@@ -93,8 +84,8 @@ static void reset_paddle(Paddle *paddle, int player_num)
 {
     paddle->active = true;
     paddle->player_num = player_num;
-    paddle->force_timer = 0.0f;
-    paddle->force_active_timer = 0.0f;
+    paddle->pulse_timer = 0.0f;
+    paddle->pulse_active_timer = 0.0f;
     b2Body_Enable(paddle->body);
     b2Body_SetTransform(paddle->body, (b2Vec2){(game_settings.play_area.width / 2) + game_settings.play_area.x, PADDLE_HEIGHT}, (b2Rot){1.0f, 0.0f});
 }
@@ -120,13 +111,13 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
     paddle->texture = &resource_manager.get_texture("ship-base")->texture;
     paddle->size = (b2Vec2){(float)paddle->texture->width, (float)paddle->texture->height};
     paddle->player_num = player_num;
-    paddle->force_timer = 0.0f;
-    paddle->force_active_timer = 0.0f;
+    paddle->pulse_timer = 0.0f;
+    paddle->pulse_active_timer = 0.0f;
     paddle->boost_timer_left = 0.0f;
     paddle->boost_timer_right = 0.0f;
     paddle->boost_active_timer = 0.0f;
 
-    // used in later development for power ups but for now ignore
+    // player attribute settings
     paddle->acceleration = &player->paddle.acceleration;
     paddle->max_speed = &player->paddle.max_speed;
     paddle->friction = &player->paddle.friction;
@@ -162,7 +153,7 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
     static_body_def.position = (b2Vec2){(game_settings.play_area.width / 2) + game_settings.play_area.x, PADDLE_HEIGHT}; // Static reference point
     paddle->constraint = b2CreateBody(world_id, &static_body_def);
 
-    // First Prismatic Joint: Constrain movement to the X-axis
+    // Prismatic Joint: Constrain movement to the X-axis
     b2PrismaticJointDef x_joint_def = b2DefaultPrismaticJointDef();
     x_joint_def.bodyIdA = paddle->body;
     x_joint_def.bodyIdB = paddle->constraint;

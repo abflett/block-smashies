@@ -18,8 +18,8 @@ typedef struct Paddle
     b2Vec2 size;
 
     int player_num;
-    float force_timer;
-    float force_active_timer;
+    float pulse_timer;
+    float pulse_active_timer;
     float boost_timer_left;
     float boost_timer_right;
     float boost_active_timer;

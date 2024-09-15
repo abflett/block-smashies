@@ -16,12 +16,12 @@ Player create_new_player(const char *name)
     new_player.currency = 0; // Starting currency
 
     // Initialize paddle attributes
-    new_player.paddle.acceleration = 200.0f;
+    new_player.paddle.acceleration = 300.0f;
     new_player.paddle.max_speed = 200.0f;
     new_player.paddle.friction = 0.97f;
     new_player.paddle.charge = 0.0f;
-    new_player.paddle.booster_str = 1.0f;
-    new_player.paddle.pulse_str = 1.0f;
+    new_player.paddle.booster_str = 200.0f;
+    new_player.paddle.pulse_str = 100.0f;
 
     // Initialize ball attributes
     new_player.ball.speed_multiplier = 1.0f;
