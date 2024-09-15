@@ -12,6 +12,7 @@
 #define BOUNCE_FORCE 100.0f // Adjust the force for the bounce
 #define MAX_VELOCITY 300.0f // Maximum velocity for the paddle
 #define PADDLE_HEIGHT 16.f
+#define BOOST_STRENGTH 50.0f
 
 static void clean_up_paddle(Paddle *paddle)
 {
@@ -24,6 +25,9 @@ static void clean_up_paddle(Paddle *paddle)
 
 static void update_paddle(Paddle *paddle, float delta_time)
 {
+    paddle->boost_timer_left += delta_time;
+    paddle->boost_timer_right += delta_time;
+
     // Handle left and right movement
     if (IsKeyDown(KEY_A))
     {
@@ -34,6 +38,31 @@ static void update_paddle(Paddle *paddle, float delta_time)
     {
         // Apply a rightward force
         b2Body_ApplyForceToCenter(paddle->body, (b2Vec2){MOVE_FORCE, 0.0f}, true);
+    }
+
+    if (IsKeyReleased(KEY_A))
+    {
+        paddle->boost_timer_left = 0.0f;
+    }
+    if (IsKeyReleased(KEY_D))
+    {
+        paddle->boost_timer_right = 0.0f;
+    }
+
+    if (paddle->boost_timer_left < 0.3f)
+    {
+        if (IsKeyDown(KEY_A))
+        {
+            b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){-BOOST_STRENGTH, 0.0f}, b2Body_GetWorldCenterOfMass(paddle->body), true);
+        }
+    }
+
+    if (paddle->boost_timer_right < 0.3f)
+    {
+        if (IsKeyDown(KEY_D))
+        {
+            b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){BOOST_STRENGTH, 0.0f}, b2Body_GetWorldCenterOfMass(paddle->body), true);
+        }
     }
 
     // Apply upward bounce when W is pressed
@@ -93,6 +122,9 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
     paddle->player_num = player_num;
     paddle->force_timer = 0.0f;
     paddle->force_active_timer = 0.0f;
+    paddle->boost_timer_left = 0.0f;
+    paddle->boost_timer_right = 0.0f;
+    paddle->boost_active_timer = 0.0f;
 
     // used in later development for power ups but for now ignore
     paddle->acceleration = &player->paddle.acceleration;
