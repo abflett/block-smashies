@@ -9,13 +9,6 @@
 #define HEALTH_MODIFIER 1
 #define CURRENCY_MODIFIER 1
 
-static char *brick_type_to_subtexture_map[2][4] = {
-    {"dk-brown-brick-01", "dk-brown-brick-02", "dk-brown-brick-03", "dk-brown-brick-04"},
-    {"brown-brick-01", "brown-brick-02", "brown-brick-03", "brown-brick-04"}};
-
-static const char *brick_type_to_animation_map[2] =
-    {"dk-brown-brick-destroy-animation", "brown-brick-destroy-animation"};
-
 static float brick_max_health(int brick_type)
 {
     return (float)(brick_type + 1) * HEALTH_MODIFIER;
@@ -43,9 +36,9 @@ static void update_brick(Brick *brick, float delta_time)
         subtexture_index = 1;
     }
 
-    if (brick->subtexture->id != brick_type_to_subtexture_map[brick->type][subtexture_index])
+    if (brick->subtexture->id != resource_manager.brick_type_mapper->brick_type_to_subtexture_id(brick->brick_type, subtexture_index))
     {
-        brick->subtexture = resource_manager.get_subtexture(brick_type_to_subtexture_map[brick->brick_type][subtexture_index]);
+        brick->subtexture = resource_manager.get_subtexture(resource_manager.brick_type_mapper->brick_type_to_subtexture_id(brick->brick_type, subtexture_index));
     }
 
     if (brick->is_destroying)
@@ -96,7 +89,7 @@ static void disable_brick(Brick *brick)
     TraceLog(LOG_INFO, "[Disable] - Brick [%d] disabled.", brick->body.index1);
 }
 
-static void reset_brick(Brick *brick, b2Vec2 position, BrickType color)
+static void reset_brick(Brick *brick, b2Vec2 position, int brick_type)
 {
     brick->health = brick_max_health(brick->brick_type);
     brick->max_health = brick_max_health(brick->brick_type);
@@ -106,18 +99,19 @@ static void reset_brick(Brick *brick, b2Vec2 position, BrickType color)
     TraceLog(LOG_INFO, "[Reset] - Brick [%d] reset to new position and health.", brick->body.index1);
 }
 
-Brick *create_brick(Entities *entities, b2WorldId world_id, b2Vec2 position, BrickType brick_type)
+Brick *create_brick(Entities *entities, b2WorldId world_id, b2Vec2 position, int brick_type)
 {
     Brick *brick = (Brick *)malloc(sizeof(Brick));
     brick->type = ENTITY_BRICK;
     brick->brick_type = brick_type;
-    brick->subtexture = resource_manager.get_subtexture(brick_type_to_subtexture_map[brick->brick_type][0]);
+    brick->subtexture = resource_manager.get_subtexture(resource_manager.brick_type_mapper->brick_type_to_subtexture_id(brick->brick_type, 0));
     brick->size = (b2Vec2){(float)brick->subtexture->src.width, (float)brick->subtexture->src.height};
     brick->health = brick_max_health(brick->brick_type);
     brick->max_health = brick_max_health(brick->brick_type);
     brick->active = true;
     brick->is_destroying = false;
-    brick->animation_handler = create_animation_manager(brick_type_to_animation_map[brick->brick_type], ANIMATION_ONCE, 0.05f);
+
+    brick->animation_handler = create_animation_manager(resource_manager.brick_type_mapper->brick_type_to_animation_id(brick->brick_type), ANIMATION_ONCE, 0.05f);
     brick->animation_handler->is_playing = false;
     brick->entities = entities;
     brick->world_id = world_id;

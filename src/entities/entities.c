@@ -50,7 +50,7 @@ static void add_paddle_func(Entities *entities, Player *player, b2WorldId world_
     kv_push(Paddle *, entities->paddles, new_paddle);
 }
 
-static void add_brick_func(Entities *entities, b2WorldId world_id, b2Vec2 position, BrickType brick_type)
+static void add_brick_func(Entities *entities, b2WorldId world_id, b2Vec2 position, int brick_type)
 {
     for (int i = 0; i < kv_size(entities->bricks); i++)
     {
