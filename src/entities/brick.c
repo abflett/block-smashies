@@ -13,8 +13,8 @@ static char *brick_type_to_subtexture_map[2][4] = {
     {"dk-brown-brick-01", "dk-brown-brick-02", "dk-brown-brick-03", "dk-brown-brick-04"},
     {"brown-brick-01", "brown-brick-02", "brown-brick-03", "brown-brick-04"}};
 
-static const char *brick_type_to_animation_map[1] =
-    {"dk-brown-brick-destroy-animation"};
+static const char *brick_type_to_animation_map[2] =
+    {"dk-brown-brick-destroy-animation", "brown-brick-destroy-animation"};
 
 static float brick_max_health(int brick_type)
 {

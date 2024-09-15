@@ -29,7 +29,6 @@
     {
       "id": "dk-brown-brick-01",
       "texture": "bricks-atlas",
-      "type": "brick",
       "src": {
         "x": 0,
         "y": 0,
@@ -40,7 +39,6 @@
     {
       "id": "dk-brown-brick-02",
       "texture": "bricks-atlas",
-      "type": "brick",
       "src": {
         "x": 18,
         "y": 0,
@@ -51,7 +49,6 @@
     {
       "id": "dk-brown-brick-03",
       "texture": "bricks-atlas",
-      "type": "brick",
       "src": {
         "x": 36,
         "y": 0,
@@ -62,7 +59,6 @@
     {
       "id": "dk-brown-brick-04",
       "texture": "bricks-atlas",
-      "type": "brick",
       "src": {
         "x": 54,
         "y": 0,
@@ -73,7 +69,6 @@
     {
       "id": "brown-brick-01",
       "texture": "bricks-atlas",
-      "type": "brick",
       "src": {
         "x": 0,
         "y": 8,
@@ -84,7 +79,6 @@
     {
       "id": "brown-brick-02",
       "texture": "bricks-atlas",
-      "type": "brick",
       "src": {
         "x": 18,
         "y": 8,
@@ -95,7 +89,6 @@
     {
       "id": "brown-brick-03",
       "texture": "bricks-atlas",
-      "type": "brick",
       "src": {
         "x": 36,
         "y": 8,
@@ -106,7 +99,6 @@
     {
       "id": "brown-brick-04",
       "texture": "bricks-atlas",
-      "type": "brick",
       "src": {
         "x": 54,
         "y": 8,
@@ -119,7 +111,6 @@
     {
       "id": "dk-brown-brick-destroy-animation",
       "texture": "bricks-atlas",
-      "type": "brick",
       "frames": [
         {
           "x": 72,
@@ -146,6 +137,58 @@
           "h": 8
         }
       ]
+    },
+    {
+      "id": "brown-brick-destroy-animation",
+      "texture": "bricks-atlas",
+      "frames": [
+        {
+          "x": 72,
+          "y": 8,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 90,
+          "y": 8,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 108,
+          "y": 8,
+          "w": 18,
+          "h": 8
+        },
+        {
+          "x": 126,
+          "y": 8,
+          "w": 18,
+          "h": 8
+        }
+      ]
+    }
+  ],
+  "brick_types": [
+    {
+      "type": "dk-brown-brick",
+      "subtextures": [
+        "dk-brown-brick-01",
+        "dk-brown-brick-02",
+        "dk-brown-brick-03",
+        "dk-brown-brick-04"
+      ],
+      "animation": "dk-brown-brick-destroy-animation"
+    },
+    {
+      "type": "brown-brick",
+      "subtextures": [
+        "brown-brick-01",
+        "brown-brick-02",
+        "brown-brick-03",
+        "brown-brick-04"
+      ],
+      "animation": "brown-brick-destroy-animation"
     }
   ]
 }
