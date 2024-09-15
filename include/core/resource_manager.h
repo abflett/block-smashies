@@ -3,11 +3,11 @@
 
 #include "kvec.h"
 #include "resource.h"
+#include "brick_type_mapper.h"
 
 typedef struct ResourceManager
 {
-    kvec_t(BrickSubtextureIdsSet) brick_type_sets;
-    kvec_t(BrickAnimationId) brick_animation_ids;
+    BrickTypeMapper *brick_type_mapper;
     // Function pointers for managing resources
     void (*load_resource_file)(const char *file);    // Load the JSON file and store resources in memory
     TextureResource *(*get_texture)(const char *id); // Get a texture by its ID

@@ -31,14 +31,14 @@ typedef struct
     UT_hash_handle hh; // Handle for hash table management
 } Animation;
 
-typedef struct BrickSubtextureIdsSet
-{
-    char *subtexture_ids[4]; // array of strings, 4 entries for the set
-} BrickSubtextureIdsSet;
+// typedef struct BrickSubtextureIdsSet
+// {
+//     char *subtexture_ids[4]; // array of strings, 4 entries for the set
+// } BrickSubtextureIdsSet;
 
-typedef struct BrickAnimationId
-{
-    const char *id; // array of strings, 4 entries for the set
-} BrickAnimationId;
+// typedef struct BrickAnimationId
+// {
+//     const char *id; // array of strings, 4 entries for the set
+// } BrickAnimationId;
 
 #endif // RESOURCE_H

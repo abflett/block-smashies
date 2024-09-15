@@ -14,6 +14,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/include/core
     ${PROJECT_SOURCE_DIR}/include/collisions
     ${PROJECT_SOURCE_DIR}/include/entities
+    ${PROJECT_SOURCE_DIR}/include/mappings
     ${PROJECT_SOURCE_DIR}/include/scenes
     ${PROJECT_SOURCE_DIR}/include/game_states
     ${PROJECT_SOURCE_DIR}/include/game
@@ -50,6 +51,11 @@ set(ENTITIES_SRC
     src/entities/nanite.c
 )
 
+# Source files for mappings
+set(MAPPINGS_SRC
+    src/mappings/brick_type_mapper.c
+)
+
 # Source files for scenes
 set(SCENES_SRC
     src/scenes/scene_manager.c
@@ -82,7 +88,8 @@ add_executable(BlockSmashies
     ${CORE_SRC}
     ${GAME_SRC}
     ${ENTITIES_SRC}
-    ${COLLISIONS_SRC})
+    ${COLLISIONS_SRC}
+    ${MAPPINGS_SRC})
 
 # Link with libraries
 target_link_libraries(BlockSmashies PUBLIC raylib parson box2d)
