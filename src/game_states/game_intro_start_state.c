@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 #include "raylib.h"
 
 #include "game_intro_start_state.h"
@@ -10,7 +11,7 @@ static float count_down;
 
 static void state_init(void)
 {
-    count_down = 1.0f;
+    count_down = 2.0f;
 }
 
 static void state_update(float delta_time)
@@ -28,7 +29,12 @@ static void state_render(void)
     game_state_manager.context->render();
     // Convert countdown value to text
     char count_down_text[2]; // Increase size if necessary
-    snprintf(count_down_text, sizeof(count_down_text), "%d", (int)count_down);
+
+    // Round up the floating-point number
+    int rounded_count_down = (int)ceil(count_down);
+
+    // Format the rounded integer value to a string
+    snprintf(count_down_text, sizeof(count_down_text), "%d", rounded_count_down);
 
     // Draw countdown text
     DrawText(count_down_text, 198, 110, 22, LIGHTGRAY);
