@@ -7,13 +7,8 @@
 #include "entities.h"
 #include "resource_manager.h"
 
-Entities *entities;
-Texture2D background;
-
 static void state_init(void)
 {
-    background = resource_manager.get_texture("gameplay-bg")->texture;
-    entities = &game_state_manager.context->entities;
 }
 
 static void state_update(float delta_time)
@@ -36,26 +31,16 @@ static void state_update(float delta_time)
 
 static void state_render(void)
 {
-    DrawTexture(background, 0, 0, WHITE);
-    entities->render(entities);
+    game_state_manager.context->render();
 
     DrawRectangle(0, game_settings.target_height / 2 - 40, game_settings.target_width, 80, (Color){0, 0, 0, 170});
-    // Text to be drawn
+
     const char *text = "'Escape' to exit\n'Enter' to continue playing!";
-
-    // Font size
     int fontSize = 8;
-
-    // Measure the width of the text
     int textWidth = MeasureText(text, fontSize);
-
-    // Calculate the position to center the text horizontally
     int posX = (game_settings.target_width - textWidth) / 2;
-
-    // Calculate the position to center the text vertically (within the rectangle)
     int posY = (game_settings.target_height / 2) - (fontSize / 2) - fontSize;
 
-    // Draw the text at the calculated position
     DrawText(text, posX, posY, fontSize, LIGHTGRAY);
 }
 

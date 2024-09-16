@@ -15,7 +15,6 @@ static int score;
 static char player_name[MAX_NAME_LENGTH + 1] = "Player"; // +1 for the null terminator
 static bool adding_player_score;
 
-// Function to update the player's score entry
 static void update_player_score(float delta_time)
 {
     int key = GetCharPressed();
@@ -43,30 +42,23 @@ static void update_player_score(float delta_time)
     // Check if the user presses Enter to confirm their name
     if (IsKeyPressed(KEY_ENTER))
     {
-        // Add a new high score
         add_high_score(high_scores, &count, player_name, score);
-
-        // Save high scores to file
         save_high_scores("high_scores.json", high_scores, count);
 
         adding_player_score = false;
     }
 }
 
-// Initialization state function
 static void state_init(void)
 {
-    // Retrieve the score passed as an argument
     score = game_state_manager.context->game_status.currency;
 
     // Load high scores from file
     load_high_scores("high_scores.json", high_scores, &count);
-
     // Determine if the player's score is high enough to be added
     adding_player_score = is_high_score(high_scores, count, score);
 }
 
-// Update state function
 static void state_update(float delta_time)
 {
     if (adding_player_score)
@@ -75,7 +67,6 @@ static void state_update(float delta_time)
     }
     else
     {
-        // Allow user to move to the next scene after showing high scores
         if (IsKeyPressed(KEY_ENTER))
         {
             scene_manager.change(scene_manager.scenes.logo);
@@ -83,7 +74,6 @@ static void state_update(float delta_time)
     }
 }
 
-// Render state function
 static void state_render(void)
 {
     if (adding_player_score)
@@ -102,13 +92,10 @@ static void state_render(void)
     }
 }
 
-// Cleanup state function
 static void state_cleanup(void)
 {
-    // Perform any necessary cleanup (if needed)
 }
 
-// Define the game over state
 GameState game_over_state = {
     .init = state_init,
     .update = state_update,

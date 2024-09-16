@@ -1,10 +1,7 @@
 #include <stddef.h>
 
-#include "raylib.h"
 #include "game_state_manager.h"
 #include "game_state.h"
-
-// GameStates
 #include "playing_state.h"
 #include "pause_menu_state.h"
 #include "game_over_state.h"
