@@ -2028,17 +2028,7 @@
         "dk-grey-brick-03",
         "dk-grey-brick-04"
       ],
-      "animation": "brown-brick-destroy-animation"
-    },
-    {
-      "type": "brown-brick",
-      "subtextures": [
-        "brown-brick-01",
-        "brown-brick-02",
-        "brown-brick-03",
-        "brown-brick-04"
-      ],
-      "animation": "brown-brick-destroy-animation"
+      "animation": "dk-grey-brick-destroy-animation"
     }
   ]
 }
