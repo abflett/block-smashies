@@ -3,6 +3,7 @@
 #include "raylib.h"
 #include "game_over_state.h"
 #include "scene_manager.h"
+#include "game_state_manager.h"
 #include "high_score.h"
 #include "game_status.h"
 
@@ -53,10 +54,10 @@ static void update_player_score(float delta_time)
 }
 
 // Initialization state function
-static void state_init(int argc, va_list args)
+static void state_init(void)
 {
     // Retrieve the score passed as an argument
-    score = va_arg(args, int);
+    score = game_state_manager.context->game_status.currency;
 
     // Load high scores from file
     load_high_scores("high_scores.json", high_scores, &count);

@@ -3,6 +3,7 @@
 
 #include <stdarg.h>
 #include "game_state.h"
+#include "game_context.h"
 
 typedef struct GameStates
 {
@@ -15,8 +16,9 @@ typedef struct GameStateManager
 {
     GameState *current_state;
     GameStates states;
+    GameContext *context;
 
-    void (*change)(GameState *new_state, int argc, ...);
+    void (*change)(GameState *new_state);
     void (*update)(float delta_time);
     void (*render)(void);
 } GameStateManager;

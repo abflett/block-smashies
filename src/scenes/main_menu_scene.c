@@ -1,6 +1,6 @@
 #include "raylib.h"
 #include "main_menu_scene.h"
-#include "game_settings.h"
+#include "game.h"
 #include "scene_manager.h"
 
 static void scene_init(void)
@@ -17,7 +17,7 @@ static void scene_update(float delta_time)
 
     if (IsKeyPressed(KEY_ESCAPE))
     {
-        game_settings.exitWindow = true;
+        exit_game();
     }
 }
 

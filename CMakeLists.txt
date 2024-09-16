@@ -30,6 +30,7 @@ set(CORE_SRC
     src/core/game_settings.c
     src/core/resource_manager.c
     src/core/animation_handler.c
+    src/core/game.c
 )
 
 set(COLLISIONS_SRC

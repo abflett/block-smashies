@@ -10,10 +10,10 @@
 Entities *entities;
 Texture2D background;
 
-static void state_init(int argc, va_list args)
+static void state_init(void)
 {
     background = resource_manager.get_texture("gameplay-bg")->texture;
-    entities = va_arg(args, Entities *);
+    entities = &game_state_manager.context->entities;
 }
 
 static void state_update(float delta_time)
@@ -30,7 +30,7 @@ static void state_update(float delta_time)
 
     if (IsKeyPressed(KEY_ENTER))
     {
-        game_state_manager.change(game_state_manager.states.playing, 0);
+        game_state_manager.change(game_state_manager.states.playing);
     }
 }
 

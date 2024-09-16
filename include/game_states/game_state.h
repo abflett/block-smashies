@@ -5,7 +5,7 @@
 
 typedef struct GameState
 {
-    void (*init)(int argc, va_list args);
+    void (*init)(void);
     void (*update)(float delta_time);
     void (*render)(void);
     void (*cleanup)(void);

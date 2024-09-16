@@ -1,5 +1,4 @@
 #include <stddef.h>
-#include <stdarg.h>
 
 #include "raylib.h"
 #include "game_state_manager.h"
@@ -10,7 +9,7 @@
 #include "pause_menu_state.h"
 #include "game_over_state.h"
 
-void change_state(GameState *new_state, int argc, ...)
+void change_state(GameState *new_state)
 {
     if (game_state_manager.current_state && game_state_manager.current_state->cleanup)
     {
@@ -19,16 +18,10 @@ void change_state(GameState *new_state, int argc, ...)
 
     game_state_manager.current_state = new_state;
 
-    
-
     if (game_state_manager.current_state && game_state_manager.current_state->init)
     {
-        va_list args;
-        va_start(args, argc);
-        game_state_manager.current_state->init(argc, args);
-        va_end(args);
+        game_state_manager.current_state->init();
     }
-    
 }
 
 void update_state(float delta_time)

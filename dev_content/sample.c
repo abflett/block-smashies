@@ -14,7 +14,7 @@ static GameStatus game_status;
 
 static void state_init(int argc, va_list args)
 {
-    if (!game_settings.is_paused)
+    if (!context->game_status.is_pause)
     {
         // Initialize the entities if not already initialized
         entities = create_entities();
@@ -28,13 +28,13 @@ static void state_init(int argc, va_list args)
     }
     else
     {
-        game_settings.is_paused = false;
+        context->game_status.is_pause = false;
     }
 }
 
 static void state_cleanup(void)
 {
-    if (game_settings.is_paused)
+    if (context->game_status.is_pause)
         return;
 
     entities.cleanup(&entities);
@@ -89,7 +89,7 @@ static void state_update(float delta_time)
 
     if (IsKeyPressed(KEY_ESCAPE))
     {
-        game_settings.is_paused = true;
+        context->game_status.is_pause = true;
         game_state_manager.change(game_state_manager.states.pause_menu, 0);
     }
 }

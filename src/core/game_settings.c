@@ -1,34 +1,7 @@
-#include "raylib.h"
 #include "parson.h"
 #include "game_settings.h"
 
 GameSettings game_settings;
-
-void load_settings(const char *filename)
-{
-    JSON_Value *root_value = json_parse_file(filename);
-    if (root_value == NULL)
-    {
-        set_default_settings();
-        save_settings(filename);
-        return;
-    }
-
-    JSON_Object *root_object = json_value_get_object(root_value);
-    game_settings.screen_width = (int)json_object_get_number(root_object, "screen_width");
-    game_settings.screen_height = (int)json_object_get_number(root_object, "screen_height");
-    game_settings.fullscreen = json_object_get_boolean(root_object, "fullscreen");
-    game_settings.volume = (float)json_object_get_number(root_object, "volume");
-
-    game_settings.target_width = 320;
-    game_settings.target_height = 180;
-    game_settings.logo_screen_time = 4.0f;
-    game_settings.exitWindow = false;
-    game_settings.is_paused = false;
-    game_settings.play_area = (Rectangle){95, 7, 218, 167}; // {104, 16, 200, 156}
-
-    json_value_free(root_value);
-}
 
 void save_settings(const char *filename)
 {
@@ -53,29 +26,34 @@ void set_default_settings(void)
     game_settings.volume = 1.0f;
 
     // variables
-    game_settings.exitWindow = false;
     game_settings.target_width = 320;
     game_settings.target_height = 180;
     game_settings.logo_screen_time = 4.0f;
-    game_settings.is_paused = false;
     game_settings.play_area = (Rectangle){95, 7, 218, 167};
 }
 
-void init_game_from_settings(const char *settings_file)
+void initialize_game_settings(const char *filename)
 {
-    load_settings(settings_file);
-    InitWindow(game_settings.screen_width, game_settings.screen_height, "Block Smashies");
-    SetExitKey(KEY_NULL); // Disable default exit key (ESC)
-    SetTargetFPS(60);     // Set target FPS for the game loop
+    game_settings.filename = filename;
 
-    // Todo: Allow other available full screen resolutions other then native
-    if (game_settings.fullscreen)
+    JSON_Value *root_value = json_parse_file(game_settings.filename);
+    if (root_value == NULL)
     {
-        int monitor = GetCurrentMonitor();
-        game_settings.screen_width = GetMonitorWidth(monitor);
-        game_settings.screen_height = GetMonitorHeight(monitor);
-
-        SetWindowSize(game_settings.screen_width, game_settings.screen_height);
-        ToggleFullscreen();
+        set_default_settings();
+        save_settings(game_settings.filename);
+        return;
     }
+
+    JSON_Object *root_object = json_value_get_object(root_value);
+    game_settings.screen_width = (int)json_object_get_number(root_object, "screen_width");
+    game_settings.screen_height = (int)json_object_get_number(root_object, "screen_height");
+    game_settings.fullscreen = json_object_get_boolean(root_object, "fullscreen");
+    game_settings.volume = (float)json_object_get_number(root_object, "volume");
+
+    game_settings.target_width = 320;
+    game_settings.target_height = 180;
+    game_settings.logo_screen_time = 4.0f;
+    game_settings.play_area = (Rectangle){95, 7, 218, 167}; // {104, 16, 200, 156}
+
+    json_value_free(root_value);
 }
