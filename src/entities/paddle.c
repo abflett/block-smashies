@@ -13,6 +13,7 @@
 #define BOOST_ACTIVE_TIMER 1.0f
 #define PULSE_TIMER 0.09f
 #define PULSE_ACTIVE_TIMER 1.0f
+#define PADDLE_MASS 1.0f
 
 static void clean_up_paddle(Paddle *paddle)
 {
@@ -161,6 +162,10 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
     x_joint_def.enableLimit = false;               // No strict limits along X-axis
     x_joint_def.enableMotor = false;
     b2CreatePrismaticJoint(world_id, &x_joint_def);
+
+    b2MassData mass_data = b2Body_GetMassData(paddle->body);
+    mass_data.mass = PADDLE_MASS;
+    b2Body_SetMassData(paddle->body, mass_data);
 
     paddle->update = update_paddle;
     paddle->render = render_paddle;
