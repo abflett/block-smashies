@@ -6,7 +6,7 @@
 #include "entity_type.h"
 #include "entities.h"
 
-#define HEALTH_MODIFIER 0.25f
+#define HEALTH_MODIFIER 1.0f
 #define CURRENCY_MODIFIER 1
 
 static float brick_max_health(int brick_type)

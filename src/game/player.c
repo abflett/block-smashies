@@ -25,7 +25,7 @@ Player create_new_player(const char *name)
 
     // Initialize ball attributes
     new_player.ball.speed_multiplier = 1.0f;
-    new_player.ball.power = 1; // Starting power level
+    new_player.ball.power = 10.0f; // Starting power level
     new_player.ball.max_speed = 50.0f;
 
     // Initialize perks

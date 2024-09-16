@@ -2,7 +2,7 @@
 
 void ball_brick_collision(Ball *ball, Brick *brick, GameContext *context)
 {
-    brick->health -= 1;
+    brick->health -= *ball->power;
     if (brick->health <= 0)
     {
         b2Vec2 position = b2Body_GetPosition(brick->body);

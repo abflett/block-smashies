@@ -18,7 +18,7 @@ typedef struct Ball
     Texture2D *texture;
     float radius;
 
-    int *power;
+    float *power;
     float *phase_nova;
     float *super_nova;
     float *max_speed;
