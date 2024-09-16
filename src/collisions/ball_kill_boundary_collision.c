@@ -4,6 +4,7 @@
 
 #include "ball_kill_boundary_collision.h"
 #include "kill_boundary.h"
+#include "game_state_manager.h"
 
 void ball_kill_boundary_collision(Ball *ball, KillBoundary *kill_boundary, GameContext *context)
 {
@@ -37,7 +38,7 @@ void ball_kill_boundary_collision(Ball *ball, KillBoundary *kill_boundary, GameC
             Paddle *paddle = kv_A(context->entities.paddles, 0);
             paddle->reset(paddle, paddle->player_num);
             context->entities.add_ball(&context->entities, &context->player, context->world_id, paddle);
-            context->game_status.is_hold = true;
+            game_state_manager.change(game_state_manager.states.game_intro_start);
         }
     }
     TraceLog(LOG_INFO, "Begin Contact - Ball[%d], KillBoundary[%d]", ball->body.index1, kill_boundary->body.index1);
