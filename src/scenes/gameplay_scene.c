@@ -4,6 +4,7 @@
 #include "game_settings.h"
 #include "game_context.h"
 
+static Scene gameplay_scene;
 static GameContext *context;
 
 static void scene_init(void)
@@ -73,9 +74,12 @@ static void scene_cleanup(void)
     game_state_manager.context->cleanup();
 }
 
-Scene gameplay_scene = {
-    .init = scene_init,
-    .update = scene_update,
-    .render = scene_render,
-    .cleanup = scene_cleanup,
+Scene *create_gameplay_scene()
+{
+    gameplay_scene.init = scene_init;
+    gameplay_scene.update = scene_update;
+    gameplay_scene.render = scene_render;
+    gameplay_scene.cleanup = scene_cleanup;
+
+    return &gameplay_scene;
 };

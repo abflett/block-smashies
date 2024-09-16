@@ -2,6 +2,8 @@
 #include "title_scene.h"
 #include "scene_manager.h"
 
+static Scene title_scene;
+
 static void scene_init(void)
 {
 }
@@ -24,9 +26,12 @@ static void scene_cleanup(void)
 {
 }
 
-Scene title_scene = {
-    .init = scene_init,
-    .update = scene_update,
-    .render = scene_render,
-    .cleanup = scene_cleanup,
+Scene *create_title_scene()
+{
+    title_scene.init = scene_init;
+    title_scene.update = scene_update;
+    title_scene.render = scene_render;
+    title_scene.cleanup = scene_cleanup;
+
+    return &title_scene;
 };

@@ -4,6 +4,7 @@
 #include "game_settings.h"
 #include "scene_manager.h"
 #include "resource_manager.h"
+#include "scene_manager.h"
 #include "game_state_manager.h"
 
 #define CLEAR_COLOR \
@@ -85,6 +86,7 @@ Game *create_game(const char *game_title, const char *settings_filename, const c
     InitWindow(game_settings.screen_width, game_settings.screen_height, game_title);
     SetExitKey(KEY_NULL); // Disable default exit key (ESC)
     SetTargetFPS(60);     // Set target FPS for the game loop
+    initialize_scene_manager();
     initialize_game_state_manager();
 
     // Todo: Allow other available full screen resolutions other then native

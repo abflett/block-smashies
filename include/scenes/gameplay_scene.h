@@ -4,7 +4,7 @@
 #include "scene.h"
 #include "game_state_manager.h"
 
-extern Scene gameplay_scene;
-extern GameStateManager game_state_manager;
+Scene *create_gameplay_scene(void);
+// extern GameStateManager game_state_manager;
 
 #endif

@@ -24,5 +24,6 @@ typedef struct SceneManager
 } SceneManager;
 
 extern SceneManager scene_manager;
+void initialize_scene_manager(void);
 
 #endif

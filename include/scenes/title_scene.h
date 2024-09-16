@@ -3,6 +3,6 @@
 
 #include "scene.h"
 
-extern Scene title_scene;
+Scene *create_title_scene(void);
 
 #endif

@@ -39,11 +39,18 @@ void render_scene(void)
 SceneManager scene_manager = {
     .current_scene = NULL,
     .next_scene = NULL,
-    .scenes.logo = &logo_scene,
-    .scenes.title = &title_scene,
-    .scenes.main_menu = &main_menu_scene,
-    .scenes.gameplay = &gameplay_scene,
+    .scenes.logo = NULL,
+    .scenes.title = NULL,
+    .scenes.main_menu = NULL,
+    .scenes.gameplay = NULL,
     .change = change_scene,
     .update = update_scene,
-    .render = render_scene
-};
+    .render = render_scene};
+
+void initialize_scene_manager(void)
+{
+    scene_manager.scenes.logo = create_logo_scene();
+    scene_manager.scenes.title = create_title_scene();
+    scene_manager.scenes.main_menu = create_main_menu_scene();
+    scene_manager.scenes.gameplay = create_gameplay_scene();
+}

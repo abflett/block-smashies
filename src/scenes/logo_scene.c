@@ -3,6 +3,8 @@
 #include "game_settings.h"
 #include "scene_manager.h"
 
+static Scene logo_scene;
+
 static float elapsed_time = 0.0f; // Variable to track elapsed time
 
 static void scene_init(void)
@@ -31,9 +33,12 @@ static void scene_cleanup(void)
     // Cleanup resources used by the main menu
 }
 
-Scene logo_scene = {
-    .init = scene_init,
-    .update = scene_update,
-    .render = scene_render,
-    .cleanup = scene_cleanup,
+Scene *create_logo_scene()
+{
+    logo_scene.init = scene_init;
+    logo_scene.update = scene_update;
+    logo_scene.render = scene_render;
+    logo_scene.cleanup = scene_cleanup;
+
+    return &logo_scene;
 };

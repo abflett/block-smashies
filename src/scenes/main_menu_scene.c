@@ -3,6 +3,8 @@
 #include "game.h"
 #include "scene_manager.h"
 
+static Scene main_menu_scene;
+
 static void scene_init(void)
 {
     // Initialize the main menu scene
@@ -36,9 +38,12 @@ static void scene_cleanup(void)
     // Cleanup resources used by the main menu
 }
 
-Scene main_menu_scene = {
-    .init = scene_init,
-    .update = scene_update,
-    .render = scene_render,
-    .cleanup = scene_cleanup,
+Scene *create_main_menu_scene()
+{
+    main_menu_scene.init = scene_init;
+    main_menu_scene.update = scene_update;
+    main_menu_scene.render = scene_render;
+    main_menu_scene.cleanup = scene_cleanup;
+
+    return &main_menu_scene;
 };

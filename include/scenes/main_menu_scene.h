@@ -3,6 +3,6 @@
 
 #include "scene.h"
 
-extern Scene main_menu_scene;
+Scene *create_main_menu_scene(void);
 
 #endif

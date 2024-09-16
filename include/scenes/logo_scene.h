@@ -3,6 +3,6 @@
 
 #include "scene.h"
 
-extern Scene logo_scene;
+Scene *create_logo_scene(void);
 
 #endif
