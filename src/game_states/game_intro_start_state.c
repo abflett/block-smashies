@@ -10,7 +10,7 @@ static float count_down;
 
 static void state_init(void)
 {
-    count_down = 3.0f;
+    count_down = 1.0f;
 }
 
 static void state_update(float delta_time)
