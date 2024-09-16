@@ -7,6 +7,8 @@
 #include "entities.h"
 #include "resource_manager.h"
 
+static GameState pause_menu_state;
+
 static void state_init(void)
 {
 }
@@ -48,9 +50,12 @@ static void state_cleanup(void)
 {
 }
 
-GameState pause_menu_state = {
-    .init = state_init,
-    .update = state_update,
-    .render = state_render,
-    .cleanup = state_cleanup,
+GameState *create_pause_menu_state(void)
+{
+    pause_menu_state.init = state_init;
+    pause_menu_state.update = state_update;
+    pause_menu_state.render = state_render;
+    pause_menu_state.cleanup = state_cleanup;
+
+    return &pause_menu_state;
 };

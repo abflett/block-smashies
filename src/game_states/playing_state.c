@@ -7,6 +7,8 @@
 #include "game_state_manager.h"
 #include "game_context.h"
 
+static GameState playing_state;
+
 static void state_init(void)
 {
     if (game_state_manager.context->game_status.is_pause)
@@ -21,11 +23,11 @@ static void state_cleanup(void)
 
 static void state_update(float delta_time)
 {
-    if (!game_state_manager.context->game_status.is_hold || IsKeyPressed(KEY_SPACE))
-    {
-        game_state_manager.context->game_status.is_hold = false;
-        game_state_manager.context->update(delta_time);
-    }
+    // if (!game_state_manager.context->game_status.is_hold || IsKeyPressed(KEY_SPACE))
+    // {
+    //     game_state_manager.context->game_status.is_hold = false;
+    game_state_manager.context->update(delta_time);
+    // }
 
     if (IsKeyPressed(KEY_ESCAPE))
     {
@@ -45,9 +47,12 @@ static void state_render(void)
     game_state_manager.context->render();
 }
 
-GameState playing_state = {
-    .init = state_init,
-    .update = state_update,
-    .render = state_render,
-    .cleanup = state_cleanup,
+GameState *create_playing_state()
+{
+    playing_state.init = state_init;
+    playing_state.update = state_update;
+    playing_state.render = state_render;
+    playing_state.cleanup = state_cleanup;
+
+    return &playing_state;
 };

@@ -3,6 +3,6 @@
 
 #include "game_state.h"
 
-extern GameState playing_state;
+GameState *create_playing_state(void);
 
 #endif

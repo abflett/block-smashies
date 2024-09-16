@@ -9,6 +9,8 @@
 
 #define MAX_NAME_LENGTH 20
 
+static GameState game_over_state;
+
 static HighScore high_scores[10];
 static int count;
 static int score;
@@ -96,9 +98,12 @@ static void state_cleanup(void)
 {
 }
 
-GameState game_over_state = {
-    .init = state_init,
-    .update = state_update,
-    .render = state_render,
-    .cleanup = state_cleanup,
+GameState *create_game_over_state(void)
+{
+    game_over_state.init = state_init;
+    game_over_state.update = state_update;
+    game_over_state.render = state_render;
+    game_over_state.cleanup = state_cleanup;
+
+    return &game_over_state;
 };

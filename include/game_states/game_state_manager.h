@@ -10,6 +10,7 @@ typedef struct GameStates
     GameState *playing;
     GameState *pause_menu;
     GameState *game_over;
+    GameState *game_intro_start;
 } GameStates;
 
 typedef struct GameStateManager
@@ -24,5 +25,7 @@ typedef struct GameStateManager
 } GameStateManager;
 
 extern GameStateManager game_state_manager;
+
+void initialize_game_state_manager(void);
 
 #endif

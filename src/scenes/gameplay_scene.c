@@ -39,7 +39,7 @@ static void scene_init(void)
     }
 
     // start cutscene and cutsene will change to playing once animation is finished.
-    game_state_manager.change(game_state_manager.states.playing);
+    game_state_manager.change(game_state_manager.states.game_intro_start);
 }
 
 static void scene_update(float delta_time)
@@ -54,10 +54,10 @@ static void scene_render(void)
 
 static void scene_cleanup(void)
 {
+    TraceLog(LOG_INFO, "[Cleanup] - scene_cleanup - Success");
     if (game_state_manager.current_state && game_state_manager.current_state->cleanup)
     {
         game_state_manager.current_state->cleanup();
-        TraceLog(LOG_INFO, "[Cleanup] - gameplay_scene - Success");
     }
 
     // cleanup the playing state if playing state paused

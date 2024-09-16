@@ -3,6 +3,6 @@
 
 #include "game_state.h"
 
-extern GameState pause_menu_state;
+GameState *create_pause_menu_state(void);
 
 #endif

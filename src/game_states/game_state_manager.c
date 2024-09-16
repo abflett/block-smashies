@@ -5,6 +5,7 @@
 #include "playing_state.h"
 #include "pause_menu_state.h"
 #include "game_over_state.h"
+#include "game_intro_start_state.h"
 
 void change_state(GameState *new_state)
 {
@@ -39,9 +40,18 @@ void render_state(void)
 
 GameStateManager game_state_manager = {
     .current_state = NULL,
-    .states.playing = &playing_state,
-    .states.pause_menu = &pause_menu_state,
-    .states.game_over = &game_over_state,
+    .states.playing = NULL,
+    .states.pause_menu = NULL,
+    .states.game_over = NULL,
+    .states.game_intro_start = NULL,
     .change = change_state,
     .update = update_state,
     .render = render_state};
+
+void initialize_game_state_manager(void)
+{
+    game_state_manager.states.playing = create_playing_state();
+    game_state_manager.states.pause_menu = create_pause_menu_state();
+    game_state_manager.states.game_over = create_game_over_state();
+    game_state_manager.states.game_intro_start = create_game_intro_start_state();
+}
