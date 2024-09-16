@@ -120,7 +120,7 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
 
     // player attribute settings
     paddle->acceleration = &player->paddle.acceleration;
-    paddle->max_speed = &player->paddle.max_speed;
+    paddle->max_velocity = &player->paddle.max_velocity;
     paddle->friction = &player->paddle.friction;
     paddle->charge = &player->paddle.charge;
     paddle->booster_str = &player->paddle.booster_str;
@@ -139,7 +139,7 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
     b2Polygon paddle_box = b2MakeBox((paddle->size.x * 0.5f) - 3, paddle->size.y * 0.5f);
 
     b2ShapeDef paddle_shape_def = b2DefaultShapeDef();
-    paddle_shape_def.density = 0.004f;
+    paddle_shape_def.density = 1.0f;
     paddle_shape_def.friction = 100.0f;
     paddle_shape_def.restitution = 1.0f; // High restitution for bouncing
 

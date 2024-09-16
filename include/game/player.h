@@ -6,7 +6,7 @@
 typedef struct
 {
     float acceleration;
-    float max_speed;
+    float max_velocity;
     float friction;
     float charge;
     float booster_str;
@@ -16,8 +16,9 @@ typedef struct
 typedef struct
 {
     float speed_multiplier;
+    float max_velocity;
+    float min_velocity;
     float power;
-    float max_speed;
 } BallAttributes;
 
 typedef struct
@@ -35,6 +36,7 @@ typedef struct Player
     int operation_complete;
     int mission_complete;
     int currency;
+    int currency_collected;
     int lives;
 
     PaddleAttributes paddle;

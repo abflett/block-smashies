@@ -25,7 +25,7 @@ typedef struct Paddle
     float boost_active_timer;
 
     float *acceleration;
-    float *max_speed;
+    float *max_velocity;
     float *friction;
     float *charge;
     float *booster_str;

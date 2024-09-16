@@ -9,8 +9,6 @@
 #include "player.h"
 #include "collision_category.h"
 
-#define MAX_VELOCITY 100.0f
-
 static void clean_up_ball(Ball *ball)
 {
     TraceLog(LOG_INFO, "[Cleanup] - Ball [%d] - Success", ball->body.index1);
@@ -43,26 +41,32 @@ static void disable_ball(Ball *ball)
 
 static void update_ball(Ball *ball, float delta_time)
 {
+    // Retrieve the current velocity of the ball
     b2Vec2 velocity = b2Body_GetLinearVelocity(ball->body);
-    // Cap horizontal velocity
-    if (velocity.x > MAX_VELOCITY)
+
+    // Cap the horizontal and vertical velocities with max values
+    if (fabs(velocity.x) > *ball->max_velocity)
     {
-        velocity.x = MAX_VELOCITY;
-    }
-    else if (velocity.x < -MAX_VELOCITY)
-    {
-        velocity.x = -MAX_VELOCITY;
+        velocity.x = (velocity.x > 0) ? *ball->max_velocity : -(*ball->max_velocity);
     }
 
-    if (velocity.y > MAX_VELOCITY)
+    if (fabs(velocity.y) > *ball->max_velocity)
     {
-        velocity.y = MAX_VELOCITY;
-    }
-    else if (velocity.y < -MAX_VELOCITY)
-    {
-        velocity.y = -MAX_VELOCITY;
+        velocity.y = (velocity.y > 0) ? *ball->max_velocity : -(*ball->max_velocity);
     }
 
+    // Ensure the velocity respects the minimum velocity constraint
+    if (fabs(velocity.x) < *ball->min_velocity)
+    {
+        velocity.x = (velocity.x > 0) ? *ball->min_velocity : -(*ball->min_velocity);
+    }
+
+    if (fabs(velocity.y) < *ball->min_velocity)
+    {
+        velocity.y = (velocity.y > 0) ? *ball->min_velocity : -(*ball->min_velocity);
+    }
+
+    // Set the adjusted velocity back to the ball's body
     b2Body_SetLinearVelocity(ball->body, velocity);
 }
 
@@ -78,6 +82,8 @@ Ball *create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 ve
     ball->power = &player->ball.power;
     ball->phase_nova = &player->perks.phase_shift;
     ball->super_nova = &player->perks.super_nova;
+    ball->max_velocity = &player->ball.max_velocity;
+    ball->min_velocity = &player->ball.min_velocity;
 
     // Create the Box2D body definition
     b2BodyDef bodyDef = b2DefaultBodyDef();

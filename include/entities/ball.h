@@ -21,7 +21,8 @@ typedef struct Ball
     float *power;
     float *phase_nova;
     float *super_nova;
-    float *max_speed;
+    float *max_velocity;
+    float *min_velocity;
 
     void (*update)(struct Ball *ball, float delta_time);
     void (*render)(struct Ball *ball);
