@@ -1,6 +1,7 @@
 #ifndef RESOURCE_MANAGER_H
 #define RESOURCE_MANAGER_H
 
+#include "raylib.h"
 #include "kvec.h"
 #include "resource.h"
 #include "brick_type_mapper.h"
@@ -13,8 +14,10 @@ typedef struct ResourceManager
     TextureResource *(*get_texture)(const char *id); // Get a texture by its ID
     Subtexture *(*get_subtexture)(const char *id);   // Get a subtexture by its ID
     Animation *(*get_animation)(const char *id);     // Get an animation by its ID
-    void (*cleanup)(void);                           // Clean up all loaded resources
+    Font *(*get_pixel7_font)(void);
+    void (*cleanup)(void); // Clean up all loaded resources
 
+    Font pixel7_font;
     // Internal storage using hash tables for fast lookups
     TextureResource *textures; // Hash table of textures
     Subtexture *subtextures;   // Hash table of subtextures

@@ -2030,5 +2030,6 @@
       ],
       "animation": "dk-grey-brick-destroy-animation"
     }
-  ]
+  ],
+  "font": "assets/fonts/pixel7.fnt"
 }
