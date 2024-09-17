@@ -23,6 +23,18 @@
     {
       "id": "bricks-atlas",
       "file": "assets/textures/bricks-atlas.png"
+    },
+    {
+      "id": "nanite-ui",
+      "file": "assets/textures/nanite-ui.png"
+    },
+    {
+      "id": "life-ui",
+      "file": "assets/textures/life-ui.png"
+    },
+    {
+      "id": "clock-ui",
+      "file": "assets/textures/clock-ui.png"
     }
   ],
   "subtextures": [
