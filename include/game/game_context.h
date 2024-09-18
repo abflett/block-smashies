@@ -8,16 +8,16 @@
 #include "entities.h"
 #include "player.h"
 #include "collision_manager.h"
+#include "game_ui.h"
 
 typedef struct GameContext
 {
-    Entities entities;     // All game entities like balls, paddles, bricks, etc.
-    Texture2D *background; // Background texture for the game
-    Texture2D *foreground;
+    Entities entities;                   // All game entities like balls, paddles, bricks, etc.
     Player player;                       // Player object
     b2WorldId world_id;                  // Box2D physics world ID
     CollisionManager *collision_manager; // Manages collisions between entities
     GameStatus game_status;              // Tracks global game state like time, score, is_paused, etc.
+    GameUi *game_ui;
 
     void (*update)(float delta_time);
     void (*render)(void);

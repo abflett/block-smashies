@@ -19,36 +19,34 @@ static void update_game_context(float delta_time)
 
     context.entities.update(&context.entities, delta_time);
     context.game_status.update(&context.game_status, delta_time);
+    context.game_ui->update(delta_time);
 }
 
 static void render_game_context(void)
 {
-    DrawTexture(*context.background, 0, 0, WHITE);
+    context.game_ui->render_before_content();
     context.game_status.render(&context.game_status);
     context.entities.render(&context.entities);
-    DrawTexture(*context.foreground, 0, 0, WHITE);
+    context.game_ui->render_after_content();
 }
 
 static void cleanup_game_context(void)
 {
     context.entities.cleanup(&context.entities);
+    context.game_ui->cleanup();
     TraceLog(LOG_INFO, "[Cleanup] - WorldId [%d] - Success", context.world_id.index1);
     b2DestroyWorld(context.world_id);
-    // free(context);
 }
 
 GameContext *create_game_context(void)
 {
-    // GameContext *context = (GameContext *)malloc(sizeof(GameContext));
-
     b2WorldDef world_def = b2DefaultWorldDef();
     world_def.gravity = (b2Vec2){0.0f, 0.0f};
 
     context.world_id = b2CreateWorld(&world_def);
     context.collision_manager = create_collision_manager(context.world_id);
     context.game_status = create_game_status();
-    context.background = &resource_manager.get_texture("gameplay-bg")->texture;
-    context.foreground = &resource_manager.get_texture("gameplay-fg")->texture;
+    context.game_ui = create_game_ui();
     context.player = create_new_player("Player 1");
     context.entities = create_entities();
 

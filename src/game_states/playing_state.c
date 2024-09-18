@@ -23,11 +23,7 @@ static void state_cleanup(void)
 
 static void state_update(float delta_time)
 {
-    // if (!game_state_manager.context->game_status.is_hold || IsKeyPressed(KEY_SPACE))
-    // {
-    //     game_state_manager.context->game_status.is_hold = false;
     game_state_manager.context->update(delta_time);
-    // }
 
     if (IsKeyPressed(KEY_ESCAPE))
     {
