@@ -55,6 +55,7 @@ void load_high_scores(const char *filename, HighScore *high_scores, int *count)
     JSON_Value *root_value = json_parse_file(filename);
     if (root_value == NULL)
     {
+        // Todo: create a empty json file instead of error.
         fprintf(stderr, "Error reading JSON file: %s\n", filename);
         return;
     }

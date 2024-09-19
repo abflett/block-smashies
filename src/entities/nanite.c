@@ -9,8 +9,7 @@
 #include "entity_type.h"
 #include "collision_category.h"
 
-#define MOVE_FORCE 20.0f
-// #define MAX_VELOCITY 50.0f
+#define NANITE_Y_VELOCITY 20.0f
 
 static void update_nanite(Nanite *nanite, float delta_time)
 {
@@ -20,7 +19,7 @@ static void update_nanite(Nanite *nanite, float delta_time)
 
     if (velocity.y < 15)
     {
-        b2Body_SetLinearVelocity(nanite->body, (b2Vec2){velocity.x, -MOVE_FORCE});
+        b2Body_SetLinearVelocity(nanite->body, (b2Vec2){velocity.x, -NANITE_Y_VELOCITY});
     }
 }
 
@@ -88,7 +87,7 @@ Nanite *create_nanite(b2WorldId world_id, b2Vec2 position, int currency)
     b2CreatePolygonShape(nanite->body, &nanite_shape_def, &nanite_box);
 
     // Set an initial downward velocity to simulate gravity or make nanites fall
-    b2Body_SetLinearVelocity(nanite->body, (b2Vec2){0.0f, -MOVE_FORCE});
+    b2Body_SetLinearVelocity(nanite->body, (b2Vec2){0.0f, -NANITE_Y_VELOCITY});
     // b2Body_SetAngularVelocity(nanite->body, 0.1f);
 
     nanite->update = update_nanite;
