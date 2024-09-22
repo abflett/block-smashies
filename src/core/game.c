@@ -1,7 +1,7 @@
 #include <time.h>
 #include <stdbool.h>
 #include "game.h"
-#include "game_settings.h"
+#include "settings.h"
 #include "scene_manager.h"
 #include "resource_manager.h"
 #include "scene_manager.h"
@@ -36,8 +36,8 @@ static void render_game(void)
     BeginDrawing();
     {
         DrawTexturePro(target_texture.texture,
-                       (Rectangle){0, 0, (float)game_settings.target_width, -(float)game_settings.target_height},
-                       (Rectangle){0, 0, (float)game_settings.screen_width, (float)game_settings.screen_height},
+                       (Rectangle){0, 0, settings.game.target_size.x, -settings.game.target_size.y},
+                       (Rectangle){0, 0, settings.config.screen_size.x, settings.config.screen_size.y},
                        (Vector2){0, 0},
                        0.0f,
                        WHITE);
@@ -81,26 +81,26 @@ Game *create_game(const char *game_title, const char *settings_filename, const c
     exit_window = false;
     game->run = run_game;
 
-    initialize_game_settings(settings_filename);
+    initialize_settings();
     srand((unsigned int)time(NULL));
-    InitWindow(game_settings.screen_width, game_settings.screen_height, game_title);
+    InitWindow((int)settings.config.screen_size.x, (int)settings.config.screen_size.y, game_title);
     SetExitKey(KEY_NULL); // Disable default exit key (ESC)
     SetTargetFPS(60);     // Set target FPS for the game loop
     initialize_scene_manager();
     initialize_game_state_manager();
 
     // Todo: Allow other available full screen resolutions other then native
-    if (game_settings.fullscreen)
+    if (settings.config.fullscreen)
     {
         int monitor = GetCurrentMonitor();
-        game_settings.screen_width = GetMonitorWidth(monitor);
-        game_settings.screen_height = GetMonitorHeight(monitor);
+        settings.config.screen_size.x = (float)GetMonitorWidth(monitor);
+        settings.config.screen_size.y = (float)GetMonitorHeight(monitor);
 
-        SetWindowSize(game_settings.screen_width, game_settings.screen_height);
+        SetWindowSize((int)settings.config.screen_size.x, (int)settings.config.screen_size.y);
         ToggleFullscreen();
     }
 
-    target_texture = LoadRenderTexture(game_settings.target_width, game_settings.target_height);
+    target_texture = LoadRenderTexture((int)settings.game.target_size.x, (int)settings.game.target_size.y);
     resource_manager.load_resource_file(resource_filename);
     scene_manager.change(scene_manager.scenes.logo);
 

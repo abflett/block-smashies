@@ -7,7 +7,7 @@
 #include "brick.h"
 #include "nanite.h"
 #include "player.h"
-#include "game_settings.h"
+#include "settings.h"
 
 static void add_ball_func(Entities *entities, Player *player, b2WorldId world_id, Paddle *paddle)
 {

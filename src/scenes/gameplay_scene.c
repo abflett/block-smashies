@@ -1,7 +1,7 @@
 #include "raylib.h"
 #include "gameplay_scene.h"
 #include "game_state_manager.h"
-#include "game_settings.h"
+#include "settings.h"
 #include "game_context.h"
 
 static Scene gameplay_scene;
@@ -34,7 +34,7 @@ static void scene_init(void)
             int brick_type = rand() % 100;
             if (brick_type < 25)
             {
-                context->entities.add_brick(&context->entities, context->world_id, (b2Vec2){row * row_spacing + game_settings.play_area.x + 10, game_settings.target_height - (col * col_spacing + game_settings.play_area.y + 5)}, brick_type);
+                context->entities.add_brick(&context->entities, context->world_id, (b2Vec2){row * row_spacing + settings.game.play_area.x + 10, settings.game.target_size.y - (col * col_spacing + settings.game.play_area.y + 5)}, brick_type);
             }
         }
     }

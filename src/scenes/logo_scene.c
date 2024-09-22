@@ -1,6 +1,6 @@
 #include "raylib.h"
 #include "logo_scene.h"
-#include "game_settings.h"
+#include "settings.h"
 #include "scene_manager.h"
 
 static Scene logo_scene;
@@ -16,7 +16,7 @@ static void scene_update(float delta_time)
 {
     elapsed_time += delta_time; // Increment elapsed time by delta_time
 
-    if (GetKeyPressed() != 0 || IsGestureDetected(GESTURE_TAP) || elapsed_time >= game_settings.logo_screen_time)
+    if (GetKeyPressed() != 0 || IsGestureDetected(GESTURE_TAP) || elapsed_time >= settings.game.logo_screen_time)
     {
         scene_manager.next_scene = scene_manager.scenes.title;
     }

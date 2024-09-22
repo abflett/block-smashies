@@ -3,7 +3,7 @@
 #include "paddle.h"
 #include "raylib.h"
 #include "resource_manager.h"
-#include "game_settings.h"
+#include "settings.h"
 #include "player.h"
 #include "entity_type.h"
 #include "collision_category.h"
@@ -88,7 +88,7 @@ static void reset_paddle(Paddle *paddle, int player_num)
     paddle->pulse_timer = 0.0f;
     paddle->pulse_active_timer = 0.0f;
     b2Body_Enable(paddle->body);
-    b2Body_SetTransform(paddle->body, (b2Vec2){(game_settings.play_area.width / 2) + game_settings.play_area.x, PADDLE_HEIGHT}, (b2Rot){1.0f, 0.0f});
+    b2Body_SetTransform(paddle->body, (b2Vec2){(settings.game.play_area.width / 2) + settings.game.play_area.x, PADDLE_HEIGHT}, (b2Rot){1.0f, 0.0f});
 }
 
 static void disable_paddle(Paddle *paddle)
@@ -100,7 +100,7 @@ static void disable_paddle(Paddle *paddle)
 static void render_paddle(Paddle *paddle)
 {
     b2Vec2 position = b2Body_GetPosition(paddle->body);
-    DrawTextureEx(*paddle->texture, (Vector2){position.x - (paddle->size.x / 2), game_settings.target_height - (position.y + (paddle->size.y / 2))}, 0.0f, 1.0f, WHITE);
+    DrawTextureEx(*paddle->texture, (Vector2){position.x - (paddle->size.x / 2), settings.game.target_size.y - (position.y + (paddle->size.y / 2))}, 0.0f, 1.0f, WHITE);
 }
 
 Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
@@ -131,7 +131,7 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
 
     b2BodyDef body_def = b2DefaultBodyDef();
     body_def.type = b2_dynamicBody;
-    body_def.position = (b2Vec2){(game_settings.play_area.width / 2) + game_settings.play_area.x, PADDLE_HEIGHT};
+    body_def.position = (b2Vec2){(settings.game.play_area.width / 2) + settings.game.play_area.x, PADDLE_HEIGHT};
     body_def.linearDamping = 3.0f;
     body_def.isBullet = true;
     paddle->body = b2CreateBody(world_id, &body_def);
@@ -151,7 +151,7 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
     // Create a static reference body for the prismatic joint
     b2BodyDef static_body_def = b2DefaultBodyDef();
     static_body_def.type = b2_staticBody;
-    static_body_def.position = (b2Vec2){(game_settings.play_area.width / 2) + game_settings.play_area.x, PADDLE_HEIGHT}; // Static reference point
+    static_body_def.position = (b2Vec2){(settings.game.play_area.width / 2) + settings.game.play_area.x, PADDLE_HEIGHT}; // Static reference point
     paddle->constraint = b2CreateBody(world_id, &static_body_def);
 
     // Prismatic Joint: Constrain movement to the X-axis

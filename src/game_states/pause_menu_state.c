@@ -3,7 +3,7 @@
 #include "game_state_manager.h"
 #include "resource_manager.h"
 #include "scene_manager.h"
-#include "game_settings.h"
+#include "settings.h"
 #include "entities.h"
 #include "resource_manager.h"
 
@@ -35,13 +35,13 @@ static void state_render(void)
 {
     game_state_manager.context->render();
 
-    DrawRectangle(0, game_settings.target_height / 2 - 40, game_settings.target_width, 80, (Color){0, 0, 0, 170});
+    DrawRectangle(0, (int)(settings.game.target_size.y / 2) - 40, (int)settings.game.target_size.x, 80, (Color){0, 0, 0, 170});
 
     const char *text = "'Escape' to exit\n'Enter' to continue playing!";
     int fontSize = 8;
     int textWidth = MeasureText(text, fontSize);
-    int posX = (game_settings.target_width - textWidth) / 2;
-    int posY = (game_settings.target_height / 2) - (fontSize / 2) - fontSize;
+    int posX = (int)((settings.game.target_size.x - textWidth) / 2);
+    int posY = (int)((settings.game.target_size.y / 2) - (fontSize / 2)) - fontSize;
 
     DrawText(text, posX, posY, fontSize, LIGHTGRAY);
 }

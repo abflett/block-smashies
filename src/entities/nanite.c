@@ -4,7 +4,7 @@
 #include "raylib.h"
 #include "nanite.h"
 #include "resource_manager.h"
-#include "game_settings.h"
+#include "settings.h"
 #include "player.h"
 #include "entity_type.h"
 #include "collision_category.h"
@@ -52,7 +52,7 @@ static void render_nanite(Nanite *nanite)
     float rotation_in_degrees = angular_velocity * (180.0f / PI);
 
     Rectangle rectSource = {0, 0, nanite->size.x, nanite->size.y};
-    Rectangle rectDest = {position.x, game_settings.target_height - position.y, nanite->size.x, nanite->size.y};
+    Rectangle rectDest = {position.x, settings.game.target_size.y - position.y, nanite->size.x, nanite->size.y};
     Vector2 origin = {nanite->size.x / 2, nanite->size.y / 2};
 
     DrawTexturePro(*nanite->texture, rectSource, rectDest, origin, rotation_in_degrees, WHITE);

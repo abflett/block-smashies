@@ -3,7 +3,7 @@
 #include "raylib.h"
 #include "kvec.h"
 #include "playing_state.h"
-#include "game_settings.h"
+#include "settings.h"
 #include "game_state_manager.h"
 #include "game_status.h"
 #include "entities.h"
@@ -72,7 +72,7 @@ static void state_update(float delta_time)
     }
 
     // Ball falls below the screen (you can add life loss or game over logic here)
-    if (ball->position.y > game_settings.target_height)
+    if (ball->position.y > settings.game.target_size.y)
     {
         game_status.lives--;
         if (game_status.lives <= 0)

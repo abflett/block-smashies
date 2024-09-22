@@ -2,7 +2,7 @@
 #include "raylib.h"
 #include "animation_handler.h"
 #include "resource_manager.h"
-#include "game_settings.h"
+#include "settings.h"
 
 static void update_animation(AnimationHandler *animation_handler, float delta_time)
 {
@@ -36,7 +36,7 @@ static void render_animation(AnimationHandler *animation_handler, b2Vec2 positio
     {
         DrawTextureRec(animation_handler->animation->texture_resource->texture,
                        animation_handler->animation->frames[animation_handler->frame_index],
-                       (Vector2){position.x, game_settings.target_height - position.y},
+                       (Vector2){position.x, settings.game.target_size.y - position.y},
                        WHITE);
     }
 }

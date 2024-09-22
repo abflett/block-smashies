@@ -5,7 +5,7 @@
 #include "ball.h"
 #include "entities.h"
 #include "resource_manager.h"
-#include "game_settings.h"
+#include "settings.h"
 #include "player.h"
 #include "collision_category.h"
 
@@ -21,7 +21,7 @@ static void render_ball(Ball *ball)
 
     b2Vec2 position = b2Body_GetPosition(ball->body);
     // draw larger ball and resize down for subpixel drawing effect
-    DrawTextureEx(*ball->texture, (Vector2){position.x - ball->radius, game_settings.target_height - (position.y + ball->radius)}, 0.0f, 0.5f, WHITE);
+    DrawTextureEx(*ball->texture, (Vector2){position.x - ball->radius, settings.game.target_size.y - (position.y + ball->radius)}, 0.0f, 0.5f, WHITE);
 }
 
 static void reset_ball(Ball *ball, b2Vec2 position, b2Vec2 velocity)

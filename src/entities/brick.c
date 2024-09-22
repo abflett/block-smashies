@@ -2,7 +2,7 @@
 #include "raylib.h"
 #include "brick.h"
 #include "resource_manager.h"
-#include "game_settings.h"
+#include "settings.h"
 #include "entity_type.h"
 #include "entities.h"
 
@@ -76,7 +76,7 @@ static void render_brick(Brick *brick)
         DrawTextureRec(brick->subtexture->texture_resource->texture,
                        brick->subtexture->src,
                        (Vector2){position.x - (brick->size.x / 2),
-                                 game_settings.target_height - (position.y + (brick->size.y / 2))},
+                                 settings.game.target_size.y - (position.y + (brick->size.y / 2))},
                        WHITE);
     }
 }
