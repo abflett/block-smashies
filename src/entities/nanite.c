@@ -9,8 +9,6 @@
 #include "entity_type.h"
 #include "collision_category.h"
 
-#define NANITE_Y_VELOCITY 20.0f
-
 static void update_nanite(Nanite *nanite, float delta_time)
 {
     b2Vec2 velocity = b2Body_GetLinearVelocity(nanite->body);
@@ -19,7 +17,7 @@ static void update_nanite(Nanite *nanite, float delta_time)
 
     if (velocity.y < 15)
     {
-        b2Body_SetLinearVelocity(nanite->body, (b2Vec2){velocity.x, -NANITE_Y_VELOCITY});
+        b2Body_SetLinearVelocity(nanite->body, (b2Vec2){velocity.x, -settings.gameplay.nanite_y_velocity});
     }
 }
 
@@ -36,7 +34,6 @@ static void reset_nanite(Nanite *nanite, b2Vec2 position, int currency)
     nanite->currency = currency;
     b2Body_Enable(nanite->body);
     b2Body_SetTransform(nanite->body, position, (b2Rot){1.0f, 0.0f});
-    // b2Body_SetAngularVelocity(nanite->body, 0.1f);
 }
 
 static void disable_nanite(Nanite *nanite)
@@ -87,7 +84,7 @@ Nanite *create_nanite(b2WorldId world_id, b2Vec2 position, int currency)
     b2CreatePolygonShape(nanite->body, &nanite_shape_def, &nanite_box);
 
     // Set an initial downward velocity to simulate gravity or make nanites fall
-    b2Body_SetLinearVelocity(nanite->body, (b2Vec2){0.0f, -NANITE_Y_VELOCITY});
+    b2Body_SetLinearVelocity(nanite->body, (b2Vec2){0.0f, -settings.gameplay.nanite_y_velocity});
     // b2Body_SetAngularVelocity(nanite->body, 0.1f);
 
     nanite->update = update_nanite;

@@ -8,13 +8,6 @@
 #include "entity_type.h"
 #include "collision_category.h"
 
-#define PADDLE_HEIGHT 16.f
-#define BOOST_TIMER 0.15f
-#define BOOST_ACTIVE_TIMER 1.0f
-#define PULSE_TIMER 0.09f
-#define PULSE_ACTIVE_TIMER 1.0f
-#define PADDLE_MASS 1.0f
-
 static void clean_up_paddle(Paddle *paddle)
 {
     TraceLog(LOG_INFO, "[Cleanup] - Paddle [%d] - Success", paddle->body.index1);
@@ -54,23 +47,23 @@ static void update_paddle(Paddle *paddle, float delta_time)
     }
 
     // apply boost if sucessfully double pressed the left or right and active timer is expired
-    if (IsKeyDown(KEY_A) && paddle->boost_timer_left < BOOST_TIMER && paddle->boost_active_timer <= 0.0f)
+    if (IsKeyDown(KEY_A) && paddle->boost_timer_left < settings.gameplay.boost_timer && paddle->boost_active_timer <= 0.0f)
     {
         b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){-*paddle->booster_str, 0.0f}, b2Body_GetWorldCenterOfMass(paddle->body), true);
-        paddle->boost_active_timer = BOOST_ACTIVE_TIMER;
+        paddle->boost_active_timer = settings.gameplay.boost_active_timer;
     }
-    if (IsKeyDown(KEY_D) && paddle->boost_timer_right < BOOST_TIMER && paddle->boost_active_timer <= 0.0f)
+    if (IsKeyDown(KEY_D) && paddle->boost_timer_right < settings.gameplay.boost_timer && paddle->boost_active_timer <= 0.0f)
     {
         b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){*paddle->booster_str, 0.0f}, b2Body_GetWorldCenterOfMass(paddle->body), true);
-        paddle->boost_active_timer = BOOST_ACTIVE_TIMER;
+        paddle->boost_active_timer = settings.gameplay.boost_active_timer;
     }
 
     // Apply upward pulse when up is pressed as long as boost timers are valid
     if (IsKeyPressed(KEY_W) && paddle->pulse_timer <= 0.0f && paddle->pulse_active_timer <= 0)
     {
         b2Body_Disable(paddle->constraint);
-        paddle->pulse_timer = PULSE_TIMER;
-        paddle->pulse_active_timer = PULSE_ACTIVE_TIMER;
+        paddle->pulse_timer = settings.gameplay.pulse_timer;
+        paddle->pulse_active_timer = settings.gameplay.pulse_active_timer;
         b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){0.0f, *paddle->pulse_str}, b2Body_GetWorldCenterOfMass(paddle->body), true);
     }
 
@@ -88,7 +81,7 @@ static void reset_paddle(Paddle *paddle, int player_num)
     paddle->pulse_timer = 0.0f;
     paddle->pulse_active_timer = 0.0f;
     b2Body_Enable(paddle->body);
-    b2Body_SetTransform(paddle->body, (b2Vec2){(settings.game.play_area.width / 2) + settings.game.play_area.x, PADDLE_HEIGHT}, (b2Rot){1.0f, 0.0f});
+    b2Body_SetTransform(paddle->body, (b2Vec2){(settings.game.play_area.width / 2) + settings.game.play_area.x, settings.gameplay.paddle_height}, (b2Rot){1.0f, 0.0f});
 }
 
 static void disable_paddle(Paddle *paddle)
@@ -131,7 +124,7 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
 
     b2BodyDef body_def = b2DefaultBodyDef();
     body_def.type = b2_dynamicBody;
-    body_def.position = (b2Vec2){(settings.game.play_area.width / 2) + settings.game.play_area.x, PADDLE_HEIGHT};
+    body_def.position = (b2Vec2){(settings.game.play_area.width / 2) + settings.game.play_area.x, settings.gameplay.paddle_height};
     body_def.linearDamping = 3.0f;
     body_def.isBullet = true;
     paddle->body = b2CreateBody(world_id, &body_def);
@@ -151,7 +144,7 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
     // Create a static reference body for the prismatic joint
     b2BodyDef static_body_def = b2DefaultBodyDef();
     static_body_def.type = b2_staticBody;
-    static_body_def.position = (b2Vec2){(settings.game.play_area.width / 2) + settings.game.play_area.x, PADDLE_HEIGHT}; // Static reference point
+    static_body_def.position = (b2Vec2){(settings.game.play_area.width / 2) + settings.game.play_area.x, settings.gameplay.paddle_height}; // Static reference point
     paddle->constraint = b2CreateBody(world_id, &static_body_def);
 
     // Prismatic Joint: Constrain movement to the X-axis
@@ -164,7 +157,7 @@ Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
     b2CreatePrismaticJoint(world_id, &x_joint_def);
 
     b2MassData mass_data = b2Body_GetMassData(paddle->body);
-    mass_data.mass = PADDLE_MASS;
+    mass_data.mass = settings.gameplay.paddle_mass;
     b2Body_SetMassData(paddle->body, mass_data);
 
     paddle->update = update_paddle;

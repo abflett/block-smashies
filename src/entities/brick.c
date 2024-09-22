@@ -6,17 +6,14 @@
 #include "entity_type.h"
 #include "entities.h"
 
-#define HEALTH_MODIFIER 1.0f
-#define CURRENCY_MODIFIER 1
-
 static float brick_max_health(int brick_type)
 {
-    return (float)(brick_type + 1) * HEALTH_MODIFIER;
+    return (float)(brick_type + 1) * settings.gameplay.health_modifier;
 }
 
 static int brick_currency(Brick *brick)
 {
-    return (int)(brick->max_health) * CURRENCY_MODIFIER;
+    return (int)(brick->max_health * settings.gameplay.currency_modifier);
 }
 
 static void update_brick(Brick *brick, float delta_time)

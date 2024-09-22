@@ -3,8 +3,6 @@
 #include "settings.h"
 #include "collision_category.h"
 
-#define BOUNDARY_PADDING 4.0f
-
 static void clean_up_kill_boundary(KillBoundary *kill_boundary)
 {
     TraceLog(LOG_INFO, "[Cleanup] - KillBoundry [%d] - Success", kill_boundary->body.index1);
@@ -23,8 +21,8 @@ KillBoundary *create_kill_boundary(b2WorldId world_id)
 
     Rectangle play_area = settings.game.play_area;
     b2Segment bottom_segment;
-    bottom_segment.point1 = (b2Vec2){play_area.x - BOUNDARY_PADDING, settings.game.target_size.y - (play_area.y + play_area.height) - BOUNDARY_PADDING};
-    bottom_segment.point2 = (b2Vec2){play_area.x + play_area.width + BOUNDARY_PADDING, settings.game.target_size.y - (play_area.y + play_area.height) - BOUNDARY_PADDING};
+    bottom_segment.point1 = (b2Vec2){play_area.x - settings.gameplay.boundary_padding, settings.game.target_size.y - (play_area.y + play_area.height) - settings.gameplay.boundary_padding};
+    bottom_segment.point2 = (b2Vec2){play_area.x + play_area.width + settings.gameplay.boundary_padding, settings.game.target_size.y - (play_area.y + play_area.height) - settings.gameplay.boundary_padding};
 
     // Define the shape properties (no density needed for static bodies)
     b2ShapeDef segment_def = b2DefaultShapeDef();

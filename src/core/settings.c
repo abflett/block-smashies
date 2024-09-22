@@ -16,10 +16,10 @@ Settings settings = {
         .pulse_timer = 0.09f,
         .pulse_active_timer = 1.0f,
         .paddle_mass = 1.0f,
-        .health_modifier = 1.0f,
-        .currency_modifier = 1.0f,
-        .nanite_y_velocity = 20.0f,
-        .boundary_padding = 4.0f,
+        .health_modifier = 1.0f,    // brick health multiplier based on brick type
+        .currency_modifier = 1.0f,  // brick currency multiplier based on brick type
+        .nanite_y_velocity = 20.0f, // velocity that nanites fall
+        .boundary_padding = 4.0f,   // extra big segment line for kill boundary
         .edge_padding = 10.0f,
     },
     .filename = "settings.json",
