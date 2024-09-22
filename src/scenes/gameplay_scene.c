@@ -34,7 +34,7 @@ static void scene_init(void)
             int brick_type = rand() % 100;
             if (brick_type < 25)
             {
-                context->entities.add_brick(&context->entities, context->world_id, (b2Vec2){row * row_spacing + settings.game.play_area.x + 10, settings.game.target_size.y - (col * col_spacing + settings.game.play_area.y + 5)}, brick_type);
+                context->entities.add_brick(context, (b2Vec2){row * row_spacing + settings.game.play_area.x + 10, settings.game.target_size.y - (col * col_spacing + settings.game.play_area.y + 5)}, brick_type);
             }
         }
     }

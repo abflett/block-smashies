@@ -11,6 +11,8 @@
 #include "kill_boundary.h"
 #include "nanite.h"
 
+struct GameContext;
+
 typedef kvec_t(Ball *) BallVector;
 typedef kvec_t(Paddle *) PaddleVector;
 typedef kvec_t(Brick *) BrickVector;
@@ -27,7 +29,7 @@ typedef struct Entities
 
     void (*add_ball)(struct Entities *entities, Player *player, b2WorldId world_id, Paddle *paddle);
     void (*add_paddle)(struct Entities *entities, Player *player, b2WorldId world_id);
-    void (*add_brick)(struct Entities *entities, b2WorldId world_id, b2Vec2 position, int brick_type);
+    void (*add_brick)(struct GameContext *game_context, b2Vec2 position, int brick_type);
     void (*add_nanite)(struct Entities *entities, b2WorldId world_id, b2Vec2 position, int currency);
     void (*add_wall_edges)(struct Entities *entities, b2WorldId world_id);
     void (*add_kill_boundary)(struct Entities *entities, b2WorldId world_id);

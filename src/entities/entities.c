@@ -8,6 +8,7 @@
 #include "nanite.h"
 #include "player.h"
 #include "settings.h"
+#include "game_context.h"
 
 static void add_ball_func(Entities *entities, Player *player, b2WorldId world_id, Paddle *paddle)
 {
@@ -50,11 +51,11 @@ static void add_paddle_func(Entities *entities, Player *player, b2WorldId world_
     kv_push(Paddle *, entities->paddles, new_paddle);
 }
 
-static void add_brick_func(Entities *entities, b2WorldId world_id, b2Vec2 position, int brick_type)
+static void add_brick_func(GameContext *game_context, b2Vec2 position, int brick_type)
 {
-    for (int i = 0; i < kv_size(entities->bricks); i++)
+    for (int i = 0; i < kv_size(game_context->entities.bricks); i++)
     {
-        Brick *existing_brick = kv_A(entities->bricks, i);
+        Brick *existing_brick = kv_A(game_context->entities.bricks, i);
         if (!existing_brick->active)
         {
             existing_brick->reset(existing_brick, position, brick_type);
@@ -62,8 +63,8 @@ static void add_brick_func(Entities *entities, b2WorldId world_id, b2Vec2 positi
         }
     }
 
-    Brick *new_brick = create_brick(entities, world_id, position, brick_type);
-    kv_push(Brick *, entities->bricks, new_brick);
+    Brick *new_brick = create_brick(game_context, position, brick_type);
+    kv_push(Brick *, game_context->entities.bricks, new_brick);
 }
 
 static void add_nanite_func(Entities *entities, b2WorldId world_id, b2Vec2 position, int currency)

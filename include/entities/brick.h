@@ -8,17 +8,16 @@
 #include "resource.h"
 #include "animation_handler.h"
 
-struct Entities;
+struct GameContext;
 
 typedef struct Brick
 {
     EntityType type;
-    b2WorldId world_id;
     b2BodyId body;
     bool active;
     bool is_destroying;
 
-    struct Entities *entities;
+    struct GameContext *game_context;
     Subtexture *subtexture;
     AnimationHandler *animation_handler;
     b2Vec2 size;
@@ -33,6 +32,6 @@ typedef struct Brick
     void (*disable)(struct Brick *brick);
 } Brick;
 
-Brick *create_brick(struct Entities *Entities, b2WorldId world_id, b2Vec2 position, int brick_type);
+Brick *create_brick(struct GameContext *game_context, b2Vec2 position, int brick_type);
 
 #endif

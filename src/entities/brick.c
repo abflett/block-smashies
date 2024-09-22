@@ -4,7 +4,7 @@
 #include "resource_manager.h"
 #include "settings.h"
 #include "entity_type.h"
-#include "entities.h"
+#include "game_context.h"
 
 static float brick_max_health(int brick_type)
 {
@@ -45,7 +45,7 @@ static void update_brick(Brick *brick, float delta_time)
         {
             b2Vec2 position = b2Body_GetPosition(brick->body);
             brick->active = false;
-            brick->entities->add_nanite(brick->entities, brick->world_id, position, 1);
+            brick->game_context->entities.add_nanite(&brick->game_context->entities, brick->game_context->world_id, position, 1);
         }
     }
 }
@@ -96,7 +96,7 @@ static void reset_brick(Brick *brick, b2Vec2 position, int brick_type)
     TraceLog(LOG_INFO, "[Reset] - Brick [%d] reset to new position and health.", brick->body.index1);
 }
 
-Brick *create_brick(Entities *entities, b2WorldId world_id, b2Vec2 position, int brick_type)
+Brick *create_brick(GameContext *game_context, b2Vec2 position, int brick_type)
 {
     Brick *brick = (Brick *)malloc(sizeof(Brick));
     brick->type = ENTITY_BRICK;
@@ -110,13 +110,12 @@ Brick *create_brick(Entities *entities, b2WorldId world_id, b2Vec2 position, int
 
     brick->animation_handler = create_animation_manager(resource_manager.brick_type_mapper->brick_type_to_animation_id(brick->brick_type), ANIMATION_ONCE, 0.05f);
     brick->animation_handler->is_playing = false;
-    brick->entities = entities;
-    brick->world_id = world_id;
+    brick->game_context = game_context;
 
     b2BodyDef body_def = b2DefaultBodyDef();
     body_def.type = b2_staticBody;
     body_def.position = position;
-    brick->body = b2CreateBody(world_id, &body_def);
+    brick->body = b2CreateBody(game_context->world_id, &body_def);
 
     b2Polygon brick_box = b2MakeBox(brick->size.x * 0.5f, brick->size.y * 0.5f);
 
