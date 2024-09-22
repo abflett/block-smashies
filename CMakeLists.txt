@@ -27,7 +27,7 @@ include_directories(
 # Source files for the core module
 set(CORE_SRC
     src/core/main.c
-    src/core/game_settings.c
+    src/core/settings.c
     src/core/resource_manager.c
     src/core/animation_handler.c
     src/core/game.c
