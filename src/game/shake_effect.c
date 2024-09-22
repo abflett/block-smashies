@@ -1,4 +1,5 @@
 #include "shake_effect.h"
+#include "settings.h"
 
 ShakeEffect shake_effect;
 
@@ -12,7 +13,7 @@ static void start_shake_effect(float intensity, float duration)
 
 static void update_shake_effect(float delta_time)
 {
-    if (shake_effect.elapsed < shake_effect.duration)
+    if (shake_effect.elapsed < shake_effect.duration && settings.config.shake_screen)
     {
         shake_effect.elapsed += delta_time;
         float progress = shake_effect.elapsed / shake_effect.duration;

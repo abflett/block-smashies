@@ -11,6 +11,7 @@ typedef struct
     bool fullscreen;
     float volume;
     float sound_fx;
+    bool shake_screen;
 } ConfigSettings;
 
 // GameSettings: Constants and values like target width/height, logo screen time, etc.

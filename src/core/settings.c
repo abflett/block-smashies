@@ -39,6 +39,7 @@ static void save_settings(void)
     json_object_set_boolean(root_object, "fullscreen", settings.config.fullscreen);
     json_object_set_number(root_object, "volume", settings.config.volume);
     json_object_set_number(root_object, "sound_fx", settings.config.sound_fx);
+    json_object_set_boolean(root_object, "shake_screen", settings.config.shake_screen);
 
     json_serialize_to_file_pretty(root_value, settings.filename);
     json_value_free(root_value);
@@ -50,6 +51,7 @@ static void set_default_config_settings(void)
     settings.config.fullscreen = false;
     settings.config.volume = 1.0f;
     settings.config.sound_fx = 1.0f;
+    settings.config.shake_screen = true;
 }
 
 void initialize_settings()
@@ -69,6 +71,6 @@ void initialize_settings()
     settings.config.fullscreen = json_object_get_boolean(root_object, "fullscreen");
     settings.config.volume = (float)json_object_get_number(root_object, "volume");
     settings.config.sound_fx = (float)json_object_get_number(root_object, "sound_fx");
-
+    settings.config.shake_screen = json_object_get_boolean(root_object, "shake_screen");
     json_value_free(root_value);
 }
