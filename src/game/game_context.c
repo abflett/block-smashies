@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "game_context.h"
 #include "resource_manager.h"
+#include "game.h"
 
 static GameContext context;
 
@@ -49,6 +50,7 @@ GameContext *create_game_context(void)
     context.game_ui = create_game_ui();
     context.player = create_new_player("Player 1");
     context.entities = create_entities();
+    context.shake_effect = get_shake_effect();
 
     context.entities.add_wall_edges(&context.entities, context.world_id);
     context.entities.add_kill_boundary(&context.entities, context.world_id);

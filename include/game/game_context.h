@@ -9,6 +9,7 @@
 #include "player.h"
 #include "collision_manager.h"
 #include "game_ui.h"
+#include "shake_effect.h"
 
 typedef struct GameContext
 {
@@ -18,6 +19,7 @@ typedef struct GameContext
     CollisionManager *collision_manager; // Manages collisions between entities
     GameStatus game_status;              // Tracks global game state like time, score, is_paused, etc.
     GameUi *game_ui;
+    ShakeEffect *shake_effect;
 
     void (*update)(float delta_time);
     void (*render)(void);

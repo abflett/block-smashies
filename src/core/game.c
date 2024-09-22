@@ -9,11 +9,13 @@
 
 static RenderTexture2D target_texture; // Now private to game.c
 static bool exit_window = false;       // Now private to game.c
-static Game *game = NULL;              // Private pointer to the game instance
+static ShakeEffect *shake_effect;
+static Game *game = NULL; // Private pointer to the game instance
 
 static void update_game(float delta_time)
 {
     scene_manager.update(delta_time);
+    shake_effect->update(delta_time);
 
     if (((IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL)) && IsKeyPressed(KEY_C)) || WindowShouldClose())
     {
@@ -34,7 +36,7 @@ static void render_game(void)
     {
         DrawTexturePro(target_texture.texture,
                        (Rectangle){0, 0, settings.game.target_size.x, -settings.game.target_size.y},
-                       (Rectangle){0, 0, settings.config.screen_size.x, settings.config.screen_size.y},
+                       (Rectangle){shake_effect->offset.x, shake_effect->offset.y, settings.config.screen_size.x, settings.config.screen_size.y},
                        (Vector2){0, 0},
                        0.0f,
                        WHITE);
@@ -72,6 +74,11 @@ void exit_game(void)
     exit_window = true;
 }
 
+ShakeEffect *get_shake_effect(void)
+{
+    return shake_effect;
+}
+
 Game *create_game(const char *game_title, const char *settings_filename, const char *resource_filename)
 {
     game = malloc(sizeof(Game));
@@ -83,6 +90,7 @@ Game *create_game(const char *game_title, const char *settings_filename, const c
     InitWindow((int)settings.config.screen_size.x, (int)settings.config.screen_size.y, game_title);
     SetExitKey(KEY_NULL); // Disable default exit key (ESC)
     SetTargetFPS(60);     // Set target FPS for the game loop
+    shake_effect = create_shake_effect();
     initialize_scene_manager();
     initialize_game_state_manager();
 
