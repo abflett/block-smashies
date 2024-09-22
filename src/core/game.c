@@ -7,9 +7,6 @@
 #include "scene_manager.h"
 #include "game_state_manager.h"
 
-#define CLEAR_COLOR \
-    (Color) { 46, 34, 47, 255 }
-
 static RenderTexture2D target_texture; // Now private to game.c
 static bool exit_window = false;       // Now private to game.c
 static Game *game = NULL;              // Private pointer to the game instance
@@ -28,7 +25,7 @@ static void update_game(float delta_time)
 static void render_game(void)
 {
     BeginTextureMode(target_texture);
-    ClearBackground(CLEAR_COLOR);
+    ClearBackground(settings.game.clear_color);
     scene_manager.render();
     EndTextureMode();
 

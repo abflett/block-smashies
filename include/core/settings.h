@@ -19,6 +19,9 @@ typedef struct
     const Vector2 target_size;
     const float logo_screen_time;
     const Rectangle play_area;
+    const Color clear_color;
+    const Color screen_color;
+    const Color screen_text_color;
 } GameSettings;
 
 // GameplaySettings: Playfield-related settings (paddle, bricks, etc.)
