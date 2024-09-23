@@ -11,8 +11,7 @@ static Texture2D *radar_fade;
 static Texture2D *rings;
 static Texture2D *needle;
 
-static Texture2D *menu_01;
-static Texture2D *menu_02;
+static Texture2D *menu_screen;
 
 static float radar_rotation = 0.0f;
 static unsigned char combo1_led_pattern = 0;
@@ -106,6 +105,15 @@ static void update_ui(float delta_time)
         combo3_accumulator = 0.0f;
         color_led_pattern = GetRandomValue(0, 255);
     }
+
+    if (toggle_menu)
+    {
+        menu_screen = &resource_manager.get_texture("gameplay-ui-menu-01")->texture;
+    }
+    else
+    {
+        menu_screen = &resource_manager.get_texture("gameplay-ui-menu-02")->texture;
+    }
 }
 
 static void render_before_content_ui(void)
@@ -135,14 +143,13 @@ static void render_before_content_ui(void)
         WHITE                                                                                                                         // Tint (full white for no tint)
     );
 
-    if (toggle_menu)
-    {
-        DrawTexture(*menu_01, 5, 68, WHITE);
-    }
-    else
-    {
-        DrawTexture(*menu_02, 5, 68, WHITE);
-    }
+    DrawTexture(*menu_screen, 5, 68, WHITE);
+
+    // Operation number
+    DrawTextEx(*resource_manager.get_pixel7_font(), "07", (Vector2){35.0f, 70.0f}, 7, 0.0f, settings.colors.blue_03);
+
+    // Mission number
+    DrawTextEx(*resource_manager.get_pixel7_font(), "4", (Vector2){48.0f, 70.0f}, 7, 0.0f, settings.colors.blue_03);
 }
 
 static void render_after_content_ui(void)
@@ -164,8 +171,7 @@ GameUi *create_game_ui(void)
     rings = &resource_manager.get_texture("gameplay-ui-rings")->texture;
     needle = &resource_manager.get_texture("gameplay-ui-needle")->texture;
 
-    menu_01 = &resource_manager.get_texture("gameplay-ui-menu-01")->texture;
-    menu_02 = &resource_manager.get_texture("gameplay-ui-menu-02")->texture;
+    menu_screen = &resource_manager.get_texture("gameplay-ui-menu-01")->texture;
 
     // gameplay-ui-menu-01
 
