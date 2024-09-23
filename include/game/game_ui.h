@@ -2,6 +2,7 @@
 #define GAME_UI
 
 #include "raylib.h"
+#include "game_status.h"
 
 typedef struct GameUi
 {
@@ -11,6 +12,6 @@ typedef struct GameUi
     void (*cleanup)(void);
 } GameUi;
 
-GameUi *create_game_ui(void);
+GameUi *create_game_ui(GameStatus *game_status);
 
 #endif

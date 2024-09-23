@@ -53,12 +53,12 @@ static void update_player_score(float delta_time)
 
 static void state_init(void)
 {
-    score = game_state_manager.context->game_status.currency;
+    // score = game_state_manager.context->game_status->currency;
 
     // Load high scores from file
     load_high_scores("high_scores.json", high_scores, &count);
     // Determine if the player's score is high enough to be added
-    adding_player_score = is_high_score(high_scores, count, score);
+    adding_player_score = is_high_score(high_scores, count, game_state_manager.context->game_status->score);
 }
 
 static void state_update(float delta_time)

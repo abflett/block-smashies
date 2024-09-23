@@ -11,9 +11,9 @@ static GameState playing_state;
 
 static void state_init(void)
 {
-    if (game_state_manager.context->game_status.is_pause)
+    if (game_state_manager.context->game_status->is_pause)
     {
-        game_state_manager.context->game_status.is_pause = false;
+        game_state_manager.context->game_status->is_pause = false;
     }
 }
 
@@ -27,12 +27,12 @@ static void state_update(float delta_time)
 
     if (IsKeyPressed(KEY_ESCAPE))
     {
-        game_state_manager.context->game_status.is_pause = true;
+        game_state_manager.context->game_status->is_pause = true;
         game_state_manager.change(game_state_manager.states.pause_menu);
         return;
     }
 
-    if (game_state_manager.context->game_status.game_over)
+    if (game_state_manager.context->game_status->game_over)
     {
         game_state_manager.change(game_state_manager.states.game_over);
     }

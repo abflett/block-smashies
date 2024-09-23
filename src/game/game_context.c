@@ -19,14 +19,13 @@ static void update_game_context(float delta_time)
     }
 
     context.entities->update(delta_time);
-    context.game_status.update(&context.game_status, delta_time);
+    context.game_status->update(delta_time);
     context.game_ui->update(delta_time);
 }
 
 static void render_game_context(void)
 {
     context.game_ui->render_before_content();
-    context.game_status.render(&context.game_status);
     context.entities->render();
     context.game_ui->render_after_content();
 }
@@ -47,7 +46,7 @@ GameContext *create_game_context(void)
     context.world_id = b2CreateWorld(&world_def);
     context.collision_manager = create_collision_manager(context.world_id);
     context.game_status = create_game_status();
-    context.game_ui = create_game_ui();
+    context.game_ui = create_game_ui(context.game_status);
     context.player = create_new_player("Player 1");
     context.entities = create_entities();
     context.shake_effect = get_shake_effect();

@@ -62,9 +62,9 @@ static void scene_cleanup(void)
     }
 
     // cleanup the playing state if playing state paused
-    if (game_state_manager.context->game_status.is_pause)
+    if (game_state_manager.context->game_status->is_pause)
     {
-        game_state_manager.context->game_status.is_pause = false;
+        game_state_manager.context->game_status->is_pause = false;
         if (game_state_manager.states.playing->cleanup)
         {
             game_state_manager.states.playing->cleanup();

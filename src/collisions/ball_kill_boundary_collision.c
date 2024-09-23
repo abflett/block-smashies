@@ -25,12 +25,12 @@ void ball_kill_boundary_collision(Ball *ball, KillBoundary *kill_boundary, GameC
     // If no active balls remain, decrement lives
     if (active_ball_count == 0)
     {
-        context->game_status.lives--;
+        context->game_status->lives--;
 
         // Check if lives are exhausted, and set game over if true
-        if (context->game_status.lives <= 0)
+        if (context->game_status->lives <= 0)
         {
-            context->game_status.game_over = true;
+            context->game_status->game_over = true;
         }
         else
         {

@@ -17,7 +17,7 @@ typedef struct GameContext
     Player player;                       // Player object
     b2WorldId world_id;                  // Box2D physics world ID
     CollisionManager *collision_manager; // Manages collisions between entities
-    GameStatus game_status;              // Tracks global game state like time, score, is_paused, etc.
+    GameStatus *game_status;             // Tracks global game state like time, score, is_paused, etc.
     GameUi *game_ui;
     ShakeEffect *shake_effect;
 

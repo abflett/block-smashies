@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
 #include "game_ui.h"
@@ -5,11 +6,15 @@
 #include "settings.h"
 
 static GameUi game_ui;
+static GameStatus *status;
 static Texture2D *screen_bg;
 static Texture2D *foreground;
 static Texture2D *radar_fade;
 static Texture2D *rings;
 static Texture2D *needle;
+static Texture2D *clock;
+static Texture2D *nanite;
+static Texture2D *life;
 
 static Texture2D *menu_screen;
 
@@ -22,6 +27,12 @@ static float combo1_accumulator = 0.0f;
 static float combo2_accumulator = 0.0f;
 static float combo3_accumulator = 0.0f;
 static bool toggle_menu = false;
+char time_text[21];
+char currency_text[21];
+char score_text[21];
+
+int minutes = 0;
+float seconds = 0;
 
 static void render_leds(void)
 {
@@ -114,6 +125,13 @@ static void update_ui(float delta_time)
     {
         menu_screen = &resource_manager.get_texture("gameplay-ui-menu-02")->texture;
     }
+
+    status->game_time += delta_time;
+    minutes = (int)(status->game_time / 60);
+    seconds = status->game_time - minutes * 60;
+    snprintf(time_text, sizeof(time_text), "%d:%04.2f", minutes, seconds);
+    snprintf(currency_text, sizeof(currency_text), "%f", status->currency);
+    snprintf(score_text, sizeof(score_text), "Score: %d", status->score);
 }
 
 static void render_before_content_ui(void)
@@ -150,6 +168,19 @@ static void render_before_content_ui(void)
 
     // Mission number
     DrawTextEx(*resource_manager.get_pixel7_font(), "4", (Vector2){48.0f, 70.0f}, 7, 0.0f, settings.colors.blue_03);
+
+    DrawTexture(*clock, 18, 15, WHITE);
+    DrawTextEx(*resource_manager.get_pixel7_font(), time_text, (Vector2){26.0f, 14.0f}, 7, 0, settings.colors.screen_text_color);
+
+    DrawTexture(*nanite, 18, 30, WHITE);
+    DrawTextEx(*resource_manager.get_pixel7_font(), currency_text, (Vector2){26.0f, 29.0f}, 7, 0, settings.colors.screen_text_color);
+
+    DrawTextEx(*resource_manager.get_pixel7_font(), score_text, (Vector2){26.0f, 37.0f}, 7, 0, settings.colors.screen_text_color);
+
+    for (int i = 0; i < status->lives; i++)
+    {
+        DrawTexture(resource_manager.get_texture("life-ui")->texture, (i * 8) + 19, 45, WHITE);
+    }
 }
 
 static void render_after_content_ui(void)
@@ -162,8 +193,9 @@ static void cleanup_ui(void)
 {
 }
 
-GameUi *create_game_ui(void)
+GameUi *create_game_ui(GameStatus *game_status)
 {
+    status = game_status;
     screen_bg = &resource_manager.get_texture("gameplay-screen-bg-01")->texture;
     foreground = &resource_manager.get_texture("gameplay-fg")->texture;
 
@@ -172,6 +204,10 @@ GameUi *create_game_ui(void)
     needle = &resource_manager.get_texture("gameplay-ui-needle")->texture;
 
     menu_screen = &resource_manager.get_texture("gameplay-ui-menu-01")->texture;
+
+    clock = &resource_manager.get_texture("clock-ui")->texture;
+    nanite = &resource_manager.get_texture("nanite-ui")->texture;
+    life = &resource_manager.get_texture("life-ui")->texture;
 
     // gameplay-ui-menu-01
 
