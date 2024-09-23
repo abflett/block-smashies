@@ -15,6 +15,7 @@ static Texture2D *needle;
 static Texture2D *clock;
 static Texture2D *nanite;
 static Texture2D *life;
+static Texture2D *score_ui;
 
 static Texture2D *menu_screen;
 
@@ -27,9 +28,9 @@ static float combo1_accumulator = 0.0f;
 static float combo2_accumulator = 0.0f;
 static float combo3_accumulator = 0.0f;
 static bool toggle_menu = false;
-char time_text[21];
-char currency_text[21];
-char score_text[21];
+static char time_text[10];
+static char currency_text[21];
+static char score_text[21];
 
 int minutes = 0;
 float seconds = 0;
@@ -126,12 +127,11 @@ static void update_ui(float delta_time)
         menu_screen = &resource_manager.get_texture("gameplay-ui-menu-02")->texture;
     }
 
-    status->game_time += delta_time;
     minutes = (int)(status->game_time / 60);
     seconds = status->game_time - minutes * 60;
-    snprintf(time_text, sizeof(time_text), "%d:%04.2f", minutes, seconds);
+    snprintf(time_text, sizeof(time_text), "%d:%05.2f", minutes, seconds);
     snprintf(currency_text, sizeof(currency_text), "%0.2f", status->currency);
-    snprintf(score_text, sizeof(score_text), "Score: %d", status->score);
+    snprintf(score_text, sizeof(score_text), "%d", status->score);
 }
 
 static void render_before_content_ui(void)
@@ -169,17 +169,19 @@ static void render_before_content_ui(void)
     // Mission number
     DrawTextEx(*resource_manager.get_pixel7_font(), "4", (Vector2){48.0f, 70.0f}, 7, 0.0f, settings.colors.blue_03);
 
-    DrawTexture(*clock, 18, 15, WHITE);
-    DrawTextEx(*resource_manager.get_pixel7_font(), time_text, (Vector2){26.0f, 14.0f}, 7, 0, settings.colors.screen_text_color);
+    // Game Status
+    DrawTexture(*clock, 18, 12, WHITE);
+    DrawTextEx(*resource_manager.get_pixel7_font(), time_text, (Vector2){26.0f, 11.0f}, 7, 0, settings.colors.screen_text_color);
 
-    DrawTexture(*nanite, 18, 30, WHITE);
-    DrawTextEx(*resource_manager.get_pixel7_font(), currency_text, (Vector2){26.0f, 29.0f}, 7, 0, settings.colors.screen_text_color);
+    DrawTexture(*nanite, 18, 24, WHITE);
+    DrawTextEx(*resource_manager.get_pixel7_font(), currency_text, (Vector2){26.0f, 24.0f}, 7, 0, settings.colors.screen_text_color);
 
-    DrawTextEx(*resource_manager.get_pixel7_font(), score_text, (Vector2){18.0f, 37.0f}, 7, 0, settings.colors.screen_text_color);
+    DrawTexture(*score_ui, 18, 36, WHITE);
+    DrawTextEx(*resource_manager.get_pixel7_font(), score_text, (Vector2){26.0f, 36.0f}, 7, 0, settings.colors.screen_text_color);
 
     for (int i = 0; i < status->lives; i++)
     {
-        DrawTexture(resource_manager.get_texture("life-ui")->texture, (i * 8) + 19, 45, WHITE);
+        DrawTexture(resource_manager.get_texture("life-ui")->texture, (i * 9) + 18, 48, WHITE);
     }
 }
 
@@ -208,8 +210,14 @@ GameUi *create_game_ui(GameStatus *game_status)
     clock = &resource_manager.get_texture("clock-ui")->texture;
     nanite = &resource_manager.get_texture("nanite-ui")->texture;
     life = &resource_manager.get_texture("life-ui")->texture;
+    score_ui = &resource_manager.get_texture("score-ui")->texture;
 
-    // gameplay-ui-menu-01
+    // set defaults
+    minutes = 0;
+    seconds = 0;
+    snprintf(time_text, sizeof(time_text), "%d:%05.2f", minutes, seconds);
+    snprintf(currency_text, sizeof(currency_text), "%0.2f", game_status->currency);
+    snprintf(score_text, sizeof(score_text), "%d", game_status->score);
 
     game_ui.update = update_ui;
     game_ui.render_before_content = render_before_content_ui;

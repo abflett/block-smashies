@@ -22,11 +22,14 @@ static void state_update(float delta_time)
     {
         game_state_manager.change(game_state_manager.states.playing);
     }
+
+    game_state_manager.context->game_ui->update(delta_time);
 }
 
 static void state_render(void)
 {
     game_state_manager.context->render();
+
     // Convert countdown value to text
     char count_down_text[2]; // Increase size if necessary
 

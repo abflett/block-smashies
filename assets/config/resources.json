@@ -33,6 +33,10 @@
       "file": "assets/textures/life-ui.png"
     },
     {
+      "id": "score-ui",
+      "file": "assets/textures/score-ui.png"
+    },
+    {
       "id": "clock-ui",
       "file": "assets/textures/clock-ui.png"
     },
