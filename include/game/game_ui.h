@@ -4,6 +4,13 @@
 #include "raylib.h"
 #include "game_status.h"
 
+typedef struct Debris
+{
+    float x;
+    float y;
+    float fall_speed;
+} Debris;
+
 typedef struct GameUi
 {
     void (*render_before_content)(void);

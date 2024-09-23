@@ -13,6 +13,10 @@
       "file": "assets/textures/gameplay-screen-bg-01.png"
     },
     {
+      "id": "gameplay-ui-debris",
+      "file": "assets/textures/gameplay-ui-debris.png"
+    },
+    {
       "id": "gameplay-fg",
       "file": "assets/textures/gameplay-fg.png"
     },

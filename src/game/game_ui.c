@@ -5,7 +5,10 @@
 #include "resource_manager.h"
 #include "settings.h"
 
+#define NUM_DEBRIS 4
+
 static GameUi game_ui;
+Debris debris_array[NUM_DEBRIS];
 static GameStatus *status;
 static Texture2D *screen_bg;
 static Texture2D *foreground;
@@ -16,6 +19,7 @@ static Texture2D *clock;
 static Texture2D *nanite;
 static Texture2D *life;
 static Texture2D *score_ui;
+static Texture2D *debris;
 
 static Texture2D *menu_screen;
 
@@ -34,6 +38,31 @@ static char score_text[21];
 
 int minutes = 0;
 float seconds = 0;
+
+void InitDebris(Rectangle play_area)
+{
+    for (int i = 0; i < NUM_DEBRIS; i++)
+    {
+        debris_array[i].x = (float)GetRandomValue((int)play_area.x, (int)play_area.x + (int)play_area.width);
+        debris_array[i].y = (float)GetRandomValue((int)play_area.y, (int)play_area.y + (int)play_area.height);
+        debris_array[i].fall_speed = (float)GetRandomValue(100, 300) / 100.0f; // Speed between 1.0 and 3.0
+    }
+}
+
+void UpdateDebris(Rectangle play_area)
+{
+    for (int i = 0; i < NUM_DEBRIS; i++)
+    {
+        debris_array[i].y += debris_array[i].fall_speed;
+
+        // If debris goes beyond the bottom of the play area, reset to top
+        if (debris_array[i].y > play_area.y + play_area.height)
+        {
+            debris_array[i].x = (float)GetRandomValue((int)play_area.x, (int)play_area.x + (int)play_area.width);
+            debris_array[i].y = play_area.y; // Reset to the top of the screen
+        }
+    }
+}
 
 static void render_leds(void)
 {
@@ -132,6 +161,9 @@ static void update_ui(float delta_time)
     snprintf(time_text, sizeof(time_text), "%d:%05.2f", minutes, seconds);
     snprintf(currency_text, sizeof(currency_text), "%0.2f", status->currency);
     snprintf(score_text, sizeof(score_text), "%d", status->score);
+
+    // In the game update loop
+    UpdateDebris(settings.game.play_area);
 }
 
 static void render_before_content_ui(void)
@@ -183,6 +215,11 @@ static void render_before_content_ui(void)
     {
         DrawTexture(resource_manager.get_texture("life-ui")->texture, (i * 9) + 18, 48, WHITE);
     }
+
+    for (int i = 0; i < NUM_DEBRIS; i++)
+    {
+        DrawTexture(*debris, (int)debris_array[i].x, (int)debris_array[i].y, WHITE);
+    }
 }
 
 static void render_after_content_ui(void)
@@ -211,6 +248,10 @@ GameUi *create_game_ui(GameStatus *game_status)
     nanite = &resource_manager.get_texture("nanite-ui")->texture;
     life = &resource_manager.get_texture("life-ui")->texture;
     score_ui = &resource_manager.get_texture("score-ui")->texture;
+
+    debris = &resource_manager.get_texture("gameplay-ui-debris")->texture;
+
+    InitDebris(settings.game.play_area);
 
     // set defaults
     minutes = 0;
