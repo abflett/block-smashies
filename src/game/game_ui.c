@@ -11,6 +11,9 @@ static Texture2D *radar_fade;
 static Texture2D *rings;
 static Texture2D *needle;
 
+static Texture2D *menu_01;
+static Texture2D *menu_02;
+
 static float radar_rotation = 0.0f;
 static unsigned char combo1_led_pattern = 0;
 static unsigned char random_led_pattern = 0;
@@ -19,37 +22,9 @@ static bool toggle_green_led = false;
 static float combo1_accumulator = 0.0f;
 static float combo2_accumulator = 0.0f;
 static float combo3_accumulator = 0.0f;
+static bool toggle_menu = false;
 
-static void update_ui(float delta_time)
-{
-    radar_rotation += delta_time * 50; // Adjust the speed of rotation if necessary
-    radar_rotation = fmodf(radar_rotation, 360.0f);
-
-    // Update the LED pattern every second
-    combo1_accumulator += delta_time;
-    if (combo1_accumulator >= 1.0f)
-    {
-        combo1_accumulator = 0.0f;
-        combo1_led_pattern = (combo1_led_pattern + 1) % 256; // Cycle through 256 patterns (0-255)
-        toggle_green_led = !toggle_green_led;
-    }
-
-    combo2_accumulator += delta_time;
-    if (combo2_accumulator >= 0.4f)
-    {
-        combo2_accumulator = 0.0f;
-        random_led_pattern = GetRandomValue(0, 255);
-    }
-
-    combo3_accumulator += delta_time;
-    if (combo3_accumulator >= 0.1f)
-    {
-        combo3_accumulator = 0.0f;
-        color_led_pattern = GetRandomValue(0, 255);
-    }
-}
-
-static render_leds(void)
+static void render_leds(void)
 {
     // Draw LED combo based on combo1_led_pattern
     for (int i = 0; i < 8; i++)
@@ -103,6 +78,36 @@ static render_leds(void)
     }
 }
 
+static void update_ui(float delta_time)
+{
+    radar_rotation += delta_time * 50; // Adjust the speed of rotation if necessary
+    radar_rotation = fmodf(radar_rotation, 360.0f);
+
+    // Update the LED pattern every second
+    combo1_accumulator += delta_time;
+    if (combo1_accumulator >= 1.0f)
+    {
+        combo1_accumulator = 0.0f;
+        combo1_led_pattern = (combo1_led_pattern + 1) % 256; // Cycle through 256 patterns (0-255)
+        toggle_green_led = !toggle_green_led;
+        toggle_menu = !toggle_menu;
+    }
+
+    combo2_accumulator += delta_time;
+    if (combo2_accumulator >= 0.4f)
+    {
+        combo2_accumulator = 0.0f;
+        random_led_pattern = GetRandomValue(0, 255);
+    }
+
+    combo3_accumulator += delta_time;
+    if (combo3_accumulator >= 0.1f)
+    {
+        combo3_accumulator = 0.0f;
+        color_led_pattern = GetRandomValue(0, 255);
+    }
+}
+
 static void render_before_content_ui(void)
 {
     ClearBackground(settings.colors.screen_color);
@@ -129,6 +134,15 @@ static void render_before_content_ui(void)
         radar_rotation,                                                                                                               // Rotation angle
         WHITE                                                                                                                         // Tint (full white for no tint)
     );
+
+    if (toggle_menu)
+    {
+        DrawTexture(*menu_01, 5, 68, WHITE);
+    }
+    else
+    {
+        DrawTexture(*menu_02, 5, 68, WHITE);
+    }
 }
 
 static void render_after_content_ui(void)
@@ -149,6 +163,11 @@ GameUi *create_game_ui(void)
     radar_fade = &resource_manager.get_texture("gameplay-ui-radar-fade")->texture;
     rings = &resource_manager.get_texture("gameplay-ui-rings")->texture;
     needle = &resource_manager.get_texture("gameplay-ui-needle")->texture;
+
+    menu_01 = &resource_manager.get_texture("gameplay-ui-menu-01")->texture;
+    menu_02 = &resource_manager.get_texture("gameplay-ui-menu-02")->texture;
+
+    // gameplay-ui-menu-01
 
     game_ui.update = update_ui;
     game_ui.render_before_content = render_before_content_ui;

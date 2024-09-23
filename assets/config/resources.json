@@ -53,6 +53,14 @@
       "file": "assets/textures/gameplay-ui-rings.png"
     },
     {
+      "id": "gameplay-ui-menu-01",
+      "file": "assets/textures/gameplay-ui-menu-01.png"
+    },
+    {
+      "id": "gameplay-ui-menu-02",
+      "file": "assets/textures/gameplay-ui-menu-02.png"
+    },
+    {
       "id": "lg-nanite-atlas",
       "file": "assets/textures/lg-nanite-atlas.png"
     },
