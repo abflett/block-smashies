@@ -130,7 +130,7 @@ static void update_ui(float delta_time)
     minutes = (int)(status->game_time / 60);
     seconds = status->game_time - minutes * 60;
     snprintf(time_text, sizeof(time_text), "%d:%04.2f", minutes, seconds);
-    snprintf(currency_text, sizeof(currency_text), "%f", status->currency);
+    snprintf(currency_text, sizeof(currency_text), "%0.2f", status->currency);
     snprintf(score_text, sizeof(score_text), "Score: %d", status->score);
 }
 
@@ -175,7 +175,7 @@ static void render_before_content_ui(void)
     DrawTexture(*nanite, 18, 30, WHITE);
     DrawTextEx(*resource_manager.get_pixel7_font(), currency_text, (Vector2){26.0f, 29.0f}, 7, 0, settings.colors.screen_text_color);
 
-    DrawTextEx(*resource_manager.get_pixel7_font(), score_text, (Vector2){26.0f, 37.0f}, 7, 0, settings.colors.screen_text_color);
+    DrawTextEx(*resource_manager.get_pixel7_font(), score_text, (Vector2){18.0f, 37.0f}, 7, 0, settings.colors.screen_text_color);
 
     for (int i = 0; i < status->lives; i++)
     {

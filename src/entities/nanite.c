@@ -28,7 +28,7 @@ static void clean_up_nanite(Nanite *nanite)
     free(nanite);
 }
 
-static void reset_nanite(Nanite *nanite, b2Vec2 position, int currency)
+static void reset_nanite(Nanite *nanite, b2Vec2 position, float currency)
 {
     nanite->active = true;
     nanite->currency = currency;
@@ -55,7 +55,7 @@ static void render_nanite(Nanite *nanite)
     DrawTexturePro(*nanite->texture, rectSource, rectDest, origin, rotation_in_degrees, WHITE);
 }
 
-Nanite *create_nanite(b2WorldId world_id, b2Vec2 position, int currency)
+Nanite *create_nanite(b2WorldId world_id, b2Vec2 position, float currency)
 {
     Nanite *nanite = (Nanite *)malloc(sizeof(Nanite));
     nanite->type = ENTITY_NANITE;

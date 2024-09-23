@@ -11,9 +11,9 @@ static float brick_max_health(int brick_type)
     return (float)(brick_type + 1) * settings.gameplay.health_modifier;
 }
 
-static int brick_currency(Brick *brick)
+static float brick_currency(Brick *brick)
 {
-    return (int)(brick->max_health * settings.gameplay.currency_modifier);
+    return brick->brick_type * settings.gameplay.currency_modifier;
 }
 
 static void update_brick(Brick *brick, float delta_time)
@@ -45,7 +45,7 @@ static void update_brick(Brick *brick, float delta_time)
         {
             b2Vec2 position = b2Body_GetPosition(brick->body);
             brick->active = false;
-            brick->game_context->entities->add_nanite(brick->game_context->world_id, position, 1);
+            brick->game_context->entities->add_nanite(brick->game_context->world_id, position, brick_currency(brick));
         }
     }
 }

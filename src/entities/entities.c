@@ -69,7 +69,7 @@ static void add_brick_func(GameContext *game_context, b2Vec2 position, int brick
     kv_push(Brick *, entities.bricks, new_brick);
 }
 
-static void add_nanite_func(b2WorldId world_id, b2Vec2 position, int currency)
+static void add_nanite_func(b2WorldId world_id, b2Vec2 position, float currency)
 {
     TraceLog(LOG_INFO, "Adding new nanite - world_id: %d, pos.x: %f, pos.y: %f, currency: %d", world_id.index1, position.x, position.y, currency);
     for (int i = 0; i < kv_size(entities.nanites); i++)
