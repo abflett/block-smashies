@@ -24,12 +24,12 @@ static void render_game_status(const GameStatus *status)
     float seconds = status->game_time - minutes * 60;
     snprintf(time_text, sizeof(time_text), "%d:%04.2f", minutes, seconds);
     DrawTexture(resource_manager.get_texture("clock-ui")->texture, 18, 15, WHITE);
-    DrawTextEx(*resource_manager.get_pixel7_font(), time_text, (Vector2){26.0f, 14.0f}, 7, 0, settings.game.screen_text_color);
+    DrawTextEx(*resource_manager.get_pixel7_font(), time_text, (Vector2){26.0f, 14.0f}, 7, 0, settings.colors.screen_text_color);
 
     char currency_text[21];
     snprintf(currency_text, sizeof(currency_text), "%d", status->currency);
     DrawTexture(resource_manager.get_texture("nanite-ui")->texture, 18, 30, WHITE);
-    DrawTextEx(*resource_manager.get_pixel7_font(), currency_text, (Vector2){26.0f, 29.0f}, 7, 0, settings.game.screen_text_color);
+    DrawTextEx(*resource_manager.get_pixel7_font(), currency_text, (Vector2){26.0f, 29.0f}, 7, 0, settings.colors.screen_text_color);
 
     for (int i = 0; i < status->lives; i++)
     {

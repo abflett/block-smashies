@@ -27,7 +27,7 @@ static void update_game(float delta_time)
 static void render_game(void)
 {
     BeginTextureMode(target_texture);
-    ClearBackground(settings.game.clear_color);
+    ClearBackground(settings.colors.clear_color);
     scene_manager.render();
     EndTextureMode();
 

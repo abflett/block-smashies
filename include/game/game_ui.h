@@ -5,8 +5,6 @@
 
 typedef struct GameUi
 {
-    Texture2D *background; // Background texture for the game
-    Texture2D *foreground;
     void (*render_before_content)(void);
     void (*render_after_content)(void);
     void (*update)(float delta_time);

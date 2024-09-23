@@ -8,10 +8,21 @@ Settings settings = {
     .game = {
         .target_size = {320, 180},
         .play_area = {95, 7, 218, 167},
-        .logo_screen_time = 4.0f,
-        .clear_color = {46, 34, 47, 255},
-        .screen_color = {50, 51, 83, 255},
-        .screen_text_color = {77, 155, 230, 255}},
+        .logo_screen_time = 4.0f},
+
+    .colors = {                                   // colors
+               .clear_color = {46, 34, 47, 255},  // off black
+               .screen_color = {50, 51, 83, 255}, // color of the displays or blue_01
+               .screen_text_color = {77, 155, 230, 255},
+               .blue_01 = {50, 51, 83, 255},
+               .blue_02 = {72, 84, 119, 255},
+               .blue_03 = {77, 101, 180, 255},
+               .blue_04 = {77, 155, 230, 255},
+               .blue_05 = {143, 211, 230, 255},
+               .red_02 = {232, 59, 59, 255},
+               .red_04 = {247, 150, 23, 255},
+               .green_04 = {145, 219, 105, 255}},
+
     .gameplay = {
         .paddle_height = 16.0f,
         .boost_timer = 0.15f,
@@ -25,6 +36,7 @@ Settings settings = {
         .boundary_padding = 4.0f,   // extra big segment line for kill boundary
         .edge_padding = 10.0f,
     },
+
     .filename = "settings.json",
     .set_defaults = set_default_config_settings,
     .save = save_settings};

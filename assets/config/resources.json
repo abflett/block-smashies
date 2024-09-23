@@ -9,8 +9,8 @@
       "file": "assets/textures/ship-base.png"
     },
     {
-      "id": "gameplay-bg",
-      "file": "assets/textures/gameplay-bg.png"
+      "id": "gameplay-screen-bg-01",
+      "file": "assets/textures/gameplay-screen-bg-01.png"
     },
     {
       "id": "gameplay-fg",

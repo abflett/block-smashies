@@ -14,15 +14,28 @@ typedef struct
     bool shake_screen;
 } ConfigSettings;
 
+typedef struct Colors
+{
+    const Color clear_color;
+    const Color screen_color;
+    const Color screen_text_color;
+
+    const Color blue_01;
+    const Color blue_02;
+    const Color blue_03;
+    const Color blue_04;
+    const Color blue_05;
+    const Color red_02;
+    const Color red_04; // more of an orange color
+    const Color green_04;
+} Colors;
+
 // GameSettings: Constants and values like target width/height, logo screen time, etc.
 typedef struct
 {
     const Vector2 target_size;
     const float logo_screen_time;
     const Rectangle play_area;
-    const Color clear_color;
-    const Color screen_color;
-    const Color screen_text_color;
 } GameSettings;
 
 // GameplaySettings: Playfield-related settings (paddle, bricks, etc.)
@@ -47,6 +60,7 @@ typedef struct
     ConfigSettings config;
     GameSettings game;
     GameplaySettings gameplay;
+    Colors colors;
     const char *filename;
     void (*save)(void);
     void (*set_defaults)(void);
