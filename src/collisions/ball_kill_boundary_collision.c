@@ -13,9 +13,9 @@ void ball_kill_boundary_collision(Ball *ball, KillBoundary *kill_boundary, GameC
 
     // Check how many balls are still active
     int active_ball_count = 0;
-    for (int i = 0; i < kv_size(context->entities.balls); i++)
+    for (int i = 0; i < kv_size(context->entities->balls); i++)
     {
-        Ball *existing_ball = kv_A(context->entities.balls, i);
+        Ball *existing_ball = kv_A(context->entities->balls, i);
         if (existing_ball->active)
         {
             active_ball_count++;
@@ -35,9 +35,9 @@ void ball_kill_boundary_collision(Ball *ball, KillBoundary *kill_boundary, GameC
         else
         {
             // get the first paddle;
-            Paddle *paddle = kv_A(context->entities.paddles, 0);
+            Paddle *paddle = kv_A(context->entities->paddles, 0);
             paddle->reset(paddle, paddle->player_num);
-            context->entities.add_ball(&context->entities, &context->player, context->world_id, paddle);
+            context->entities->add_ball(&context->player, context->world_id, paddle);
             game_state_manager.change(game_state_manager.states.game_intro_start);
         }
     }

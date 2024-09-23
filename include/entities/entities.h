@@ -13,31 +13,26 @@
 
 struct GameContext;
 
-typedef kvec_t(Ball *) BallVector;
-typedef kvec_t(Paddle *) PaddleVector;
-typedef kvec_t(Brick *) BrickVector;
-typedef kvec_t(Nanite *) NaniteVector;
-
 typedef struct Entities
 {
-    BallVector balls;
-    PaddleVector paddles;
-    BrickVector bricks;
-    NaniteVector nanites;
+    kvec_t(Ball *) balls;
+    kvec_t(Paddle *) paddles;
+    kvec_t(Brick *) bricks;
+    kvec_t(Nanite *) nanites;
     WallEdges *wall_edges;
     KillBoundary *kill_boundary;
 
-    void (*add_ball)(struct Entities *entities, Player *player, b2WorldId world_id, Paddle *paddle);
-    void (*add_paddle)(struct Entities *entities, Player *player, b2WorldId world_id);
+    void (*add_ball)(Player *player, b2WorldId world_id, Paddle *paddle);
+    void (*add_paddle)(Player *player, b2WorldId world_id);
     void (*add_brick)(struct GameContext *game_context, b2Vec2 position, int brick_type);
-    void (*add_nanite)(struct Entities *entities, b2WorldId world_id, b2Vec2 position, int currency);
-    void (*add_wall_edges)(struct Entities *entities, b2WorldId world_id);
-    void (*add_kill_boundary)(struct Entities *entities, b2WorldId world_id);
-    void (*update)(struct Entities *entities, float delta_time);
-    void (*render)(struct Entities *entities);
-    void (*cleanup)(struct Entities *entities);
+    void (*add_nanite)(b2WorldId world_id, b2Vec2 position, int currency);
+    void (*add_wall_edges)(b2WorldId world_id);
+    void (*add_kill_boundary)(b2WorldId world_id);
+    void (*update)(float delta_time);
+    void (*render)(void);
+    void (*cleanup)(void);
 } Entities;
 
-Entities create_entities();
+Entities *create_entities();
 
 #endif

@@ -13,7 +13,7 @@
 
 typedef struct GameContext
 {
-    Entities entities;                   // All game entities like balls, paddles, bricks, etc.
+    Entities *entities;                  // All game entities like balls, paddles, bricks, etc.
     Player player;                       // Player object
     b2WorldId world_id;                  // Box2D physics world ID
     CollisionManager *collision_manager; // Manages collisions between entities

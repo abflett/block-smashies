@@ -18,7 +18,7 @@ static void update_game_context(float delta_time)
         context.collision_manager->process_collisions(&context);
     }
 
-    context.entities.update(&context.entities, delta_time);
+    context.entities->update(delta_time);
     context.game_status.update(&context.game_status, delta_time);
     context.game_ui->update(delta_time);
 }
@@ -27,13 +27,13 @@ static void render_game_context(void)
 {
     context.game_ui->render_before_content();
     context.game_status.render(&context.game_status);
-    context.entities.render(&context.entities);
+    context.entities->render();
     context.game_ui->render_after_content();
 }
 
 static void cleanup_game_context(void)
 {
-    context.entities.cleanup(&context.entities);
+    context.entities->cleanup();
     context.game_ui->cleanup();
     TraceLog(LOG_INFO, "[Cleanup] - WorldId [%d] - Success", context.world_id.index1);
     b2DestroyWorld(context.world_id);
@@ -52,8 +52,8 @@ GameContext *create_game_context(void)
     context.entities = create_entities();
     context.shake_effect = get_shake_effect();
 
-    context.entities.add_wall_edges(&context.entities, context.world_id);
-    context.entities.add_kill_boundary(&context.entities, context.world_id);
+    context.entities->add_wall_edges(context.world_id);
+    context.entities->add_kill_boundary(context.world_id);
 
     context.update = update_game_context;
     context.render = render_game_context;
