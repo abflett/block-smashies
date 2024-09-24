@@ -1077,6 +1077,676 @@
         "w": 18,
         "h": 8
       }
+    },
+    {
+      "id": "ui-bar-a-01",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 0,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-02",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 8,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-03",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 16,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-04",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 24,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-05",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 32,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-06",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 40,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-07",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 48,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-08",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 56,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-09",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 64,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-10",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 72,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-11",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 80,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-12",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 88,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-13",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 96,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-14",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 104,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-15",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 112,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-16",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 120,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-17",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 128,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-18",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 136,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-a-19",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 144,
+        "y": 0,
+        "w": 8,
+        "h": 34
+      }
+    },
+    {
+      "id": "ui-bar-b-01",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 0,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-02",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 7,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-03",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 14,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-04",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 21,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-05",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 28,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-06",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 35,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-07",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 42,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-08",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 49,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-09",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 56,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-10",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 63,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-11",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 70,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-12",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 77,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-13",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 84,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-14",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 91,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-15",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 98,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-16",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 105,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-17",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 112,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-b-18",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 119,
+        "y": 35,
+        "w": 7,
+        "h": 32
+      }
+    },
+    {
+      "id": "ui-bar-c-01",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 0,
+        "y": 68,
+        "w": 7,
+        "h": 28
+      }
+    },
+    {
+      "id": "ui-bar-c-02",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 7,
+        "y": 68,
+        "w": 7,
+        "h": 28
+      }
+    },
+    {
+      "id": "ui-bar-c-03",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 14,
+        "y": 68,
+        "w": 7,
+        "h": 28
+      }
+    },
+    {
+      "id": "ui-bar-c-04",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 21,
+        "y": 68,
+        "w": 7,
+        "h": 28
+      }
+    },
+    {
+      "id": "ui-bar-c-05",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 28,
+        "y": 68,
+        "w": 7,
+        "h": 28
+      }
+    },
+    {
+      "id": "ui-bar-c-06",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 35,
+        "y": 68,
+        "w": 7,
+        "h": 28
+      }
+    },
+    {
+      "id": "ui-bar-c-07",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 42,
+        "y": 68,
+        "w": 7,
+        "h": 28
+      }
+    },
+    {
+      "id": "ui-bar-c-08",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 49,
+        "y": 68,
+        "w": 7,
+        "h": 28
+      }
+    },
+    {
+      "id": "ui-bar-c-09",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 56,
+        "y": 68,
+        "w": 7,
+        "h": 28
+      }
+    },
+    {
+      "id": "ui-bar-c-10",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 63,
+        "y": 68,
+        "w": 7,
+        "h": 28
+      }
+    },
+    {
+      "id": "ui-bar-c-11",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 70,
+        "y": 68,
+        "w": 7,
+        "h": 28
+      }
+    },
+    {
+      "id": "ui-bar-c-12",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 77,
+        "y": 68,
+        "w": 7,
+        "h": 28
+      }
+    },
+    {
+      "id": "ui-bar-c-13",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 84,
+        "y": 68,
+        "w": 7,
+        "h": 28
+      }
+    },
+    {
+      "id": "ui-bar-c-14",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 91,
+        "y": 68,
+        "w": 7,
+        "h": 28
+      }
+    },
+    {
+      "id": "ui-bar-c-15",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 98,
+        "y": 68,
+        "w": 7,
+        "h": 28
+      }
+    },
+    {
+      "id": "ui-bar-c-16",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 105,
+        "y": 68,
+        "w": 7,
+        "h": 28
+      }
+    },
+    {
+      "id": "ui-bar-d-01",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 0,
+        "y": 97,
+        "w": 6,
+        "h": 26
+      }
+    },
+    {
+      "id": "ui-bar-d-02",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 6,
+        "y": 97,
+        "w": 6,
+        "h": 26
+      }
+    },
+    {
+      "id": "ui-bar-d-03",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 12,
+        "y": 97,
+        "w": 6,
+        "h": 26
+      }
+    },
+    {
+      "id": "ui-bar-d-04",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 18,
+        "y": 97,
+        "w": 6,
+        "h": 26
+      }
+    },
+    {
+      "id": "ui-bar-d-05",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 24,
+        "y": 97,
+        "w": 6,
+        "h": 26
+      }
+    },
+    {
+      "id": "ui-bar-d-06",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 30,
+        "y": 97,
+        "w": 6,
+        "h": 26
+      }
+    },
+    {
+      "id": "ui-bar-d-07",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 36,
+        "y": 97,
+        "w": 6,
+        "h": 26
+      }
+    },
+    {
+      "id": "ui-bar-d-08",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 42,
+        "y": 97,
+        "w": 6,
+        "h": 26
+      }
+    },
+    {
+      "id": "ui-bar-d-09",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 48,
+        "y": 97,
+        "w": 6,
+        "h": 26
+      }
+    },
+    {
+      "id": "ui-bar-d-10",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 54,
+        "y": 97,
+        "w": 6,
+        "h": 26
+      }
+    },
+    {
+      "id": "ui-bar-d-11",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 60,
+        "y": 97,
+        "w": 6,
+        "h": 26
+      }
+    },
+    {
+      "id": "ui-bar-d-12",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 66,
+        "y": 97,
+        "w": 6,
+        "h": 26
+      }
+    },
+    {
+      "id": "ui-bar-d-13",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 72,
+        "y": 97,
+        "w": 6,
+        "h": 26
+      }
+    },
+    {
+      "id": "ui-bar-d-14",
+      "texture": "gameplay-ui-bars",
+      "src": {
+        "x": 78,
+        "y": 97,
+        "w": 6,
+        "h": 26
+      }
     }
   ],
   "animations": [
@@ -2081,6 +2751,95 @@
         "dk-grey-brick-04"
       ],
       "animation": "dk-grey-brick-destroy-animation"
+    }
+  ],
+  "ui-bars": [
+    {
+      "type": "ui-bar-a",
+      "subtextures": [
+        "ui-bar-a-01",
+        "ui-bar-a-02",
+        "ui-bar-a-03",
+        "ui-bar-a-04",
+        "ui-bar-a-05",
+        "ui-bar-a-06",
+        "ui-bar-a-07",
+        "ui-bar-a-08",
+        "ui-bar-a-09",
+        "ui-bar-a-10",
+        "ui-bar-a-11",
+        "ui-bar-a-12",
+        "ui-bar-a-13",
+        "ui-bar-a-14",
+        "ui-bar-a-15",
+        "ui-bar-a-16",
+        "ui-bar-a-17",
+        "ui-bar-a-18",
+        "ui-bar-a-19"
+      ]
+    },
+    {
+      "type": "ui-bar-b",
+      "subtextures": [
+        "ui-bar-b-01",
+        "ui-bar-b-02",
+        "ui-bar-b-03",
+        "ui-bar-b-04",
+        "ui-bar-b-05",
+        "ui-bar-b-06",
+        "ui-bar-b-07",
+        "ui-bar-b-08",
+        "ui-bar-b-09",
+        "ui-bar-b-10",
+        "ui-bar-b-11",
+        "ui-bar-b-12",
+        "ui-bar-b-13",
+        "ui-bar-b-14",
+        "ui-bar-b-15",
+        "ui-bar-b-16",
+        "ui-bar-b-17",
+        "ui-bar-b-18"
+      ]
+    },
+    {
+      "type": "ui-bar-c",
+      "subtextures": [
+        "ui-bar-c-01",
+        "ui-bar-c-02",
+        "ui-bar-c-03",
+        "ui-bar-c-04",
+        "ui-bar-c-05",
+        "ui-bar-c-06",
+        "ui-bar-c-07",
+        "ui-bar-c-08",
+        "ui-bar-c-09",
+        "ui-bar-c-10",
+        "ui-bar-c-11",
+        "ui-bar-c-12",
+        "ui-bar-c-13",
+        "ui-bar-c-14",
+        "ui-bar-c-15",
+        "ui-bar-c-16"
+      ]
+    },
+    {
+      "type": "ui-bar-d",
+      "subtextures": [
+        "ui-bar-d-01",
+        "ui-bar-d-02",
+        "ui-bar-d-03",
+        "ui-bar-d-04",
+        "ui-bar-d-05",
+        "ui-bar-d-06",
+        "ui-bar-d-07",
+        "ui-bar-d-08",
+        "ui-bar-d-09",
+        "ui-bar-d-10",
+        "ui-bar-d-11",
+        "ui-bar-d-12",
+        "ui-bar-d-13",
+        "ui-bar-d-14"
+      ]
     }
   ],
   "font": "assets/fonts/pixel7.fnt"

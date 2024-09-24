@@ -5,10 +5,12 @@
 #include "kvec.h"
 #include "resource.h"
 #include "brick_type_mapper.h"
+#include "bar_level_mapper.h"
 
 typedef struct ResourceManager
 {
     BrickTypeMapper *brick_type_mapper;
+    BarLevelMapper *bar_level_mapper;
     // Function pointers for managing resources
     void (*load_resource_file)(const char *file);    // Load the JSON file and store resources in memory
     TextureResource *(*get_texture)(const char *id); // Get a texture by its ID

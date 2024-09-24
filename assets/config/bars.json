@@ -1,0 +1,14 @@
+{
+    "subtextures": [
+        {
+            "id": "ui-bar-c-01",
+            "texture": "gameplay-ui-bars",
+            "src": {
+                "x": 0,
+                "y": 68,
+                "w": 7,
+                "h": 28
+            }
+        }
+    ]
+}

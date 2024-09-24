@@ -20,6 +20,7 @@ void rm_load_resource_file(const char *file)
     resource_manager.pixel7_font = LoadFont(pixel7_font);
 
     resource_manager.brick_type_mapper = create_brick_type_mapper(root_object);
+    resource_manager.bar_level_mapper = create_bar_level_mapper(root_object);
 
     for (size_t i = 0; i < (int)json_array_get_count(textures_array); i++)
     {
@@ -151,6 +152,7 @@ void rm_cleanup(void)
     resource_manager.textures = NULL;
 
     resource_manager.brick_type_mapper->cleanup();
+    resource_manager.bar_level_mapper->cleanup();
 
     UnloadFont(resource_manager.pixel7_font);
 }
@@ -166,4 +168,5 @@ ResourceManager resource_manager = {
     .subtextures = NULL,
     .animations = NULL,
     .brick_type_mapper = NULL,
+    .bar_level_mapper = NULL,
     .pixel7_font = {0}};
