@@ -84,6 +84,7 @@ set(GAME_SRC
     src/game/game_context.c
     src/game/game_ui.c
     src/game/shake_effect.c
+    src/game/playing_ui_bars.c
 )
 
 # Create the BlockSmashies executable

@@ -4,10 +4,12 @@
 #include "game_ui.h"
 #include "resource_manager.h"
 #include "settings.h"
+#include "playing_ui_bars.h"
 
 #define NUM_DEBRIS 4
 
 static GameUi game_ui;
+static PlayingUiBars *ui_bars;
 Debris debris_array[NUM_DEBRIS];
 static GameStatus *status;
 static Texture2D *screen_bg;
@@ -20,7 +22,6 @@ static Texture2D *nanite;
 static Texture2D *life;
 static Texture2D *score_ui;
 static Texture2D *debris;
-
 static Texture2D *menu_screen;
 
 static float radar_rotation = 0.0f;
@@ -39,7 +40,7 @@ static char score_text[21];
 int minutes = 0;
 float seconds = 0;
 
-void InitDebris(Rectangle play_area)
+void init_debris(Rectangle play_area)
 {
     for (int i = 0; i < NUM_DEBRIS; i++)
     {
@@ -49,7 +50,7 @@ void InitDebris(Rectangle play_area)
     }
 }
 
-void UpdateDebris(Rectangle play_area)
+void update_debris(Rectangle play_area)
 {
     for (int i = 0; i < NUM_DEBRIS; i++)
     {
@@ -163,7 +164,8 @@ static void update_ui(float delta_time)
     snprintf(score_text, sizeof(score_text), "%d", status->score);
 
     // In the game update loop
-    UpdateDebris(settings.game.play_area);
+    update_debris(settings.game.play_area);
+    ui_bars->update(delta_time);
 }
 
 static void render_before_content_ui(void)
@@ -226,6 +228,10 @@ static void render_after_content_ui(void)
 {
     DrawTexture(*foreground, 0, 0, WHITE);
     render_leds();
+
+    // DrawTexturePro(bar_a->texture_resource->texture, bar_a->src, bar_a->src, (Vector2){0, 0}, 0.0f, WHITE);
+
+    ui_bars->render();
 }
 
 static void cleanup_ui(void)
@@ -251,7 +257,9 @@ GameUi *create_game_ui(GameStatus *game_status)
 
     debris = &resource_manager.get_texture("gameplay-ui-debris")->texture;
 
-    InitDebris(settings.game.play_area);
+    init_debris(settings.game.play_area);
+
+    ui_bars = create_playing_ui_bars();
 
     // set defaults
     minutes = 0;
