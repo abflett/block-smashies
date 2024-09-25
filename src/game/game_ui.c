@@ -23,6 +23,7 @@ static Texture2D *life;
 static Texture2D *score_ui;
 static Texture2D *debris;
 static Texture2D *menu_screen;
+static Texture2D *warning;
 
 static float radar_rotation = 0.0f;
 static unsigned char combo1_led_pattern = 0;
@@ -36,6 +37,7 @@ static bool toggle_menu = false;
 static char time_text[10];
 static char currency_text[21];
 static char score_text[21];
+static bool toggle_warning = false;
 
 int minutes = 0;
 float seconds = 0;
@@ -139,6 +141,7 @@ static void update_ui(float delta_time)
     {
         combo2_accumulator = 0.0f;
         random_led_pattern = GetRandomValue(0, 255);
+        toggle_warning = !toggle_warning;
     }
 
     combo3_accumulator += delta_time;
@@ -229,7 +232,10 @@ static void render_after_content_ui(void)
     DrawTexture(*foreground, 0, 0, WHITE);
     render_leds();
 
-    // DrawTexturePro(bar_a->texture_resource->texture, bar_a->src, bar_a->src, (Vector2){0, 0}, 0.0f, WHITE);
+    if (toggle_warning)
+    {
+        DrawTexture(*warning, 64, 73, WHITE);
+    }
 
     ui_bars->render();
 }
@@ -249,6 +255,7 @@ GameUi *create_game_ui(GameStatus *game_status)
     needle = &resource_manager.get_texture("gameplay-ui-needle")->texture;
 
     menu_screen = &resource_manager.get_texture("gameplay-ui-menu-01")->texture;
+    warning = &resource_manager.get_texture("gameplay-ui-warning")->texture;
 
     clock = &resource_manager.get_texture("clock-ui")->texture;
     nanite = &resource_manager.get_texture("nanite-ui")->texture;
