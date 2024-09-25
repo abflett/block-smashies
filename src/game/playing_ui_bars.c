@@ -40,7 +40,6 @@ static void update_playing_ui_bars(float delta_time)
     }
     else
     {
-        // fake_stat -= delta_time / 2;
         fake_stat = 1.0f;
     }
 
@@ -68,21 +67,25 @@ PlayingUiBars *create_playing_ui_bars(void)
 {
     fake_stat = 0.5f;
 
+    // Left Bars for current energy level for players 1-4
     bars.playing_ui_bars[0] = create_playing_ui_bar(&fake_stat, 0, 0.0f, (Vector2){12, 119});
     bars.playing_ui_bars[1] = create_playing_ui_bar(&fake_stat, 1, 0.0f, (Vector2){15, 120});
     bars.playing_ui_bars[2] = create_playing_ui_bar(&fake_stat, 2, 0.0f, (Vector2){18, 122});
     bars.playing_ui_bars[3] = create_playing_ui_bar(&fake_stat, 3, 0.0f, (Vector2){21, 123});
 
+    // Top Bars for force move timeout - uses energy to use force timeout
     bars.playing_ui_bars[4] = create_playing_ui_bar(&fake_stat, 0, 90.0f, (Vector2){61, 104});
     bars.playing_ui_bars[5] = create_playing_ui_bar(&fake_stat, 1, 90.0f, (Vector2){60, 107});
     bars.playing_ui_bars[6] = create_playing_ui_bar(&fake_stat, 2, 90.0f, (Vector2){58, 110});
     bars.playing_ui_bars[7] = create_playing_ui_bar(&fake_stat, 3, 90.0f, (Vector2){57, 113});
 
+    // Left Bars for heat - shooting uses energy and builds up heat, max heat will disable shooting
     bars.playing_ui_bars[8] = create_playing_ui_bar(&fake_stat, 0, 180.0f, (Vector2){76, 153});
     bars.playing_ui_bars[9] = create_playing_ui_bar(&fake_stat, 1, 180.0f, (Vector2){73, 152});
     bars.playing_ui_bars[10] = create_playing_ui_bar(&fake_stat, 2, 180.0f, (Vector2){70, 150});
     bars.playing_ui_bars[11] = create_playing_ui_bar(&fake_stat, 3, 180.0f, (Vector2){67, 149});
 
+    // Bottom bars for boost timout - dashing left or right (boost) uses energy
     bars.playing_ui_bars[12] = create_playing_ui_bar(&fake_stat, 0, 270.0f, (Vector2){27, 168});
     bars.playing_ui_bars[13] = create_playing_ui_bar(&fake_stat, 1, 270.0f, (Vector2){28, 165});
     bars.playing_ui_bars[14] = create_playing_ui_bar(&fake_stat, 2, 270.0f, (Vector2){30, 162});
