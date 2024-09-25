@@ -31,6 +31,6 @@ typedef struct Ball
     void (*disable)(struct Ball *ball);
 } Ball;
 
-Ball *create_ball(GameData *player, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity);
+Ball *create_ball(GameData *game_data, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity);
 
 #endif

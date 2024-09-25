@@ -70,7 +70,7 @@ static void update_ball(Ball *ball, float delta_time)
     b2Body_SetLinearVelocity(ball->body, velocity);
 }
 
-Ball *create_ball(GameData *player, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity)
+Ball *create_ball(GameData *game_data, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity)
 {
     Ball *ball = (Ball *)malloc(sizeof(Ball));
 
@@ -79,11 +79,11 @@ Ball *create_ball(GameData *player, b2WorldId world_id, b2Vec2 position, b2Vec2 
     ball->texture = &resource_manager.get_texture("ball")->texture;
     ball->radius = ball->texture->width / 4.0f;
 
-    ball->power = &player->ball.power;
-    ball->phase_nova = &player->perks.phase_shift;
-    ball->super_nova = &player->perks.super_nova;
-    ball->max_velocity = &player->ball.max_velocity;
-    ball->min_velocity = &player->ball.min_velocity;
+    ball->power = &game_data->ball.power;
+    ball->phase_nova = &game_data->perks.phase_shift;
+    ball->super_nova = &game_data->perks.super_nova;
+    ball->max_velocity = &game_data->ball.max_velocity;
+    ball->min_velocity = &game_data->ball.min_velocity;
 
     // Create the Box2D body definition
     b2BodyDef bodyDef = b2DefaultBodyDef();

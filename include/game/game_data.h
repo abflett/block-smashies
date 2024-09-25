@@ -45,6 +45,6 @@ typedef struct GameData
 
 } GameData;
 
-GameData create_game_data(const char *name);
+GameData *create_game_data(const char *name);
 
 #endif

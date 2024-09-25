@@ -96,7 +96,7 @@ static void render_paddle(Paddle *paddle)
     DrawTextureEx(*paddle->texture, (Vector2){position.x - (paddle->size.x / 2), settings.game.target_size.y - (position.y + (paddle->size.y / 2))}, 0.0f, 1.0f, WHITE);
 }
 
-Paddle *create_paddle(int player_num, GameData *player, b2WorldId world_id)
+Paddle *create_paddle(int player_num, GameData *game_data, b2WorldId world_id)
 {
     Paddle *paddle = (Paddle *)malloc(sizeof(Paddle));
     paddle->type = ENTITY_PADDLE;
@@ -112,15 +112,15 @@ Paddle *create_paddle(int player_num, GameData *player, b2WorldId world_id)
     paddle->boost_active_timer = 0.0f;
 
     // player attribute settings
-    paddle->acceleration = &player->paddle.acceleration;
-    paddle->max_velocity = &player->paddle.max_velocity;
-    paddle->friction = &player->paddle.friction;
-    paddle->charge = &player->paddle.charge;
-    paddle->booster_str = &player->paddle.booster_str;
-    paddle->pulse_str = &player->paddle.pulse_str;
-    paddle->phase_shift = &player->perks.phase_shift;
-    paddle->time_manipulation = &player->perks.time_manipulation;
-    paddle->orb_shot = &player->perks.orb_shot;
+    paddle->acceleration = &game_data->paddle.acceleration;
+    paddle->max_velocity = &game_data->paddle.max_velocity;
+    paddle->friction = &game_data->paddle.friction;
+    paddle->charge = &game_data->paddle.charge;
+    paddle->booster_str = &game_data->paddle.booster_str;
+    paddle->pulse_str = &game_data->paddle.pulse_str;
+    paddle->phase_shift = &game_data->perks.phase_shift;
+    paddle->time_manipulation = &game_data->perks.time_manipulation;
+    paddle->orb_shot = &game_data->perks.orb_shot;
 
     b2BodyDef body_def = b2DefaultBodyDef();
     body_def.type = b2_dynamicBody;

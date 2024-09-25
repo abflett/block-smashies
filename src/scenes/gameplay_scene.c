@@ -15,12 +15,12 @@ static void scene_init(int arg_count, ...)
     // load player, this will define players level and stats based on new game, loaded game and player count
     // setup paddle default positions and initial ball.
     // use the context level loader to create the level and populate the playfield
-    context->entities->add_paddle(&context->player, context->world_id);
+    context->entities->add_paddle(context->game_data, context->world_id);
     Paddle *paddle = kv_A(context->entities->paddles, 0); // player1 paddle
 
     for (int i = 0; i < 1; i++)
     {
-        context->entities->add_ball(&context->player, context->world_id, paddle);
+        context->entities->add_ball(context->game_data, context->world_id, paddle);
     }
 
     int brick_row = 12;

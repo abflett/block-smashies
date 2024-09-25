@@ -12,7 +12,7 @@
 
 Entities entities;
 
-static void add_ball_func(GameData *player, b2WorldId world_id, Paddle *paddle)
+static void add_ball_func(GameData *game_data, b2WorldId world_id, Paddle *paddle)
 {
     float random_x = -100.0f + ((float)rand() / RAND_MAX) * 200.0f;
     b2Vec2 paddle_position = b2Body_GetPosition(paddle->body);
@@ -29,13 +29,13 @@ static void add_ball_func(GameData *player, b2WorldId world_id, Paddle *paddle)
         }
     }
 
-    Ball *new_ball = create_ball(player, world_id,
+    Ball *new_ball = create_ball(game_data, world_id,
                                  (b2Vec2){paddle_position.x, paddle_position.y + (paddle->size.y / 2) + 4},
                                  (b2Vec2){random_x, 50});
     kv_push(Ball *, entities.balls, new_ball);
 }
 
-static void add_paddle_func(GameData *player, b2WorldId world_id)
+static void add_paddle_func(GameData *game_data, b2WorldId world_id)
 {
     // Todo: check active paddles before setting the player count
     for (int i = 0; i < kv_size(entities.paddles); i++)
@@ -49,7 +49,7 @@ static void add_paddle_func(GameData *player, b2WorldId world_id)
     }
 
     // Todo: check active paddles before setting the player count
-    Paddle *new_paddle = create_paddle((int)kv_size(entities.paddles) + 1, player, world_id);
+    Paddle *new_paddle = create_paddle((int)kv_size(entities.paddles) + 1, game_data, world_id);
     kv_push(Paddle *, entities.paddles, new_paddle);
 }
 

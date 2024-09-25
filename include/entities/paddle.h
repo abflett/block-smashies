@@ -41,6 +41,6 @@ typedef struct Paddle
     void (*disable)(struct Paddle *paddle);
 } Paddle;
 
-Paddle *create_paddle(int player_num, GameData *player, b2WorldId world_id);
+Paddle *create_paddle(int player_num, GameData *game_data, b2WorldId world_id);
 
 #endif
