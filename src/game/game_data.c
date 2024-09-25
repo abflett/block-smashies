@@ -8,7 +8,8 @@ GameData *create_game_data(const char *name)
     // Set the Team's name
     strncpy(game_data.name, name, sizeof(game_data.name) - 1);
     game_data.name[sizeof(game_data.name) - 1] = '\0'; // Ensure null termination
-    game_data.lives = 3;                               // Starting lives
+    game_data.player_count = 1;
+    game_data.lives = 3; // Starting lives
 
     // Initialize player progress
     game_data.operation_complete = 0;

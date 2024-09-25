@@ -33,6 +33,7 @@ typedef struct
 typedef struct GameData
 {
     char name[32];
+    int player_count;
     int operation_complete;
     int mission_complete;
     int currency;

@@ -259,7 +259,7 @@ GameUi *create_game_ui(GameStatus *game_status)
 
     init_debris(settings.game.play_area);
 
-    ui_bars = create_playing_ui_bars();
+    ui_bars = create_playing_ui_bars(game_status);
 
     // set defaults
     minutes = 0;

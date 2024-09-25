@@ -2,9 +2,12 @@
 #define GAME_STATUS_H
 
 #include <stdbool.h>
+#include "player_stat.h"
 
 typedef struct GameStatus
 {
+    PlayerStat player_stats[4];
+    int player_count;
     int score;
     float currency;
     int lives;
@@ -16,6 +19,6 @@ typedef struct GameStatus
     void (*reset)(void);
 } GameStatus;
 
-GameStatus *create_game_status(void);
+GameStatus *create_game_status(int player_count);
 
 #endif

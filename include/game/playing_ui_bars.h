@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "resource_manager.h"
+#include "game_status.h"
 
 typedef struct PlayingUiBar
 {
@@ -24,6 +25,6 @@ typedef struct PlayingUiBars
     void (*cleanup)(void);
 } PlayingUiBars;
 
-PlayingUiBars *create_playing_ui_bars(void);
+PlayingUiBars *create_playing_ui_bars(GameStatus *game_status);
 
 #endif

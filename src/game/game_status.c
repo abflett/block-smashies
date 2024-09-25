@@ -19,8 +19,9 @@ static void reset_game_status(void)
     status.game_time = 0.0f;
 }
 
-GameStatus *create_game_status(void)
+GameStatus *create_game_status(int player_count)
 {
+    status.player_count = player_count;
     status.score = 0;
     status.currency = 0;
     status.lives = 3;
@@ -28,6 +29,12 @@ GameStatus *create_game_status(void)
     status.game_over = false;
     status.is_hold = true;
     status.is_pause = false;
+
+    for (int i = 0; i < 4; i++)
+    {
+        status.player_stats[i] = create_player_stat(i);
+    }
+
     status.update = update_game_status;
     status.reset = reset_game_status;
     return &status;
