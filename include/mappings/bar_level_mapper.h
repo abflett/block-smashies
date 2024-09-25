@@ -12,7 +12,7 @@ typedef struct BarLevelSet
 
 typedef struct BarLevelMapper
 {
-    BarLevelSet bars[4];
+    BarLevelSet bars[5];
     const char *(*bar_level_to_subtexture_id)(const int bar_type, const int index);
     void (*cleanup)(void);
 } BarLevelMapper;

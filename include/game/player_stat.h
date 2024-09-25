@@ -8,6 +8,7 @@ typedef struct PlayerStat
     float force_cooldown;
     float heat;
     float boost_cooldown;
+    float velocity;
 } PlayerStat;
 
 PlayerStat create_player_stat(int player_num);

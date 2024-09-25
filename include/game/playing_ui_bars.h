@@ -17,9 +17,21 @@ typedef struct PlayingUiBar
     Subtexture *subtexture;
 } PlayingUiBar;
 
+typedef struct PlayingSmUiBar
+{
+    int player_index;
+    int bar_type;
+    int max_bar_level;
+    int current_bar_level;
+    float *stat;
+    Vector2 position;
+    Subtexture *subtexture;
+} PlayingSmUiBar;
+
 typedef struct PlayingUiBars
 {
     PlayingUiBar playing_ui_bars[16];
+    PlayingSmUiBar playing_sm_ui_bars[4];
     void (*update)(float delta_time);
     void (*render)(void);
     void (*cleanup)(void);

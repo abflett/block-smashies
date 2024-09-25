@@ -25,7 +25,7 @@ BarLevelMapper *create_bar_level_mapper(const JSON_Object *root_object)
 {
     JSON_Array *ui_bars_array = json_object_get_array(root_object, "ui-bars");
 
-    for (size_t i = 0; i < json_array_get_count(ui_bars_array) && i < 4; i++)
+    for (size_t i = 0; i < json_array_get_count(ui_bars_array) && i < 5; i++)
     {
         kv_init(mapper.bars[i].subtexture_ids);
 

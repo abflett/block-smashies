@@ -18,23 +18,34 @@ static void render_playing_ui_bars(void)
             WHITE                                                                                               // Tint color
         );
     }
+
+    for (int j = 0; j < 4; j++)
+    {
+        PlayingSmUiBar bar = bars.playing_sm_ui_bars[j];
+
+        DrawTextureRec(bar.subtexture->texture_resource->texture,
+                       bar.subtexture->src,
+                       bar.position,
+                       WHITE);
+    }
 }
 
 static void cleanup_playing_ui_bars(void)
 {
 }
 
-static void update_playing_ui_bar(PlayingUiBar *bar)
-{
-    bar->current_bar_level = (int)((*bar->stat * (bar->max_bar_level - 1)) + 0.5f);
-    bar->subtexture = resource_manager.get_subtexture(resource_manager.bar_level_mapper->bar_level_to_subtexture_id(bar->player_index, bar->current_bar_level));
-}
-
 static void update_playing_ui_bars(float delta_time)
 {
     for (int i = 0; i < 16; i++)
     {
-        update_playing_ui_bar(&bars.playing_ui_bars[i]);
+        bars.playing_ui_bars[i].current_bar_level = (int)((*bars.playing_ui_bars[i].stat * (bars.playing_ui_bars[i].max_bar_level - 1)) + 0.5f);
+        bars.playing_ui_bars[i].subtexture = resource_manager.get_subtexture(resource_manager.bar_level_mapper->bar_level_to_subtexture_id(bars.playing_ui_bars[i].player_index, bars.playing_ui_bars[i].current_bar_level));
+    }
+
+    for (int j = 0; j < 4; j++)
+    {
+        bars.playing_sm_ui_bars[j].current_bar_level = (int)((*bars.playing_sm_ui_bars[j].stat * (bars.playing_sm_ui_bars[j].max_bar_level - 1)) + 0.5f);
+        bars.playing_sm_ui_bars[j].subtexture = resource_manager.get_subtexture(resource_manager.bar_level_mapper->bar_level_to_subtexture_id(bars.playing_sm_ui_bars[j].bar_type, bars.playing_sm_ui_bars[j].current_bar_level));
     }
 }
 
@@ -48,6 +59,21 @@ static PlayingUiBar create_playing_ui_bar(float *stat, int player_index, float r
     bar.subtexture = resource_manager.get_subtexture(resource_manager.bar_level_mapper->bar_level_to_subtexture_id(bar.player_index, bar.current_bar_level));
     bar.rotation = rotation;
     bar.origin = (Vector2){0, 0};
+    bar.position = (Vector2){position.x, position.y};
+    return bar;
+}
+
+static PlayingSmUiBar create_playing_sm_ui_bar(float *stat, int player_index, int bar_type, Vector2 position)
+{
+    PlayingSmUiBar bar;
+    bar.player_index = player_index;
+    bar.bar_type = bar_type;
+    bar.stat = stat;
+    bar.max_bar_level = resource_manager.bar_level_mapper->bars[bar.bar_type].count;
+    bar.current_bar_level = (int)((*bar.stat * (bar.max_bar_level - 1)) + 0.5f);
+    const char *subtexture_id = resource_manager.bar_level_mapper->bar_level_to_subtexture_id(bar.bar_type, bar.current_bar_level);
+    TraceLog(LOG_INFO, "[[[subtexture sm]]]: %s", subtexture_id);
+    bar.subtexture = resource_manager.get_subtexture(subtexture_id);
     bar.position = (Vector2){position.x, position.y};
     return bar;
 }
@@ -77,6 +103,11 @@ PlayingUiBars *create_playing_ui_bars(GameStatus *game_status)
     bars.playing_ui_bars[13] = create_playing_ui_bar(&game_status->player_stats[1].boost_cooldown, 1, 270.0f, (Vector2){28, 165});
     bars.playing_ui_bars[14] = create_playing_ui_bar(&game_status->player_stats[2].boost_cooldown, 2, 270.0f, (Vector2){30, 162});
     bars.playing_ui_bars[15] = create_playing_ui_bar(&game_status->player_stats[3].boost_cooldown, 3, 270.0f, (Vector2){31, 159});
+
+    bars.playing_sm_ui_bars[0] = create_playing_sm_ui_bar(&game_status->player_stats[0].velocity, 0, 4, (Vector2){35, 85});
+    bars.playing_sm_ui_bars[1] = create_playing_sm_ui_bar(&game_status->player_stats[1].velocity, 1, 4, (Vector2){40, 85});
+    bars.playing_sm_ui_bars[2] = create_playing_sm_ui_bar(&game_status->player_stats[2].velocity, 2, 4, (Vector2){45, 85});
+    bars.playing_sm_ui_bars[3] = create_playing_sm_ui_bar(&game_status->player_stats[3].velocity, 3, 4, (Vector2){50, 85});
 
     bars.update = update_playing_ui_bars;
     bars.render = render_playing_ui_bars;
