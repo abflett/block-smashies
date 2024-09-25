@@ -9,7 +9,7 @@ static Scene main_menu_scene;
 static Font font1;
 static Font font2;
 
-static void scene_init(void)
+static void scene_init(int arg_count, ...)
 {
 }
 
@@ -17,7 +17,7 @@ static void scene_update(float delta_time)
 {
     if (IsKeyPressed(KEY_ENTER))
     {
-        scene_manager.next_scene = scene_manager.scenes.gameplay;
+        scene_manager.change(scene_manager.scenes.gameplay, 0);
     }
 
     if (IsKeyPressed(KEY_ESCAPE))

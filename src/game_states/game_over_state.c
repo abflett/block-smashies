@@ -71,7 +71,7 @@ static void state_update(float delta_time)
     {
         if (IsKeyPressed(KEY_ENTER))
         {
-            scene_manager.change(scene_manager.scenes.logo);
+            scene_manager.change(scene_manager.scenes.logo, 0);
         }
     }
 }

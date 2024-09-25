@@ -21,8 +21,7 @@ static void state_update(float delta_time)
         {
             game_state_manager.states.playing->cleanup();
         }
-
-        scene_manager.next_scene = scene_manager.scenes.logo;
+        scene_manager.change(scene_manager.scenes.logo, 0);
     }
 
     if (IsKeyPressed(KEY_ENTER))

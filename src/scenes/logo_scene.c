@@ -7,7 +7,7 @@ static Scene logo_scene;
 
 static float elapsed_time = 0.0f; // Variable to track elapsed time
 
-static void scene_init(void)
+static void scene_init(int arg_count, ...)
 {
     elapsed_time = 0.0f;
 }
@@ -18,7 +18,7 @@ static void scene_update(float delta_time)
 
     if (GetKeyPressed() != 0 || IsGestureDetected(GESTURE_TAP) || elapsed_time >= settings.game.logo_screen_time)
     {
-        scene_manager.next_scene = scene_manager.scenes.title;
+        scene_manager.change(scene_manager.scenes.title, 0);
     }
 }
 

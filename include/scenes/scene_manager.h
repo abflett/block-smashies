@@ -1,6 +1,7 @@
 #ifndef SCENE_MANAGER_H
 #define SCENE_MANAGER_H
 
+#include <stdarg.h>
 #include "scene.h"
 
 typedef struct GameScenes
@@ -14,11 +15,9 @@ typedef struct GameScenes
 typedef struct SceneManager
 {
     Scene *current_scene;
-    Scene *next_scene;
-
     GameScenes scenes;
 
-    void (*change)(Scene *new_scene);
+    void (*change)(Scene *new_scene, int arg_count, ...);
     void (*update)(float delta_time);
     void (*render)(void);
 } SceneManager;

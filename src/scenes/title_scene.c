@@ -4,7 +4,7 @@
 
 static Scene title_scene;
 
-static void scene_init(void)
+static void scene_init(int arg_count, ...)
 {
 }
 
@@ -12,7 +12,7 @@ static void scene_update(float delta_time)
 {
     if (GetKeyPressed() != 0 || IsGestureDetected(GESTURE_TAP))
     {
-        scene_manager.next_scene = scene_manager.scenes.main_menu;
+        scene_manager.change(scene_manager.scenes.main_menu, 0);
     }
 }
 

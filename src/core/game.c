@@ -107,7 +107,7 @@ Game *create_game(const char *game_title, const char *settings_filename, const c
 
     target_texture = LoadRenderTexture((int)settings.game.target_size.x, (int)settings.game.target_size.y);
     resource_manager.load_resource_file(resource_filename);
-    scene_manager.change(scene_manager.scenes.logo);
+    scene_manager.change(scene_manager.scenes.logo, 0);
 
     return game;
 }

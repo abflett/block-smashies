@@ -7,7 +7,7 @@
 static Scene gameplay_scene;
 static GameContext *context;
 
-static void scene_init(void)
+static void scene_init(int arg_count, ...)
 {
     context = create_game_context();
     game_state_manager.context = context;
