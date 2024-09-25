@@ -1,3 +1,4 @@
+#include <stdarg.h>
 #include "raylib.h"
 #include "gameplay_scene.h"
 #include "game_state_manager.h"
@@ -7,9 +8,18 @@
 static Scene gameplay_scene;
 static GameContext *context;
 
-static void scene_init(int arg_count, ...)
+static void scene_init(int arg_count, va_list args)
 {
-    context = create_game_context();
+    GameData *game_data = NULL;
+
+    // Retrieve arguments
+    for (int i = 0; i < arg_count; i++)
+    {
+        if (i == 0)
+            game_data = va_arg(args, GameData *);
+    }
+
+    context = create_game_context(game_data);
     game_state_manager.context = context;
 
     // load player, this will define players level and stats based on new game, loaded game and player count

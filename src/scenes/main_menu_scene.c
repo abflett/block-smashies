@@ -3,6 +3,7 @@
 #include "game.h"
 #include "scene_manager.h"
 #include "resource_manager.h"
+#include "game_data.h"
 
 static Scene main_menu_scene;
 
@@ -17,7 +18,7 @@ static void scene_update(float delta_time)
 {
     if (IsKeyPressed(KEY_ENTER))
     {
-        scene_manager.change(scene_manager.scenes.gameplay, 0);
+        scene_manager.change(scene_manager.scenes.gameplay, 1, create_game_data("Team1"));
     }
 
     if (IsKeyPressed(KEY_ESCAPE))

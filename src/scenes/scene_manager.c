@@ -17,11 +17,8 @@ void change_scene(Scene *new_scene, int arg_count, ...)
     if (scene_manager.current_scene && scene_manager.current_scene->init)
     {
         va_list args;
-        va_start(args, arg_count);
-
-        // Call the init function with arg_count and variable arguments
-        scene_manager.current_scene->init(arg_count, args);
-
+        va_start(args, arg_count);                          // Only call this once before the init
+        scene_manager.current_scene->init(arg_count, args); // Pass arg_count and args
         va_end(args);
     }
 }

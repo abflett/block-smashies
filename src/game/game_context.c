@@ -38,7 +38,7 @@ static void cleanup_game_context(void)
     b2DestroyWorld(context.world_id);
 }
 
-GameContext *create_game_context(void)
+GameContext *create_game_context(GameData *game_data)
 {
     b2WorldDef world_def = b2DefaultWorldDef();
     world_def.gravity = (b2Vec2){0.0f, 0.0f};
@@ -47,7 +47,7 @@ GameContext *create_game_context(void)
     context.collision_manager = create_collision_manager(context.world_id);
     context.game_status = create_game_status();
     context.game_ui = create_game_ui(context.game_status);
-    context.game_data = create_game_data("Player 1");
+    context.game_data = game_data;
     context.entities = create_entities();
     context.shake_effect = get_shake_effect();
 
