@@ -6,7 +6,7 @@
 #include "box2d/box2d.h" // For b2WorldId
 #include "game_status.h"
 #include "entities.h"
-#include "player.h"
+#include "game_data.h"
 #include "collision_manager.h"
 #include "game_ui.h"
 #include "shake_effect.h"
@@ -14,7 +14,7 @@
 typedef struct GameContext
 {
     Entities *entities;                  // All game entities like balls, paddles, bricks, etc.
-    Player player;                       // Player object
+    GameData player;                     // Player object
     b2WorldId world_id;                  // Box2D physics world ID
     CollisionManager *collision_manager; // Manages collisions between entities
     GameStatus *game_status;             // Tracks global game state like time, score, is_paused, etc.

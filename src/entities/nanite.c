@@ -5,7 +5,7 @@
 #include "nanite.h"
 #include "resource_manager.h"
 #include "settings.h"
-#include "player.h"
+#include "game_data.h"
 #include "entity_type.h"
 #include "collision_category.h"
 

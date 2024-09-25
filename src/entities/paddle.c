@@ -4,7 +4,7 @@
 #include "raylib.h"
 #include "resource_manager.h"
 #include "settings.h"
-#include "player.h"
+#include "game_data.h"
 #include "entity_type.h"
 #include "collision_category.h"
 
@@ -96,7 +96,7 @@ static void render_paddle(Paddle *paddle)
     DrawTextureEx(*paddle->texture, (Vector2){position.x - (paddle->size.x / 2), settings.game.target_size.y - (position.y + (paddle->size.y / 2))}, 0.0f, 1.0f, WHITE);
 }
 
-Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id)
+Paddle *create_paddle(int player_num, GameData *player, b2WorldId world_id)
 {
     Paddle *paddle = (Paddle *)malloc(sizeof(Paddle));
     paddle->type = ENTITY_PADDLE;

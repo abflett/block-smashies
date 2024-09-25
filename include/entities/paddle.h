@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "raylib.h"
 #include "box2d/box2d.h"
-#include "player.h"
+#include "game_data.h"
 #include "entity_type.h"
 
 typedef struct Paddle
@@ -41,6 +41,6 @@ typedef struct Paddle
     void (*disable)(struct Paddle *paddle);
 } Paddle;
 
-Paddle *create_paddle(int player_num, Player *player, b2WorldId world_id);
+Paddle *create_paddle(int player_num, GameData *player, b2WorldId world_id);
 
 #endif

@@ -6,13 +6,13 @@
 #include "paddle.h"
 #include "brick.h"
 #include "nanite.h"
-#include "player.h"
+#include "game_data.h"
 #include "settings.h"
 #include "game_context.h"
 
 Entities entities;
 
-static void add_ball_func(Player *player, b2WorldId world_id, Paddle *paddle)
+static void add_ball_func(GameData *player, b2WorldId world_id, Paddle *paddle)
 {
     float random_x = -100.0f + ((float)rand() / RAND_MAX) * 200.0f;
     b2Vec2 paddle_position = b2Body_GetPosition(paddle->body);
@@ -35,7 +35,7 @@ static void add_ball_func(Player *player, b2WorldId world_id, Paddle *paddle)
     kv_push(Ball *, entities.balls, new_ball);
 }
 
-static void add_paddle_func(Player *player, b2WorldId world_id)
+static void add_paddle_func(GameData *player, b2WorldId world_id)
 {
     // Todo: check active paddles before setting the player count
     for (int i = 0; i < kv_size(entities.paddles); i++)

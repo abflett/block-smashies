@@ -6,7 +6,7 @@
 #include "ball.h"
 #include "brick.h"
 #include "kvec.h"
-#include "player.h"
+#include "game_data.h"
 #include "wall_edges.h"
 #include "kill_boundary.h"
 #include "nanite.h"
@@ -22,8 +22,8 @@ typedef struct Entities
     WallEdges *wall_edges;
     KillBoundary *kill_boundary;
 
-    void (*add_ball)(Player *player, b2WorldId world_id, Paddle *paddle);
-    void (*add_paddle)(Player *player, b2WorldId world_id);
+    void (*add_ball)(GameData *player, b2WorldId world_id, Paddle *paddle);
+    void (*add_paddle)(GameData *player, b2WorldId world_id);
     void (*add_brick)(struct GameContext *game_context, b2Vec2 position, int brick_type);
     void (*add_nanite)(b2WorldId world_id, b2Vec2 position, float currency);
     void (*add_wall_edges)(b2WorldId world_id);

@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "raylib.h"
 #include "box2d/box2d.h"
-#include "player.h"
+#include "game_data.h"
 #include "entity_type.h"
 
 struct Entities;
@@ -31,6 +31,6 @@ typedef struct Ball
     void (*disable)(struct Ball *ball);
 } Ball;
 
-Ball *create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity);
+Ball *create_ball(GameData *player, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity);
 
 #endif

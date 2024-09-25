@@ -1,5 +1,5 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef GAME_DATA_H
+#define GAME_DATA_H
 
 #include <stdbool.h>
 
@@ -30,7 +30,7 @@ typedef struct
     bool orb_shot;
 } Perks;
 
-typedef struct Player
+typedef struct GameData
 {
     char name[32];
     int operation_complete;
@@ -43,8 +43,8 @@ typedef struct Player
     BallAttributes ball;
     Perks perks;
 
-} Player;
+} GameData;
 
-Player create_new_player(const char *name);
+GameData create_game_data(const char *name);
 
 #endif

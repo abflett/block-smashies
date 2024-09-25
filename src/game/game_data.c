@@ -1,9 +1,9 @@
 #include <string.h> // For strcpy
-#include "player.h"
+#include "game_data.h"
 
-Player create_new_player(const char *name)
+GameData create_game_data(const char *name)
 {
-    Player new_player;
+    GameData new_player;
 
     // Set the player's name
     strncpy(new_player.name, name, sizeof(new_player.name) - 1);

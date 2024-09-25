@@ -6,7 +6,7 @@
 #include "entities.h"
 #include "resource_manager.h"
 #include "settings.h"
-#include "player.h"
+#include "game_data.h"
 #include "collision_category.h"
 
 static void clean_up_ball(Ball *ball)
@@ -70,7 +70,7 @@ static void update_ball(Ball *ball, float delta_time)
     b2Body_SetLinearVelocity(ball->body, velocity);
 }
 
-Ball *create_ball(Player *player, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity)
+Ball *create_ball(GameData *player, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity)
 {
     Ball *ball = (Ball *)malloc(sizeof(Ball));
 

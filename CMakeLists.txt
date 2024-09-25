@@ -79,7 +79,7 @@ set(GAME_STATES_SRC
 # Source files for game
 set(GAME_SRC
     src/game/game_status.c
-    src/game/player.c
+    src/game/game_data.c
     src/game/high_score.c
     src/game/game_context.c
     src/game/game_ui.c

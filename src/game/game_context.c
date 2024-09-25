@@ -47,7 +47,7 @@ GameContext *create_game_context(void)
     context.collision_manager = create_collision_manager(context.world_id);
     context.game_status = create_game_status();
     context.game_ui = create_game_ui(context.game_status);
-    context.player = create_new_player("Player 1");
+    context.player = create_game_data("Player 1");
     context.entities = create_entities();
     context.shake_effect = get_shake_effect();
 
