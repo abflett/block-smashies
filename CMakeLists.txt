@@ -56,6 +56,7 @@ set(ENTITIES_SRC
 set(MAPPINGS_SRC
     src/mappings/brick_type_mapper.c
     src/mappings/bar_level_mapper.c
+    src/mappings/nanite_type_mapper.c
 )
 
 # Source files for scenes

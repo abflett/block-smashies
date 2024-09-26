@@ -16,11 +16,11 @@ void rm_load_resource_file(const char *file)
     JSON_Array *animations_array = json_object_get_array(root_object, "animations");
 
     const char *pixel7_font = json_object_get_string(root_object, "font");
-
     resource_manager.pixel7_font = LoadFont(pixel7_font);
 
     resource_manager.brick_type_mapper = create_brick_type_mapper(root_object);
     resource_manager.bar_level_mapper = create_bar_level_mapper(root_object);
+    resource_manager.nanite_type_mapper = create_nanite_type_mapper(root_object);
 
     for (size_t i = 0; i < (int)json_array_get_count(textures_array); i++)
     {
