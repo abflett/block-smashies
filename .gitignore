@@ -2,8 +2,6 @@
 /.vscode
 /out
 /build
-/assets
-/dev_content
 
 # Prerequisites
 *.d
