@@ -13,3 +13,6 @@
 [submodule "external/box2d"]
 	path = external/box2d
 	url = git@github.com:erincatto/box2d.git
+[submodule "assets"]
+	path = assets
+	url = git@github.com:abflett/block-smashies-assets.git
