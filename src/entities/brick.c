@@ -83,7 +83,7 @@ static void disable_brick(Brick *brick)
     brick->is_destroying = true;
     brick->animation_handler->is_playing = true;
     b2Body_Disable(brick->body);
-    TraceLog(LOG_INFO, "[Disable] - Box2d Brick [%d] disabled.", brick->body.index1);
+    // TraceLog(LOG_INFO, "[Disable] - Box2d Brick [%d] disabled.", brick->body.index1);
 }
 
 static void reset_brick(Brick *brick, b2Vec2 position, int brick_type)

@@ -4,5 +4,4 @@ void nanite_paddle_collision(Nanite *nanite, Paddle *paddle, GameContext *contex
 {
     context->game_status->currency += nanite->currency;
     nanite->disable(nanite);
-    TraceLog(LOG_ERROR, "Disable nanite paddle");
 }

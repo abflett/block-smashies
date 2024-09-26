@@ -10,14 +10,26 @@
 
 static void update_nanite(Nanite *nanite, float delta_time)
 {
-    b2Vec2 velocity = b2Body_GetLinearVelocity(nanite->body);
-    float torque = 5.0f; // Adjust the torque value as needed
-    b2Body_ApplyTorque(nanite->body, torque, true);
+    nanite->current_rotation += delta_time * nanite->rotation_speed;
+    nanite->current_rotation = fmodf(nanite->current_rotation, 360.0f);
 
-    if (velocity.y < 15)
+    int subtexture_index = 0;
+    if ((nanite->current_rotation >= 0 && nanite->current_rotation < 30) ||
+        (nanite->current_rotation >= 90 && nanite->current_rotation < 120))
     {
-        b2Body_SetLinearVelocity(nanite->body, (b2Vec2){velocity.x, -settings.gameplay.nanite_y_velocity});
+        subtexture_index = 1; // Sparkly texture
     }
+
+    const char *subtexture_id;
+    if (nanite->large_nanite)
+    {
+        subtexture_id = resource_manager.nanite_type_mapper->lg_nanite_type_to_subtexture_id(nanite->nanite_type, subtexture_index);
+    }
+    else
+    {
+        subtexture_id = resource_manager.nanite_type_mapper->nanite_type_to_subtexture_id(nanite->nanite_type, subtexture_index);
+    }
+    nanite->subtexture = resource_manager.get_subtexture(subtexture_id);
 }
 
 static void clean_up_nanite(Nanite *nanite)
@@ -30,12 +42,32 @@ static void clean_up_nanite(Nanite *nanite)
 static void reset_nanite(Nanite *nanite, b2Vec2 position, float currency, int nanite_type)
 {
     nanite->active = true;
-    nanite->currency = currency;
-    nanite->type = nanite_type;
-    const char *subtexture_id = resource_manager.nanite_type_mapper->nanite_type_to_subtexture_id(nanite_type, 0);
+
+    nanite->nanite_type = nanite_type;
+
+    int large_chance = GetRandomValue(0, 100);
+    const char *subtexture_id;
+    if (large_chance > 95)
+    {
+        nanite->large_nanite = true;
+        subtexture_id = resource_manager.nanite_type_mapper->lg_nanite_type_to_subtexture_id(nanite_type, 0);
+        nanite->currency = currency * 2;
+    }
+    else
+    {
+        nanite->large_nanite = false;
+        subtexture_id = resource_manager.nanite_type_mapper->nanite_type_to_subtexture_id(nanite_type, 0);
+        nanite->currency = currency;
+    }
     nanite->subtexture = resource_manager.get_subtexture(subtexture_id);
+
+    nanite->size = (b2Vec2){nanite->subtexture->src.width, nanite->subtexture->src.height};
+    nanite->rotation_speed = (float)GetRandomValue(90, 360);
+    b2Polygon nanite_box = b2MakeBox(nanite->size.x * 0.5f, nanite->size.y * 0.5f);
     b2Body_Enable(nanite->body);
+    b2Shape_SetPolygon(nanite->shape_id, &nanite_box);
     b2Body_SetTransform(nanite->body, position, (b2Rot){1.0f, 0.0f});
+    b2Body_SetLinearVelocity(nanite->body, (b2Vec2){0.0f, -settings.gameplay.nanite_y_velocity});
 }
 
 static void disable_nanite(Nanite *nanite)
@@ -47,13 +79,9 @@ static void disable_nanite(Nanite *nanite)
 static void render_nanite(Nanite *nanite)
 {
     b2Vec2 position = b2Body_GetPosition(nanite->body);
-    float angular_velocity = b2Body_GetAngularVelocity(nanite->body);
-    float rotation_in_degrees = angular_velocity * (180.0f / PI);
-
     Rectangle rectDest = {position.x, settings.game.target_size.y - position.y, nanite->size.x, nanite->size.y};
     Vector2 origin = {nanite->size.x / 2, nanite->size.y / 2};
-
-    DrawTexturePro(nanite->subtexture->texture_resource->texture, nanite->subtexture->src, rectDest, origin, rotation_in_degrees, WHITE);
+    DrawTexturePro(nanite->subtexture->texture_resource->texture, nanite->subtexture->src, rectDest, origin, nanite->current_rotation, WHITE);
 }
 
 Nanite *create_nanite(b2WorldId world_id, b2Vec2 position, float currency, int nanite_type)
@@ -61,12 +89,27 @@ Nanite *create_nanite(b2WorldId world_id, b2Vec2 position, float currency, int n
     Nanite *nanite = (Nanite *)malloc(sizeof(Nanite));
     nanite->type = ENTITY_NANITE;
     nanite->active = true;
-    nanite->currency = currency;
+
     nanite->nanite_type = nanite_type;
 
-    const char *subtexture_id = resource_manager.nanite_type_mapper->nanite_type_to_subtexture_id(nanite_type, 0);
+    int large_chance = GetRandomValue(0, 100);
+    const char *subtexture_id;
+    if (large_chance > 95)
+    {
+        nanite->large_nanite = true;
+        subtexture_id = resource_manager.nanite_type_mapper->lg_nanite_type_to_subtexture_id(nanite_type, 0);
+        nanite->currency = currency * 2;
+    }
+    else
+    {
+        nanite->large_nanite = false;
+        subtexture_id = resource_manager.nanite_type_mapper->nanite_type_to_subtexture_id(nanite_type, 0);
+        nanite->currency = currency;
+    }
     nanite->subtexture = resource_manager.get_subtexture(subtexture_id);
 
+    nanite->current_rotation = (float)GetRandomValue(1, 359);
+    nanite->rotation_speed = (float)GetRandomValue(90, 360);
     nanite->size = (b2Vec2){nanite->subtexture->src.width, nanite->subtexture->src.height};
 
     b2BodyDef body_def = b2DefaultBodyDef();
@@ -79,13 +122,12 @@ Nanite *create_nanite(b2WorldId world_id, b2Vec2 position, float currency, int n
     b2ShapeDef nanite_shape_def = b2DefaultShapeDef();
     nanite_shape_def.density = 0.01f;
     nanite_shape_def.friction = 0.0f;
-    nanite_shape_def.restitution = 0.0f; // High restitution for bouncing
+    nanite_shape_def.restitution = 0.0f;
 
-    // Set up the filter to prevent ball-to-ball collisions
     nanite_shape_def.filter.categoryBits = CATEGORY_NANITE;
     nanite_shape_def.filter.maskBits = NANITE_COLLIDE_WITH;
 
-    b2CreatePolygonShape(nanite->body, &nanite_shape_def, &nanite_box);
+    nanite->shape_id = b2CreatePolygonShape(nanite->body, &nanite_shape_def, &nanite_box);
 
     // Set an initial downward velocity to simulate gravity or make nanites fall
     b2Body_SetLinearVelocity(nanite->body, (b2Vec2){0.0f, -settings.gameplay.nanite_y_velocity});
@@ -97,7 +139,5 @@ Nanite *create_nanite(b2WorldId world_id, b2Vec2 position, float currency, int n
     nanite->disable = disable_nanite;
 
     b2Body_SetUserData(nanite->body, nanite);
-    b2Body_SetAngularDamping(nanite->body, 0.0f);
-
     return nanite;
 }

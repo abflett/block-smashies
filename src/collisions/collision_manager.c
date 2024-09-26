@@ -12,6 +12,70 @@
 
 CollisionManager collision_manager;
 
+static void print_entity_types(EntityType *type_a, EntityType *type_b)
+{
+    const char *a_type = "unknown";
+    const char *b_type = "unknown";
+
+    switch (*type_a)
+    {
+    case ENTITY_NONE:
+        a_type = "entity_none";
+        break;
+    case ENTITY_BALL:
+        a_type = "entity_ball";
+        break;
+    case ENTITY_BRICK:
+        a_type = "entity_brick";
+        break;
+    case ENTITY_PADDLE:
+        a_type = "entity_paddle";
+        break;
+    case ENTITY_NANITE:
+        a_type = "entity_nanite";
+        break;
+    case ENTITY_WALL:
+        a_type = "entity_wall";
+        break;
+    case ENTITY_KILL_BOUNDARY:
+        a_type = "entity_kill_boundary";
+        break;
+    default:
+        a_type = "unknown";
+        break;
+    }
+
+    switch (*type_b)
+    {
+    case ENTITY_NONE:
+        b_type = "entity_none";
+        break;
+    case ENTITY_BALL:
+        b_type = "entity_ball";
+        break;
+    case ENTITY_BRICK:
+        b_type = "entity_brick";
+        break;
+    case ENTITY_PADDLE:
+        b_type = "entity_paddle";
+        break;
+    case ENTITY_NANITE:
+        b_type = "entity_nanite";
+        break;
+    case ENTITY_WALL:
+        b_type = "entity_wall";
+        break;
+    case ENTITY_KILL_BOUNDARY:
+        b_type = "entity_kill_boundary";
+        break;
+    default:
+        b_type = "unknown";
+        break;
+    }
+
+    TraceLog(LOG_INFO, "Collision: (%s), (%s)", a_type, b_type);
+}
+
 static void begin_contact(b2ShapeId shapeA, b2ShapeId shapeB, GameContext *context)
 {
     b2BodyId bodyA = b2Shape_GetBody(shapeA);
@@ -30,6 +94,8 @@ static void begin_contact(b2ShapeId shapeA, b2ShapeId shapeB, GameContext *conte
     // Cast user data to entity types
     EntityType *typeA = (EntityType *)userDataA;
     EntityType *typeB = (EntityType *)userDataB;
+
+    print_entity_types(typeA, typeB);
 
     // Handle ball-brick collision
     if ((*typeA == ENTITY_BALL && *typeB == ENTITY_BRICK) ||

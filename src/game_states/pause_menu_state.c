@@ -15,7 +15,7 @@ static void state_init(void)
 
 static void state_update(float delta_time)
 {
-    if (IsKeyPressed(KEY_ESCAPE))
+    if (IsKeyPressed(KEY_ENTER))
     {
         if (game_state_manager.states.playing->cleanup)
         {
@@ -24,7 +24,7 @@ static void state_update(float delta_time)
         scene_manager.change(scene_manager.scenes.logo, 0);
     }
 
-    if (IsKeyPressed(KEY_ENTER))
+    if (IsKeyPressed(KEY_ESCAPE))
     {
         game_state_manager.change(game_state_manager.states.playing);
     }

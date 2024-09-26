@@ -18,6 +18,10 @@ typedef struct Nanite
 
     Subtexture *subtexture;
     b2Vec2 size;
+    float current_rotation;
+    float rotation_speed;
+    bool large_nanite;
+    b2ShapeId shape_id;
     float currency;
 
     void (*update)(struct Nanite *nanite, float delta_time);
