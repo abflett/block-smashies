@@ -45,14 +45,14 @@ static void update_brick(Brick *brick, float delta_time)
         {
             b2Vec2 position = b2Body_GetPosition(brick->body);
             brick->active = false;
-            brick->game_context->entities->add_nanite(brick->game_context->world_id, position, brick_currency(brick));
+            brick->game_context->entities->add_nanite(brick->game_context->world_id, position, brick_currency(brick), brick->brick_type);
         }
     }
 }
 
 static void clean_up_brick(Brick *brick)
 {
-    TraceLog(LOG_INFO, "[Cleanup] - Brick [%d] - Success", brick->body.index1);
+    TraceLog(LOG_INFO, "[Destroy] - Box2d Brick [%d] - Success", brick->body.index1);
     b2DestroyBody(brick->body);
     brick->animation_handler->cleanup(brick->animation_handler);
     free(brick);
@@ -83,7 +83,7 @@ static void disable_brick(Brick *brick)
     brick->is_destroying = true;
     brick->animation_handler->is_playing = true;
     b2Body_Disable(brick->body);
-    TraceLog(LOG_INFO, "[Disable] - Brick [%d] disabled.", brick->body.index1);
+    TraceLog(LOG_INFO, "[Disable] - Box2d Brick [%d] disabled.", brick->body.index1);
 }
 
 static void reset_brick(Brick *brick, b2Vec2 position, int brick_type)

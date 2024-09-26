@@ -3,7 +3,6 @@
 #include <math.h> // For M_PI
 #include "raylib.h"
 #include "nanite.h"
-#include "resource_manager.h"
 #include "settings.h"
 #include "game_data.h"
 #include "entity_type.h"
@@ -23,15 +22,18 @@ static void update_nanite(Nanite *nanite, float delta_time)
 
 static void clean_up_nanite(Nanite *nanite)
 {
-    TraceLog(LOG_INFO, "[Cleanup] - Nanite [%d] - Success", nanite->body.index1);
+    TraceLog(LOG_INFO, "[Destroy] - Box2d Nanite [%d] - Success", nanite->body.index1);
     b2DestroyBody(nanite->body);
     free(nanite);
 }
 
-static void reset_nanite(Nanite *nanite, b2Vec2 position, float currency)
+static void reset_nanite(Nanite *nanite, b2Vec2 position, float currency, int nanite_type)
 {
     nanite->active = true;
     nanite->currency = currency;
+    nanite->type = nanite_type;
+    const char *subtexture_id = resource_manager.nanite_type_mapper->nanite_type_to_subtexture_id(nanite_type, 0);
+    nanite->subtexture = resource_manager.get_subtexture(subtexture_id);
     b2Body_Enable(nanite->body);
     b2Body_SetTransform(nanite->body, position, (b2Rot){1.0f, 0.0f});
 }
@@ -48,22 +50,24 @@ static void render_nanite(Nanite *nanite)
     float angular_velocity = b2Body_GetAngularVelocity(nanite->body);
     float rotation_in_degrees = angular_velocity * (180.0f / PI);
 
-    Rectangle rectSource = {0, 0, nanite->size.x, nanite->size.y};
     Rectangle rectDest = {position.x, settings.game.target_size.y - position.y, nanite->size.x, nanite->size.y};
     Vector2 origin = {nanite->size.x / 2, nanite->size.y / 2};
 
-    DrawTexturePro(*nanite->texture, rectSource, rectDest, origin, rotation_in_degrees, WHITE);
+    DrawTexturePro(nanite->subtexture->texture_resource->texture, nanite->subtexture->src, rectDest, origin, rotation_in_degrees, WHITE);
 }
 
-Nanite *create_nanite(b2WorldId world_id, b2Vec2 position, float currency)
+Nanite *create_nanite(b2WorldId world_id, b2Vec2 position, float currency, int nanite_type)
 {
     Nanite *nanite = (Nanite *)malloc(sizeof(Nanite));
     nanite->type = ENTITY_NANITE;
     nanite->active = true;
     nanite->currency = currency;
+    nanite->nanite_type = nanite_type;
 
-    nanite->texture = &resource_manager.get_texture("nanite-01")->texture;
-    nanite->size = (b2Vec2){(float)nanite->texture->width, (float)nanite->texture->height};
+    const char *subtexture_id = resource_manager.nanite_type_mapper->nanite_type_to_subtexture_id(nanite_type, 0);
+    nanite->subtexture = resource_manager.get_subtexture(subtexture_id);
+
+    nanite->size = (b2Vec2){nanite->subtexture->src.width, nanite->subtexture->src.height};
 
     b2BodyDef body_def = b2DefaultBodyDef();
     body_def.type = b2_dynamicBody;
@@ -85,7 +89,6 @@ Nanite *create_nanite(b2WorldId world_id, b2Vec2 position, float currency)
 
     // Set an initial downward velocity to simulate gravity or make nanites fall
     b2Body_SetLinearVelocity(nanite->body, (b2Vec2){0.0f, -settings.gameplay.nanite_y_velocity});
-    // b2Body_SetAngularVelocity(nanite->body, 0.1f);
 
     nanite->update = update_nanite;
     nanite->render = render_nanite;

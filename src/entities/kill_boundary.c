@@ -5,7 +5,7 @@
 
 static void clean_up_kill_boundary(KillBoundary *kill_boundary)
 {
-    TraceLog(LOG_INFO, "[Cleanup] - KillBoundry [%d] - Success", kill_boundary->body.index1);
+    TraceLog(LOG_INFO, "[Destroy] - Box2d KillBoundry [%d] - Success", kill_boundary->body.index1);
     b2DestroyBody(kill_boundary->body);
     free(kill_boundary);
 }

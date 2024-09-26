@@ -114,16 +114,15 @@ Font *rm_get_pixel7_font(void)
 
 void rm_cleanup(void)
 {
-
     // Free all subtextures
     Subtexture *subtexture, *tmp_subtexture;
     HASH_ITER(hh, resource_manager.subtextures, subtexture, tmp_subtexture)
     {
         HASH_DEL(resource_manager.subtextures, subtexture);
-        TraceLog(LOG_INFO, "[Cleanup] - Subtexture [%s] - Success", subtexture->id);
         free((char *)subtexture->id); // Free duplicated string
         free(subtexture);
     }
+    TraceLog(LOG_INFO, "[Cleanup] - Subtextures - Success");
 
     // Free all animations and their frames
     Animation *animation, *tmp_animation;
@@ -131,10 +130,10 @@ void rm_cleanup(void)
     {
         free(animation->frames);
         HASH_DEL(resource_manager.animations, animation);
-        TraceLog(LOG_INFO, "[Cleanup] - Animation [%s] - Success", animation->id);
         free((char *)animation->id); // Free duplicated string
         free(animation);
     }
+    TraceLog(LOG_INFO, "[Cleanup] - Animations - Success");
 
     // Free all textures
     TextureResource *texture, *tmp_texture;
@@ -142,10 +141,10 @@ void rm_cleanup(void)
     {
         UnloadTexture(texture->texture);
         HASH_DEL(resource_manager.textures, texture);
-        TraceLog(LOG_INFO, "[Cleanup] - Texture [%s] - Success", texture->id);
         free((char *)texture->id); // Free duplicated string
         free(texture);
     }
+    TraceLog(LOG_INFO, "[Cleanup] - Textures - Success");
 
     resource_manager.subtextures = NULL;
     resource_manager.animations = NULL;

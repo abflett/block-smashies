@@ -10,9 +10,9 @@
 
 static void clean_up_paddle(Paddle *paddle)
 {
-    TraceLog(LOG_INFO, "[Cleanup] - Paddle [%d] - Success", paddle->body.index1);
+    TraceLog(LOG_INFO, "[Destroy] - Box2d Paddle [%d] - Success", paddle->body.index1);
     b2DestroyBody(paddle->body);
-    TraceLog(LOG_INFO, "[Cleanup] - Ball [%d] - Success", paddle->constraint.index1);
+    TraceLog(LOG_INFO, "[Cleanup] - Box2d Paddle Constraint [%d] - Success", paddle->constraint.index1);
     b2DestroyBody(paddle->constraint);
     free(paddle);
 }

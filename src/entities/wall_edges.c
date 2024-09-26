@@ -6,7 +6,7 @@
 
 static void clean_up_edges(WallEdges *walls)
 {
-    TraceLog(LOG_INFO, "[Cleanup] - WallEdges [%d] - Success", walls->body.index1);
+    TraceLog(LOG_INFO, "[Destroy] - Box2d WallEdges [%d] - Success", walls->body.index1);
     b2DestroyBody(walls->body);
     free(walls);
 }

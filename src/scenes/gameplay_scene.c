@@ -65,7 +65,7 @@ static void scene_render(void)
 
 static void scene_cleanup(void)
 {
-    TraceLog(LOG_INFO, "[Cleanup] - scene_cleanup - Success");
+    TraceLog(LOG_INFO, "[Cleanup] - scene_cleanup");
     if (game_state_manager.current_state && game_state_manager.current_state->cleanup)
     {
         game_state_manager.current_state->cleanup();

@@ -41,5 +41,4 @@ void ball_kill_boundary_collision(Ball *ball, KillBoundary *kill_boundary, GameC
             game_state_manager.change(game_state_manager.states.game_intro_start);
         }
     }
-    TraceLog(LOG_INFO, "Begin Contact - Ball[%d], KillBoundary[%d]", ball->body.index1, kill_boundary->body.index1);
 }

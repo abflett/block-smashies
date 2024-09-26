@@ -11,7 +11,7 @@
 
 static void clean_up_ball(Ball *ball)
 {
-    TraceLog(LOG_INFO, "[Cleanup] - Ball [%d] - Success", ball->body.index1);
+    TraceLog(LOG_INFO, "[Destroy] - Box2d Ball [%d] - Success", ball->body.index1);
     b2DestroyBody(ball->body);
     free(ball);
 }

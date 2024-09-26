@@ -34,7 +34,7 @@ static void cleanup_game_context(void)
 {
     context.entities->cleanup();
     context.game_ui->cleanup();
-    TraceLog(LOG_INFO, "[Cleanup] - WorldId [%d] - Success", context.world_id.index1);
+    TraceLog(LOG_INFO, "[Cleanup] - Box2d WorldId [%d] - Success", context.world_id.index1);
     b2DestroyWorld(context.world_id);
 }
 

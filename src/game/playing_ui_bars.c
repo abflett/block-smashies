@@ -72,7 +72,6 @@ static PlayingSmUiBar create_playing_sm_ui_bar(float *stat, int player_index, in
     bar.max_bar_level = resource_manager.bar_level_mapper->bars[bar.bar_type].count;
     bar.current_bar_level = (int)((*bar.stat * (bar.max_bar_level - 1)) + 0.5f);
     const char *subtexture_id = resource_manager.bar_level_mapper->bar_level_to_subtexture_id(bar.bar_type, bar.current_bar_level);
-    TraceLog(LOG_INFO, "[[[subtexture sm]]]: %s", subtexture_id);
     bar.subtexture = resource_manager.get_subtexture(subtexture_id);
     bar.position = (Vector2){position.x, position.y};
     return bar;

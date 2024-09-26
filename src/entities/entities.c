@@ -69,20 +69,19 @@ static void add_brick_func(GameContext *game_context, b2Vec2 position, int brick
     kv_push(Brick *, entities.bricks, new_brick);
 }
 
-static void add_nanite_func(b2WorldId world_id, b2Vec2 position, float currency)
+static void add_nanite_func(b2WorldId world_id, b2Vec2 position, float currency, int nanite_type)
 {
-    TraceLog(LOG_INFO, "Adding new nanite - world_id: %d, pos.x: %f, pos.y: %f, currency: %d", world_id.index1, position.x, position.y, currency);
     for (int i = 0; i < kv_size(entities.nanites); i++)
     {
         Nanite *existing_nanite = kv_A(entities.nanites, i);
         if (!existing_nanite->active)
         {
-            existing_nanite->reset(existing_nanite, position, currency);
+            existing_nanite->reset(existing_nanite, position, currency, nanite_type);
             return;
         }
     }
 
-    Nanite *new_nanite = create_nanite(world_id, position, currency);
+    Nanite *new_nanite = create_nanite(world_id, position, currency, nanite_type);
     kv_push(Nanite *, entities.nanites, new_nanite);
 }
 
