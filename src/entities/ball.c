@@ -9,6 +9,34 @@
 #include "game_data.h"
 #include "collision_category.h"
 
+static float accumlator = 0.0f;
+
+static void default_ball_transparency(BallTrail *trails, Vector2 position, float radius, Texture2D *texture)
+{
+    for (int i = 0; i < MAX_TRAIL; i++)
+    {
+        trails[i].position = (Vector2){position.x - radius, settings.game.target_size.y - (position.y + radius)};
+        trails[i].transparency = 0.1f * (1.0f - (i / (float)(MAX_TRAIL - 1)));
+        trails[i].active = true;
+        trails[i].texture = texture;
+    }
+}
+
+void update_ball_trails(Ball *ball)
+{
+    // Todo: maybe time out the fade and set inactive if faded out to 0;
+    // Move existing trails down the array
+    for (int i = MAX_TRAIL - 1; i > 0; i--) // Start from the end and move to the front
+    {
+        ball->balltrails[i].position = ball->balltrails[i - 1].position; // Shift trail down
+        ball->balltrails[i].texture = ball->balltrails[i - 1].texture;   // Shift trail down
+    }
+
+    b2Vec2 position = b2Body_GetPosition(ball->body);
+    ball->balltrails[0].position = (Vector2){position.x - ball->radius, settings.game.target_size.y - (position.y + ball->radius)};
+    ball->balltrails[0].texture = ball->texture; // You can change this if the texture changes during the game
+}
+
 static void clean_up_ball(Ball *ball)
 {
     TraceLog(LOG_INFO, "[Destroy] - Box2d Ball [%d] - Success", ball->body.index1);
@@ -22,6 +50,20 @@ static void render_ball(Ball *ball)
     b2Vec2 position = b2Body_GetPosition(ball->body);
     // draw larger ball and resize down for subpixel drawing effect
     DrawTextureEx(*ball->texture, (Vector2){position.x - ball->radius, settings.game.target_size.y - (position.y + ball->radius)}, 0.0f, 0.5f, WHITE);
+
+    // render ball trails
+    for (int i = 0; i < MAX_TRAIL; i++)
+    {
+        // Check if the trail is active before rendering
+        if (ball->balltrails[i].active)
+        {
+            // Set transparency based on trail's transparency value
+            Color trail_color = (Color){255, 255, 255, (unsigned char)(ball->balltrails[i].transparency * 255)};
+
+            // Draw the trail texture at its position with the computed transparency
+            DrawTextureEx(*ball->balltrails[i].texture, ball->balltrails[i].position, 0.0f, 0.5f, trail_color);
+        }
+    }
 }
 
 static void reset_ball(Ball *ball, b2Vec2 position, b2Vec2 velocity)
@@ -41,6 +83,13 @@ static void disable_ball(Ball *ball)
 
 static void update_ball(Ball *ball, float delta_time)
 {
+    accumlator += delta_time;
+    if (accumlator > 0.04)
+    {
+        update_ball_trails(ball);
+        accumlator = 0.0f;
+    }
+
     // Retrieve the current velocity of the ball
     b2Vec2 velocity = b2Body_GetLinearVelocity(ball->body);
 
@@ -78,6 +127,8 @@ Ball *create_ball(GameData *game_data, b2WorldId world_id, b2Vec2 position, b2Ve
     ball->active = true;
     ball->texture = &resource_manager.get_texture("ball")->texture;
     ball->radius = ball->texture->width / 4.0f;
+
+    default_ball_transparency(ball->balltrails, (Vector2){position.x, position.y}, ball->radius, ball->texture);
 
     ball->power = &game_data->ball.power;
     ball->phase_nova = &game_data->perks.phase_shift;

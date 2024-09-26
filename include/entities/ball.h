@@ -7,7 +7,17 @@
 #include "game_data.h"
 #include "entity_type.h"
 
+#define MAX_TRAIL 10
+
 struct Entities;
+
+typedef struct BallTrail
+{
+    Vector2 position;
+    Texture2D *texture;
+    float transparency;
+    bool active;
+} BallTrail;
 
 typedef struct Ball
 {
@@ -15,6 +25,7 @@ typedef struct Ball
     b2BodyId body;
     bool active;
 
+    BallTrail balltrails[MAX_TRAIL];
     Texture2D *texture;
     float radius;
 
