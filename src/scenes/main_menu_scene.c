@@ -29,7 +29,7 @@ static void scene_update(float delta_time)
 
 static void scene_render(void)
 {
-    DrawTextEx(*resource_manager.get_pixel7_font(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\nABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890", (Vector2){0.0f, 0.0f}, 7, 0, WHITE);
+    DrawTextEx(*resource_manager.get_pixel7_font(), "Block Smashies", (Vector2){0.0f, 0.0f}, 7, 0, WHITE);
 }
 
 static void scene_cleanup(void)
