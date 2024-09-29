@@ -45,7 +45,6 @@ static const char *flavor_texts[] = {
 int flavor_text_scroll_index = 0;      // Starting index of the displayed text
 float flavor_text_scroll_timer = 0.0f; // Timer for controlling scroll speed
 float scroll_speed = 0.3f;             // Adjust this to change the scroll speed
-const int max_display_chars = 50;      // Maximum number of characters to display at once
 
 void update_flavor_text_scroll(float delta_time)
 {

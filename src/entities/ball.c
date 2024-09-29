@@ -106,12 +106,6 @@ static void update_ball(Ball *ball, float delta_time)
         velocity.y = (velocity.y > 0) ? *ball->max_velocity : -(*ball->max_velocity);
     }
 
-    // Ensure the velocity respects the minimum velocity constraint
-    if (fabs(velocity.x) < *ball->min_velocity)
-    {
-        velocity.x = (velocity.x > 0) ? *ball->min_velocity : -(*ball->min_velocity);
-    }
-
     if (fabs(velocity.y) < *ball->min_velocity)
     {
         velocity.y = (velocity.y > 0) ? *ball->min_velocity : -(*ball->min_velocity);
