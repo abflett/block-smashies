@@ -2,8 +2,6 @@
 #include "wall_edges.h"
 #include "settings.h" // To access settings.game.play_area
 
-#define EDGE_PADDING 10.0f
-
 static void clean_up_edges(WallEdges *walls)
 {
     TraceLog(LOG_INFO, "[Destroy] - Box2d WallEdges [%d] - Success", walls->body.index1);
@@ -24,10 +22,10 @@ WallEdges *create_wall_edges(b2WorldId world_id)
     // Define the vertices of the walls (left, top, right) based on play_area from game_settings
     Rectangle play_area = settings.game.play_area;
     b2Vec2 vertices[4];
-    vertices[0] = (b2Vec2){play_area.x, settings.game.target_size.y - (play_area.y + play_area.height) - EDGE_PADDING};                   // Bottom-left (left wall start)
-    vertices[1] = (b2Vec2){play_area.x, settings.game.target_size.y - play_area.y};                                                       // Top-left (left wall end, top wall start)
-    vertices[2] = (b2Vec2){play_area.x + play_area.width, settings.game.target_size.y - play_area.y};                                     // Top-right (top wall end, right wall start)
-    vertices[3] = (b2Vec2){play_area.x + play_area.width, settings.game.target_size.y - (play_area.y + play_area.height) - EDGE_PADDING}; // Bottom-right (right wall end)
+    vertices[0] = (b2Vec2){play_area.x, settings.game.target_size.y - (play_area.y + play_area.height) - settings.gameplay.edge_padding};                   // Bottom-left (left wall start)
+    vertices[1] = (b2Vec2){play_area.x, settings.game.target_size.y - play_area.y};                                                                         // Top-left (left wall end, top wall start)
+    vertices[2] = (b2Vec2){play_area.x + play_area.width, settings.game.target_size.y - play_area.y};                                                       // Top-right (top wall end, right wall start)
+    vertices[3] = (b2Vec2){play_area.x + play_area.width, settings.game.target_size.y - (play_area.y + play_area.height) - settings.gameplay.edge_padding}; // Bottom-right (right wall end)
     int count = sizeof(vertices) / sizeof(vertices[0]);
 
     // Define the chain shape with the vertices

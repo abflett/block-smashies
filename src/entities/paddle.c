@@ -7,6 +7,7 @@
 #include "game_data.h"
 #include "entity_type.h"
 #include "collision_category.h"
+#include "b_utils.h"
 
 static void clean_up_paddle(Paddle *paddle)
 {
@@ -93,7 +94,7 @@ static void disable_paddle(Paddle *paddle)
 static void render_paddle(Paddle *paddle)
 {
     b2Vec2 position = b2Body_GetPosition(paddle->body);
-    DrawTextureEx(*paddle->texture, (Vector2){position.x - (paddle->size.x / 2), settings.game.target_size.y - (position.y + (paddle->size.y / 2))}, 0.0f, 1.0f, WHITE);
+    DrawTextureEx(*paddle->texture, vector2_flip_y_center(b2vec2_to_vector2(position), b2vec2_to_vector2(paddle->size)), 0.0f, 1.0f, WHITE);
 }
 
 Paddle *create_paddle(int player_num, GameData *game_data, b2WorldId world_id)
@@ -103,7 +104,7 @@ Paddle *create_paddle(int player_num, GameData *game_data, b2WorldId world_id)
     paddle->active = true;
 
     paddle->texture = &resource_manager.get_texture("ship-base")->texture;
-    paddle->size = (b2Vec2){(float)paddle->texture->width, (float)paddle->texture->height};
+    paddle->size = ints_to_b2vec(paddle->texture->width, paddle->texture->height);
     paddle->player_num = player_num;
     paddle->pulse_timer = 0.0f;
     paddle->pulse_active_timer = 0.0f;
