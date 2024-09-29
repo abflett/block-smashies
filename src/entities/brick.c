@@ -106,7 +106,7 @@ Brick *create_brick(GameContext *game_context, b2Vec2 position, int brick_type)
     brick->type = ENTITY_BRICK;
     brick->brick_type = brick_type;
     brick->subtexture = resource_manager.get_subtexture(resource_manager.brick_type_mapper->brick_type_to_subtexture_id(brick->brick_type, 0));
-    brick->size = ints_to_b2vec(brick->subtexture->src.width, brick->subtexture->src.height);
+    brick->size = (b2Vec2){brick->subtexture->src.width, brick->subtexture->src.height};
 
     brick->health = brick_max_health(brick->brick_type);
     brick->max_health = brick_max_health(brick->brick_type);

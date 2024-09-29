@@ -7,10 +7,10 @@
 #include "scene_manager.h"
 #include "game_state_manager.h"
 
+static Game game;
 static RenderTexture2D target_texture;
 static bool exit_window = false;
 static ShakeEffect *shake_effect;
-static Game *game = NULL;
 
 static void update_game(float delta_time)
 {
@@ -54,7 +54,6 @@ static void cleanup_game(void)
     resource_manager.cleanup();
     UnloadRenderTexture(target_texture);
     CloseWindow();
-    free(game);
 }
 
 static void run_game(void)
@@ -79,11 +78,9 @@ ShakeEffect *get_shake_effect(void)
     return shake_effect;
 }
 
-Game *create_game(const char *game_title, const char *settings_filename, const char *resource_filename)
+Game *create_game(const char *game_title)
 {
-    game = malloc(sizeof(Game));
     exit_window = false;
-    game->run = run_game;
 
     initialize_settings();
     srand((unsigned int)time(NULL));
@@ -106,8 +103,10 @@ Game *create_game(const char *game_title, const char *settings_filename, const c
     }
 
     target_texture = LoadRenderTexture((int)settings.game.target_size.x, (int)settings.game.target_size.y);
-    resource_manager.load_resource_file(resource_filename);
+    resource_manager.load_resource_file(settings.file_locations.resource_file);
     scene_manager.change(scene_manager.scenes.logo, 0);
 
-    return game;
+    game.run = run_game;
+
+    return &game;
 }

@@ -9,7 +9,7 @@ typedef struct Game
     void (*run)(void);
 } Game;
 
-Game *create_game(const char *game_title, const char *settings_filename, const char *resource_filename);
+Game *create_game(const char *game_title);
 void exit_game(void);
 ShakeEffect *get_shake_effect(void);
 

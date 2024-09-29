@@ -14,6 +14,15 @@ typedef struct
     bool shake_screen;
 } ConfigSettings;
 
+typedef struct FileLocations
+{
+    const char *settings_file;
+    const char *resource_file;
+    const char *high_score_file;
+    const char *game_data_file;
+    const char *levels_file;
+} FileLocations;
+
 typedef struct Colors
 {
     const Color clear_color;
@@ -58,10 +67,10 @@ typedef struct
 typedef struct
 {
     ConfigSettings config;
+    FileLocations file_locations;
     GameSettings game;
     GameplaySettings gameplay;
     Colors colors;
-    const char *filename;
     void (*save)(void);
     void (*set_defaults)(void);
 } Settings;

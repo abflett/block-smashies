@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include "parson.h"
 #include "high_score.h"
+#include "settings.h"
+#include "b_utils.h"
 
 #define MAX_HIGH_SCORES 10
 
@@ -46,17 +48,16 @@ void sort_high_scores(HighScore *high_scores, int count)
     }
 }
 
-void load_high_scores(const char *filename, HighScore *high_scores, int *count)
+void load_high_scores(HighScore *high_scores, int *count)
 {
     // Initialize
     *count = 0;
 
     // Parse JSON file
-    JSON_Value *root_value = json_parse_file(filename);
+    JSON_Value *root_value = json_parse_file(settings.file_locations.high_score_file);
     if (root_value == NULL)
     {
-        // Todo: create a empty json file instead of error.
-        fprintf(stderr, "Error reading JSON file: %s\n", filename);
+        log_error("Error reading JSON file");
         return;
     }
 
@@ -64,7 +65,7 @@ void load_high_scores(const char *filename, HighScore *high_scores, int *count)
     JSON_Array *scores_array = json_object_get_array(root_object, "high_scores");
     if (scores_array == NULL)
     {
-        fprintf(stderr, "No 'high_scores' array found in JSON file.\n");
+        log_error("No 'high_scores' array found in JSON file.");
         json_value_free(root_value);
         return;
     }
@@ -86,7 +87,7 @@ void load_high_scores(const char *filename, HighScore *high_scores, int *count)
     json_value_free(root_value);
 }
 
-void save_high_scores(const char *filename, HighScore *high_scores, int count)
+void save_high_scores(HighScore *high_scores, int count)
 {
     // Create JSON object
     JSON_Value *root_value = json_value_init_object();
@@ -109,8 +110,7 @@ void save_high_scores(const char *filename, HighScore *high_scores, int count)
         json_array_append_value(scores_array, score_value);
     }
 
-    // Write JSON to file
-    json_serialize_to_file(root_value, filename);
+    json_serialize_to_file_pretty(root_value, settings.file_locations.high_score_file);
     json_value_free(root_value);
 }
 

@@ -10,6 +10,14 @@ Settings settings = {
         .play_area = {95, 7, 218, 167},
         .logo_screen_time = 4.0f},
 
+    .file_locations = {
+        .game_data_file = "assets/config/game_data.json",    // save files
+        .high_score_file = "assets/config/high_scores.json", // high scores
+        .resource_file = "assets/config/resources.json",     // asset locations
+        .settings_file = "assets/config/settings.json",      // save settings and options
+        .levels_file = "assets/config/levels.json"           // levels data
+    },
+
     .colors = {                                   // colors
                .clear_color = {46, 34, 47, 255},  // off black
                .screen_color = {50, 51, 83, 255}, // color of the displays or blue_01
@@ -37,7 +45,6 @@ Settings settings = {
         .edge_padding = 10.0f,
     },
 
-    .filename = "settings.json",
     .set_defaults = set_default_config_settings,
     .save = save_settings};
 
@@ -53,7 +60,7 @@ static void save_settings(void)
     json_object_set_number(root_object, "sound_fx", settings.config.sound_fx);
     json_object_set_boolean(root_object, "shake_screen", settings.config.shake_screen);
 
-    json_serialize_to_file_pretty(root_value, settings.filename);
+    json_serialize_to_file_pretty(root_value, settings.file_locations.settings_file);
     json_value_free(root_value);
 }
 
@@ -69,7 +76,7 @@ static void set_default_config_settings(void)
 void initialize_settings()
 {
     // ConfigSettings
-    JSON_Value *root_value = json_parse_file(settings.filename);
+    JSON_Value *root_value = json_parse_file(settings.file_locations.settings_file);
     if (root_value == NULL)
     {
         settings.set_defaults();

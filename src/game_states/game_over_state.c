@@ -45,7 +45,7 @@ static void update_player_score(float delta_time)
     if (IsKeyPressed(KEY_ENTER))
     {
         add_high_score(high_scores, &count, player_name, score);
-        save_high_scores("high_scores.json", high_scores, count);
+        save_high_scores(high_scores, count);
 
         adding_player_score = false;
     }
@@ -56,7 +56,7 @@ static void state_init(void)
     score = (int)game_state_manager.context->game_status->score;
 
     // Load high scores from file
-    load_high_scores("high_scores.json", high_scores, &count);
+    load_high_scores(high_scores, &count);
     // Determine if the player's score is high enough to be added
     adding_player_score = is_high_score(high_scores, count, score);
 }
