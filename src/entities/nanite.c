@@ -7,6 +7,7 @@
 #include "game_data.h"
 #include "entity_type.h"
 #include "collision_category.h"
+#include "b_utils.h"
 
 static void update_nanite(Nanite *nanite, float delta_time)
 {
@@ -79,8 +80,9 @@ static void disable_nanite(Nanite *nanite)
 static void render_nanite(Nanite *nanite)
 {
     b2Vec2 position = b2Body_GetPosition(nanite->body);
-    Rectangle rectDest = {position.x, settings.game.target_size.y - position.y, nanite->size.x, nanite->size.y};
-    Vector2 origin = {nanite->size.x / 2, nanite->size.y / 2};
+
+    Rectangle rectDest = {position.x, flip_y(position.y), nanite->size.x, nanite->size.y};
+    Vector2 origin = {nanite->size.x * 0.5f, nanite->size.y * 0.5f};
     DrawTexturePro(nanite->subtexture->texture_resource->texture, nanite->subtexture->src, rectDest, origin, nanite->current_rotation, WHITE);
 }
 
@@ -92,7 +94,7 @@ Nanite *create_nanite(b2WorldId world_id, b2Vec2 position, float currency, int n
 
     nanite->nanite_type = nanite_type;
 
-    int large_chance = GetRandomValue(0, 100);
+    int large_chance = GetRandomValue(1, 100);
     const char *subtexture_id;
     if (large_chance > 95)
     {
