@@ -1,4 +1,3 @@
-#include "box2d/box2d.h"
 #include "raylib.h"
 #include "animation_handler.h"
 #include "resource_manager.h"
@@ -30,13 +29,13 @@ static void update_animation(AnimationHandler *animation_handler, float delta_ti
     }
 }
 
-static void render_animation(AnimationHandler *animation_handler, b2Vec2 position)
+static void render_animation(AnimationHandler *animation_handler, Vector2 position)
 {
     if (animation_handler->is_playing)
     {
         DrawTextureRec(animation_handler->animation->texture_resource->texture,
                        animation_handler->animation->frames[animation_handler->frame_index],
-                       (Vector2){position.x, settings.game.target_size.y - position.y},
+                       position,
                        WHITE);
     }
 }

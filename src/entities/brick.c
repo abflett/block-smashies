@@ -5,6 +5,8 @@
 #include "settings.h"
 #include "entity_type.h"
 #include "game_context.h"
+#include "b_utils.h"
+#include "game.h"
 
 static float brick_max_health(int brick_type)
 {
@@ -64,16 +66,14 @@ static void render_brick(Brick *brick)
 
     if (brick->animation_handler->is_playing)
     {
-        brick->animation_handler->render(brick->animation_handler,
-                                         (b2Vec2){position.x - (brick->animation_handler->animation->frames[brick->animation_handler->frame_index].width / 2),
-                                                  position.y + ((brick->animation_handler->animation->frames[brick->animation_handler->frame_index].height / 2))});
+        brick->animation_handler->render(brick->animation_handler, vector2_flip_y_center(b2vec2_to_vector2(position), b2vec2_to_vector2(brick->size)));
     }
     else
     {
+
         DrawTextureRec(brick->subtexture->texture_resource->texture,
                        brick->subtexture->src,
-                       (Vector2){position.x - (brick->size.x / 2),
-                                 settings.game.target_size.y - (position.y + (brick->size.y / 2))},
+                       vector2_flip_y_center(b2vec2_to_vector2(position), b2vec2_to_vector2(brick->size)),
                        WHITE);
     }
 }
@@ -83,7 +83,6 @@ static void disable_brick(Brick *brick)
     brick->is_destroying = true;
     brick->animation_handler->is_playing = true;
     b2Body_Disable(brick->body);
-    // TraceLog(LOG_INFO, "[Disable] - Box2d Brick [%d] disabled.", brick->body.index1);
 }
 
 static void reset_brick(Brick *brick, b2Vec2 position, int brick_type)
@@ -93,16 +92,22 @@ static void reset_brick(Brick *brick, b2Vec2 position, int brick_type)
     brick->active = true;
     b2Body_Enable(brick->body);
     b2Body_SetTransform(brick->body, position, (b2Rot){0.0f, 1.0f});
-    TraceLog(LOG_INFO, "[Reset] - Brick [%d] reset to new position and health.", brick->body.index1);
 }
 
 Brick *create_brick(GameContext *game_context, b2Vec2 position, int brick_type)
 {
     Brick *brick = (Brick *)malloc(sizeof(Brick));
+    if (brick == NULL)
+    {
+        log_error("Could not allocate memory for brick!");
+        exit_game();
+    }
+
     brick->type = ENTITY_BRICK;
     brick->brick_type = brick_type;
     brick->subtexture = resource_manager.get_subtexture(resource_manager.brick_type_mapper->brick_type_to_subtexture_id(brick->brick_type, 0));
-    brick->size = (b2Vec2){(float)brick->subtexture->src.width, (float)brick->subtexture->src.height};
+    brick->size = ints_to_b2vec(brick->subtexture->src.width, brick->subtexture->src.height);
+
     brick->health = brick_max_health(brick->brick_type);
     brick->max_health = brick_max_health(brick->brick_type);
     brick->active = true;

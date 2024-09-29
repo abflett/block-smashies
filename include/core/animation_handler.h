@@ -2,6 +2,7 @@
 #define ANIMATION_HANDLER_H
 
 #include <stdbool.h>
+#include "raylib.h"
 #include "resource.h"
 
 typedef enum
@@ -20,7 +21,7 @@ typedef struct AnimationHandler
     float frame_time;
     bool is_playing;
     void (*update)(struct AnimationHandler *animation_handler, float delta_time);
-    void (*render)(struct AnimationHandler *animation_handler, b2Vec2 position);
+    void (*render)(struct AnimationHandler *animation_handler, Vector2 position);
     void (*cleanup)(struct AnimationHandler *animation_handler);
 
 } AnimationHandler;

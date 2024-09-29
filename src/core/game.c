@@ -7,10 +7,10 @@
 #include "scene_manager.h"
 #include "game_state_manager.h"
 
-static RenderTexture2D target_texture; // Now private to game.c
-static bool exit_window = false;       // Now private to game.c
+static RenderTexture2D target_texture;
+static bool exit_window = false;
 static ShakeEffect *shake_effect;
-static Game *game = NULL; // Private pointer to the game instance
+static Game *game = NULL;
 
 static void update_game(float delta_time)
 {
