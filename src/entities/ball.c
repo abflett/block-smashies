@@ -8,15 +8,16 @@
 #include "settings.h"
 #include "game_data.h"
 #include "collision_category.h"
+#include "b_utils.h"
 
 static float accumlator = 0.0f;
 
-static void default_ball_transparency(BallTrail *trails, Vector2 position, float radius, Texture2D *texture)
+static void set_default_ball_trails(BallTrail *trails, Vector2 position, float radius, Texture2D *texture)
 {
     for (int i = 0; i < MAX_TRAIL; i++)
     {
-        trails[i].position = (Vector2){position.x - radius, settings.game.target_size.y - (position.y + radius)};
-        trails[i].transparency = 0.1f * (1.0f - (i / (float)(MAX_TRAIL - 1)));
+        trails[i].position = vector2_flip_y_center(position, (Vector2){radius * 2, radius * 2});
+        trails[i].transparency = 0.2f * (1.0f - (i / (float)(MAX_TRAIL - 1)));
         trails[i].active = true;
         trails[i].texture = texture;
     }
@@ -33,8 +34,9 @@ void update_ball_trails(Ball *ball)
     }
 
     b2Vec2 position = b2Body_GetPosition(ball->body);
-    ball->balltrails[0].position = (Vector2){position.x - ball->radius, settings.game.target_size.y - (position.y + ball->radius)};
-    ball->balltrails[0].texture = ball->texture; // You can change this if the texture changes during the game
+
+    ball->balltrails[0].position = vector2_flip_y_center(b2vec2_to_vector2(position), (Vector2){ball->radius * 2, ball->radius * 2});
+    ball->balltrails[0].texture = ball->texture;
 }
 
 static void clean_up_ball(Ball *ball)
@@ -49,7 +51,7 @@ static void render_ball(Ball *ball)
 
     b2Vec2 position = b2Body_GetPosition(ball->body);
     // draw larger ball and resize down for subpixel drawing effect
-    DrawTextureEx(*ball->texture, (Vector2){position.x - ball->radius, settings.game.target_size.y - (position.y + ball->radius)}, 0.0f, 0.5f, WHITE);
+    DrawTextureEx(*ball->texture, vector2_flip_y_center(b2vec2_to_vector2(position), (Vector2){ball->radius * 2, ball->radius * 2}), 0.0f, 0.5f, WHITE);
 
     // render ball trails
     for (int i = 0; i < MAX_TRAIL; i++)
@@ -70,7 +72,7 @@ static void reset_ball(Ball *ball, b2Vec2 position, b2Vec2 velocity)
 {
     ball->active = true;
     b2Body_Enable(ball->body);
-
+    set_default_ball_trails(ball->balltrails, b2vec2_to_vector2(position), ball->radius, ball->texture);
     b2Body_SetTransform(ball->body, position, (b2Rot){0.0f, 1.0f});
     b2Body_SetLinearVelocity(ball->body, velocity);
 }
@@ -128,7 +130,7 @@ Ball *create_ball(GameData *game_data, b2WorldId world_id, b2Vec2 position, b2Ve
     ball->texture = &resource_manager.get_texture("ball")->texture;
     ball->radius = ball->texture->width / 4.0f;
 
-    default_ball_transparency(ball->balltrails, (Vector2){position.x, position.y}, ball->radius, ball->texture);
+    set_default_ball_trails(ball->balltrails, b2vec2_to_vector2(position), ball->radius, ball->texture);
 
     ball->power = &game_data->ball.power;
     ball->phase_nova = &game_data->perks.phase_shift;
