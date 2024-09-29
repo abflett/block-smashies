@@ -37,7 +37,8 @@ static void update_brick(Brick *brick, float delta_time)
 
     if (brick->subtexture->id != resource_manager.brick_type_mapper->brick_type_to_subtexture_id(brick->brick_type, subtexture_index))
     {
-        brick->subtexture = resource_manager.get_subtexture(resource_manager.brick_type_mapper->brick_type_to_subtexture_id(brick->brick_type, subtexture_index));
+        brick->subtexture = resource_manager.get_subtexture(
+            resource_manager.brick_type_mapper->brick_type_to_subtexture_id(brick->brick_type, subtexture_index));
     }
 
     if (brick->is_destroying)
@@ -66,7 +67,8 @@ static void render_brick(Brick *brick)
 
     if (brick->animation_handler->is_playing)
     {
-        brick->animation_handler->render(brick->animation_handler, vector2_flip_y_center(b2vec2_to_vector2(position), b2vec2_to_vector2(brick->size)));
+        brick->animation_handler->render(brick->animation_handler,
+                                         vector2_flip_y_center(b2vec2_to_vector2(position), b2vec2_to_vector2(brick->size)));
     }
     else
     {
