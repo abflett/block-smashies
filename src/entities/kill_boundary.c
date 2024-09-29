@@ -14,7 +14,7 @@ KillBoundary *create_kill_boundary(b2WorldId world_id)
 {
     KillBoundary *kill_boundary = (KillBoundary *)malloc(sizeof(KillBoundary));
     kill_boundary->type = ENTITY_KILL_BOUNDARY;
-    // Create a static body for the kill boundary
+
     b2BodyDef bodyDef = b2DefaultBodyDef();
     bodyDef.type = b2_staticBody;
     kill_boundary->body = b2CreateBody(world_id, &bodyDef);
@@ -24,18 +24,15 @@ KillBoundary *create_kill_boundary(b2WorldId world_id)
     bottom_segment.point1 = (b2Vec2){play_area.x - settings.gameplay.boundary_padding, settings.game.target_size.y - (play_area.y + play_area.height) - settings.gameplay.boundary_padding};
     bottom_segment.point2 = (b2Vec2){play_area.x + play_area.width + settings.gameplay.boundary_padding, settings.game.target_size.y - (play_area.y + play_area.height) - settings.gameplay.boundary_padding};
 
-    // Define the shape properties (no density needed for static bodies)
     b2ShapeDef segment_def = b2DefaultShapeDef();
     segment_def.friction = 0.0f;
-    segment_def.restitution = 1.0f; // Bouncy effect, if needed
+    segment_def.restitution = 1.0f;
 
     segment_def.filter.categoryBits = CATEGORY_KILL_BOUNDARY;
-    segment_def.filter.maskBits = KILL_BOUNDARY_COLLIDE_WITH; // Collide with everything except other balls
+    segment_def.filter.maskBits = KILL_BOUNDARY_COLLIDE_WITH;
 
-    // Create the segment shape (kill boundary) attached to the body
     b2CreateSegmentShape(kill_boundary->body, &segment_def, &bottom_segment);
 
-    // Assign the clean-up function
     kill_boundary->clean_up = clean_up_kill_boundary;
 
     b2Body_SetUserData(kill_boundary->body, kill_boundary);
