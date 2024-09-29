@@ -38,6 +38,8 @@ typedef struct Colors
     const Color red_04; // more of an orange color
     const Color green_04;
 
+    const Color alpha_03;
+    const Color alpha_06;
     const Color alpha_05;
     const Color alpha_07;
 } Colors;
