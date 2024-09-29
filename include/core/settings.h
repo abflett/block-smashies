@@ -37,6 +37,9 @@ typedef struct Colors
     const Color red_02;
     const Color red_04; // more of an orange color
     const Color green_04;
+
+    const Color alpha_05;
+    const Color alpha_07;
 } Colors;
 
 // GameSettings: Constants and values like target width/height, logo screen time, etc.

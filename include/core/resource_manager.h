@@ -14,7 +14,7 @@ typedef struct ResourceManager
     BarLevelMapper *bar_level_mapper;
     NaniteTypeMapper *nanite_type_mapper;
     // Function pointers for managing resources
-    void (*load_resource_file)(const char *file);    // Load the JSON file and store resources in memory
+    void (*load_resource_file)(void);                // Load the JSON file and store resources in memory
     TextureResource *(*get_texture)(const char *id); // Get a texture by its ID
     Subtexture *(*get_subtexture)(const char *id);   // Get a subtexture by its ID
     Animation *(*get_animation)(const char *id);     // Get an animation by its ID

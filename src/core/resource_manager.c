@@ -5,11 +5,12 @@
 #include "raylib.h"
 #include "parson.h"
 #include "resource_manager.h"
+#include "settings.h"
 
-void rm_load_resource_file(const char *file)
+static void rm_load_resource_file(void)
 {
     // Parse the JSON file
-    JSON_Value *root_value = json_parse_file(file);
+    JSON_Value *root_value = json_parse_file(settings.file_locations.resource_file);
     JSON_Object *root_object = json_value_get_object(root_value);
     JSON_Array *textures_array = json_object_get_array(root_object, "textures");
     JSON_Array *subtextures_array = json_object_get_array(root_object, "subtextures");
@@ -86,33 +87,33 @@ void rm_load_resource_file(const char *file)
     json_value_free(root_value);
 }
 
-TextureResource *rm_get_texture(const char *id)
+static TextureResource *rm_get_texture(const char *id)
 {
     TextureResource *texture = NULL;
     HASH_FIND_STR(resource_manager.textures, id, texture);
     return texture;
 }
 
-Subtexture *rm_get_subtexture(const char *id)
+static Subtexture *rm_get_subtexture(const char *id)
 {
     Subtexture *subtexture = NULL;
     HASH_FIND_STR(resource_manager.subtextures, id, subtexture);
     return subtexture;
 }
 
-Animation *rm_get_animation(const char *id)
+static Animation *rm_get_animation(const char *id)
 {
     Animation *animation = NULL;
     HASH_FIND_STR(resource_manager.animations, id, animation);
     return animation;
 }
 
-Font *rm_get_pixel7_font(void)
+static Font *rm_get_pixel7_font(void)
 {
     return &resource_manager.pixel7_font;
 }
 
-void rm_cleanup(void)
+static void rm_cleanup(void)
 {
     // Free all subtextures
     Subtexture *subtexture, *tmp_subtexture;

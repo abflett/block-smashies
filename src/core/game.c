@@ -83,11 +83,12 @@ Game *create_game(const char *game_title)
     exit_window = false;
 
     initialize_settings();
-    srand((unsigned int)time(NULL));
     InitWindow((int)settings.config.screen_size.x, (int)settings.config.screen_size.y, game_title);
     SetExitKey(KEY_NULL); // Disable default exit key (ESC)
     SetTargetFPS(60);     // Set target FPS for the game loop
+    target_texture = LoadRenderTexture((int)settings.game.target_size.x, (int)settings.game.target_size.y);
     shake_effect = create_shake_effect();
+    resource_manager.load_resource_file();
     initialize_scene_manager();
     initialize_game_state_manager();
 
@@ -102,8 +103,6 @@ Game *create_game(const char *game_title)
         ToggleFullscreen();
     }
 
-    target_texture = LoadRenderTexture((int)settings.game.target_size.x, (int)settings.game.target_size.y);
-    resource_manager.load_resource_file(settings.file_locations.resource_file);
     scene_manager.change(scene_manager.scenes.logo, 0);
 
     game.run = run_game;
