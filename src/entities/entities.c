@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <time.h>
 #include "box2d/box2d.h"
 #include "entities.h"
 #include "ball.h"
@@ -14,7 +13,7 @@ Entities entities;
 
 static void add_ball_func(GameData *game_data, b2WorldId world_id, Paddle *paddle)
 {
-    float random_x = -100.0f + ((float)rand() / RAND_MAX) * 200.0f;
+    float random_x = (float)GetRandomValue(-25, 25);
     b2Vec2 paddle_position = b2Body_GetPosition(paddle->body);
 
     for (int i = 0; i < kv_size(entities.balls); i++)
@@ -23,14 +22,14 @@ static void add_ball_func(GameData *game_data, b2WorldId world_id, Paddle *paddl
         if (!existing_ball->active)
         {
             existing_ball->reset(existing_ball,
-                                 (b2Vec2){paddle_position.x, paddle_position.y + (paddle->size.y / 2) + 4},
+                                 (b2Vec2){paddle_position.x, paddle_position.y + (paddle->size.y / 2) + 3},
                                  (b2Vec2){random_x, 50});
             return;
         }
     }
 
     Ball *new_ball = create_ball(game_data, world_id,
-                                 (b2Vec2){paddle_position.x, paddle_position.y + (paddle->size.y / 2) + 4},
+                                 (b2Vec2){paddle_position.x, paddle_position.y + (paddle->size.y / 2) + 3},
                                  (b2Vec2){random_x, 50});
     kv_push(Ball *, entities.balls, new_ball);
 }
