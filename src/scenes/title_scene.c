@@ -4,7 +4,7 @@
 
 static Scene title_scene;
 
-static void scene_init(int arg_count, ...)
+static void scene_init(int arg_count, va_list args)
 {
 }
 

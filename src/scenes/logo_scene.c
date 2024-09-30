@@ -7,7 +7,7 @@ static Scene logo_scene;
 
 static float elapsed_time = 0.0f; // Variable to track elapsed time
 
-static void scene_init(int arg_count, ...)
+static void scene_init(int arg_count, va_list args)
 {
     elapsed_time = 0.0f;
 }

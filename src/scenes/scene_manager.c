@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <stdarg.h>
 #include "scene_manager.h"
 #include "scene.h"
 
@@ -7,6 +8,7 @@
 #include "title_scene.h"
 #include "main_menu_scene.h"
 #include "logo_scene.h"
+#include "embark_scene.h"
 
 void change_scene(Scene *new_scene, int arg_count, ...)
 {
@@ -51,4 +53,5 @@ void initialize_scene_manager(void)
     scene_manager.scenes.title = create_title_scene();
     scene_manager.scenes.main_menu = create_main_menu_scene();
     scene_manager.scenes.gameplay = create_gameplay_scene();
+    scene_manager.scenes.embark = create_embark_scene();
 }

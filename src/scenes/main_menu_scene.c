@@ -1,9 +1,7 @@
 #include "raylib.h"
-#include "main_menu_scene.h"
 #include "game.h"
 #include "scene_manager.h"
 #include "resource_manager.h"
-#include "game_data.h"
 #include "settings.h"
 
 #define MAX_DISPLAY_CHARS 51
@@ -113,7 +111,7 @@ static void scene_update(float delta_time)
         switch (selected_menu_option)
         {
         case 0: // Embark
-            scene_manager.change(scene_manager.scenes.gameplay, 1, create_game_data("Team1"));
+            scene_manager.change(scene_manager.scenes.embark, 0);
             break;
         case 1: // Relive
             // Add logic for loading a saved game
@@ -170,7 +168,7 @@ static void scene_render(void)
     int exit_index_b = (selected_menu_option == 4) ? 3 : 2;
 
     DrawTextureRec(text_block_smashies[0]->texture_resource->texture, text_block_smashies[0]->src, (Vector2){113, 19}, text_alpha);
-    DrawTextureRec(text_block_smashies[2]->texture_resource->texture, text_block_smashies[2]->src, (Vector2){113, 20}, text_alpha);
+    DrawTextureRec(text_block_smashies[2]->texture_resource->texture, text_block_smashies[2]->src, (Vector2){113, 20}, beam_alpha);
 
     DrawTextureRec(text_embark[embark_index_a]->texture_resource->texture, text_embark[embark_index_a]->src, (Vector2){41, 68}, text_alpha);
     DrawTextureRec(text_relive[relive_index_a]->texture_resource->texture, text_relive[relive_index_a]->src, (Vector2){194, 87}, text_alpha);
@@ -178,11 +176,11 @@ static void scene_render(void)
     DrawTextureRec(text_historic[historic_index_a]->texture_resource->texture, text_historic[historic_index_a]->src, (Vector2){51, 148}, text_alpha);
     DrawTextureRec(text_exit[exit_index_a]->texture_resource->texture, text_exit[exit_index_a]->src, (Vector2){239, 126}, text_alpha);
 
-    DrawTextureRec(text_embark[embark_index_b]->texture_resource->texture, text_embark[embark_index_b]->src, (Vector2){41, 69}, text_alpha);
-    DrawTextureRec(text_relive[relive_index_b]->texture_resource->texture, text_relive[relive_index_b]->src, (Vector2){194, 88}, text_alpha);
-    DrawTextureRec(text_modify[modify_index_b]->texture_resource->texture, text_modify[modify_index_b]->src, (Vector2){22, 100}, text_alpha);
-    DrawTextureRec(text_historic[historic_index_b]->texture_resource->texture, text_historic[historic_index_b]->src, (Vector2){51, 149}, text_alpha);
-    DrawTextureRec(text_exit[exit_index_b]->texture_resource->texture, text_exit[exit_index_b]->src, (Vector2){239, 127}, text_alpha);
+    DrawTextureRec(text_embark[embark_index_b]->texture_resource->texture, text_embark[embark_index_b]->src, (Vector2){41, 69}, beam_alpha);
+    DrawTextureRec(text_relive[relive_index_b]->texture_resource->texture, text_relive[relive_index_b]->src, (Vector2){194, 88}, beam_alpha);
+    DrawTextureRec(text_modify[modify_index_b]->texture_resource->texture, text_modify[modify_index_b]->src, (Vector2){22, 100}, beam_alpha);
+    DrawTextureRec(text_historic[historic_index_b]->texture_resource->texture, text_historic[historic_index_b]->src, (Vector2){51, 149}, beam_alpha);
+    DrawTextureRec(text_exit[exit_index_b]->texture_resource->texture, text_exit[exit_index_b]->src, (Vector2){239, 127}, beam_alpha);
 }
 
 static void scene_cleanup(void)

@@ -67,6 +67,7 @@ set(SCENES_SRC
     src/scenes/gameplay_scene.c
     src/scenes/title_scene.c
     src/scenes/logo_scene.c
+    src/scenes/embark_scene.c
 )
 
 # Source files for game states

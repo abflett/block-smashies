@@ -10,6 +10,7 @@ typedef struct GameScenes
     Scene *logo;
     Scene *main_menu;
     Scene *title;
+    Scene *embark;
 } GameScenes;
 
 typedef struct SceneManager
