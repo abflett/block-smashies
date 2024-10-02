@@ -1,12 +1,5 @@
 #include "ship.h"
 
-static void move_ship(b2Vec2 position) {}    // movement for animation scenes without physics
-static void update_ship(float delta_time) {} // handle player input and other updates
-static void render_ship(void) {}
-static void disable_ship(void) {}          // set active false
-static void reset_ship(b2Vec2 position) {} // reset position on death etc.
-static void cleanup_ship(void) {}
-
 static int calculate_segments(int player, int player_count)
 {
     switch (player_count)
@@ -24,6 +17,20 @@ static int calculate_segments(int player, int player_count)
     }
 }
 
+static void move_ship(struct Ship *ship, b2Vec2 position) {}
+static void update_ship(struct Ship *ship, float delta_time) {}
+
+static void render_ship(struct Ship *ship)
+{
+    ship->ship_body->render(ship->ship_body);
+    // ship->ship_shield->render(ship->ship_shield);
+    // ship->ship_thrusters->render(ship->ship_thrusters);
+}
+
+static void disable_ship(struct Ship *ship) {}
+static void reset_ship(struct Ship *ship, b2Vec2 position) {}
+static void cleanup_ship(struct Ship *ship) {}
+
 Ship *create_ship(int player, int player_count, int ship_color, b2Vec2 position)
 {
     Ship *ship = malloc(sizeof(Ship));
@@ -33,12 +40,13 @@ Ship *create_ship(int player, int player_count, int ship_color, b2Vec2 position)
     ship->player_count = player_count;
     ship->ship_color = ship_color;
     ship->position = position;
+    ship->shield_level = 0;
 
     ship->segments = calculate_segments(ship->player, ship->player_count);
-    ShipBody *shipbody = create_ship_body(&ship->segments, &ship_color, &ship->position);
-    //  ship->ship_body = create_ship_body(&ship->segments, &ship_color, &ship->position);
-    //   ship->ship_shield = create_ship_shield();
-    //   ship->ship_thrusters = create_ship_thrusters();
+
+    ship->ship_body = create_ship_body(&ship->segments, &ship->ship_color, &ship->position);
+    ship->ship_shield = create_ship_shield(&ship->segments, &ship->shield_level, &ship->position);
+    ship->ship_thrusters = create_ship_thrusters(&ship->segments, &ship->position);
 
     ship->move = move_ship;
     ship->update = update_ship;

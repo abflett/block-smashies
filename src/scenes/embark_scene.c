@@ -4,8 +4,11 @@
 #include "scene_manager.h"
 #include "resource_manager.h"
 #include "game_data.h"
+#include "ship.h"
 
 Scene embark_scene;
+
+Ship *ship;
 
 Texture2D *floor_dock;
 Texture2D *floor_simulation;
@@ -19,6 +22,8 @@ Texture2D *embark_projector_beams;
 Texture2D *embark_room;
 Texture2D *embark_text_backing;
 
+int color_selection;
+
 static void scene_init(int arg_count, va_list args)
 {
 }
@@ -28,6 +33,17 @@ static void scene_update(float delta_time)
     if (IsKeyPressed(KEY_ENTER))
     {
         scene_manager.change(scene_manager.scenes.gameplay, 1, create_game_data("Team1"));
+    }
+
+    if (IsKeyPressed(KEY_UP))
+    {
+        color_selection++;
+        ship->ship_color = color_selection % 25;
+    }
+    if (IsKeyPressed(KEY_DOWN))
+    {
+
+        ship->ship_color = (color_selection - 1 + 25) % 25;
     }
 }
 
@@ -48,10 +64,13 @@ static void scene_render(void)
     DrawTexture(*num_2, 185, 148, WHITE);
     DrawTexture(*num_3, 81, 148, WHITE);
     DrawTexture(*num_4, 236, 148, WHITE);
+
+    ship->render(ship);
 }
 
 static void scene_cleanup(void)
 {
+    ship->cleanup(ship);
 }
 
 Scene *create_embark_scene(void)
@@ -67,6 +86,8 @@ Scene *create_embark_scene(void)
     embark_projector_beams = &resource_manager.get_texture("embark-projector-beams")->texture;
     embark_room = &resource_manager.get_texture("embark-room")->texture;
     embark_text_backing = &resource_manager.get_texture("embark-text-backing")->texture;
+
+    ship = create_ship(1, 1, 0, (b2Vec2){132, 80});
 
     embark_scene.init = scene_init;
     embark_scene.update = scene_update;

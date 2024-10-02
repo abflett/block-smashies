@@ -22,13 +22,14 @@ typedef struct Ship
     int player_count; // from game_data
     b2Vec2 position;
     int ship_color; // from game_data
+    int shield_level;
 
-    void (*move)(b2Vec2 position);    // movement for animation scenes without physics
-    void (*update)(float delta_time); // handle player input and other updates
-    void (*render)(void);
-    void (*disable)(void);          // set active false
-    void (*reset)(b2Vec2 position); // reset position on death etc.
-    void (*cleanup)(void);
+    void (*move)(struct Ship *ship, b2Vec2 position);    // movement for animation scenes without physics
+    void (*update)(struct Ship *ship, float delta_time); // handle player input and other updates
+    void (*render)(struct Ship *ship);
+    void (*disable)(struct Ship *ship);                // set active false
+    void (*reset)(struct Ship *ship, b2Vec2 position); // reset position on death etc.
+    void (*cleanup)(struct Ship *ship);
 } Ship;
 
 Ship *create_ship(int player, int player_count, int ship_color, b2Vec2 position);

@@ -17,6 +17,6 @@ typedef struct ShipShield
     void (*cleanup)(void);
 } ShipShield;
 
-ShipShield *create_ship_shield(int *segments, int *shield_level);
+ShipShield *create_ship_shield(int *segments, int *shield_level, b2Vec2 *position);
 
 #endif
