@@ -58,6 +58,9 @@ set(MAPPINGS_SRC
     src/mappings/brick_type_mapper.c
     src/mappings/bar_level_mapper.c
     src/mappings/nanite_type_mapper.c
+    src/mappings/ship_color_mapper.c
+    src/mappings/thruster_level_mapper.c
+    src/mappings/shield_type_mapper.c
 )
 
 # Source files for scenes
