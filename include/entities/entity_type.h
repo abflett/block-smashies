@@ -7,6 +7,7 @@ typedef enum EntityType
     ENTITY_BALL,
     ENTITY_BRICK,
     ENTITY_PADDLE,
+    ENTITY_SHIP,
     ENTITY_NANITE,
     ENTITY_WALL,
     ENTITY_KILL_BOUNDARY

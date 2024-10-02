@@ -11,10 +11,10 @@ add_subdirectory(external/box2d)
 
 # Include directories
 include_directories(
+    ${PROJECT_SOURCE_DIR}/include/entities/ship
     ${PROJECT_SOURCE_DIR}/include/core
     ${PROJECT_SOURCE_DIR}/include/collisions
     ${PROJECT_SOURCE_DIR}/include/entities
-    ${PROJECT_SOURCE_DIR}/include/entities/ship
     ${PROJECT_SOURCE_DIR}/include/mappings
     ${PROJECT_SOURCE_DIR}/include/scenes
     ${PROJECT_SOURCE_DIR}/include/game_states
@@ -54,10 +54,10 @@ set(ENTITIES_SRC
     src/entities/nanite.c
 )
 
-set(ENTITIES_SHIP_SRC
-    src/entities/ship/ship_body.c
+set(SHIP_SRC
     src/entities/ship/ship_shield.c
-    src/entities/ship/ship_thruster.c
+    src/entities/ship/ship_body.c
+    src/entities/ship/ship_thrusters.c
     src/entities/ship/ship.c
 )
 
@@ -100,7 +100,7 @@ set(GAME_SRC
     src/game/shake_effect.c
     src/game/playing_ui_bars.c
     src/game/player_stat.c
-)
+) 
 
 # Create the BlockSmashies executable
 add_executable(BlockSmashies
@@ -109,7 +109,7 @@ add_executable(BlockSmashies
     ${CORE_SRC}
     ${GAME_SRC}
     ${ENTITIES_SRC}
-    ${ENTITIES_SHIP_SRC}
+    ${SHIP_SRC}
     ${COLLISIONS_SRC}
     ${MAPPINGS_SRC})
 
