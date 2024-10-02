@@ -156,6 +156,10 @@ static void rm_cleanup(void)
 
     resource_manager.brick_type_mapper->cleanup();
     resource_manager.bar_level_mapper->cleanup();
+    resource_manager.nanite_type_mapper->cleanup();
+    resource_manager.shield_type_mapper->cleanup();
+    resource_manager.ship_color_mapper->cleanup();
+    resource_manager.thruster_level_mapper->cleanup();
 
     UnloadFont(resource_manager.pixel7_font);
 }
