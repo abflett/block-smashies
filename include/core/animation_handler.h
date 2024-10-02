@@ -8,7 +8,8 @@
 typedef enum
 {
     ANIMATION_LOOP,
-    ANIMATION_ONCE
+    ANIMATION_ONCE,
+    ANIMATION_PING_PONG
 } AnimationType;
 
 typedef struct AnimationHandler
@@ -19,8 +20,10 @@ typedef struct AnimationHandler
     int frame_count;
     float elapsed_time;
     float frame_time;
+    bool ping_pong_forward;
+    float rotation;
     bool is_playing;
-    void (*update)(struct AnimationHandler *animation_handler, float delta_time);
+    void (*update)(struct AnimationHandler *animation_handler, float delta_time, float rotation);
     void (*render)(struct AnimationHandler *animation_handler, Vector2 position);
     void (*cleanup)(struct AnimationHandler *animation_handler);
 

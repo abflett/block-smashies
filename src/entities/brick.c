@@ -43,7 +43,7 @@ static void update_brick(Brick *brick, float delta_time)
 
     if (brick->is_destroying)
     {
-        brick->animation_handler->update(brick->animation_handler, delta_time);
+        brick->animation_handler->update(brick->animation_handler, delta_time, 0.0f);
         if (!brick->animation_handler->is_playing)
         {
             b2Vec2 position = b2Body_GetPosition(brick->body);
@@ -67,8 +67,9 @@ static void render_brick(Brick *brick)
 
     if (brick->animation_handler->is_playing)
     {
+
         brick->animation_handler->render(brick->animation_handler,
-                                         vector2_flip_y_center(b2vec2_to_vector2(position), b2vec2_to_vector2(brick->size)));
+                                         vector2_flip_y(b2vec2_to_vector2(position)));
     }
     else
     {
