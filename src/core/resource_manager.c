@@ -22,6 +22,9 @@ static void rm_load_resource_file(void)
     resource_manager.brick_type_mapper = create_brick_type_mapper(root_object);
     resource_manager.bar_level_mapper = create_bar_level_mapper(root_object);
     resource_manager.nanite_type_mapper = create_nanite_type_mapper(root_object);
+    resource_manager.ship_color_mapper = create_ship_color_mapper(root_object);
+    resource_manager.shield_type_mapper = create_shield_type_mapper(root_object);
+    resource_manager.thruster_level_mapper = create_thruster_level_mapper(root_object);
 
     for (size_t i = 0; i < (int)json_array_get_count(textures_array); i++)
     {

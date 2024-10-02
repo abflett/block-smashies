@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <string.h>
 #include "thruster_level_mapper.h"
 
 static ThrusterLevelMapper mapper;
@@ -19,6 +21,14 @@ static void cleanup_mapper(void)
 ThrusterLevelMapper *create_thruster_level_mapper(const JSON_Object *root_object)
 {
     kv_init(mapper.animation_ids);
+
+    JSON_Array *thrusters_array = json_object_get_array(root_object, "thruster-level-animations");
+
+    for (size_t i = 0; i < json_array_get_count(thrusters_array); i++)
+    {
+        const char *animation_id = json_array_get_string(thrusters_array, i);
+        kv_push(char *, mapper.animation_ids, strdup(animation_id));
+    }
 
     mapper.thruster_level_to_animation_id = thruster_level_to_animation_id_func;
     mapper.cleanup = cleanup_mapper;
