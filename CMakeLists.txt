@@ -14,6 +14,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/include/core
     ${PROJECT_SOURCE_DIR}/include/collisions
     ${PROJECT_SOURCE_DIR}/include/entities
+    ${PROJECT_SOURCE_DIR}/include/entities/ship
     ${PROJECT_SOURCE_DIR}/include/mappings
     ${PROJECT_SOURCE_DIR}/include/scenes
     ${PROJECT_SOURCE_DIR}/include/game_states
@@ -51,6 +52,13 @@ set(ENTITIES_SRC
     src/entities/kill_boundary.c
     src/entities/entities.c
     src/entities/nanite.c
+)
+
+set(ENTITIES_SHIP_SRC
+    src/entities/ship/ship_body.c
+    src/entities/ship/ship_shield.c
+    src/entities/ship/ship_thruster.c
+    src/entities/ship/ship.c
 )
 
 # Source files for mappings
@@ -101,6 +109,7 @@ add_executable(BlockSmashies
     ${CORE_SRC}
     ${GAME_SRC}
     ${ENTITIES_SRC}
+    ${ENTITIES_SHIP_SRC}
     ${COLLISIONS_SRC}
     ${MAPPINGS_SRC})
 
