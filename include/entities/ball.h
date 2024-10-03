@@ -13,9 +13,9 @@ struct Entities;
 
 typedef struct BallTrail
 {
-    Vector2 position;
+    b2Vec2 position;
     Texture2D *texture;
-    float transparency;
+    Color color;
     bool active;
 } BallTrail;
 
@@ -27,6 +27,7 @@ typedef struct Ball
 
     BallTrail balltrails[MAX_TRAIL];
     Texture2D *texture;
+    b2Vec2 position;
     float radius;
 
     float *power;

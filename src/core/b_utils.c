@@ -80,3 +80,24 @@ void render_subtexture(Subtexture *subtexture, b2Vec2 position)
                    vector2_flip_y_center(b2vec2_to_vector2(position), size),
                    WHITE);
 }
+
+// render_texture_scale // texture, size, scale
+void render_texture_scale(Texture2D *texture, b2Vec2 position, float scale)
+{
+    Vector2 size = (Vector2){texture->width * scale, texture->height * scale};
+    DrawTextureEx(*texture,
+                  vector2_flip_y_center(b2vec2_to_vector2(position), size),
+                  0.0f,
+                  scale,
+                  WHITE);
+}
+
+void render_texture_scale_color(Texture2D *texture, b2Vec2 position, float scale, Color color)
+{
+    Vector2 size = (Vector2){texture->width * scale, texture->height * scale};
+    DrawTextureEx(*texture,
+                  vector2_flip_y_center(b2vec2_to_vector2(position), size),
+                  0.0f,
+                  scale,
+                  color);
+}

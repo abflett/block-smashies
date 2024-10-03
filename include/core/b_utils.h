@@ -18,5 +18,7 @@ b2Vec2 vector2_to_b2vec2(Vector2 vec);
 Vector2 ints_to_vector2(int x, int y);
 b2Vec2 ints_to_b2vec(int x, int y);
 void render_subtexture(Subtexture *subtexture, b2Vec2 position);
+void render_texture_scale(Texture2D *texture, b2Vec2 position, float scale);
+void render_texture_scale_color(Texture2D *texture, b2Vec2 position, float scale, Color color);
 
 #endif

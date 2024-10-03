@@ -1,23 +1,21 @@
-#include <stdbool.h>
 #include <stdlib.h>
-#include "raylib.h"
-#include "box2d/box2d.h"
 #include "ball.h"
 #include "entities.h"
 #include "resource_manager.h"
 #include "settings.h"
-#include "game_data.h"
 #include "collision_category.h"
 #include "b_utils.h"
 
 static float accumlator = 0.0f;
 
-static void set_default_ball_trails(BallTrail *trails, Vector2 position, float radius, Texture2D *texture)
+static void set_default_ball_trails(BallTrail *trails, b2Vec2 position, float radius, Texture2D *texture)
 {
     for (int i = 0; i < MAX_TRAIL; i++)
     {
-        trails[i].position = vector2_flip_y_center(position, (Vector2){radius * 2, radius * 2});
-        trails[i].transparency = 0.2f * (1.0f - (i / (float)(MAX_TRAIL - 1)));
+        float transparency = 0.2f * (1.0f - (i / (float)(MAX_TRAIL - 1)));
+
+        trails[i].position = position;
+        trails[i].color = (Color){255, 255, 255, (int)(transparency * 255)};
         trails[i].active = true;
         trails[i].texture = texture;
     }
@@ -25,17 +23,16 @@ static void set_default_ball_trails(BallTrail *trails, Vector2 position, float r
 
 void update_ball_trails(Ball *ball)
 {
-    // Todo: maybe time out the fade and set inactive if faded out to 0;
-    // Move existing trails down the array
-    for (int i = MAX_TRAIL - 1; i > 0; i--) // Start from the end and move to the front
-    {
-        ball->balltrails[i].position = ball->balltrails[i - 1].position; // Shift trail down
-        ball->balltrails[i].texture = ball->balltrails[i - 1].texture;   // Shift trail down
-    }
-
     b2Vec2 position = b2Body_GetPosition(ball->body);
 
-    ball->balltrails[0].position = vector2_flip_y_center(b2vec2_to_vector2(position), (Vector2){ball->radius * 2, ball->radius * 2});
+    // Move existing trails down the array
+    for (int i = MAX_TRAIL - 1; i > 0; i--)
+    {
+        ball->balltrails[i].position = ball->balltrails[i - 1].position;
+        ball->balltrails[i].texture = ball->balltrails[i - 1].texture;
+    }
+
+    ball->balltrails[0].position = position;
     ball->balltrails[0].texture = ball->texture;
 }
 
@@ -50,8 +47,9 @@ static void render_ball(Ball *ball)
 {
 
     b2Vec2 position = b2Body_GetPosition(ball->body);
+
     // draw larger ball and resize down for subpixel drawing effect
-    DrawTextureEx(*ball->texture, vector2_flip_y_center(b2vec2_to_vector2(position), (Vector2){ball->radius * 2, ball->radius * 2}), 0.0f, 0.5f, WHITE);
+    render_texture_scale(ball->texture, position, 0.5f);
 
     // render ball trails
     for (int i = 0; i < MAX_TRAIL; i++)
@@ -59,11 +57,7 @@ static void render_ball(Ball *ball)
         // Check if the trail is active before rendering
         if (ball->balltrails[i].active)
         {
-            // Set transparency based on trail's transparency value
-            Color trail_color = (Color){255, 255, 255, (unsigned char)(ball->balltrails[i].transparency * 255)};
-
-            // Draw the trail texture at its position with the computed transparency
-            DrawTextureEx(*ball->balltrails[i].texture, ball->balltrails[i].position, 0.0f, 0.5f, trail_color);
+            render_texture_scale_color(ball->balltrails[i].texture, ball->balltrails[i].position, 0.5f, ball->balltrails[i].color);
         }
     }
 }
@@ -72,7 +66,7 @@ static void reset_ball(Ball *ball, b2Vec2 position, b2Vec2 velocity)
 {
     ball->active = true;
     b2Body_Enable(ball->body);
-    set_default_ball_trails(ball->balltrails, b2vec2_to_vector2(position), ball->radius, ball->texture);
+    set_default_ball_trails(ball->balltrails, position, ball->radius, ball->texture);
     b2Body_SetTransform(ball->body, position, (b2Rot){0.0f, 1.0f});
     b2Body_SetLinearVelocity(ball->body, velocity);
 }
@@ -123,8 +117,9 @@ Ball *create_ball(GameData *game_data, b2WorldId world_id, b2Vec2 position, b2Ve
     ball->active = true;
     ball->texture = &resource_manager.get_texture("ball")->texture;
     ball->radius = ball->texture->width / 4.0f;
+    ball->position = position;
 
-    set_default_ball_trails(ball->balltrails, b2vec2_to_vector2(position), ball->radius, ball->texture);
+    set_default_ball_trails(ball->balltrails, ball->position, ball->radius, ball->texture);
 
     ball->power = &game_data->ball.power;
     ball->phase_nova = &game_data->perks.phase_shift;
@@ -135,14 +130,14 @@ Ball *create_ball(GameData *game_data, b2WorldId world_id, b2Vec2 position, b2Ve
     // Create the Box2D body definition
     b2BodyDef bodyDef = b2DefaultBodyDef();
     bodyDef.type = b2_dynamicBody;
-    bodyDef.position = position; // Initial position in the Box2D world
+    bodyDef.position = ball->position;
     bodyDef.isBullet = true;
     ball->body = b2CreateBody(world_id, &bodyDef);
 
     // Define the circle shape for the ball
     b2Circle circle;
-    circle.center = (b2Vec2){0, 0};              // This is an offset from the body's position
-    circle.radius = ball->texture->width / 4.0f; // Texture width is the diameter, so radius is half
+    circle.center = (b2Vec2){0, 0};               // This is an offset from the body's position
+    circle.radius = ball->texture->width * 0.25f; // Texture width is the diameter, so radius is half and scaled half
 
     // Define the physical properties of the ball (density, friction, etc.)
     b2ShapeDef circle_def = b2DefaultShapeDef();
