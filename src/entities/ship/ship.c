@@ -23,8 +23,8 @@ static void update_ship(struct Ship *ship, float delta_time) {}
 static void render_ship(struct Ship *ship)
 {
     ship->ship_body->render(ship->ship_body);
-    // ship->ship_shield->render(ship->ship_shield);
-    // ship->ship_thrusters->render(ship->ship_thrusters);
+    ship->ship_shield->render(ship->ship_shield);
+    ship->ship_thrusters->render(ship->ship_thrusters);
 }
 
 static void disable_ship(struct Ship *ship) {}
@@ -33,6 +33,8 @@ static void cleanup_ship(struct Ship *ship)
 {
 
     ship->ship_body->cleanup(ship->ship_body);
+    ship->ship_shield->cleanup(ship->ship_shield);
+    ship->ship_thrusters->cleanup(ship->ship_thrusters);
     free(ship);
 }
 
@@ -50,8 +52,8 @@ Ship *create_ship(int player, int player_count, int ship_color, b2Vec2 position)
     ship->segments = calculate_segments(ship->player, ship->player_count);
 
     ship->ship_body = create_ship_body(&ship->segments, &ship->ship_color, &ship->position);
-    // ship->ship_shield = create_ship_shield(&ship->segments, &ship->shield_level, &ship->position);
-    // ship->ship_thrusters = create_ship_thrusters(&ship->segments, &ship->position);
+    ship->ship_shield = create_ship_shield(&ship->segments, &ship->shield_level, &ship->position);
+    ship->ship_thrusters = create_ship_thrusters(&ship->segments, &ship->position);
 
     ship->move = move_ship;
     ship->update = update_ship;

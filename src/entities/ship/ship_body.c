@@ -57,7 +57,6 @@ ShipBody *create_ship_body(int *segments, int *ship_color, b2Vec2 *position)
     ship_body->position = position;
 
     const char *subtexture_id = resource_manager.ship_color_mapper->ship_color_to_subtexture_id(*ship_body->ship_color);
-
     ship_body->subtexture = resource_manager.get_subtexture(subtexture_id);
 
     ship_body->set_color = set_color_ship_body;

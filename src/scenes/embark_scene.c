@@ -28,6 +28,7 @@ int color_selection;
 
 static void scene_init(int arg_count, va_list args)
 {
+    ship = create_ship(1, 1, 0, (b2Vec2){135, 80});
 }
 
 static void scene_update(float delta_time)
@@ -47,9 +48,15 @@ static void scene_update(float delta_time)
         color_selection = (color_selection - 1 + SHIP_COLORS) % SHIP_COLORS;
         ship->ship_body->set_color(ship->ship_body, color_selection);
     }
+    if (IsKeyPressed(KEY_LEFT))
+    {
+        ship->shield_level = (ship->shield_level + 1) % 4;
+        ship->ship_shield->set_shield(ship->ship_shield);
+    }
     if (IsKeyPressed(KEY_RIGHT))
     {
         ship->segments = (ship->segments % 4) + 1;
+        ship->ship_shield->set_shield(ship->ship_shield);
     }
 }
 
@@ -93,7 +100,6 @@ Scene *create_embark_scene(void)
     embark_room = &resource_manager.get_texture("embark-room")->texture;
     embark_text_backing = &resource_manager.get_texture("embark-text-backing")->texture;
 
-    ship = create_ship(1, 1, 0, (b2Vec2){135, 80});
     color_selection = 0;
 
     embark_scene.init = scene_init;

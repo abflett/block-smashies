@@ -60,11 +60,11 @@ static void render_animation(AnimationHandler *animation_handler, Vector2 positi
         DrawTexturePro(animation_handler->animation->texture_resource->texture,
                        animation_handler->animation->frames[animation_handler->frame_index],
                        (Rectangle){
-                           position.x,
-                           position.y,
+                           (float)(int)position.x,
+                           (float)(int)position.y,
                            width,
                            height},
-                       (Vector2){width / 2, height / 2},
+                       (Vector2){(float)(int)(width * 0.5f), (float)(int)(height * 0.5f)},
                        animation_handler->rotation,
                        WHITE);
     }
