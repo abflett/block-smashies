@@ -2,6 +2,7 @@
 #include <time.h>
 #include "b_utils.h"
 #include "settings.h"
+#include "game.h"
 
 void log_error(const char *message)
 {
@@ -12,6 +13,7 @@ void log_error(const char *message)
         fprintf(logFile, "[%s] Error: %s\n", ctime(&now), message);
         fclose(logFile);
     }
+    exit_game();
     TraceLog(LOG_ERROR, message);
 }
 

@@ -103,7 +103,6 @@ Brick *create_brick(GameContext *game_context, b2Vec2 position, int brick_type)
     if (brick == NULL)
     {
         log_error("Could not allocate memory for brick!");
-        exit_game();
     }
 
     brick->type = ENTITY_BRICK;

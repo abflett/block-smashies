@@ -190,9 +190,8 @@ static void scene_cleanup(void)
 
 Scene *create_main_menu_scene()
 {
-    TraceLog(LOG_INFO, "[[[[CREATED]]]] -");
-    texture_stars = &resource_manager.get_texture("menu-ui-stars")->texture;     // d
-    texture_station = &resource_manager.get_texture("menu-ui-station")->texture; // d
+    texture_stars = &resource_manager.get_texture("menu-ui-stars")->texture;
+    texture_station = &resource_manager.get_texture("menu-ui-station")->texture;
     texture_beam_relive = &resource_manager.get_texture("menu-ui-beam-relive")->texture;
     texture_beam_exit = &resource_manager.get_texture("menu-ui-beam-exit")->texture;
     texture_beam_historic = &resource_manager.get_texture("menu-ui-beam-historic")->texture;

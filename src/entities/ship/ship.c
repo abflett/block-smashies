@@ -29,7 +29,12 @@ static void render_ship(struct Ship *ship)
 
 static void disable_ship(struct Ship *ship) {}
 static void reset_ship(struct Ship *ship, b2Vec2 position) {}
-static void cleanup_ship(struct Ship *ship) {}
+static void cleanup_ship(struct Ship *ship)
+{
+
+    ship->ship_body->cleanup(ship->ship_body);
+    free(ship);
+}
 
 Ship *create_ship(int player, int player_count, int ship_color, b2Vec2 position)
 {
@@ -45,8 +50,8 @@ Ship *create_ship(int player, int player_count, int ship_color, b2Vec2 position)
     ship->segments = calculate_segments(ship->player, ship->player_count);
 
     ship->ship_body = create_ship_body(&ship->segments, &ship->ship_color, &ship->position);
-    ship->ship_shield = create_ship_shield(&ship->segments, &ship->shield_level, &ship->position);
-    ship->ship_thrusters = create_ship_thrusters(&ship->segments, &ship->position);
+    // ship->ship_shield = create_ship_shield(&ship->segments, &ship->shield_level, &ship->position);
+    // ship->ship_thrusters = create_ship_thrusters(&ship->segments, &ship->position);
 
     ship->move = move_ship;
     ship->update = update_ship;

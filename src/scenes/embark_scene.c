@@ -6,6 +6,8 @@
 #include "game_data.h"
 #include "ship.h"
 
+#define SHIP_COLORS 25
+
 Scene embark_scene;
 
 Ship *ship;
@@ -37,13 +39,17 @@ static void scene_update(float delta_time)
 
     if (IsKeyPressed(KEY_UP))
     {
-        color_selection++;
-        ship->ship_color = color_selection % 25;
+        color_selection = (1 + color_selection) % SHIP_COLORS;
+        ship->ship_body->set_color(ship->ship_body, color_selection);
     }
     if (IsKeyPressed(KEY_DOWN))
     {
-
-        ship->ship_color = (color_selection - 1 + 25) % 25;
+        color_selection = (color_selection - 1 + SHIP_COLORS) % SHIP_COLORS;
+        ship->ship_body->set_color(ship->ship_body, color_selection);
+    }
+    if (IsKeyPressed(KEY_RIGHT))
+    {
+        ship->segments = (ship->segments % 4) + 1;
     }
 }
 
@@ -87,7 +93,8 @@ Scene *create_embark_scene(void)
     embark_room = &resource_manager.get_texture("embark-room")->texture;
     embark_text_backing = &resource_manager.get_texture("embark-text-backing")->texture;
 
-    ship = create_ship(1, 1, 0, (b2Vec2){132, 80});
+    ship = create_ship(1, 1, 0, (b2Vec2){135, 80});
+    color_selection = 0;
 
     embark_scene.init = scene_init;
     embark_scene.update = scene_update;
