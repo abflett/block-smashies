@@ -24,6 +24,7 @@ typedef struct Ship
     int ship_color; // from game_data
     int shield_level;
 
+    int (*calculate_segments)(struct Ship *ship);
     void (*move)(struct Ship *ship, b2Vec2 position);    // movement for animation scenes without physics
     void (*update)(struct Ship *ship, float delta_time); // handle player input and other updates
     void (*render)(struct Ship *ship);

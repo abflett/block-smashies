@@ -1,15 +1,15 @@
 #include "ship.h"
 
-static int calculate_segments(int player, int player_count)
+static int calculate_segments_func(Ship *ship)
 {
-    switch (player_count)
+    switch (ship->player_count)
     {
     case 1:
         return 4; // Single player, 4 segments
     case 2:
         return 2; // 2 players, each with 2 segments
     case 3:
-        return (player == 1) ? 2 : 1; // Player 1 has 2, others have 1
+        return (ship->player == 1) ? 2 : 1; // Player 1 has 2, others have 1
     case 4:
         return 1; // 4 players, each with 1 segment
     default:
@@ -49,12 +49,13 @@ Ship *create_ship(int player, int player_count, int ship_color, b2Vec2 position)
     ship->position = position;
     ship->shield_level = 0;
 
-    ship->segments = calculate_segments(ship->player, ship->player_count);
+    ship->segments = calculate_segments_func(ship);
 
     ship->ship_body = create_ship_body(&ship->segments, &ship->ship_color, &ship->position);
     ship->ship_shield = create_ship_shield(&ship->segments, &ship->shield_level, &ship->position);
     ship->ship_thrusters = create_ship_thrusters(&ship->segments, &ship->position);
 
+    ship->calculate_segments = calculate_segments_func;
     ship->move = move_ship;
     ship->update = update_ship;
     ship->render = render_ship;

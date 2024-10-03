@@ -18,7 +18,7 @@ static void cleanup_nanite_mapper(void)
     for (size_t i = 0; i < kv_size(mapper.nanite_sets); ++i)
     {
         NaniteSubtextureIdsSet set = kv_A(mapper.nanite_sets, i);
-        for (int j = 0; j < 4; ++j)
+        for (int j = 0; j < 2; ++j)
         {
             free(set.subtexture_ids[j]);
         }
@@ -28,7 +28,7 @@ static void cleanup_nanite_mapper(void)
     for (size_t i = 0; i < kv_size(mapper.lg_nanite_sets); ++i)
     {
         NaniteSubtextureIdsSet set = kv_A(mapper.lg_nanite_sets, i);
-        for (int j = 0; j < 4; ++j)
+        for (int j = 0; j < 2; ++j)
         {
             free(set.subtexture_ids[j]);
         }
