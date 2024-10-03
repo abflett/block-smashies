@@ -132,6 +132,7 @@ Ball *create_ball(GameData *game_data, b2WorldId world_id, b2Vec2 position, b2Ve
     bodyDef.type = b2_dynamicBody;
     bodyDef.position = ball->position;
     bodyDef.isBullet = true;
+    bodyDef.fixedRotation = true;
     ball->body = b2CreateBody(world_id, &bodyDef);
 
     // Define the circle shape for the ball
@@ -142,7 +143,7 @@ Ball *create_ball(GameData *game_data, b2WorldId world_id, b2Vec2 position, b2Ve
     // Define the physical properties of the ball (density, friction, etc.)
     b2ShapeDef circle_def = b2DefaultShapeDef();
     circle_def.density = 0.003f;
-    circle_def.friction = 10.0f;   // Low friction for a smooth ball
+    circle_def.friction = 0.5f;    // Low friction for a smooth ball
     circle_def.restitution = 1.0f; // High restitution for bouncing
 
     // Set up the filter to prevent ball-to-ball collisions
