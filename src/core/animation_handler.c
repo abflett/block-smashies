@@ -13,22 +13,21 @@ static void update_animation(AnimationHandler *animation_handler, float delta_ti
         if (animation_handler->elapsed_time >= animation_handler->frame_time)
         {
             animation_handler->elapsed_time -= animation_handler->frame_time;
-            animation_handler->frame_index++;
 
             if (animation_handler->animation_type == ANIMATION_LOOP)
             {
-                animation_handler->frame_index %= animation_handler->frame_count;
+                animation_handler->frame_index = (animation_handler->frame_index + 1) % animation_handler->frame_count;
             }
             else if (animation_handler->animation_type == ANIMATION_ONCE)
             {
+                animation_handler->frame_index++;
                 if (animation_handler->frame_index >= animation_handler->frame_count)
                 {
-                    animation_handler->is_playing = false;
+                    animation_handler->is_playing = false; // Stop animation after reaching the last frame
                 }
             }
             else if (animation_handler->animation_type == ANIMATION_PING_PONG)
             {
-                // Check if we're moving forward or backward
                 if (animation_handler->ping_pong_forward)
                 {
                     animation_handler->frame_index++;
@@ -57,6 +56,7 @@ static void render_animation(AnimationHandler *animation_handler, Vector2 positi
         float width = animation_handler->animation->frames[animation_handler->frame_index].width;
         float height = animation_handler->animation->frames[animation_handler->frame_index].height;
 
+        // casting to int then float fixes graphic glitches that roundf can't
         DrawTexturePro(animation_handler->animation->texture_resource->texture,
                        animation_handler->animation->frames[animation_handler->frame_index],
                        (Rectangle){

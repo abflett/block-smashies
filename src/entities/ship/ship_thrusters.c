@@ -62,17 +62,17 @@ ShipThrusters *create_ship_thrusters(int *segments, b2Vec2 *position)
     ship_thrusters->right_level = 0;
     ship_thrusters->bottom_level = 0;
 
-    const char *animation_left_id = resource_manager.thruster_level_mapper->thruster_level_to_animation_id(2);
-    const char *animation_right_id = resource_manager.thruster_level_mapper->thruster_level_to_animation_id(2);
+    const char *animation_left_id = resource_manager.thruster_level_mapper->thruster_level_to_animation_id(4);
+    const char *animation_right_id = resource_manager.thruster_level_mapper->thruster_level_to_animation_id(4);
     const char *animation_bottom_id = resource_manager.thruster_level_mapper->thruster_level_to_animation_id(4);
 
-    ship_thrusters->left_thruster = create_animation_manager(animation_left_id, ANIMATION_LOOP, 0.05f);
+    ship_thrusters->left_thruster = create_animation_manager(animation_left_id, ANIMATION_PING_PONG, 0.03f);
     ship_thrusters->left_thruster->is_playing = true;
 
-    ship_thrusters->right_thruster = create_animation_manager(animation_right_id, ANIMATION_LOOP, 0.05f);
+    ship_thrusters->right_thruster = create_animation_manager(animation_right_id, ANIMATION_PING_PONG, 0.03f);
     ship_thrusters->right_thruster->is_playing = true;
 
-    ship_thrusters->bottom_thruster = create_animation_manager(animation_bottom_id, ANIMATION_LOOP, 0.05f);
+    ship_thrusters->bottom_thruster = create_animation_manager(animation_bottom_id, ANIMATION_PING_PONG, 0.03f);
     ship_thrusters->bottom_thruster->is_playing = true;
 
     ship_thrusters->render = render_ship_thrusters;
