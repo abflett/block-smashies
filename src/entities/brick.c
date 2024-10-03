@@ -73,11 +73,11 @@ static void render_brick(Brick *brick)
     }
     else
     {
-
-        DrawTextureRec(brick->subtexture->texture_resource->texture,
-                       brick->subtexture->src,
-                       vector2_flip_y_center(b2vec2_to_vector2(position), b2vec2_to_vector2(brick->size)),
-                       WHITE);
+        render_subtexture(brick->subtexture, position);
+        // DrawTextureRec(brick->subtexture->texture_resource->texture,
+        //                brick->subtexture->src,
+        //                vector2_flip_y_center(b2vec2_to_vector2(position), b2vec2_to_vector2(brick->size)),
+        //                WHITE);
     }
 }
 

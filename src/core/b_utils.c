@@ -71,3 +71,12 @@ b2Vec2 ints_to_b2vec(int x, int y)
 {
     return (b2Vec2){(float)x, (float)y};
 }
+
+void render_subtexture(Subtexture *subtexture, b2Vec2 position)
+{
+    Vector2 size = (Vector2){subtexture->src.width, subtexture->src.height};
+    DrawTextureRec(subtexture->texture_resource->texture,
+                   subtexture->src,
+                   vector2_flip_y_center(b2vec2_to_vector2(position), size),
+                   WHITE);
+}
