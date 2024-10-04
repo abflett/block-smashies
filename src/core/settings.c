@@ -8,7 +8,8 @@ Settings settings = {
     .game = {
         .target_size = {320, 180},
         .play_area = {95, 7, 218, 167},
-        .logo_screen_time = 4.0f},
+        .logo_screen_time = 4.0f //
+    },
 
     .file_locations = {
         .game_data_file = "assets/config/game_data.json",    // save files
@@ -18,25 +19,33 @@ Settings settings = {
         .levels_file = "assets/config/levels.json"           // levels data
     },
 
-    .colors = {                                   // colors
-               .clear_color = {46, 34, 47, 255},  // off black
-               .screen_color = {50, 51, 83, 255}, // color of the displays or blue_01
-               .screen_text_color = {77, 155, 230, 255},
-               .blue_01 = {50, 51, 83, 255},
-               .blue_02 = {72, 84, 119, 255},
-               .blue_03 = {77, 101, 180, 255},
-               .blue_04 = {77, 155, 230, 255},
-               .blue_05 = {143, 211, 230, 255},
-               .red_02 = {232, 59, 59, 255},
-               .red_04 = {247, 150, 23, 255},
-               .green_04 = {145, 219, 105, 255},
-               .alpha_03 = {255, 255, 255, 200},
-               .alpha_06 = {255, 255, 255, 180},
-               .alpha_05 = {255, 255, 255, 64},
-               .alpha_07 = {255, 255, 255, 32}},
+    .colors = {
+        .clear_color = {46, 34, 47, 255},  // off black
+        .screen_color = {50, 51, 83, 255}, // color of the displays or blue_01
+        .screen_text_color = {77, 155, 230, 255},
+        .blue_01 = {50, 51, 83, 255},
+        .blue_02 = {72, 84, 119, 255},
+        .blue_03 = {77, 101, 180, 255},
+        .blue_04 = {77, 155, 230, 255},
+        .blue_05 = {143, 211, 230, 255},
+        .red_02 = {232, 59, 59, 255},
+        .red_04 = {247, 150, 23, 255},
+        .green_04 = {145, 219, 105, 255},
+        .alpha_00 = {255, 255, 255, 0}, // Full
+        .alpha_01 = {255, 255, 255, 25},
+        .alpha_02 = {255, 255, 255, 51},
+        .alpha_03 = {255, 255, 255, 76},
+        .alpha_04 = {255, 255, 255, 102},
+        .alpha_05 = {255, 255, 255, 127},
+        .alpha_06 = {255, 255, 255, 153},
+        .alpha_07 = {255, 255, 255, 178},
+        .alpha_08 = {255, 255, 255, 204},
+        .alpha_09 = {255, 255, 255, 229},
+        .alpha_10 = {255, 255, 255, 255} // White
+    },
 
     .gameplay = {
-        .paddle_height = 16.0f,
+        .paddle_height = 16.0f, //
         .boost_timer = 0.15f,
         .boost_active_timer = 1.0f,
         .pulse_timer = 0.09f,
@@ -46,7 +55,7 @@ Settings settings = {
         .currency_modifier = 1.0f,  // brick currency multiplier based on brick type
         .nanite_y_velocity = 20.0f, // velocity that nanites fall
         .boundary_padding = 4.0f,   // extra big segment line for kill boundary
-        .edge_padding = 10.0f,
+        .edge_padding = 10.0f       //
     },
 
     .set_defaults = set_default_config_settings,
