@@ -62,17 +62,17 @@ typedef struct
 // GameplaySettings: Playfield-related settings (paddle, bricks, etc.)
 typedef struct
 {
+    // paddle
     const float paddle_height;
     const float boost_timer;
-    const float boost_active_timer;
     const float pulse_timer;
-    const float pulse_active_timer;
     const float paddle_mass;
-    const float health_modifier;
-    const float currency_modifier;
+    // nanite
     const float nanite_y_velocity;
-    const float boundary_padding;
-    const float edge_padding;
+    // kill boundary
+    const float boundary_padding; // segment extra padding for corners
+    // walls boundary
+    const float edge_padding; //  bottom offset
 } GameplaySettings;
 
 // Main struct that holds all categories of settings

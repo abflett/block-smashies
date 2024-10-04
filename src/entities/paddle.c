@@ -30,11 +30,11 @@ static void update_paddle(Paddle *paddle, float delta_time)
     // Handle left and right movement
     if (IsKeyDown(KEY_A))
     {
-        b2Body_ApplyForceToCenter(paddle->body, (b2Vec2){-*paddle->acceleration, 0.0f}, true);
+        b2Body_ApplyForceToCenter(paddle->body, (b2Vec2){-*paddle->force, 0.0f}, true);
     }
     if (IsKeyDown(KEY_D))
     {
-        b2Body_ApplyForceToCenter(paddle->body, (b2Vec2){*paddle->acceleration, 0.0f}, true);
+        b2Body_ApplyForceToCenter(paddle->body, (b2Vec2){*paddle->force, 0.0f}, true);
     }
 
     // start timer for horizontal boosts
@@ -50,22 +50,22 @@ static void update_paddle(Paddle *paddle, float delta_time)
     // apply boost if sucessfully double pressed the left or right and active timer is expired
     if (IsKeyDown(KEY_A) && paddle->boost_timer_left < settings.gameplay.boost_timer && paddle->boost_active_timer <= 0.0f)
     {
-        b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){-*paddle->booster_str, 0.0f}, b2Body_GetWorldCenterOfMass(paddle->body), true);
-        paddle->boost_active_timer = settings.gameplay.boost_active_timer;
+        b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){-*paddle->boost_force, 0.0f}, b2Body_GetWorldCenterOfMass(paddle->body), true);
+        paddle->boost_active_timer = *paddle->boost_cooldown; // cooldown timer
     }
     if (IsKeyDown(KEY_D) && paddle->boost_timer_right < settings.gameplay.boost_timer && paddle->boost_active_timer <= 0.0f)
     {
-        b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){*paddle->booster_str, 0.0f}, b2Body_GetWorldCenterOfMass(paddle->body), true);
-        paddle->boost_active_timer = settings.gameplay.boost_active_timer;
+        b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){*paddle->boost_force, 0.0f}, b2Body_GetWorldCenterOfMass(paddle->body), true);
+        paddle->boost_active_timer = *paddle->boost_cooldown; // cooldown timer
     }
 
     // Apply upward pulse when up is pressed as long as boost timers are valid
     if (IsKeyPressed(KEY_W) && paddle->pulse_timer <= 0.0f && paddle->pulse_active_timer <= 0)
     {
         b2Body_Disable(paddle->constraint);
-        paddle->pulse_timer = settings.gameplay.pulse_timer;
-        paddle->pulse_active_timer = settings.gameplay.pulse_active_timer;
-        b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){0.0f, *paddle->pulse_str}, b2Body_GetWorldCenterOfMass(paddle->body), true);
+        paddle->pulse_timer = settings.gameplay.pulse_timer;  // pulse animation up timer
+        paddle->pulse_active_timer = *paddle->pulse_cooldown; // cooldown timer
+        b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){0.0f, *paddle->pulse_force}, b2Body_GetWorldCenterOfMass(paddle->body), true);
     }
 
     // return paddle back to X constraint after pulse
@@ -106,22 +106,28 @@ Paddle *create_paddle(int player_num, GameData *game_data, b2WorldId world_id)
     paddle->texture = &resource_manager.get_texture("ship-base")->texture;
     paddle->size = ints_to_b2vec(paddle->texture->width, paddle->texture->height);
     paddle->player_num = player_num;
+
+    // current timers
     paddle->pulse_timer = 0.0f;
     paddle->pulse_active_timer = 0.0f;
     paddle->boost_timer_left = 0.0f;
     paddle->boost_timer_right = 0.0f;
     paddle->boost_active_timer = 0.0f;
 
-    // player attribute settings
-    paddle->acceleration = &game_data->paddle.acceleration;
-    paddle->max_velocity = &game_data->paddle.max_velocity;
-    paddle->friction = &game_data->paddle.friction;
-    paddle->charge = &game_data->paddle.charge;
-    paddle->booster_str = &game_data->paddle.booster_str;
-    paddle->pulse_str = &game_data->paddle.pulse_str;
+    // perks
     paddle->phase_shift = &game_data->perks.phase_shift;
-    paddle->time_manipulation = &game_data->perks.time_manipulation;
     paddle->orb_shot = &game_data->perks.orb_shot;
+
+    // new paddle attributes
+    paddle->force = &game_data->paddle.force;                   // general movement force
+    paddle->friction = &game_data->paddle.friction;             // ball manipulation
+    paddle->damping = &game_data->paddle.damping;               // de-acceleration - affects max velocity as well
+    paddle->max_energy = &game_data->paddle.max_energy;         // max_energy
+    paddle->boost_force = &game_data->paddle.boost_force;       // boost force - horizontal burst
+    paddle->boost_cooldown = &game_data->paddle.boost_cooldown; // boost cooldown timer < is better
+    paddle->pulse_force = &game_data->paddle.pulse_force;       // boost force - vertical burst
+    paddle->pulse_cooldown = &game_data->paddle.pulse_cooldown; // pulse cooldown timer < is better
+    paddle->heat = &game_data->paddle.heat;                     // heat buildup % < is no heat
 
     b2BodyDef body_def = b2DefaultBodyDef();
     body_def.type = b2_dynamicBody;
@@ -134,7 +140,7 @@ Paddle *create_paddle(int player_num, GameData *game_data, b2WorldId world_id)
 
     b2ShapeDef paddle_shape_def = b2DefaultShapeDef();
     paddle_shape_def.density = 1.0f;
-    paddle_shape_def.friction = 1.0f;
+    paddle_shape_def.friction = *paddle->friction;
     paddle_shape_def.restitution = 1.0f; // High restitution for bouncing
 
     paddle_shape_def.filter.categoryBits = CATEGORY_PADDLE;

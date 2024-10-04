@@ -24,14 +24,17 @@ typedef struct Paddle
     float boost_timer_right;
     float boost_active_timer;
 
-    float *acceleration;
-    float *max_velocity;
-    float *friction;
-    float *charge;
-    float *booster_str;
-    float *pulse_str;
+    float *force;          // general movement force
+    float *friction;       // ball manipulation
+    float *damping;        // de-acceleration - affects max velocity as well
+    float *max_energy;     // max_energy
+    float *boost_force;    // boost force - horizontal burst
+    float *boost_cooldown; // boost cooldown timer < is better
+    float *pulse_force;    // boost force - vertical burst
+    float *pulse_cooldown; // pulse cooldown timer < is better
+    float *heat;           // heat buildup % < is no heat
+
     float *phase_shift;
-    bool *time_manipulation;
     bool *orb_shot;
 
     void (*update)(struct Paddle *paddle, float delta_time);

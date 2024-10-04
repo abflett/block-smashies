@@ -10,12 +10,14 @@
 
 static float brick_max_health(int brick_type)
 {
-    return (float)(brick_type + 1) * settings.gameplay.health_modifier;
+    // Todo: add modifier
+    return (float)(brick_type + 1) * 1;
 }
 
 static float brick_currency(Brick *brick)
 {
-    return brick->brick_type * settings.gameplay.currency_modifier;
+    // Todo: add modifier
+    return (float)(brick->brick_type + 1) * 1;
 }
 
 static void update_brick(Brick *brick, float delta_time)

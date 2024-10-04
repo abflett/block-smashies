@@ -45,17 +45,17 @@ Settings settings = {
     },
 
     .gameplay = {
+        // paddle
         .paddle_height = 16.0f, //
-        .boost_timer = 0.15f,
-        .boost_active_timer = 1.0f,
-        .pulse_timer = 0.09f,
-        .pulse_active_timer = 1.0f,
+        .boost_timer = 0.15f,   // double press timer for boosting
+        .pulse_timer = 0.09f,   // pulse animation up timer
         .paddle_mass = 1.0f,
-        .health_modifier = 1.0f,    // brick health multiplier based on brick type
-        .currency_modifier = 1.0f,  // brick currency multiplier based on brick type
+        // nanite
         .nanite_y_velocity = 20.0f, // velocity that nanites fall
-        .boundary_padding = 4.0f,   // extra big segment line for kill boundary
-        .edge_padding = 10.0f       //
+        // kill boundary
+        .boundary_padding = 4.0f, // extra big segment line for kill boundary
+        // walls boundary
+        .edge_padding = 10.0f //
     },
 
     .set_defaults = set_default_config_settings,
