@@ -13,7 +13,7 @@ static void scene_update(float delta_time)
     // update information about the controller to be displayed.
 
     // if (GetKeyPressed() != 0 || IsGestureDetected(GESTURE_TAP))
-    if (IsKeyPressed(KEY_ENTER))
+    if (IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN))
     {
         scene_manager.change(scene_manager.scenes.main_menu, 0);
     }

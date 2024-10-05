@@ -16,7 +16,7 @@ static void scene_update(float delta_time)
 {
     elapsed_time += delta_time; // Increment elapsed time by delta_time
 
-    if (GetKeyPressed() != 0 || IsGestureDetected(GESTURE_TAP) || elapsed_time >= settings.game.logo_screen_time)
+    if (GetKeyPressed() != 0 || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) || IsGestureDetected(GESTURE_TAP) || elapsed_time >= settings.game.logo_screen_time)
     {
         scene_manager.change(scene_manager.scenes.title, 0);
     }

@@ -28,39 +28,39 @@ static void update_paddle(Paddle *paddle, float delta_time)
     paddle->pulse_timer -= delta_time;
 
     // Handle left and right movement
-    if (IsKeyDown(KEY_A))
+    if (IsKeyDown(KEY_A) || IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))
     {
         b2Body_ApplyForceToCenter(paddle->body, (b2Vec2){-*paddle->force, 0.0f}, true);
     }
-    if (IsKeyDown(KEY_D))
+    if (IsKeyDown(KEY_D) || IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))
     {
         b2Body_ApplyForceToCenter(paddle->body, (b2Vec2){*paddle->force, 0.0f}, true);
     }
 
     // start timer for horizontal boosts
-    if (IsKeyReleased(KEY_A))
+    if (IsKeyReleased(KEY_A) || IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))
     {
         paddle->boost_timer_left = 0.0f;
     }
-    if (IsKeyReleased(KEY_D))
+    if (IsKeyReleased(KEY_D) || IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))
     {
         paddle->boost_timer_right = 0.0f;
     }
 
     // apply boost if sucessfully double pressed the left or right and active timer is expired
-    if (IsKeyDown(KEY_A) && paddle->boost_timer_left < settings.gameplay.boost_timer && paddle->boost_active_timer <= 0.0f)
+    if ((IsKeyDown(KEY_A) || IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT)) && paddle->boost_timer_left < settings.gameplay.boost_timer && paddle->boost_active_timer <= 0.0f)
     {
         b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){-*paddle->boost_force, 0.0f}, b2Body_GetWorldCenterOfMass(paddle->body), true);
         paddle->boost_active_timer = *paddle->boost_cooldown; // cooldown timer
     }
-    if (IsKeyDown(KEY_D) && paddle->boost_timer_right < settings.gameplay.boost_timer && paddle->boost_active_timer <= 0.0f)
+    if ((IsKeyDown(KEY_D) || IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT)) && paddle->boost_timer_right < settings.gameplay.boost_timer && paddle->boost_active_timer <= 0.0f)
     {
         b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){*paddle->boost_force, 0.0f}, b2Body_GetWorldCenterOfMass(paddle->body), true);
         paddle->boost_active_timer = *paddle->boost_cooldown; // cooldown timer
     }
 
     // Apply upward pulse when up is pressed as long as boost timers are valid
-    if (IsKeyPressed(KEY_W) && paddle->pulse_timer <= 0.0f && paddle->pulse_active_timer <= 0)
+    if ((IsKeyPressed(KEY_W) || IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_UP)) && paddle->pulse_timer <= 0.0f && paddle->pulse_active_timer <= 0)
     {
         b2Body_Disable(paddle->constraint);
         paddle->pulse_timer = settings.gameplay.pulse_timer;  // pulse animation up timer

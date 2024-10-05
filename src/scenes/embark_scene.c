@@ -65,7 +65,7 @@ static void scene_init(int arg_count, va_list args)
 
 static void scene_update(float delta_time)
 {
-    if (IsKeyPressed(KEY_ENTER))
+    if (IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN))
     {
         if (enter_exit)
         {
@@ -103,11 +103,11 @@ static void scene_update(float delta_time)
         player_count = (player_count % 4) + 1;
         change_player_count(&player_count);
     }
-    if (IsKeyPressed(KEY_RIGHT))
+    if (IsKeyPressed(KEY_RIGHT) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))
     {
         enter_exit = true;
     }
-    if (IsKeyPressed(KEY_LEFT))
+    if (IsKeyPressed(KEY_LEFT) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))
     {
         enter_exit = false;
     }
