@@ -7,7 +7,7 @@ static void delete_game_data_summary(struct GameDataSummaries *game_data_summari
 
 static void cleanup_game_data_summary(struct GameDataSummaries *game_data_summaries)
 {
-    kvec_free(game_data_summaries->summaries);
+    kv_destroy(game_data_summaries->summaries);
     free(game_data_summaries);
 }
 
