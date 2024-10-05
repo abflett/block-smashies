@@ -1,8 +1,17 @@
 #include <stdio.h>
 #include <time.h>
+#include "uuid4.h"
 #include "b_utils.h"
 #include "settings.h"
 #include "game.h"
+
+const char *create_uuid(void)
+{
+    static char buf[UUID4_LEN];
+    uuid4_init();
+    uuid4_generate(buf);
+    return buf;
+}
 
 void log_error(const char *message)
 {

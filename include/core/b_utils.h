@@ -5,6 +5,7 @@
 #include "box2d/box2d.h"
 #include "resource.h"
 
+const char *create_uuid(void);
 void log_error(const char *message);
 float flip_y(float y);
 float flip_y_center(float y, float size_y);

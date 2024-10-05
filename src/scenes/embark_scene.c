@@ -69,7 +69,7 @@ static void scene_update(float delta_time)
     {
         if (enter_exit)
         {
-            scene_manager.change(scene_manager.scenes.gameplay, 1, create_game_data("Team1"));
+            scene_manager.change(scene_manager.scenes.gameplay, 1, create_game_data());
         }
         else
         {

@@ -76,9 +76,16 @@ typedef struct GameData
     void (*save_data)(void);     // save game data to the json file, either updating or creating a new json object, uses id of current game_data global struct
 } GameData;
 
+typedef struct GameDataSummary
+{
+    int id;           // Game data ID
+    char name[15];    // Team name for display
+    int high_score;   // High score for display
+    int player_count; // Player count for display
+    int currency;     // Current currency
+} GameDataSummary;
+
 GameData *create_game_data(void); // create a new default game data with starting attributes
 GameData *load_game_data(int id); // create a game data from an existing object from json
-
-// Display all saved games
 
 #endif

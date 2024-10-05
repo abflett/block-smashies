@@ -1,6 +1,8 @@
 #include <string.h> // For strcpy
 #include "game_data.h"
 #include "raylib.h"
+#include "b_utils.h"
+#include "uuid4.h"
 
 static GameData game_data;
 
@@ -9,6 +11,9 @@ static void remove_player_game_data(void) {}
 
 GameData *create_game_data(void)
 {
+    const char *test_uuid = create_uuid();
+    TraceLog(LOG_INFO, "[[[test uuid]]]: %s", test_uuid);
+
     const char *name = "Block Smashies";
     strncpy(game_data.name, name, sizeof(game_data.name) - 1);
     game_data.name[sizeof(game_data.name) - 1] = '\0'; // Ensure null termination

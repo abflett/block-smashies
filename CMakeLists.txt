@@ -23,6 +23,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/external/uthash/src
     ${PROJECT_SOURCE_DIR}/external/klib
     ${PROJECT_SOURCE_DIR}/external/box2d/include
+    ${PROJECT_SOURCE_DIR}/external/uuid4/src
 )
 
 # Source files for the core module
@@ -33,6 +34,10 @@ set(CORE_SRC
     src/core/animation_handler.c
     src/core/game.c
     src/core/b_utils.c
+)
+
+set(EXTERNAL_SRC
+    external/uuid4/src/uuid4.c
 )
 
 set(COLLISIONS_SRC
@@ -111,7 +116,8 @@ add_executable(BlockSmashies
     ${ENTITIES_SRC}
     ${SHIP_SRC}
     ${COLLISIONS_SRC}
-    ${MAPPINGS_SRC})
+    ${MAPPINGS_SRC}
+    ${EXTERNAL_SRC})
 
 # Link with libraries
 target_link_libraries(BlockSmashies PUBLIC raylib parson box2d)
