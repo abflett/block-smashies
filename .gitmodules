@@ -16,3 +16,6 @@
 [submodule "assets"]
 	path = assets
 	url = git@github.com:abflett/block-smashies-assets.git
+[submodule "external/uuid4"]
+	path = external/uuid4
+	url = git@github.com:abflett/uuid4.git
