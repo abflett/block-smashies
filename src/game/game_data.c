@@ -1,21 +1,15 @@
 #include <string.h> // For strcpy
 #include "game_data.h"
+#include "raylib.h"
 
 static GameData game_data;
 
-static void cleanup_game_data(void)
-{
-    for (int i = 0; i < 4; i++)
-    {
-        game_data.ships[i]->cleanup(game_data.ships[i]);
-    }
-}
 static void add_player_game_data(void) {}
 static void remove_player_game_data(void) {}
 
-GameData *create_game_data(const char *name)
+GameData *create_game_data(void)
 {
-    // Set the Team's name
+    const char *name = "Block Smashies";
     strncpy(game_data.name, name, sizeof(game_data.name) - 1);
     game_data.name[sizeof(game_data.name) - 1] = '\0'; // Ensure null termination
     game_data.player_count = 1;
@@ -50,12 +44,13 @@ GameData *create_game_data(const char *name)
     game_data.perks.time_manipulation = false;
     game_data.perks.orb_shot = false;
 
+    SetRandomSeed(1);
     for (int i = 0; i < 4; i++)
     {
-        game_data.ships[i] = create_ship(i + 1, game_data.player_count, GetRandomValue(0, 25), (b2Vec2){0, 0});
+        int random_color = GetRandomValue(0, 25);
+        game_data.ships[i] = (ShipCustomization){.active = i == 0, .player_num = i, .ship_color = random_color};
     }
 
-    game_data.cleanup = cleanup_game_data;
     game_data.add_player = add_player_game_data;
     game_data.remove_player = remove_player_game_data;
 

@@ -2,15 +2,23 @@
 #define GAME_DATA_H
 
 #include <stdbool.h>
-#include <ship.h>
 
 /*  GameData
-    Used for saving data that will remain persistant
+    - Used for saving data that will remain persistant
+    - Using the upgrade tree will modify and save the new game_data
 */
 
-typedef struct
+typedef struct ShipCustomization
+{
+    bool active;    // active based on player count
+    int ship_color; // ship color
+    int player_num; // player number: shape/segments based on player_num and player_count
+} ShipCustomization;
+
+typedef struct PaddleAttributes
 {
     // Ship Attributes
+    int shield_level;
     float force;          // general movement force
     float friction;       // ball manipulation
     float damping;        // de-acceleration - affects max velocity as well
@@ -22,14 +30,14 @@ typedef struct
     float heat;           // heat buildup % < is no heat
 } PaddleAttributes;
 
-typedef struct
+typedef struct BallAttributes
 {
     float max_velocity; // max velocity
     float min_velocity; // min velocity
     float power;        // damage
 } BallAttributes;
 
-typedef struct
+typedef struct Perks
 {
     // paddle perks
     float phase_shift; // dublicate orb weapon % chance
@@ -43,14 +51,15 @@ typedef struct
 
 typedef struct GameData
 {
-    char name[11];
+    int id;        // game_data id for saving and loading
+    char name[15]; // Team name max 10 chars
     int player_count;
     int operation_complete;
-    int mission_complete;
+    int mission_complete;   // 5 missions per operation
     int currency;           // available currency
     int currency_collected; // total currency collected
     int high_score;         // current high score
-    int lives;
+    int lives;              // number of orb catchers/lives
 
     // Difficulty and modifiers
     int max_lives;         // max ammount of saver bots
@@ -60,14 +69,16 @@ typedef struct GameData
     PaddleAttributes paddle;
     BallAttributes ball;
     Perks perks;
+    ShipCustomization ships[4];
 
-    Ship *ships[4];
-
-    void (*cleanup)(void);
-    void (*add_player)(void);
-    void (*remove_player)(void);
+    void (*add_player)(void);    // change player count and update active ships
+    void (*remove_player)(void); // change player cound and update active ships
+    void (*save_data)(void);     // save game data to the json file, either updating or creating a new json object, uses id of current game_data global struct
 } GameData;
 
-GameData *create_game_data(const char *name);
+GameData *create_game_data(void); // create a new default game data with starting attributes
+GameData *load_game_data(int id); // create a game data from an existing object from json
+
+// Display all saved games
 
 #endif
