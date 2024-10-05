@@ -127,7 +127,7 @@ Paddle *create_paddle(int player_num, GameData *game_data, b2WorldId world_id)
     paddle->boost_cooldown = &game_data->paddle.boost_cooldown; // boost cooldown timer < is better
     paddle->pulse_force = &game_data->paddle.pulse_force;       // boost force - vertical burst
     paddle->pulse_cooldown = &game_data->paddle.pulse_cooldown; // pulse cooldown timer < is better
-    paddle->heat = &game_data->paddle.heat;                     // heat buildup % < is no heat
+    paddle->heat = &game_data->paddle.max_heat;                 // heat buildup % < is no heat
 
     b2BodyDef body_def = b2DefaultBodyDef();
     body_def.type = b2_dynamicBody;

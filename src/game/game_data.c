@@ -6,25 +6,67 @@
 
 static GameData game_data;
 
-static void add_player_game_data(void) {}
-static void remove_player_game_data(void) {}
+static void add_player_game_data(void)
+{
+    if (game_data.player_count < MAX_SHIPS)
+    {
+        game_data.player_count++;
+    }
+
+    for (int i = 0; i < MAX_SHIPS; i++)
+    {
+        if (i < game_data.player_count)
+        {
+            game_data.ships[i].active = true;
+        }
+        else
+        {
+            game_data.ships[i].active = false;
+        }
+    }
+}
+static void remove_player_game_data(void)
+{
+    if (game_data.player_count > 1)
+    {
+        game_data.player_count--;
+    }
+
+    for (int i = 0; i < MAX_SHIPS; i++)
+    {
+        if (i < game_data.player_count)
+        {
+            game_data.ships[i].active = true;
+        }
+        else
+        {
+            game_data.ships[i].active = false;
+        }
+    }
+}
 
 GameData *create_game_data(void)
 {
-    const char *test_uuid = create_uuid();
-    TraceLog(LOG_INFO, "[[[test uuid]]]: %s", test_uuid);
+    const char *uuid = create_uuid(); // Use your existing create_uuid function
+    strncpy(game_data.uuid, uuid, UUID4_LEN);
+    // game_data.uuid[UUID4_LEN - 1] = '\0'; // Ensure null termination
 
     const char *name = "Block Smashies";
     strncpy(game_data.name, name, sizeof(game_data.name) - 1);
     game_data.name[sizeof(game_data.name) - 1] = '\0'; // Ensure null termination
-    game_data.player_count = 1;
-    game_data.lives = 3; // Starting lives
 
-    // Initialize player progress
+    game_data.player_count = 1;
     game_data.operation_complete = 0;
-    game_data.mission_complete = 0;
-    game_data.currency = 0; // Starting currency
-    game_data.currency_collected = 0;
+    game_data.mission_complete = 0;   // 5 missions per operation
+    game_data.currency = 0;           // available currency
+    game_data.currency_collected = 0; // total currency collected
+    game_data.high_score = 0;         // current high score
+    game_data.lives = 3;              // number of orb catchers/lives
+
+    game_data.difficulty = NORMAL_DIFFICULTY;
+    game_data.max_lives = 5;          // max ammount of saver bots
+    game_data.difficulty_high = 1.0f; // 0.5 - 2.0 - currency * difficulty_high > is easier
+    game_data.difficulty_low = 1.0f;  // 0.5 - 2.0 - ball.max_velocity * difficulty_low < is easier
 
     // Initialize paddle attributes
     game_data.paddle.force = 300.0f;        // general movement force
@@ -35,7 +77,7 @@ GameData *create_game_data(void)
     game_data.paddle.boost_cooldown = 2.0f; // boost cooldown timer < is better
     game_data.paddle.pulse_force = 100.0f;  // boost force - vertical burst
     game_data.paddle.pulse_cooldown = 2.0f; // pulse cooldown timer < is better
-    game_data.paddle.heat = 0.0f;           // heat buildup % < is no heat
+    game_data.paddle.max_heat = 100.0f;     // max_heat until over heat
 
     // Initialize ball attributes
     game_data.ball.max_velocity = 50.0f;
@@ -49,8 +91,9 @@ GameData *create_game_data(void)
     game_data.perks.time_manipulation = false;
     game_data.perks.orb_shot = false;
 
+    // ShipCustomization
     SetRandomSeed(1);
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < MAX_SHIPS; i++)
     {
         int random_color = GetRandomValue(0, 25);
         game_data.ships[i] = (ShipCustomization){.active = i == 0, .player_num = i, .ship_color = random_color};
@@ -58,6 +101,13 @@ GameData *create_game_data(void)
 
     game_data.add_player = add_player_game_data;
     game_data.remove_player = remove_player_game_data;
+
+    return &game_data;
+}
+
+GameData *load_game_data(const char *uuid)
+{
+    // populate game_data based on the data from the json based on the found uuid
 
     return &game_data;
 }
