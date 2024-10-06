@@ -19,6 +19,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/include/scenes
     ${PROJECT_SOURCE_DIR}/include/game_states
     ${PROJECT_SOURCE_DIR}/include/game
+    ${PROJECT_SOURCE_DIR}/include/input
     ${PROJECT_SOURCE_DIR}/external/parson
     ${PROJECT_SOURCE_DIR}/external/uthash/src
     ${PROJECT_SOURCE_DIR}/external/klib
@@ -108,12 +109,17 @@ set(GAME_SRC
     src/game/game_data_summary.c
 ) 
 
+set(INPUT_SRC
+    src/input/gamepad_test.c
+) 
+
 # Create the BlockSmashies executable
 add_executable(BlockSmashies
     ${SCENES_SRC}
     ${GAME_STATES_SRC}
     ${CORE_SRC}
     ${GAME_SRC}
+    ${INPUT_SRC}
     ${ENTITIES_SRC}
     ${SHIP_SRC}
     ${COLLISIONS_SRC}

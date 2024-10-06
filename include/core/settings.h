@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include "raylib.h"
+#include "input_mapping.h"
 
 // ConfigSettings: Savable settings in the JSON file (e.g., screen, fullscreen, volume)
 typedef struct
@@ -83,7 +84,9 @@ typedef struct
     GameSettings game;
     GameplaySettings gameplay;
     Colors colors;
+    InputMapping inputs[4];
     void (*save)(void);
+    void (*set_default_inputs)(void);
     void (*set_defaults)(void);
 } Settings;
 
