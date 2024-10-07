@@ -7,6 +7,7 @@
 #define MAX_DISPLAY_CHARS 51
 
 static Scene main_menu_scene;
+static InputMapping *input;
 
 static Texture2D *texture_stars;
 static Texture2D *texture_station;
@@ -96,17 +97,17 @@ static void scene_init(int arg_count, va_list args)
 static void scene_update(float delta_time)
 {
 
-    if (IsKeyPressed(KEY_DOWN) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN))
+    if (IsKeyPressed(input->action_k_DOWN) || IsGamepadButtonPressed(0, input->action_DOWN))
     {
         selected_menu_option = (selected_menu_option + 1) % num_menu_options; // Loop back to the first option
     }
 
-    if (IsKeyPressed(KEY_UP) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_UP))
+    if (IsKeyPressed(input->action_k_UP) || IsGamepadButtonPressed(0, input->action_UP))
     {
         selected_menu_option = (selected_menu_option - 1 + num_menu_options) % num_menu_options; // Loop to the last option
     }
 
-    if (IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN))
+    if (IsKeyPressed(input->action_k_ENTER) || IsGamepadButtonPressed(0, input->action_A))
     {
         switch (selected_menu_option)
         {
@@ -126,6 +127,11 @@ static void scene_update(float delta_time)
             exit_game();
             break;
         }
+    }
+
+    if (IsKeyPressed(settings.inputs[0].action_k_ESCAPE))
+    {
+        exit_game();
     }
 
     update_flavor_text_scroll(delta_time);
@@ -234,6 +240,8 @@ Scene *create_main_menu_scene()
     toggle_beams = false;
     accumalator = 0.0f;
     beam_alpha = settings.colors.alpha_05;
+
+    input = &settings.inputs[0];
 
     main_menu_scene.init = scene_init;
     main_menu_scene.update = scene_update;
