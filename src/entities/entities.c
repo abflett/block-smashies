@@ -36,19 +36,30 @@ static void add_ball_func(GameData *game_data, b2WorldId world_id, Paddle *paddl
 
 static void add_paddle_func(GameData *game_data, b2WorldId world_id)
 {
-    // Todo: check active paddles before setting the player count
+    int paddle_count = (int)kv_size(entities.paddles);
+    int player_count = 0;
+
     for (int i = 0; i < kv_size(entities.paddles); i++)
+    {
+        Paddle *existing_paddle = kv_A(entities.paddles, i);
+        if (existing_paddle->active)
+        {
+            player_count++;
+        }
+    }
+
+    for (int i = 0; i < paddle_count; i++)
     {
         Paddle *existing_paddle = kv_A(entities.paddles, i);
         if (!existing_paddle->active)
         {
-            existing_paddle->reset(existing_paddle, 1);
+            existing_paddle->reset(existing_paddle, player_count);
             return;
         }
     }
 
     // Todo: check active paddles before setting the player count
-    Paddle *new_paddle = create_paddle((int)kv_size(entities.paddles) + 1, game_data, world_id);
+    Paddle *new_paddle = create_paddle(player_count, game_data, world_id);
     kv_push(Paddle *, entities.paddles, new_paddle);
 }
 

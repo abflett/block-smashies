@@ -6,6 +6,7 @@
 #include "box2d/box2d.h"
 #include "game_data.h"
 #include "entity_type.h"
+#include "settings.h"
 
 typedef struct Paddle
 {
@@ -13,7 +14,7 @@ typedef struct Paddle
     b2BodyId body;
     b2BodyId constraint;
     bool active;
-
+    InputMapping *input;
     Texture2D *texture;
     b2Vec2 size;
 

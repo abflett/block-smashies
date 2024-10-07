@@ -94,6 +94,8 @@ static void save_settings(void)
         json_object_set_number(input_mapping_object, "action_A", settings.inputs[i].action_A);
         json_object_set_number(input_mapping_object, "action_B", settings.inputs[i].action_B);
         json_object_set_number(input_mapping_object, "action_START", settings.inputs[i].action_START);
+        json_object_set_number(input_mapping_object, "action_L", settings.inputs[i].action_L);
+        json_object_set_number(input_mapping_object, "action_R", settings.inputs[i].action_R);
 
         // Save keyboard mappings
         json_object_set_number(input_mapping_object, "action_k_UP", settings.inputs[i].action_k_UP);
@@ -138,6 +140,8 @@ static void set_default_input_settings(void)
             .action_LEFT = GAMEPAD_BUTTON_LEFT_FACE_LEFT,
             .action_A = GAMEPAD_BUTTON_RIGHT_FACE_DOWN,
             .action_B = GAMEPAD_BUTTON_RIGHT_FACE_RIGHT,
+            .action_L = GAMEPAD_BUTTON_LEFT_TRIGGER_1,
+            .action_R = GAMEPAD_BUTTON_RIGHT_TRIGGER_1,
             .action_START = GAMEPAD_BUTTON_MIDDLE_RIGHT,
             .action_a_x = GAMEPAD_AXIS_LEFT_X,
             .action_a_y = GAMEPAD_AXIS_LEFT_Y};
@@ -219,6 +223,9 @@ void initialize_settings()
             settings.inputs[i].action_A = (GamepadButton)json_object_get_number(input_mapping_object, "action_A");
             settings.inputs[i].action_B = (GamepadButton)json_object_get_number(input_mapping_object, "action_B");
             settings.inputs[i].action_START = (GamepadButton)json_object_get_number(input_mapping_object, "action_START");
+            settings.inputs[i].action_L = (GamepadButton)json_object_get_number(input_mapping_object, "action_L");
+            settings.inputs[i].action_R = (GamepadButton)json_object_get_number(input_mapping_object, "action_R");
+
             // Load gamepad axes
             settings.inputs[i].action_a_x = (GamepadAxis)json_object_get_number(input_mapping_object, "action_a_x");
             settings.inputs[i].action_a_y = (GamepadAxis)json_object_get_number(input_mapping_object, "action_a_y");

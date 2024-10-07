@@ -28,39 +28,39 @@ static void update_paddle(Paddle *paddle, float delta_time)
     paddle->pulse_timer -= delta_time;
 
     // Handle left and right movement
-    if (IsKeyDown(KEY_A) || IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))
+    if (IsKeyDown(paddle->input->action_k_LEFT) || IsGamepadButtonDown(paddle->player_num, paddle->input->action_LEFT))
     {
         b2Body_ApplyForceToCenter(paddle->body, (b2Vec2){-*paddle->force, 0.0f}, true);
     }
-    if (IsKeyDown(KEY_D) || IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))
+    if (IsKeyDown(paddle->input->action_k_RIGHT) || IsGamepadButtonDown(paddle->player_num, paddle->input->action_RIGHT))
     {
         b2Body_ApplyForceToCenter(paddle->body, (b2Vec2){*paddle->force, 0.0f}, true);
     }
 
     // start timer for horizontal boosts
-    if (IsKeyReleased(KEY_A) || IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))
+    if (IsKeyReleased(paddle->input->action_k_LEFT) || IsGamepadButtonReleased(paddle->player_num, paddle->input->action_LEFT))
     {
         paddle->boost_timer_left = 0.0f;
     }
-    if (IsKeyReleased(KEY_D) || IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))
+    if (IsKeyReleased(paddle->input->action_k_RIGHT) || IsGamepadButtonReleased(paddle->player_num, paddle->input->action_RIGHT))
     {
         paddle->boost_timer_right = 0.0f;
     }
 
     // apply boost if sucessfully double pressed the left or right and active timer is expired
-    if ((IsKeyDown(KEY_A) || IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT)) && paddle->boost_timer_left < settings.gameplay.boost_timer && paddle->boost_active_timer <= 0.0f)
+    if ((IsKeyDown(paddle->input->action_k_LEFT) && paddle->boost_timer_left < settings.gameplay.boost_timer && paddle->boost_active_timer <= 0.0f) || (IsGamepadButtonPressed(paddle->player_num, paddle->input->action_L) && paddle->boost_active_timer <= 0.0f))
     {
         b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){-*paddle->boost_force, 0.0f}, b2Body_GetWorldCenterOfMass(paddle->body), true);
         paddle->boost_active_timer = *paddle->boost_cooldown; // cooldown timer
     }
-    if ((IsKeyDown(KEY_D) || IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT)) && paddle->boost_timer_right < settings.gameplay.boost_timer && paddle->boost_active_timer <= 0.0f)
+    if ((IsKeyDown(paddle->input->action_k_RIGHT) && paddle->boost_timer_right < settings.gameplay.boost_timer && paddle->boost_active_timer <= 0.0f) || (IsGamepadButtonPressed(paddle->player_num, paddle->input->action_R) && paddle->boost_active_timer <= 0.0f))
     {
         b2Body_ApplyLinearImpulse(paddle->body, (b2Vec2){*paddle->boost_force, 0.0f}, b2Body_GetWorldCenterOfMass(paddle->body), true);
         paddle->boost_active_timer = *paddle->boost_cooldown; // cooldown timer
     }
 
     // Apply upward pulse when up is pressed as long as boost timers are valid
-    if ((IsKeyPressed(KEY_W) || IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_UP)) && paddle->pulse_timer <= 0.0f && paddle->pulse_active_timer <= 0)
+    if ((IsKeyPressed(paddle->input->action_k_UP) || IsGamepadButtonDown(paddle->player_num, paddle->input->action_A)) && paddle->pulse_timer <= 0.0f && paddle->pulse_active_timer <= 0)
     {
         b2Body_Disable(paddle->constraint);
         paddle->pulse_timer = settings.gameplay.pulse_timer;  // pulse animation up timer
@@ -106,6 +106,7 @@ Paddle *create_paddle(int player_num, GameData *game_data, b2WorldId world_id)
     paddle->texture = &resource_manager.get_texture("ship-base")->texture;
     paddle->size = ints_to_b2vec(paddle->texture->width, paddle->texture->height);
     paddle->player_num = player_num;
+    paddle->input = &settings.inputs[paddle->player_num];
 
     // current timers
     paddle->pulse_timer = 0.0f;
