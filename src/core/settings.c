@@ -158,24 +158,24 @@ static void set_default_input_settings(void)
             settings.inputs[i].action_k_DOWN = KEY_S;
             settings.inputs[i].action_k_LEFT = KEY_A;
             settings.inputs[i].action_k_RIGHT = KEY_D;
-            settings.inputs[i].action_k_ENTER = KEY_ENTER;
-            settings.inputs[i].action_k_ESCAPE = KEY_ESCAPE;
+            settings.inputs[i].action_k_ENTER = KEY_E;
+            settings.inputs[i].action_k_ESCAPE = KEY_Q;
             break;
         case 2:
             settings.inputs[i].action_k_UP = KEY_T;
             settings.inputs[i].action_k_DOWN = KEY_G;
             settings.inputs[i].action_k_LEFT = KEY_F;
             settings.inputs[i].action_k_RIGHT = KEY_H;
-            settings.inputs[i].action_k_ENTER = KEY_ENTER;
-            settings.inputs[i].action_k_ESCAPE = KEY_ESCAPE;
+            settings.inputs[i].action_k_ENTER = KEY_Y;
+            settings.inputs[i].action_k_ESCAPE = KEY_R;
             break;
         case 3:
             settings.inputs[i].action_k_UP = KEY_I;
             settings.inputs[i].action_k_DOWN = KEY_K;
             settings.inputs[i].action_k_LEFT = KEY_J;
             settings.inputs[i].action_k_RIGHT = KEY_L;
-            settings.inputs[i].action_k_ENTER = KEY_ENTER;
-            settings.inputs[i].action_k_ESCAPE = KEY_ESCAPE;
+            settings.inputs[i].action_k_ENTER = KEY_O;
+            settings.inputs[i].action_k_ESCAPE = KEY_U;
             break;
         }
     }
@@ -219,6 +219,9 @@ void initialize_settings()
             settings.inputs[i].action_A = (GamepadButton)json_object_get_number(input_mapping_object, "action_A");
             settings.inputs[i].action_B = (GamepadButton)json_object_get_number(input_mapping_object, "action_B");
             settings.inputs[i].action_START = (GamepadButton)json_object_get_number(input_mapping_object, "action_START");
+            // Load gamepad axes
+            settings.inputs[i].action_a_x = (GamepadAxis)json_object_get_number(input_mapping_object, "action_a_x");
+            settings.inputs[i].action_a_y = (GamepadAxis)json_object_get_number(input_mapping_object, "action_a_y");
 
             // Load keyboard keys
             settings.inputs[i].action_k_UP = (KeyboardKey)json_object_get_number(input_mapping_object, "action_k_UP");
@@ -227,10 +230,6 @@ void initialize_settings()
             settings.inputs[i].action_k_LEFT = (KeyboardKey)json_object_get_number(input_mapping_object, "action_k_LEFT");
             settings.inputs[i].action_k_ENTER = (KeyboardKey)json_object_get_number(input_mapping_object, "action_k_ENTER");
             settings.inputs[i].action_k_ESCAPE = (KeyboardKey)json_object_get_number(input_mapping_object, "action_k_ESCAPE");
-
-            // Load gamepad axes
-            settings.inputs[i].action_a_x = (GamepadAxis)json_object_get_number(input_mapping_object, "action_a_x");
-            settings.inputs[i].action_a_y = (GamepadAxis)json_object_get_number(input_mapping_object, "action_a_y");
         }
     }
 
