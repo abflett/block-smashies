@@ -6,10 +6,13 @@
 #include "resource_manager.h"
 #include "game_data.h"
 #include "ship.h"
+#include "game.h"
 
 #define SHIP_COLORS 25
 
 Scene embark_scene;
+static InputManager *input_manager;
+static float axis_debounce = 0.0f;
 
 Ship *ship_p1;
 Ship *ship_p2;
@@ -28,11 +31,10 @@ Texture2D *embark_projector_beams;
 Texture2D *embark_room;
 Texture2D *embark_text_backing;
 
-int player_count = 2;
-
-bool enter_exit = true;
-
-int color_selection;
+int player_count = 1;
+int menu_selection = 0;
+const menu_selection_count = 2;
+int color_selection = 0;
 
 static void change_player_count(int *players)
 {
@@ -57,73 +59,89 @@ static void change_player_count(int *players)
 
 static void scene_init(int arg_count, va_list args)
 {
-    ship_p1 = create_ship(1, player_count, GetRandomValue(0, 25), (b2Vec2){135, 80});
-    ship_p2 = create_ship(2, player_count, GetRandomValue(0, 25), (b2Vec2){188, 80});
-    ship_p3 = create_ship(3, player_count, GetRandomValue(0, 25), (b2Vec2){84, 80});
-    ship_p4 = create_ship(4, player_count, GetRandomValue(0, 25), (b2Vec2){239, 80});
+    ship_p1 = create_ship(1, player_count, GetRandomValue(0, 24), (b2Vec2){135, 80});
+    ship_p2 = create_ship(2, player_count, GetRandomValue(0, 24), (b2Vec2){188, 80});
+    ship_p3 = create_ship(3, player_count, GetRandomValue(0, 24), (b2Vec2){84, 80});
+    ship_p4 = create_ship(4, player_count, GetRandomValue(0, 24), (b2Vec2){239, 80});
 }
 
 static void scene_update(float delta_time)
 {
-    if (IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN))
+    if (axis_debounce >= 0.0f)
     {
-        if (enter_exit)
+        axis_debounce -= delta_time;
+    }
+
+    InputMapping *p1_input = input_manager->get_player_input(0);
+
+    // float axis = GetGamepadAxisMovement(0, p1_input->action_a_X) > 0;
+    // TraceLog(LOG_INFO, "[[Axis]]: %f", axis);
+
+    if (IsKeyPressed(p1_input->action_k_ENTER) || IsGamepadButtonPressed(0, p1_input->action_A) || IsGamepadButtonPressed(0, p1_input->action_START))
+    {
+        switch (menu_selection)
         {
-            scene_manager.change(scene_manager.scenes.gameplay, 1, create_game_data());
-        }
-        else
-        {
+        case 0:
             scene_manager.change(scene_manager.scenes.main_menu, 0);
+            break;
+        case 1:
+            scene_manager.change(scene_manager.scenes.gameplay, 1, create_game_data());
+            break;
+        default:
+            scene_manager.change(scene_manager.scenes.main_menu, 0);
+            break;
         }
     }
 
-    if (IsKeyPressed(KEY_W))
+    if (IsKeyPressed(p1_input->action_k_RIGHT) || IsGamepadButtonPressed(0, p1_input->action_RIGHT) || GetGamepadAxisMovement(0, p1_input->action_a_X) > 0.5f)
     {
+        menu_selection = (menu_selection + 1) % menu_selection_count;
+        // selected_menu_option = (selected_menu_option + 1) % num_menu_options; // Loop back to the first option
+    }
+    if (IsKeyPressed(p1_input->action_k_LEFT) || IsGamepadButtonPressed(0, p1_input->action_LEFT) || GetGamepadAxisMovement(0, p1_input->action_a_X) < -0.5f)
+    {
+        menu_selection = (menu_selection - 1 + menu_selection_count) % menu_selection_count;
+        //  selected_menu_option = (selected_menu_option - 1 + num_menu_options) % num_menu_options; // Loop to the last option
+    }
+
+    if (IsKeyPressed(p1_input->action_k_UP) || IsGamepadButtonPressed(0, p1_input->action_UP) || (GetGamepadAxisMovement(0, p1_input->action_a_Y) > 0.5f && axis_debounce <= 0))
+    {
+        axis_debounce = 0.2f;
         color_selection = (1 + color_selection) % SHIP_COLORS;
         ship_p1->ship_body->set_color(ship_p1->ship_body, color_selection);
     }
-    if (IsKeyPressed(KEY_S))
+
+    if (IsKeyPressed(p1_input->action_k_DOWN) || IsGamepadButtonPressed(0, p1_input->action_DOWN) || (GetGamepadAxisMovement(0, p1_input->action_a_Y) < -0.5f && axis_debounce <= 0))
     {
+        axis_debounce = 0.2f;
         color_selection = (color_selection - 1 + SHIP_COLORS) % SHIP_COLORS;
         ship_p1->ship_body->set_color(ship_p1->ship_body, color_selection);
     }
-    if (IsKeyPressed(KEY_A))
-    {
-        ship_p1->shield_level = (ship_p1->shield_level + 1) % 4;
-        ship_p1->ship_shield->set_shield(ship_p1->ship_shield);
-    }
-    if (IsKeyPressed(KEY_D))
-    {
-        ship_p1->segments = (ship_p1->segments % 4) + 1;
-        ship_p1->ship_shield->set_shield(ship_p1->ship_shield);
-    }
 
-    if (IsKeyPressed(KEY_E))
-    {
-        player_count = (player_count % 4) + 1;
-        change_player_count(&player_count);
-    }
-    if (IsKeyPressed(KEY_RIGHT) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))
-    {
-        enter_exit = true;
-    }
-    if (IsKeyPressed(KEY_LEFT) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))
-    {
-        enter_exit = false;
-    }
+    // color_selection = (color_selection - 1 + SHIP_COLORS) % SHIP_COLORS;
+    // ship_p1->ship_body->set_color(ship_p1->ship_body, color_selection);
+    // ship_p1->shield_level = (ship_p1->shield_level + 1) % 4;
+    // ship_p1->ship_shield->set_shield(ship_p1->ship_shield);
+    // ship_p1->segments = (ship_p1->segments % 4) + 1;
+    // ship_p1->ship_shield->set_shield(ship_p1->ship_shield);
 }
 
 static void scene_render(void)
 {
     DrawTexture(*embark_room, 0, 0, WHITE);
 
-    if (enter_exit)
+    switch (menu_selection)
     {
-        DrawTexture(*floor_simulation, 214, 166, WHITE);
-    }
-    else
-    {
+    case 0:
         DrawTexture(*floor_dock, 22, 166, WHITE);
+        break;
+    case 1:
+        DrawTexture(*floor_simulation, 214, 166, WHITE);
+        break;
+
+    default:
+        DrawTexture(*floor_dock, 22, 166, WHITE);
+        break;
     }
 
     DrawTexture(*embark_projector_beams, 51, 36, WHITE);
@@ -161,6 +179,9 @@ static void scene_cleanup(void)
 
 Scene *create_embark_scene(void)
 {
+    input_manager = get_input_manager();
+
+    // set textures
     floor_dock = &resource_manager.get_texture("embark-floor-dock")->texture;
     floor_simulation = &resource_manager.get_texture("embark-floor-simulation")->texture;
     holo_beam = &resource_manager.get_texture("embark-holo-beam")->texture;

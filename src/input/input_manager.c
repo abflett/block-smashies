@@ -94,17 +94,41 @@ static int input_pressed(void)
     return -1;
 }
 
+static void map_player_input(int player, int input_index)
+{
+    if (player < 0 || player >= MAX_PLAYERS || input_index < 0 || input_index >= MAX_INPUTS)
+    {
+        return;
+    }
+
+    manager.player[player] = input_index;
+    manager.input_mapped[input_index];
+}
+
+static InputMapping *get_player_input(int player)
+{
+    if (player < 0 || player >= MAX_PLAYERS)
+    {
+        return NULL;
+    }
+    return &manager.inputs[manager.player[player]];
+}
+
 InputManager *create_input_manager(void)
 {
-    manager.inputs = settings.inputs;
-
     font = resource_manager.get_pixel7_font();
+
+    manager.inputs = settings.inputs;
+    manager.player[0] = 0;
+    manager.input_mapped[0] = true;
 
     for (int i = 0; i < MAX_INPUTS; i++)
     {
         notification_timeout[i] = 0.0f;
     }
 
+    manager.get_player_input = get_player_input;
+    manager.map_player_input = map_player_input;
     manager.update = update;
     manager.render = render;
     manager.input_pressed = input_pressed;
