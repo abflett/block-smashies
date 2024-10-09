@@ -16,10 +16,11 @@ static void update_game(float delta_time)
 {
     scene_manager.update(delta_time);
     shake_effect->update(delta_time);
+    game.input_manager->update(delta_time);
+    game.input_manager->input_pressed();
 
     if (((IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL)) && IsKeyPressed(KEY_C)) || WindowShouldClose())
     {
-
         exit_window = true;
     }
 }
@@ -29,6 +30,7 @@ static void render_game(void)
     BeginTextureMode(target_texture);
     ClearBackground(settings.colors.clear_color);
     scene_manager.render();
+    game.input_manager->render();
     EndTextureMode();
 
     // Draw the render texture to the screen with scaling
@@ -89,6 +91,7 @@ Game *create_game(const char *game_title)
     target_texture = LoadRenderTexture((int)settings.game.target_size.x, (int)settings.game.target_size.y);
     shake_effect = create_shake_effect();
     resource_manager.load_resource_file();
+    game.input_manager = create_input_manager();
     initialize_scene_manager();
     initialize_game_state_manager();
 

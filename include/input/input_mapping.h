@@ -1,6 +1,7 @@
 #ifndef INPUT_MAPPING_H
 #define INPUT_MAPPING_H
 
+#include <stdbool.h>
 #include "raylib.h"
 
 typedef struct InputMapping
@@ -23,8 +24,8 @@ typedef struct InputMapping
     KeyboardKey action_k_ENTER;  // Enter / Select  | Enter / Select  | None
     KeyboardKey action_k_ESCAPE; // Exit / Back     | Exit / Back     | Pause Menu
                                  // ================|=================|=============
-    GamepadAxis action_a_x;      // Cycle +/-       | Cycle +/-       | Acc +/-
-    GamepadAxis action_a_y;      // Cycle +/-       | Color +/-       | None
+    GamepadAxis action_a_X;      // Cycle +/-       | Cycle +/-       | Acc +/-
+    GamepadAxis action_a_Y;      // Cycle +/-       | Color +/-       | None
 } InputMapping;
 
 #endif

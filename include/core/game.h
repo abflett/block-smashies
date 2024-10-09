@@ -3,9 +3,11 @@
 
 #include "raylib.h"
 #include "shake_effect.h"
+#include "input_manager.h"
 
 typedef struct Game
 {
+    InputManager *input_manager;
     void (*run)(void);
 } Game;
 

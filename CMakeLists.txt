@@ -111,6 +111,7 @@ set(GAME_SRC
 
 set(INPUT_SRC
     src/input/gamepad_test.c
+    src/input/input_manager.c
 ) 
 
 # Create the BlockSmashies executable

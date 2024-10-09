@@ -32,6 +32,7 @@ Settings settings = {
         .red_02 = {232, 59, 59, 255},
         .red_04 = {247, 150, 23, 255},
         .green_04 = {145, 219, 105, 255},
+        .black_alpha_05 = {0, 0, 0, 127},
         .alpha_00 = {255, 255, 255, 0}, // Full
         .alpha_01 = {255, 255, 255, 25},
         .alpha_02 = {255, 255, 255, 51},
@@ -96,6 +97,8 @@ static void save_settings(void)
         json_object_set_number(input_mapping_object, "action_START", settings.inputs[i].action_START);
         json_object_set_number(input_mapping_object, "action_L", settings.inputs[i].action_L);
         json_object_set_number(input_mapping_object, "action_R", settings.inputs[i].action_R);
+        json_object_set_number(input_mapping_object, "action_a_X", settings.inputs[i].action_a_X);
+        json_object_set_number(input_mapping_object, "action_a_Y", settings.inputs[i].action_a_Y);
 
         // Save keyboard mappings
         json_object_set_number(input_mapping_object, "action_k_UP", settings.inputs[i].action_k_UP);
@@ -104,10 +107,6 @@ static void save_settings(void)
         json_object_set_number(input_mapping_object, "action_k_LEFT", settings.inputs[i].action_k_LEFT);
         json_object_set_number(input_mapping_object, "action_k_ENTER", settings.inputs[i].action_k_ENTER);
         json_object_set_number(input_mapping_object, "action_k_ESCAPE", settings.inputs[i].action_k_ESCAPE);
-
-        // Save axis mappings
-        json_object_set_number(input_mapping_object, "action_a_x", settings.inputs[i].action_a_x);
-        json_object_set_number(input_mapping_object, "action_a_y", settings.inputs[i].action_a_y);
 
         // Add input mapping object to the array
         json_array_append_value(input_mappings_array, input_mapping_value);
@@ -143,8 +142,8 @@ static void set_default_input_settings(void)
             .action_L = GAMEPAD_BUTTON_LEFT_TRIGGER_1,
             .action_R = GAMEPAD_BUTTON_RIGHT_TRIGGER_1,
             .action_START = GAMEPAD_BUTTON_MIDDLE_RIGHT,
-            .action_a_x = GAMEPAD_AXIS_LEFT_X,
-            .action_a_y = GAMEPAD_AXIS_LEFT_Y};
+            .action_a_X = GAMEPAD_AXIS_LEFT_X,
+            .action_a_Y = GAMEPAD_AXIS_LEFT_Y};
 
         // Set different keyboard mappings based on the input index
         switch (i)
@@ -227,8 +226,8 @@ void initialize_settings()
             settings.inputs[i].action_R = (GamepadButton)json_object_get_number(input_mapping_object, "action_R");
 
             // Load gamepad axes
-            settings.inputs[i].action_a_x = (GamepadAxis)json_object_get_number(input_mapping_object, "action_a_x");
-            settings.inputs[i].action_a_y = (GamepadAxis)json_object_get_number(input_mapping_object, "action_a_y");
+            settings.inputs[i].action_a_X = (GamepadAxis)json_object_get_number(input_mapping_object, "action_a_X");
+            settings.inputs[i].action_a_Y = (GamepadAxis)json_object_get_number(input_mapping_object, "action_a_Y");
 
             // Load keyboard keys
             settings.inputs[i].action_k_UP = (KeyboardKey)json_object_get_number(input_mapping_object, "action_k_UP");
