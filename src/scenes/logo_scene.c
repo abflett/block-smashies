@@ -2,21 +2,22 @@
 #include "logo_scene.h"
 #include "settings.h"
 #include "scene_manager.h"
+#include "resource_manager.h"
 
 static Scene logo_scene;
-
-static float elapsed_time = 0.0f; // Variable to track elapsed time
+static float min_scene_time = 0.0f; // Variable to track elapsed time
+static Font *font;
 
 static void scene_init(int arg_count, va_list args)
 {
-    elapsed_time = 0.0f;
+    min_scene_time = 0.0f;
 }
 
 static void scene_update(float delta_time)
 {
-    elapsed_time += delta_time; // Increment elapsed time by delta_time
+    min_scene_time += delta_time; // Increment elapsed time by delta_time
 
-    if (GetKeyPressed() != 0 || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) || IsGestureDetected(GESTURE_TAP) || elapsed_time >= settings.game.logo_screen_time)
+    if (GetKeyPressed() != 0 || GetGamepadButtonPressed() != 0 || IsGestureDetected(GESTURE_TAP) || min_scene_time >= settings.game.logo_screen_time)
     {
         scene_manager.change(scene_manager.scenes.title, 0);
     }
@@ -24,8 +25,12 @@ static void scene_update(float delta_time)
 
 static void scene_render(void)
 {
-    DrawText("Logo Screen - (Slide show before the title screen)", 5, 5, 8, WHITE);
-    DrawText("Press ENTER to Title Screen", 5, 16, 8, WHITE);
+    const char *text = "Press any button";
+    Vector2 text_size = MeasureTextEx(GetFontDefault(), text, 8, 0.0f);
+    Vector2 text_position = {
+        (settings.game.target_size.x - text_size.x) / 2,
+        (settings.game.target_size.y - text_size.y) / 2};
+    DrawTextEx(*font, text, text_position, 7, 0.0f, WHITE);
 }
 
 static void scene_cleanup(void)
@@ -35,6 +40,7 @@ static void scene_cleanup(void)
 
 Scene *create_logo_scene()
 {
+    font = resource_manager.get_pixel7_font();
     logo_scene.init = scene_init;
     logo_scene.update = scene_update;
     logo_scene.render = scene_render;

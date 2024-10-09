@@ -7,12 +7,12 @@
 
 typedef struct Game
 {
-    InputManager *input_manager;
     void (*run)(void);
 } Game;
 
 Game *create_game(const char *game_title);
 void exit_game(void);
 ShakeEffect *get_shake_effect(void);
+InputManager *get_input_manager(void);
 
 #endif
