@@ -7,12 +7,14 @@
 #include "game_data.h"
 #include "ship.h"
 #include "game.h"
+#include "virtual_keyboard.h"
 
 #define SHIP_COLORS 25
 #define MAX_PLAYERS 4
 
 static Scene embark_scene;
 static InputManager *input_manager;
+static VirtualKeyboard *virtual_keyboard;
 static GameData *game_data;
 static Ship *ships[MAX_PLAYERS];
 
@@ -54,6 +56,8 @@ static void scene_init(int arg_count, va_list args)
 
 static void scene_update(float delta_time)
 {
+    virtual_keyboard->update(virtual_keyboard, delta_time);
+
     InputMapping *player_inputs[MAX_PLAYERS];
     for (int i = 0; i < MAX_PLAYERS; i++)
     {
@@ -161,6 +165,8 @@ static void scene_render(void)
         ships[i]->render(ships[i]);
         DrawTexture(*nums[i], num_x_positions[i], 148, WHITE);
     }
+
+    virtual_keyboard->render(virtual_keyboard);
 }
 
 static void scene_cleanup(void)
@@ -189,6 +195,7 @@ Scene *create_embark_scene(void)
     embark_text_backing = &resource_manager.get_texture("embark-text-backing")->texture;
 
     game_data = create_game_data();
+    virtual_keyboard = create_virtual_keyboard((Vector2){160, 10}, 10);
 
     embark_scene.init = scene_init;
     embark_scene.update = scene_update;
