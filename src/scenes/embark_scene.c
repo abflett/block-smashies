@@ -9,121 +9,127 @@
 #include "game.h"
 
 #define SHIP_COLORS 25
+#define MAX_PLAYERS 4
 
-Scene embark_scene;
+static Scene embark_scene;
 static InputManager *input_manager;
-static float axis_debounce = 0.0f;
+static GameData *game_data;
+static Ship *ships[MAX_PLAYERS];
 
-Ship *ship_p1;
-Ship *ship_p2;
-Ship *ship_p3;
-Ship *ship_p4;
+static Texture2D *floor_dock;
+static Texture2D *floor_simulation;
+static Texture2D *holo_beam;
+static Texture2D *holo_spots;
+static Texture2D *nums[MAX_PLAYERS];
+static Texture2D *embark_projector_beams;
+static Texture2D *embark_room;
+static Texture2D *embark_text_backing;
 
-Texture2D *floor_dock;
-Texture2D *floor_simulation;
-Texture2D *holo_beam;
-Texture2D *holo_spots;
-Texture2D *num_1;
-Texture2D *num_2;
-Texture2D *num_3;
-Texture2D *num_4;
-Texture2D *embark_projector_beams;
-Texture2D *embark_room;
-Texture2D *embark_text_backing;
-
-int player_count = 1;
-int menu_selection = 0;
-const menu_selection_count = 2;
-int color_selection = 0;
+static int player_count = 1;
+static int menu_selection = 1;
+static const int menu_selection_count = 2;
+static int color_selection = 0;
+static bool menu_selection_mode = true;
 
 static void change_player_count(int *players)
 {
-    player_count = *players;
+    player_count = *players; // get from game_data
 
-    ship_p1->player_count = player_count;
-    ship_p1->segments = ship_p1->calculate_segments(ship_p1);
-    ship_p1->ship_shield->set_shield(ship_p1->ship_shield);
-
-    ship_p2->player_count = player_count;
-    ship_p2->segments = ship_p2->calculate_segments(ship_p2);
-    ship_p2->ship_shield->set_shield(ship_p2->ship_shield);
-
-    ship_p3->player_count = player_count;
-    ship_p3->segments = ship_p3->calculate_segments(ship_p3);
-    ship_p3->ship_shield->set_shield(ship_p3->ship_shield);
-
-    ship_p4->player_count = player_count;
-    ship_p4->segments = ship_p4->calculate_segments(ship_p4);
-    ship_p4->ship_shield->set_shield(ship_p4->ship_shield);
+    for (int i = 0; i < MAX_PLAYERS; i++)
+    {
+        ships[i]->player_count = player_count;                       // should be a pointer reference
+        ships[i]->segments = ships[i]->calculate_segments(ships[i]); // maybe check and update inside ship instead
+        ships[i]->ship_shield->set_shield(ships[i]->ship_shield);    // maybe check and update inside ship shield instead
+    }
 }
 
 static void scene_init(int arg_count, va_list args)
 {
-    ship_p1 = create_ship(1, player_count, GetRandomValue(0, 24), (b2Vec2){135, 80});
-    ship_p2 = create_ship(2, player_count, GetRandomValue(0, 24), (b2Vec2){188, 80});
-    ship_p3 = create_ship(3, player_count, GetRandomValue(0, 24), (b2Vec2){84, 80});
-    ship_p4 = create_ship(4, player_count, GetRandomValue(0, 24), (b2Vec2){239, 80});
+    menu_selection = 1;
+    float x_positions[] = {135, 188, 84, 239};
+
+    SetRandomSeed(1);
+    for (int i = 0; i < MAX_PLAYERS; i++)
+    {
+        ships[i] = create_ship(i + 1, player_count, GetRandomValue(0, 24), (b2Vec2){x_positions[i], 80}); // player count and color should be a pointer reference
+    }
 }
 
 static void scene_update(float delta_time)
 {
-    if (axis_debounce >= 0.0f)
+    InputMapping *player_inputs[MAX_PLAYERS];
+    for (int i = 0; i < MAX_PLAYERS; i++)
     {
-        axis_debounce -= delta_time;
+        player_inputs[i] = input_manager->get_player_input(i);
     }
 
-    InputMapping *p1_input = input_manager->get_player_input(0);
-
-    // float axis = GetGamepadAxisMovement(0, p1_input->action_a_X) > 0;
-    // TraceLog(LOG_INFO, "[[Axis]]: %f", axis);
-
-    if (IsKeyPressed(p1_input->action_k_ENTER) || IsGamepadButtonPressed(0, p1_input->action_A) || IsGamepadButtonPressed(0, p1_input->action_START))
+    if (menu_selection_mode)
     {
-        switch (menu_selection)
+
+        if (input_manager->check_for_new_players(player_count))
         {
-        case 0:
-            scene_manager.change(scene_manager.scenes.main_menu, 0);
-            break;
-        case 1:
-            scene_manager.change(scene_manager.scenes.gameplay, 1, create_game_data());
-            break;
-        default:
-            scene_manager.change(scene_manager.scenes.main_menu, 0);
-            break;
+            player_count++;
+            change_player_count(&player_count); // update the ships
+        }
+
+        if (IsKeyPressed(player_inputs[0]->action_k_ENTER) || IsGamepadButtonPressed(0, player_inputs[0]->action_A) || IsGamepadButtonPressed(0, player_inputs[0]->action_START))
+        {
+            switch (menu_selection)
+            {
+            case 0:
+                scene_manager.change(scene_manager.scenes.main_menu, 0);
+                break;
+            case 1:
+                scene_manager.change(scene_manager.scenes.gameplay, 1, create_game_data());
+                break;
+            default:
+                scene_manager.change(scene_manager.scenes.main_menu, 0);
+                break;
+            }
+        }
+
+        for (int i = 0; i < player_count; i++)
+        {
+            if (IsKeyPressed(player_inputs[0]->action_k_RIGHT) || IsGamepadButtonPressed(0, player_inputs[0]->action_RIGHT) || input_manager->axis_debounce(0, player_inputs[0]->action_a_X, 0.5f))
+            {
+                menu_selection = (menu_selection + 1) % menu_selection_count;
+            }
+            if (IsKeyPressed(player_inputs[0]->action_k_LEFT) || IsGamepadButtonPressed(0, player_inputs[0]->action_LEFT) || input_manager->axis_debounce(0, player_inputs[0]->action_a_X, -0.5f))
+            {
+                menu_selection = (menu_selection - 1 + menu_selection_count) % menu_selection_count;
+            }
+
+            int player_i_i = input_manager->player[i];
+
+            // change color forward
+            if (IsKeyPressed(player_inputs[i]->action_k_UP) || IsGamepadButtonPressed(player_i_i, player_inputs[i]->action_UP) || input_manager->axis_debounce(player_i_i, player_inputs[i]->action_a_Y, 0.5f))
+            {
+                color_selection = (1 + color_selection) % SHIP_COLORS;
+                ships[i]->ship_body->set_color(ships[i]->ship_body, color_selection);
+            }
+
+            // change color backward
+            if (IsKeyPressed(player_inputs[i]->action_k_DOWN) || IsGamepadButtonPressed(player_i_i, player_inputs[i]->action_DOWN) || input_manager->axis_debounce(player_i_i, player_inputs[i]->action_a_Y, -0.5f))
+            {
+                color_selection = (color_selection - 1 + SHIP_COLORS) % SHIP_COLORS;
+                ships[i]->ship_body->set_color(ships[i]->ship_body, color_selection);
+            }
+
+            // remove player
+            if (i != 0 && input_manager->player_mapped[i])
+            {
+                if (IsKeyPressed(player_inputs[i]->action_k_ESCAPE) || IsGamepadButtonPressed(player_i_i, player_inputs[i]->action_B))
+                {
+                    player_count--;
+                    input_manager->unmap_player_input(i); // remove the input mapping for the player and shift the players down
+
+                    change_player_count(&player_count); // this will reset the player count for all ships, recalculate segments, and set the shield
+
+                    TraceLog(LOG_INFO, "Player %d removed from embarking", i);
+                }
+            }
         }
     }
-
-    if (IsKeyPressed(p1_input->action_k_RIGHT) || IsGamepadButtonPressed(0, p1_input->action_RIGHT) || GetGamepadAxisMovement(0, p1_input->action_a_X) > 0.5f)
-    {
-        menu_selection = (menu_selection + 1) % menu_selection_count;
-        // selected_menu_option = (selected_menu_option + 1) % num_menu_options; // Loop back to the first option
-    }
-    if (IsKeyPressed(p1_input->action_k_LEFT) || IsGamepadButtonPressed(0, p1_input->action_LEFT) || GetGamepadAxisMovement(0, p1_input->action_a_X) < -0.5f)
-    {
-        menu_selection = (menu_selection - 1 + menu_selection_count) % menu_selection_count;
-        //  selected_menu_option = (selected_menu_option - 1 + num_menu_options) % num_menu_options; // Loop to the last option
-    }
-
-    if (IsKeyPressed(p1_input->action_k_UP) || IsGamepadButtonPressed(0, p1_input->action_UP) || (GetGamepadAxisMovement(0, p1_input->action_a_Y) > 0.5f && axis_debounce <= 0))
-    {
-        axis_debounce = 0.2f;
-        color_selection = (1 + color_selection) % SHIP_COLORS;
-        ship_p1->ship_body->set_color(ship_p1->ship_body, color_selection);
-    }
-
-    if (IsKeyPressed(p1_input->action_k_DOWN) || IsGamepadButtonPressed(0, p1_input->action_DOWN) || (GetGamepadAxisMovement(0, p1_input->action_a_Y) < -0.5f && axis_debounce <= 0))
-    {
-        axis_debounce = 0.2f;
-        color_selection = (color_selection - 1 + SHIP_COLORS) % SHIP_COLORS;
-        ship_p1->ship_body->set_color(ship_p1->ship_body, color_selection);
-    }
-
-    // color_selection = (color_selection - 1 + SHIP_COLORS) % SHIP_COLORS;
-    // ship_p1->ship_body->set_color(ship_p1->ship_body, color_selection);
-    // ship_p1->shield_level = (ship_p1->shield_level + 1) % 4;
-    // ship_p1->ship_shield->set_shield(ship_p1->ship_shield);
-    // ship_p1->segments = (ship_p1->segments % 4) + 1;
-    // ship_p1->ship_shield->set_shield(ship_p1->ship_shield);
 }
 
 static void scene_render(void)
@@ -150,31 +156,20 @@ static void scene_render(void)
     DrawTexture(*holo_beam, 114, 42, WHITE);
     DrawTexture(*embark_text_backing, 114, 51, WHITE);
 
-    ship_p1->render(ship_p1);
-    DrawTexture(*num_1, 133, 148, WHITE);
-    if (player_count >= 2)
+    int num_x_positions[] = {133, 185, 81, 236};
+    for (int i = 0; i < player_count; i++)
     {
-        ship_p2->render(ship_p2);
-        DrawTexture(*num_2, 185, 148, WHITE);
-    }
-    if (player_count >= 3)
-    {
-        ship_p3->render(ship_p3);
-        DrawTexture(*num_3, 81, 148, WHITE);
-    }
-    if (player_count >= 4)
-    {
-        ship_p4->render(ship_p4);
-        DrawTexture(*num_4, 236, 148, WHITE);
+        ships[i]->render(ships[i]);
+        DrawTexture(*nums[i], num_x_positions[i], 148, WHITE);
     }
 }
 
 static void scene_cleanup(void)
 {
-    ship_p1->cleanup(ship_p1);
-    ship_p2->cleanup(ship_p2);
-    ship_p3->cleanup(ship_p3);
-    ship_p4->cleanup(ship_p4);
+    for (int i = 0; i < MAX_PLAYERS; i++)
+    {
+        ships[i]->cleanup(ships[i]);
+    }
 }
 
 Scene *create_embark_scene(void)
@@ -186,15 +181,13 @@ Scene *create_embark_scene(void)
     floor_simulation = &resource_manager.get_texture("embark-floor-simulation")->texture;
     holo_beam = &resource_manager.get_texture("embark-holo-beam")->texture;
     holo_spots = &resource_manager.get_texture("embark-holo-spots")->texture;
-    num_1 = &resource_manager.get_texture("embark-num-1")->texture;
-    num_2 = &resource_manager.get_texture("embark-num-2")->texture;
-    num_3 = &resource_manager.get_texture("embark-num-3")->texture;
-    num_4 = &resource_manager.get_texture("embark-num-4")->texture;
+    nums[0] = &resource_manager.get_texture("embark-num-1")->texture;
+    nums[1] = &resource_manager.get_texture("embark-num-2")->texture;
+    nums[2] = &resource_manager.get_texture("embark-num-3")->texture;
+    nums[3] = &resource_manager.get_texture("embark-num-4")->texture;
     embark_projector_beams = &resource_manager.get_texture("embark-projector-beams")->texture;
     embark_room = &resource_manager.get_texture("embark-room")->texture;
     embark_text_backing = &resource_manager.get_texture("embark-text-backing")->texture;
-
-    color_selection = 0;
 
     embark_scene.init = scene_init;
     embark_scene.update = scene_update;

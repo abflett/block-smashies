@@ -26,7 +26,7 @@ static void scene_update(float delta_time)
 static void scene_render(void)
 {
     const char *text = "Press any button";
-    Vector2 text_size = MeasureTextEx(GetFontDefault(), text, 8, 0.0f);
+    Vector2 text_size = MeasureTextEx(*font, text, 8, 0.0f);
     Vector2 text_position = {
         (settings.game.target_size.x - text_size.x) / 2,
         (settings.game.target_size.y - text_size.y) / 2};

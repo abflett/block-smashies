@@ -4,21 +4,39 @@
 #include "resource_manager.h"
 #include "math.h"
 
+#define NOTIFICATION_TIMEOUT 2.0f
+
 static InputManager manager;
 static float notification_timeout[MAX_INPUTS];
 static Font *font;
+static float axis_debounce_time[MAX_INPUTS];
+
+static bool axis_debounce(int input_index, GamepadAxis axis, float threshold)
+{
+    float movement = GetGamepadAxisMovement(input_index, axis);
+    bool exceeds_threshold = (threshold > 0) ? (movement > threshold) : (movement < threshold);
+
+    if (exceeds_threshold && axis_debounce_time[input_index] <= 0)
+    {
+        axis_debounce_time[input_index] = 0.2f;
+        return true;
+    }
+    return false;
+}
 
 static void update(float delta_time)
 {
     for (int i = 0; i < MAX_INPUTS; i++)
     {
+        axis_debounce_time[i] -= delta_time;
+
         bool connected = IsGamepadAvailable(i);
         if (connected != manager.pad_active[i])
         {
-            notification_timeout[i] = 4.0f;
-            TraceLog(LOG_INFO, "Gamepad %d connected: %d", i, connected);
+            notification_timeout[i] = NOTIFICATION_TIMEOUT;
         }
         manager.pad_active[i] = connected;
+
         if (notification_timeout[i] > 0)
         {
             notification_timeout[i] -= delta_time;
@@ -71,7 +89,6 @@ static int input_pressed(void)
                                 IsKeyPressed(manager.inputs[i].action_k_ENTER) ||
                                 IsKeyPressed(manager.inputs[i].action_k_ESCAPE)))
             {
-                TraceLog(LOG_INFO, "Keyboard input pressed: %d", i);
                 return i;
             }
 
@@ -85,7 +102,6 @@ static int input_pressed(void)
                                           IsGamepadButtonPressed(i, manager.inputs[i].action_L) ||     //
                                           IsGamepadButtonPressed(i, manager.inputs[i].action_R)))
             {
-                TraceLog(LOG_INFO, "Gamepad input pressed: %d", i);
                 return i;
             }
         }
@@ -102,7 +118,43 @@ static void map_player_input(int player, int input_index)
     }
 
     manager.player[player] = input_index;
-    manager.input_mapped[input_index];
+    manager.player_mapped[player] = true;
+    manager.input_mapped[input_index] = true;
+}
+
+static bool check_for_new_players(int player_count)
+{
+    int new_input_pressed = manager.input_pressed();
+    if (new_input_pressed != -1)
+    {
+        if (!manager.input_mapped[new_input_pressed])
+        {
+            manager.map_player_input(player_count, new_input_pressed);
+            TraceLog(LOG_INFO, "Player %d added", player_count);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static void unmap_player_input(int player)
+{
+    if (player < 0 || player >= MAX_PLAYERS)
+    {
+        return;
+    }
+
+    manager.input_mapped[manager.player[player]] = false;
+
+    for (int i = player; i < MAX_PLAYERS - 1; i++)
+    {
+        manager.player[i] = manager.player[i + 1];
+        manager.player_mapped[i] = manager.player_mapped[i + 1];
+    }
+
+    manager.player[MAX_PLAYERS - 1] = -1;
+    manager.player_mapped[MAX_PLAYERS - 1] = false;
 }
 
 static InputMapping *get_player_input(int player)
@@ -119,19 +171,24 @@ InputManager *create_input_manager(void)
     font = resource_manager.get_pixel7_font();
 
     manager.inputs = settings.inputs;
-    manager.player[0] = 0;
-    manager.input_mapped[0] = true;
 
     for (int i = 0; i < MAX_INPUTS; i++)
     {
         notification_timeout[i] = 0.0f;
+        manager.pad_active[i] = IsGamepadAvailable(i);
+        manager.input_mapped[i] = i == 0;
+        manager.player_mapped[0] = i == 0;
+        manager.player[i] = i == 0 ? 0 : -1;
     }
 
+    manager.axis_debounce = axis_debounce;
     manager.get_player_input = get_player_input;
     manager.map_player_input = map_player_input;
+    manager.unmap_player_input = unmap_player_input;
     manager.update = update;
     manager.render = render;
     manager.input_pressed = input_pressed;
+    manager.check_for_new_players = check_for_new_players;
 
     return &manager;
 }
