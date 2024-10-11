@@ -15,7 +15,6 @@ typedef struct InputManager
     bool player_mapped[MAX_PLAYERS]; // true if a player is mapped to an input
     int player[MAX_PLAYERS];         // player input mapping to the correct input index, so player 2 can map to input 3 for example.
 
-    // (GetGamepadAxisMovement(i, player_inputs[i]->action_a_Y) < -0.5f && axis_debounce <= 0)
     bool (*axis_debounce)(int input_index, GamepadAxis axis, float threshold);
 
     void (*map_player_input)(int player, int input_index); // map the player to the correct input index
