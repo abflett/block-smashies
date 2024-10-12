@@ -25,6 +25,8 @@ typedef struct VirtualKeyboard
     Texture2D *keyboard_space;      // Texture for the keyboard key
     bool shift_on;
     bool caps_on;
+    float blink_time;
+    bool show_underscore;
     int max_length;                     // Max length of the input string
     int cursor_position;                // Position of the cursor for text editing
     int selected_key_x, selected_key_y; // Current position on the virtual keyboard

@@ -16,6 +16,14 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
     if (!keyboard->active)
         return;
 
+    keyboard->blink_time--;
+
+    if (keyboard->blink_time < 0)
+    {
+        keyboard->blink_time = 10.0f;
+        keyboard->show_underscore = !keyboard->show_underscore;
+    }
+
     // Gamepad movement: move cursor with d-pad
     bool moved = false;
     if (IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))
@@ -157,6 +165,17 @@ static void keyboard_render(VirtualKeyboard *keyboard)
     // Render the input text at the specified position
     DrawTextEx(*keyboard->font, keyboard->input_text, keyboard->text_position, 7, 0.0f, keyboard->font_color);
 
+    // If we haven't reached max_length, show the blinking underscore at the typing position
+    if (keyboard->cursor_position < keyboard->max_length && keyboard->show_underscore)
+    {
+        // Measure the size of the current text to position the underscore at the right spot
+        Vector2 text_size = MeasureTextEx(*keyboard->font, keyboard->input_text, 7, 0.0f);
+        Vector2 underscore_position = {
+            keyboard->text_position.x + text_size.x, // At the end of the input text
+            keyboard->text_position.y};
+        DrawTextEx(*keyboard->font, "_", underscore_position, 7, 0.0f, keyboard->font_color); // Draw the blinking underscore
+    }
+
     // Render the virtual keyboard (lower half of the screen)
     int key_width = 15;                                                                               // Adjusted key width for low-res
     int key_height = 15;                                                                              // Adjusted key height for low-res
@@ -281,6 +300,7 @@ VirtualKeyboard *create_virtual_keyboard(Vector2 text_position, Vector2 keyboard
     keyboard->selected_key_x = 1;
     keyboard->selected_key_y = 0;
     keyboard->active = true;
+    keyboard->show_underscore = true;
 
     keyboard->update = keyboard_update;
     keyboard->render = keyboard_render;
