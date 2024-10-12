@@ -93,9 +93,10 @@ Game *create_game(const char *game_title)
     InitWindow((int)settings.config.screen_size.x, (int)settings.config.screen_size.y, game_title);
     SetExitKey(KEY_NULL); // Disable default exit key (ESC)
     SetTargetFPS(60);     // Set target FPS for the game loop
+    resource_manager.load_resource_file();
     target_texture = LoadRenderTexture((int)settings.game.target_size.x, (int)settings.game.target_size.y);
     shake_effect = create_shake_effect();
-    resource_manager.load_resource_file();
+
     input_manager = create_input_manager();
     initialize_scene_manager();
     initialize_game_state_manager();

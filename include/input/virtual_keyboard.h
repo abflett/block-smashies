@@ -3,15 +3,27 @@
 
 #include <stdbool.h>
 #include "raylib.h"
-#include "resource.h"
 
 typedef struct VirtualKeyboard
 {
-    char *input_text;                                                   // Stores the input string
-    Font *font;                                                         // Font to use for the keyboard
-    TextureResource *keyboard_bg;                                       // Texture for the keyboard background
-    TextureResource *keyboard_key_lit;                                  // Texture for the keyboard key when it is pressed
-    TextureResource *keyboard_key;                                      // Texture for the keyboard key
+    char *input_text; // Stores the input string
+    Font *font;       // Font to use for the keyboard
+
+    Texture2D *keyboard_bg;         // Texture for the keyboard background
+    Texture2D *keyboard_key_lit;    // Texture for the keyboard key when it is pressed
+    Texture2D *keyboard_key;        // Texture for the keyboard key
+    Texture2D *keyboard_caps_lit;   // Texture for the keyboard key when it is pressed
+    Texture2D *keyboard_caps;       // Texture for the keyboard key
+    Texture2D *keyboard_delete_lit; // Texture for the keyboard key when it is pressed
+    Texture2D *keyboard_delete;     // Texture for the keyboard key
+    Texture2D *keyboard_enter_lit;  // Texture for the keyboard key when it is pressed
+    Texture2D *keyboard_enter;      // Texture for the keyboard key
+    Texture2D *keyboard_shift_lit;  // Texture for the keyboard key when it is pressed
+    Texture2D *keyboard_shift;      // Texture for the keyboard key
+    Texture2D *keyboard_space_lit;  // Texture for the keyboard key when it is pressed
+    Texture2D *keyboard_space;      // Texture for the keyboard key
+    bool shift_on;
+    bool caps_on;
     int max_length;                                                     // Max length of the input string
     int cursor_position;                                                // Position of the cursor for text editing
     int selected_key_x, selected_key_y;                                 // Current position on the virtual keyboard
