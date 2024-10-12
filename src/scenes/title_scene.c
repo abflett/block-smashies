@@ -48,7 +48,7 @@ static void scene_cleanup(void)
 Scene *create_title_scene()
 {
     font = resource_manager.get_pixel7_font();
-    virtual_keyboard = create_virtual_keyboard((Vector2){160, 10}, 10);
+    virtual_keyboard = create_virtual_keyboard((Vector2){160, 10}, (Vector2){40, 90}, 10, settings.colors.blue_04);
     title_scene.init = scene_init;
     title_scene.update = scene_update;
     title_scene.render = scene_render;

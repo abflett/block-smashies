@@ -195,7 +195,7 @@ Scene *create_embark_scene(void)
     embark_text_backing = &resource_manager.get_texture("embark-text-backing")->texture;
 
     game_data = create_game_data();
-    virtual_keyboard = create_virtual_keyboard((Vector2){160, 10}, 10);
+    virtual_keyboard = create_virtual_keyboard((Vector2){160, 10}, (Vector2){40, 90}, 10, settings.colors.blue_04);
 
     embark_scene.init = scene_init;
     embark_scene.update = scene_update;

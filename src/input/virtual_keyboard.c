@@ -152,16 +152,15 @@ static void keyboard_render(VirtualKeyboard *keyboard)
     if (!keyboard->active)
         return;
 
-    DrawTexture(*keyboard->keyboard_bg, 0, (int)(settings.game.target_size.y * 0.5), WHITE);
+    DrawTexture(*keyboard->keyboard_bg, (int)keyboard->keyboard_position.x, (int)keyboard->keyboard_position.y, WHITE);
 
     // Render the input text at the specified position
-    DrawTextEx(*keyboard->font, keyboard->input_text, keyboard->position, 7, 0.0f, WHITE);
+    DrawTextEx(*keyboard->font, keyboard->input_text, keyboard->text_position, 7, 0.0f, keyboard->font_color);
 
     // Render the virtual keyboard (lower half of the screen)
-    int key_width = 15;                // Adjusted key width for low-res
-    int key_height = 15;               // Adjusted key height for low-res
-    Vector2 keyboard_start = {23, 96}; // Start position for the keyboard on the screen
-
+    int key_width = 15;                                                                               // Adjusted key width for low-res
+    int key_height = 15;                                                                              // Adjusted key height for low-res
+    Vector2 keyboard_start = {keyboard->keyboard_position.x + 23, keyboard->keyboard_position.y + 6}; // Start position for the keyboard on the screen
     int key_offsets_x[KEYBOARD_ROWS] = {-15, -5, 0, 10, 0};
 
     Texture2D *shift_texture = keyboard->keyboard_shift;
@@ -251,7 +250,7 @@ static void keyboard_cleanup(VirtualKeyboard *keyboard)
     free(keyboard);
 }
 
-VirtualKeyboard *create_virtual_keyboard(Vector2 position, int max_length)
+VirtualKeyboard *create_virtual_keyboard(Vector2 text_position, Vector2 keyboard_position, int max_length, Color font_color)
 {
     VirtualKeyboard *keyboard = (VirtualKeyboard *)malloc(sizeof(VirtualKeyboard));
 
@@ -271,12 +270,14 @@ VirtualKeyboard *create_virtual_keyboard(Vector2 position, int max_length)
     keyboard->keyboard_space_lit = &resource_manager.get_texture("keyboard-space-lit")->texture;
     keyboard->keyboard_space = &resource_manager.get_texture("keyboard-space")->texture;
 
+    keyboard->font_color = font_color;
     keyboard->caps_on = false;
     keyboard->shift_on = false;
     keyboard->input_text = (char *)calloc(max_length + 1, sizeof(char)); // Allocate memory for the string
     keyboard->max_length = max_length;
     keyboard->cursor_position = 0;
-    keyboard->position = position;
+    keyboard->text_position = text_position;
+    keyboard->keyboard_position = keyboard_position;
     keyboard->selected_key_x = 1;
     keyboard->selected_key_y = 0;
     keyboard->active = true;
