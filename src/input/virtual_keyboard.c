@@ -8,7 +8,7 @@
 
 #define KEYBOARD_ROWS 4
 #define KEYBOARD_COLS 10
-#define KEYBOARD_KEYS "1234567890QWERTYUIOPASDFGHJKLZXCVBNM    "
+#define KEYBOARD_KEYS "1234567890QWERTYUIOPASDFGHJKL'ZXCVBNM,._"
 
 static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
 {
@@ -60,10 +60,12 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
 
 static void keyboard_render(VirtualKeyboard *keyboard)
 {
-    DrawTextEx(*keyboard->font, "1234567890-=\nQWERTYUIOP[]\\\nASDFGHJKL;'\nZXCVBNM,./\n\n!@#$%^&*()_+\nqwertyuiop[]|\nasdfghjkl;'\nzxcvbnm,./\nSpace, Enter, Shift, Caps", (Vector2){1, 1}, 7, 0.0f, WHITE);
+    DrawTextEx(*keyboard->font, "1234567890-\nQWERTYUIOP\\\nASDFGHJKL'\nZXCVBNM,.\n\n_+\nqwertyuiop\nasdfghjkl'\nzxcvbnm\nSpace, Enter, Shift, Caps", (Vector2){1, 1}, 7, 0.0f, WHITE);
 
     if (!keyboard->active)
         return;
+
+    DrawTexture(keyboard->keyboard_bg->texture, 0, (int)(settings.game.target_size.y * 0.5), WHITE);
 
     DrawRectangle(0, (int)(settings.game.target_size.y * 0.5), (int)settings.game.target_size.x, (int)(settings.game.target_size.y * 0.5), settings.colors.black_alpha_05);
 
@@ -71,8 +73,8 @@ static void keyboard_render(VirtualKeyboard *keyboard)
     DrawTextEx(*keyboard->font, keyboard->input_text, keyboard->position, 7, 0.0f, WHITE);
 
     // Render the virtual keyboard (lower half of the screen)
-    int key_width = 20;                // Adjusted key width for low-res
-    int key_height = 20;               // Adjusted key height for low-res
+    int key_width = 15;                // Adjusted key width for low-res
+    int key_height = 15;               // Adjusted key height for low-res
     Vector2 keyboard_start = {50, 92}; // Start position for the keyboard on the screen
 
     for (int y = 0; y < KEYBOARD_ROWS; y++)
@@ -84,11 +86,11 @@ static void keyboard_render(VirtualKeyboard *keyboard)
             Color key_color = (keyboard->selected_key_x == x && keyboard->selected_key_y == y) ? settings.colors.alpha_09 : settings.colors.alpha_05;
 
             Vector2 key_position = {keyboard_start.x + x * (key_width + 1), keyboard_start.y + y * (key_height + 1)};
-            DrawRectangle((int)key_position.x + (y * 6), (int)key_position.y, key_width, key_height, key_color);
+            DrawRectangle((int)key_position.x + (y * 5), (int)key_position.y, key_width, key_height, key_color);
 
             // Center the text in the key
             Vector2 text_size = MeasureTextEx(*keyboard->font, TextFormat("%c", key), 7, 0.0f);
-            Vector2 text_position = {(float)(int)(key_position.x + (key_width - text_size.x) / 2) + (y * 6), (float)(int)(key_position.y + (key_height - text_size.y) - 11)};
+            Vector2 text_position = {(float)(int)(key_position.x + (key_width - text_size.x) / 2) + (y * 5), (float)(int)(key_position.y + (key_height - text_size.y) / 2)};
             DrawTextEx(*keyboard->font, TextFormat("%c", key), text_position, 7, 0.0f, BLACK);
         }
     }
@@ -110,6 +112,9 @@ VirtualKeyboard *create_virtual_keyboard(Vector2 position, int max_length)
     VirtualKeyboard *keyboard = (VirtualKeyboard *)malloc(sizeof(VirtualKeyboard));
 
     keyboard->font = resource_manager.get_pixel7_font();
+    keyboard->keyboard_bg = resource_manager.get_texture("keyboard-bg");
+    keyboard->keyboard_key_lit = resource_manager.get_texture("keyboard-key-lit");
+    keyboard->keyboard_key = resource_manager.get_texture("keyboard-key");
 
     keyboard->input_text = (char *)calloc(max_length + 1, sizeof(char)); // Allocate memory for the string
     keyboard->max_length = max_length;
