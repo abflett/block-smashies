@@ -3,12 +3,15 @@
 
 #include <stdbool.h>
 #include "raylib.h"
+#include "input_manager.h"
 
 typedef struct VirtualKeyboard
 {
     char *input_text; // Stores the input string
     Font *font;       // Font to use for the keyboard
     Color font_color;
+    InputMapping *p1_input;
+    InputManager *input_manager;
 
     Texture2D *keyboard_bg;         // Texture for the keyboard background
     Texture2D *keyboard_key_lit;    // Texture for the keyboard key when it is pressed
@@ -24,6 +27,7 @@ typedef struct VirtualKeyboard
     Texture2D *keyboard_space_lit;  // Texture for the keyboard key when it is pressed
     Texture2D *keyboard_space;      // Texture for the keyboard key
     bool shift_on;
+    bool shift_down;
     bool caps_on;
     float blink_time;
     bool show_underscore;

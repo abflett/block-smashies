@@ -6,44 +6,60 @@
 #include "virtual_keyboard.h"
 #include "resource_manager.h"
 #include "settings.h"
+#include "game.h"
 
 #define KEYBOARD_ROWS 5
 #define KEYBOARD_COLS 12
 #define KEYBOARD_KEYS "*1234567890<*qwertyuiop*+asdfghjkl']=zxcvbnm,._*>>>>>>>>>>>>"
+// *1234567890< // (*)none, (<)delete // row 0
+// *QWERTYUIOP* // (*)none, (*)none   // row 1
+// +ASDFGHJKL'] // (+)caps, (])enter  // row 2
+// =ZXCVBNM,._* // (=)shift, (*)none  // row 3
+// >>>>>>>>>>>> // (>)space...        // row 4
 
 static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
 {
     if (!keyboard->active)
         return;
 
-    keyboard->blink_time--;
+    keyboard->blink_time -= delta_time;
 
     if (keyboard->blink_time < 0)
     {
-        keyboard->blink_time = 10.0f;
+        keyboard->blink_time = 0.25f;
         keyboard->show_underscore = !keyboard->show_underscore;
     }
 
     // Gamepad movement: move cursor with d-pad
     bool moved = false;
-    if (IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))
+
+    // Store previous positions
+    int previous_x = 0;
+    int previous_y = 0;
+
+    // Movement input handling
+    if (IsGamepadButtonPressed(0, keyboard->p1_input->action_LEFT) || keyboard->input_manager->axis_debounce(0, keyboard->p1_input->action_a_X, -0.5f))
     {
         keyboard->selected_key_x--;
+        previous_x = -1;
         moved = true;
     }
-    if (IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))
+    if (IsGamepadButtonPressed(0, keyboard->p1_input->action_RIGHT) || keyboard->input_manager->axis_debounce(0, keyboard->p1_input->action_a_X, 0.5f))
     {
         keyboard->selected_key_x++;
+        previous_x = 1;
         moved = true;
     }
-    if (IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_UP))
+    if (IsGamepadButtonPressed(0, keyboard->p1_input->action_UP) || keyboard->input_manager->axis_debounce(0, keyboard->p1_input->action_a_Y, -0.5f))
     {
         keyboard->selected_key_y--;
+        previous_y = -1;
         moved = true;
     }
-    if (IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN))
+    if (IsGamepadButtonPressed(0, keyboard->p1_input->action_DOWN) || keyboard->input_manager->axis_debounce(0, keyboard->p1_input->action_a_Y, 0.5f))
     {
         keyboard->selected_key_y++;
+        previous_y = 1;
         moved = true;
     }
 
@@ -63,50 +79,37 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
         int key_index = keyboard->selected_key_y * KEYBOARD_COLS + keyboard->selected_key_x;
         char selected_char = KEYBOARD_KEYS[key_index];
 
+        // If currently on '*', move back to the previous position
         while (selected_char == '*')
         {
-            if (IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))
+            if (previous_y != 0)
             {
-                keyboard->selected_key_x--;
-                if (keyboard->selected_key_x < 0)
-                    keyboard->selected_key_x = KEYBOARD_COLS - 1;
-            }
-            else if (IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))
-            {
-                keyboard->selected_key_x++;
-                if (keyboard->selected_key_x >= KEYBOARD_COLS)
-                    keyboard->selected_key_x = 0;
-            }
-            else if (IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_UP))
-            {
-                keyboard->selected_key_y--;
-                if (keyboard->selected_key_y < 0)
-                    keyboard->selected_key_y = KEYBOARD_ROWS - 1;
-            }
-            else if (IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN))
-            {
-                keyboard->selected_key_y++;
-                if (keyboard->selected_key_y >= KEYBOARD_ROWS)
-                    keyboard->selected_key_y = 0;
+                keyboard->selected_key_x += keyboard->selected_key_x < 6 ? 1 : -1;
             }
 
-            // Update key index and check again
+            keyboard->selected_key_x += previous_x;
+
+            // Wrap around the keyboard layout
+            if (keyboard->selected_key_x < 0)
+                keyboard->selected_key_x = KEYBOARD_COLS - 1;
+            if (keyboard->selected_key_x >= KEYBOARD_COLS)
+                keyboard->selected_key_x = 0;
+            if (keyboard->selected_key_y < 0)
+                keyboard->selected_key_y = KEYBOARD_ROWS - 1;
+            if (keyboard->selected_key_y >= KEYBOARD_ROWS)
+                keyboard->selected_key_y = 0;
+
+            // Update the key index and check again
             key_index = keyboard->selected_key_y * KEYBOARD_COLS + keyboard->selected_key_x;
             selected_char = KEYBOARD_KEYS[key_index];
         }
     }
 
     // Handle character input when pressing the "confirm" button (A or Enter)
-    if (IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) || IsKeyPressed(KEY_ENTER))
+    if (IsGamepadButtonPressed(0, keyboard->p1_input->action_A))
     {
         int key_index = keyboard->selected_key_y * KEYBOARD_COLS + keyboard->selected_key_x;
         char selected_char = KEYBOARD_KEYS[key_index];
-
-        // *1234567890< // none, delete
-        // *QWERTYUIOP* // none, none
-        // +ASDFGHJKL'] // caps, enter
-        // =ZXCVBNM,._* // shift, none
-        // >>>>>>>>>>>> // space-space
 
         switch (selected_char)
         {
@@ -145,8 +148,30 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
         }
     }
 
+    // Check if the Caps Lock key is pressed
+    // Weird hack as if I only check for key pressed it will require 2 pressed
+    if (IsKeyReleased(KEY_CAPS_LOCK) || IsKeyPressed(KEY_CAPS_LOCK))
+    {
+        keyboard->caps_on = !keyboard->caps_on; // Toggle caps state
+    }
+
+    int key = GetKeyPressed(); // Get the key pressed
+    keyboard->shift_down = IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT);
+
+    // Check for printable characters
+    if (key >= 32 && key <= 126)
+    { // Printable ASCII range
+        if (keyboard->cursor_position < keyboard->max_length)
+        { // Ensure room for null terminator
+            char selected_char = (char)key;
+            keyboard->input_text[keyboard->cursor_position++] = keyboard->caps_on || keyboard->shift_on || keyboard->shift_down ? selected_char : tolower(selected_char);
+            keyboard->input_text[keyboard->cursor_position] = '\0'; // Null-terminate the string
+            keyboard->shift_on = false;
+        }
+    }
+
     // Handle backspace input
-    if (IsKeyPressed(KEY_BACKSPACE) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT))
+    if (IsKeyPressed(KEY_BACKSPACE) || IsGamepadButtonPressed(0, keyboard->p1_input->action_B))
     {
         if (keyboard->cursor_position > 0)
         {
@@ -160,6 +185,7 @@ static void keyboard_render(VirtualKeyboard *keyboard)
     if (!keyboard->active)
         return;
 
+    // Keyboard background
     DrawTexture(*keyboard->keyboard_bg, (int)keyboard->keyboard_position.x, (int)keyboard->keyboard_position.y, WHITE);
 
     // Render the input text at the specified position
@@ -168,7 +194,6 @@ static void keyboard_render(VirtualKeyboard *keyboard)
     // If we haven't reached max_length, show the blinking underscore at the typing position
     if (keyboard->cursor_position < keyboard->max_length && keyboard->show_underscore)
     {
-        // Measure the size of the current text to position the underscore at the right spot
         Vector2 text_size = MeasureTextEx(*keyboard->font, keyboard->input_text, 7, 0.0f);
         Vector2 underscore_position = {
             keyboard->text_position.x + text_size.x, // At the end of the input text
@@ -177,8 +202,8 @@ static void keyboard_render(VirtualKeyboard *keyboard)
     }
 
     // Render the virtual keyboard (lower half of the screen)
-    int key_width = 15;                                                                               // Adjusted key width for low-res
-    int key_height = 15;                                                                              // Adjusted key height for low-res
+    int key_width = 15;
+    int key_height = 15;
     Vector2 keyboard_start = {keyboard->keyboard_position.x + 23, keyboard->keyboard_position.y + 6}; // Start position for the keyboard on the screen
     int key_offsets_x[KEYBOARD_ROWS] = {-15, -5, 0, 10, 0};
 
@@ -245,7 +270,7 @@ static void keyboard_render(VirtualKeyboard *keyboard)
         caps_texture = keyboard->keyboard_caps_lit;
     }
 
-    if (keyboard->shift_on)
+    if (keyboard->shift_on || keyboard->shift_down)
     {
         shift_texture = keyboard->keyboard_shift_lit;
         keyboard->caps_on = false;
@@ -274,6 +299,8 @@ VirtualKeyboard *create_virtual_keyboard(Vector2 text_position, Vector2 keyboard
     VirtualKeyboard *keyboard = (VirtualKeyboard *)malloc(sizeof(VirtualKeyboard));
 
     keyboard->font = resource_manager.get_pixel7_font();
+    keyboard->input_manager = get_input_manager();
+    keyboard->p1_input = keyboard->input_manager->get_player_input(0);
 
     keyboard->keyboard_bg = &resource_manager.get_texture("keyboard-bg")->texture;
     keyboard->keyboard_key_lit = &resource_manager.get_texture("keyboard-key-lit")->texture;
