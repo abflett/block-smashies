@@ -201,8 +201,8 @@ static void keyboard_render(VirtualKeyboard *keyboard)
     if (keyboard->cursor_position < keyboard->max_length && keyboard->show_underscore)
     {
         Vector2 underscore_position = {
-            keyboard->text_position.x + text_size.x / 2, // At the end of the input text
-            keyboard->text_position.y};
+            text_centered_position.x + text_size.x, // At the end of the input text
+            text_centered_position.y};
         DrawTextEx(*keyboard->font, "_", underscore_position, 7, 0.0f, keyboard->font_color); // Draw the blinking underscore
     }
 
