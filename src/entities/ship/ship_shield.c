@@ -1,4 +1,5 @@
 #include "ship_shield.h"
+#include "b_utils.h"
 
 static void set_ship_shield(ShipShield *ship_shield)
 {
@@ -30,8 +31,8 @@ static void render_ship_shield(ShipShield *ship_shield)
     }
 
     float centered_x = (float)(int)(ship_shield->position->x - (ship_shield->subtexture->src.width / 2.0f));
-    float offset_y = ship_shield->position->y - 4;
-    Vector2 position = (Vector2){centered_x, offset_y};
+    float offset_y = ship_shield->position->y + 4;
+    Vector2 position = (Vector2){centered_x, flip_y(offset_y)};
 
     DrawTextureRec(ship_shield->subtexture->texture_resource->texture,
                    ship_shield->subtexture->src,
@@ -56,7 +57,6 @@ ShipShield *create_ship_shield(int *segments, int *shield_level, b2Vec2 *positio
     set_ship_shield(ship_shield);
     ship_shield->previous_shield_level = *shield_level;
 
-    // ship_shield->set_shield = set_ship_shield;
     ship_shield->render = render_ship_shield;
     ship_shield->cleanup = cleanup_ship_shield;
 

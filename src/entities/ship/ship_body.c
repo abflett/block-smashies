@@ -25,7 +25,8 @@ static void render_ship_body(ShipBody *ship_body)
     for (int i = 0; i < *ship_body->segments; i++)
     {
 
-        Vector2 position = (Vector2){starting_x + (ship_body->subtexture->src.width * i), ship_body->position->y};
+        Vector2 position = (Vector2){starting_x + (ship_body->subtexture->src.width * i), flip_y(ship_body->position->y)};
+
         DrawTextureRec(ship_body->subtexture->texture_resource->texture,
                        ship_body->subtexture->src,
                        position,

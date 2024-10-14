@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include "ship_thrusters.h"
 #include "resource_manager.h"
+#include "b_utils.h"
 
 const float segment_body_width = 7.0f;             // Width of each ship segment
 const float thruster_vertical_right_offset = 4.0f; // Offset from ship body to thrusters vertically
@@ -17,10 +18,10 @@ static void render_ship_thrusters(ShipThrusters *ship_thrusters)
 
     // Left and right thruster positions
     Vector2 left_position = (Vector2){ship_thrusters->position->x - half_body_width - thruster_horizontal_offset,
-                                      ship_thrusters->position->y + thruster_vertical_left_offset};
+                                      flip_y(ship_thrusters->position->y - thruster_vertical_left_offset)};
     Vector2 right_position = (Vector2){ship_thrusters->position->x + half_body_width + thruster_horizontal_offset,
-                                       ship_thrusters->position->y + thruster_vertical_right_offset};
-    float bottom_y_position = ship_thrusters->position->y + bottom_thruster_offset_y;
+                                       flip_y(ship_thrusters->position->y - thruster_vertical_right_offset)};
+    float bottom_y_position = flip_y(ship_thrusters->position->y - bottom_thruster_offset_y);
 
     // Update and render left thruster
     ship_thrusters->left_thruster->update(ship_thrusters->left_thruster, GetFrameTime(), 90.0f);

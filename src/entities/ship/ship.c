@@ -55,12 +55,13 @@ Ship *create_ship(int *player, int *player_count, int *ship_color, int *shield_l
     ship->ship_color = ship_color;
     ship->position = position;
     ship->shield_level = shield_level;
-
     ship->segments = calculate_segments_func(ship);
 
     ship->ship_body = create_ship_body(&ship->segments, ship->ship_color, &ship->position);
     ship->ship_shield = create_ship_shield(&ship->segments, ship->shield_level, &ship->position);
     ship->ship_thrusters = create_ship_thrusters(&ship->segments, &ship->position);
+
+    // add box2d data
 
     ship->calculate_segments = calculate_segments_func;
     ship->move = move_ship;

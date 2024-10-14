@@ -218,7 +218,7 @@ Scene *create_embark_scene(void)
                                    &game_data->player_count,
                                    &game_data->ships[i].ship_color,
                                    &game_data->ships[i].shield_level,
-                                   (b2Vec2){x_positions[i], 80});
+                                   (b2Vec2){x_positions[i], 100});
         }
     }
 
