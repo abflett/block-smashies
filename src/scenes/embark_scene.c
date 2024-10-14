@@ -45,6 +45,19 @@ static void scene_init(int arg_count, va_list args)
 {
     menu_selection = 2; // change team name
 
+    float x_positions[] = {135, 188, 84, 239};
+    for (int i = 0; i < MAX_PLAYERS; i++)
+    {
+        if (ships[i] == NULL)
+        {
+            ships[i] = create_ship(&game_data->ships[i].player_num,
+                                   &game_data->player_count,
+                                   &game_data->ships[i].ship_color,
+                                   &game_data->ships[i].shield_level,
+                                   (b2Vec2){x_positions[i], 100});
+        }
+    }
+
     virtual_keyboard = create_virtual_keyboard(input_text, MAX_NAME_LENGTH, text_position, (Vector2){40, 90}, settings.colors.blue_04);
 }
 
@@ -208,19 +221,6 @@ Scene *create_embark_scene(void)
 
     game_data = create_game_data();
     font = resource_manager.get_pixel7_font();
-
-    float x_positions[] = {135, 188, 84, 239};
-    for (int i = 0; i < MAX_PLAYERS; i++)
-    {
-        if (ships[i] == NULL)
-        {
-            ships[i] = create_ship(&game_data->ships[i].player_num,
-                                   &game_data->player_count,
-                                   &game_data->ships[i].ship_color,
-                                   &game_data->ships[i].shield_level,
-                                   (b2Vec2){x_positions[i], 100});
-        }
-    }
 
     embark_scene.init = scene_init;
     embark_scene.update = scene_update;

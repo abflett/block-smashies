@@ -247,6 +247,12 @@ static void cleanup_entities_func(void)
         }
     }
     kv_destroy(entities.nanites);
+
+    for (int i = 0; i < MAX_SHIPS; i++)
+    {
+        entities.ships[i]->cleanup(entities.ships[i]);
+        entities.ships[i] = NULL;
+    }
 }
 
 Entities *create_entities(Ship **ships)

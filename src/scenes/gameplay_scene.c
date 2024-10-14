@@ -23,18 +23,12 @@ static void scene_init(int arg_count, va_list args)
             ships = va_arg(args, Ship **);
     }
 
-    // for (int i = 0; i < 4; i++)
-    // {
-    //     b2Vec2 pos = ships[i]->position;
-    //     TraceLog(LOG_INFO, "Ship pos.x: %f, pos.y: %f", pos.x, pos.y);
-    // }
-
     context = create_game_context(game_data, ships);
     game_state_manager.context = context;
 
     // load player, this will define players level and stats based on new game, loaded game and player count
     // setup paddle default positions and initial ball.
-    // use the context level loader to create the level and populate the playfield
+
     context->entities->add_paddle(context->game_data, context->world_id);
     Paddle *paddle = kv_A(context->entities->paddles, 0); // player1 paddle
 
@@ -43,6 +37,7 @@ static void scene_init(int arg_count, va_list args)
         context->entities->add_ball(context->game_data, context->world_id, paddle);
     }
 
+    // use the context level loader to create the level and populate the playfield
     int brick_row = 12;
     int brick_column = 12;
     float row_spacing = 18.0f; // Horizontal spacing (width of the brick + any gap)
