@@ -10,6 +10,18 @@ static InputManager manager;
 static float notification_timeout[MAX_INPUTS];
 static Font *font;
 static float axis_debounce_time[MAX_INPUTS];
+static float key_debounce_time[MAX_INPUTS];
+
+static bool key_debounce(int input_index, KeyboardKey key)
+{
+    bool key_pressed = IsKeyPressed(key);
+    if (key_pressed && key_debounce_time[input_index] <= 0)
+    {
+        key_debounce_time[input_index] = 0.2f;
+        return true;
+    }
+    return false;
+}
 
 static bool axis_debounce(int input_index, GamepadAxis axis, float threshold)
 {
@@ -28,7 +40,15 @@ static void update(float delta_time)
 {
     for (int i = 0; i < MAX_INPUTS; i++)
     {
-        axis_debounce_time[i] -= delta_time;
+        if (axis_debounce_time[i] > 0)
+        {
+            axis_debounce_time[i] -= delta_time;
+        }
+
+        if (key_debounce_time[i] > 0)
+        {
+            key_debounce_time[i] -= delta_time;
+        }
 
         bool connected = IsGamepadAvailable(i);
         if (connected != manager.pad_active[i])
@@ -181,6 +201,7 @@ InputManager *create_input_manager(void)
         manager.player[i] = i == 0 ? 0 : -1;
     }
 
+    manager.key_debounce = key_debounce;
     manager.axis_debounce = axis_debounce;
     manager.get_player_input = get_player_input;
     manager.map_player_input = map_player_input;

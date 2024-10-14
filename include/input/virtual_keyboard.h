@@ -9,7 +9,7 @@ typedef struct VirtualKeyboard
 {
     char *input_text; // Stores the input string
     Font *font;       // Font to use for the keyboard
-    Color font_color;
+    Color blink_color;
     InputMapping *p1_input;
     InputManager *input_manager;
 
@@ -43,5 +43,5 @@ typedef struct VirtualKeyboard
     void (*cleanup)(struct VirtualKeyboard *keyboard);                  // Cleanup memory, etc.
 } VirtualKeyboard;
 
-VirtualKeyboard *create_virtual_keyboard(Vector2 text_position, Vector2 keyboard_position, int max_length, Color font_color);
+VirtualKeyboard *create_virtual_keyboard(char *input_text, int max_length, Vector2 text_position, Vector2 keyboard_position, Color blink_color);
 #endif

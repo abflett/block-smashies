@@ -11,12 +11,17 @@
 
 #define SHIP_COLORS 25
 #define MAX_PLAYERS 4
+#define MAX_NAME_LENGTH 14
 
 static Scene embark_scene;
 static InputManager *input_manager;
 static VirtualKeyboard *virtual_keyboard;
 static GameData *game_data;
 static Ship *ships[MAX_PLAYERS];
+
+static Font *font;
+static char input_text[MAX_NAME_LENGTH + 1] = "Team1";
+static Vector2 text_position = {160, 52};
 
 static Texture2D *floor_dock;
 static Texture2D *floor_simulation;
@@ -28,7 +33,7 @@ static Texture2D *embark_room;
 static Texture2D *embark_text_backing;
 
 static int menu_selection = 1;
-static const int menu_selection_count = 2;
+static const int menu_selection_count = 3;
 static int color_selection = 0;
 static bool menu_selection_mode = true;
 
@@ -52,11 +57,17 @@ static void scene_init(int arg_count, va_list args)
     {
         ships[i] = create_ship(i + 1, game_data->player_count, GetRandomValue(0, 24), (b2Vec2){x_positions[i], 80}); // player count and color should be a pointer reference
     }
+
+    virtual_keyboard = create_virtual_keyboard(input_text, MAX_NAME_LENGTH, text_position, (Vector2){40, 90}, settings.colors.blue_04);
 }
 
 static void scene_update(float delta_time)
 {
     virtual_keyboard->update(virtual_keyboard, delta_time);
+    if (virtual_keyboard->active)
+    {
+        return;
+    }
 
     InputMapping *player_inputs[MAX_PLAYERS];
     for (int i = 0; i < MAX_PLAYERS; i++)
@@ -73,7 +84,7 @@ static void scene_update(float delta_time)
             change_player_count(&game_data->player_count); // update the ships
         }
 
-        if (IsKeyPressed(player_inputs[0]->action_k_ENTER) || IsGamepadButtonPressed(0, player_inputs[0]->action_A) || IsGamepadButtonPressed(0, player_inputs[0]->action_START))
+        if (input_manager->key_debounce(0, player_inputs[0]->action_k_ENTER) || IsGamepadButtonPressed(0, player_inputs[0]->action_A) || IsGamepadButtonPressed(0, player_inputs[0]->action_START))
         {
             switch (menu_selection)
             {
@@ -82,6 +93,9 @@ static void scene_update(float delta_time)
                 break;
             case 1:
                 scene_manager.change(scene_manager.scenes.gameplay, 1, game_data);
+                break;
+            case 2:
+                virtual_keyboard->active = true;
                 break;
             default:
                 scene_manager.change(scene_manager.scenes.main_menu, 0);
@@ -147,7 +161,9 @@ static void scene_render(void)
     case 1:
         DrawTexture(*floor_simulation, 214, 166, WHITE);
         break;
-
+    case 2:
+        // modify aphla color of projector beams
+        break;
     default:
         DrawTexture(*floor_dock, 22, 166, WHITE);
         break;
@@ -166,6 +182,14 @@ static void scene_render(void)
         DrawTexture(*nums[i], num_x_positions[i], 148, WHITE);
     }
 
+    Vector2 text_size = MeasureTextEx(*font, input_text, 7, 0.0f);
+    Vector2 text_centered_position = {
+        text_position.x - text_size.x / 2, // Center horizontally
+        text_position.y                    // Keep vertical position the same
+    };
+
+    DrawTextEx(*font, input_text, text_centered_position, 7, 0.0f, settings.colors.blue_04);
+
     virtual_keyboard->render(virtual_keyboard);
 }
 
@@ -175,6 +199,8 @@ static void scene_cleanup(void)
     {
         ships[i]->cleanup(ships[i]);
     }
+
+    virtual_keyboard->cleanup(virtual_keyboard);
 }
 
 Scene *create_embark_scene(void)
@@ -195,7 +221,7 @@ Scene *create_embark_scene(void)
     embark_text_backing = &resource_manager.get_texture("embark-text-backing")->texture;
 
     game_data = create_game_data();
-    virtual_keyboard = create_virtual_keyboard((Vector2){160, 10}, (Vector2){40, 90}, 10, settings.colors.blue_04);
+    font = resource_manager.get_pixel7_font();
 
     embark_scene.init = scene_init;
     embark_scene.update = scene_update;

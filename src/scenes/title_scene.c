@@ -3,12 +3,10 @@
 #include "scene_manager.h"
 #include "resource_manager.h"
 #include "settings.h"
-#include "virtual_keyboard.h"
 
 static Scene title_scene;
 static float min_scene_time = 0.0f;
 static Font *font;
-static VirtualKeyboard *virtual_keyboard;
 
 static void scene_init(int arg_count, va_list args)
 {
@@ -17,14 +15,12 @@ static void scene_init(int arg_count, va_list args)
 
 static void scene_update(float delta_time)
 {
-    virtual_keyboard->update(virtual_keyboard, delta_time);
     if (min_scene_time >= 0.0f)
     {
         min_scene_time -= delta_time;
     }
 
-    if (GetKeyPressed() == KEY_SPACE)
-    // if ((GetKeyPressed() != 0 || IsGestureDetected(GESTURE_TAP) || GetGamepadButtonPressed() != 0) && min_scene_time <= 0.0f)
+    if ((GetKeyPressed() != 0 || IsGestureDetected(GESTURE_TAP) || GetGamepadButtonPressed() != 0) && min_scene_time <= 0.0f)
     {
         scene_manager.change(scene_manager.scenes.main_menu, 0);
     }
@@ -32,13 +28,12 @@ static void scene_update(float delta_time)
 
 static void scene_render(void)
 {
-    virtual_keyboard->render(virtual_keyboard);
-    // const char *text = "Press any button";
-    // Vector2 text_size = MeasureTextEx(*font, text, 8, 0.0f);
-    // Vector2 text_position = {
-    //     (settings.game.target_size.x - text_size.x) / 2,
-    //     (settings.game.target_size.y - text_size.y) / 2};
-    // DrawTextEx(*font, text, text_position, 7, 0.0f, WHITE);
+    const char *text = "Title: Press any button";
+    Vector2 text_size = MeasureTextEx(*font, text, 8, 0.0f);
+    Vector2 text_position = {
+        (settings.game.target_size.x - text_size.x) / 2,
+        (settings.game.target_size.y - text_size.y) / 2};
+    DrawTextEx(*font, text, text_position, 7, 0.0f, WHITE);
 }
 
 static void scene_cleanup(void)
@@ -48,7 +43,6 @@ static void scene_cleanup(void)
 Scene *create_title_scene()
 {
     font = resource_manager.get_pixel7_font();
-    virtual_keyboard = create_virtual_keyboard((Vector2){160, 10}, (Vector2){40, 90}, 10, settings.colors.blue_04);
     title_scene.init = scene_init;
     title_scene.update = scene_update;
     title_scene.render = scene_render;

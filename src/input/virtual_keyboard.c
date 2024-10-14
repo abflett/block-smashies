@@ -22,6 +22,13 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
     if (!keyboard->active)
         return;
 
+    // close virtural keyboard if enter key is pressed
+    if (keyboard->input_manager->key_debounce(0, keyboard->p1_input->action_k_ENTER))
+    {
+        TraceLog(LOG_INFO, "Enter key pressed");
+        keyboard->active = false;
+    }
+
     keyboard->blink_time -= delta_time;
 
     if (keyboard->blink_time < 0)
@@ -170,8 +177,8 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
         }
     }
 
-    // Handle backspace input
-    if (IsKeyPressed(KEY_BACKSPACE) || IsGamepadButtonPressed(0, keyboard->p1_input->action_B))
+    // Handle backspace input // Todo: inputmanager keydebounce
+    if (IsKeyPressed(KEY_BACKSPACE) || IsKeyDown(KEY_BACKSPACE) || IsGamepadButtonPressed(0, keyboard->p1_input->action_B))
     {
         if (keyboard->cursor_position > 0)
         {
@@ -185,28 +192,20 @@ static void keyboard_render(VirtualKeyboard *keyboard)
     if (!keyboard->active)
         return;
 
-    // Keyboard background
-    DrawTexture(*keyboard->keyboard_bg, (int)keyboard->keyboard_position.x, (int)keyboard->keyboard_position.y, WHITE);
-
-    Vector2 text_size = MeasureTextEx(*keyboard->font, keyboard->input_text, 7, 0.0f);
-    Vector2 text_centered_position = {
-        keyboard->text_position.x - text_size.x / 2, // Center horizontally
-        keyboard->text_position.y                    // Keep vertical position the same
-    };
-
-    // Render the input text at the specified position
-    DrawTextEx(*keyboard->font, keyboard->input_text, text_centered_position, 7, 0.0f, keyboard->font_color);
-
     // If we haven't reached max_length, show the blinking underscore at the typing position
     if (keyboard->cursor_position < keyboard->max_length && keyboard->show_underscore)
     {
+        Vector2 text_size = MeasureTextEx(*keyboard->font, keyboard->input_text, 7, 0.0f);
         Vector2 underscore_position = {
-            text_centered_position.x + text_size.x, // At the end of the input text
-            text_centered_position.y};
-        DrawTextEx(*keyboard->font, "_", underscore_position, 7, 0.0f, keyboard->font_color); // Draw the blinking underscore
+            keyboard->text_position.x + text_size.x / 2, // At the end of the input text
+            keyboard->text_position.y};
+        DrawTextEx(*keyboard->font, "_", underscore_position, 7, 0.0f, keyboard->blink_color); // Draw the blinking underscore
     }
 
     // Render the virtual keyboard (lower half of the screen)
+    // Keyboard background
+    DrawTexture(*keyboard->keyboard_bg, (int)keyboard->keyboard_position.x, (int)keyboard->keyboard_position.y, WHITE);
+
     int key_width = 15;
     int key_height = 15;
     Vector2 keyboard_start = {keyboard->keyboard_position.x + 23, keyboard->keyboard_position.y + 6}; // Start position for the keyboard on the screen
@@ -295,11 +294,10 @@ static char *keyboard_get_string(VirtualKeyboard *keyboard)
 
 static void keyboard_cleanup(VirtualKeyboard *keyboard)
 {
-    free(keyboard->input_text);
     free(keyboard);
 }
 
-VirtualKeyboard *create_virtual_keyboard(Vector2 text_position, Vector2 keyboard_position, int max_length, Color font_color)
+VirtualKeyboard *create_virtual_keyboard(char *input_text, int max_length, Vector2 text_position, Vector2 keyboard_position, Color blink_color)
 {
     VirtualKeyboard *keyboard = (VirtualKeyboard *)malloc(sizeof(VirtualKeyboard));
 
@@ -321,17 +319,17 @@ VirtualKeyboard *create_virtual_keyboard(Vector2 text_position, Vector2 keyboard
     keyboard->keyboard_space_lit = &resource_manager.get_texture("keyboard-space-lit")->texture;
     keyboard->keyboard_space = &resource_manager.get_texture("keyboard-space")->texture;
 
-    keyboard->font_color = font_color;
+    keyboard->blink_color = blink_color;
     keyboard->caps_on = false;
     keyboard->shift_on = false;
-    keyboard->input_text = (char *)calloc(max_length + 1, sizeof(char)); // Allocate memory for the string
+    keyboard->input_text = input_text; // Allocate memory for the string
     keyboard->max_length = max_length;
     keyboard->cursor_position = 0;
     keyboard->text_position = text_position;
     keyboard->keyboard_position = keyboard_position;
     keyboard->selected_key_x = 1;
     keyboard->selected_key_y = 0;
-    keyboard->active = true;
+    keyboard->active = false;
     keyboard->show_underscore = true;
 
     keyboard->update = keyboard_update;
