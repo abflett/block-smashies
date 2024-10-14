@@ -32,7 +32,7 @@ static Texture2D *embark_projector_beams;
 static Texture2D *embark_room;
 static Texture2D *embark_text_backing;
 
-static int menu_selection = 1;
+static int menu_selection = 2;
 static const int menu_selection_count = 3;
 static int color_selection = 0;
 static bool menu_selection_mode = true;
@@ -49,7 +49,7 @@ static void change_player_count(int *players)
 
 static void scene_init(int arg_count, va_list args)
 {
-    menu_selection = 1;
+    menu_selection = 2; // change team name
     float x_positions[] = {135, 188, 84, 239};
 
     SetRandomSeed(1);

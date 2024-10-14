@@ -178,9 +178,26 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
         if (keyboard->cursor_position < keyboard->max_length)
         { // Ensure room for null terminator
             char selected_char = (char)key;
-            keyboard->input_text[keyboard->cursor_position++] = keyboard->caps_on || keyboard->shift_on || keyboard->shift_down ? selected_char : tolower(selected_char);
+            selected_char = (keyboard->caps_on || keyboard->shift_on || keyboard->shift_down) ? selected_char : tolower(selected_char);
+            keyboard->input_text[keyboard->cursor_position++] = selected_char;
             keyboard->input_text[keyboard->cursor_position] = '\0'; // Null-terminate the string
             keyboard->shift_on = false;
+
+            // Map the typed character to the virtual keyboard's layout
+            for (int y = 0; y < KEYBOARD_ROWS; y++)
+            {
+                for (int x = 0; x < KEYBOARD_COLS; x++)
+                {
+                    int key_index = y * KEYBOARD_COLS + x;
+                    if (KEYBOARD_KEYS[key_index] == tolower(selected_char))
+                    {
+                        // Set the selected key's position
+                        keyboard->selected_key_x = x;
+                        keyboard->selected_key_y = y;
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -189,6 +206,8 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
     {
         if (keyboard->cursor_position > 0)
         {
+            keyboard->selected_key_x = 11;
+            keyboard->selected_key_y = 0;
             keyboard->input_text[--keyboard->cursor_position] = '\0';
         }
     }
@@ -261,7 +280,7 @@ static void keyboard_render(VirtualKeyboard *keyboard)
                 continue;
             }
 
-            key = keyboard->caps_on || keyboard->shift_on ? toupper(key) : key;
+            key = keyboard->caps_on || keyboard->shift_on || keyboard->shift_down ? toupper(key) : key;
 
             Vector2 key_position = {keyboard_start.x + x * (key_width + 1), keyboard_start.y + y * (key_height + 1)};
             Texture2D *key_texture = is_selected ? keyboard->keyboard_key_lit : keyboard->keyboard_key;
