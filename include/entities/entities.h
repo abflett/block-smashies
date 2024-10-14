@@ -10,6 +10,7 @@
 #include "wall_edges.h"
 #include "kill_boundary.h"
 #include "nanite.h"
+#include "ship.h"
 
 struct GameContext;
 
@@ -19,6 +20,9 @@ typedef struct Entities
     kvec_t(Paddle *) paddles;
     kvec_t(Brick *) bricks;
     kvec_t(Nanite *) nanites;
+
+    Ship **ships;
+
     WallEdges *wall_edges;
     KillBoundary *kill_boundary;
 
@@ -33,6 +37,6 @@ typedef struct Entities
     void (*cleanup)(void);
 } Entities;
 
-Entities *create_entities();
+Entities *create_entities(Ship **ships);
 
 #endif

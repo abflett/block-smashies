@@ -4,6 +4,7 @@
 #include "game_state_manager.h"
 #include "settings.h"
 #include "game_context.h"
+#include "ship.h"
 
 static Scene gameplay_scene;
 static GameContext *context;
@@ -11,15 +12,24 @@ static GameContext *context;
 static void scene_init(int arg_count, va_list args)
 {
     GameData *game_data = NULL;
+    Ship **ships = NULL;
 
     // Retrieve arguments
     for (int i = 0; i < arg_count; i++)
     {
         if (i == 0)
             game_data = va_arg(args, GameData *);
+        if (i == 1)
+            ships = va_arg(args, Ship **);
     }
 
-    context = create_game_context(game_data);
+    // for (int i = 0; i < 4; i++)
+    // {
+    //     b2Vec2 pos = ships[i]->position;
+    //     TraceLog(LOG_INFO, "Ship pos.x: %f, pos.y: %f", pos.x, pos.y);
+    // }
+
+    context = create_game_context(game_data, ships);
     game_state_manager.context = context;
 
     // load player, this will define players level and stats based on new game, loaded game and player count

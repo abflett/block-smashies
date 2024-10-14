@@ -27,6 +27,6 @@ typedef struct GameContext
 } GameContext;
 
 // Function declarations for GameContext management (if needed)
-GameContext *create_game_context(GameData *game_data);
+GameContext *create_game_context(GameData *game_data, Ship **ships);
 
 #endif // GAME_CONTEXT_H

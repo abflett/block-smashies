@@ -9,6 +9,8 @@
 #include "settings.h"
 #include "game_context.h"
 
+#define MAX_SHIPS 4
+
 Entities entities;
 
 static void add_ball_func(GameData *game_data, b2WorldId world_id, Paddle *paddle)
@@ -181,6 +183,11 @@ static void render_entities_func(void)
             nanite->render(nanite);
         }
     }
+
+    for (int i = 0; i < MAX_SHIPS; i++)
+    {
+        entities.ships[i]->render(entities.ships[i]);
+    }
 }
 
 static void cleanup_entities_func(void)
@@ -242,12 +249,14 @@ static void cleanup_entities_func(void)
     kv_destroy(entities.nanites);
 }
 
-Entities *create_entities()
+Entities *create_entities(Ship **ships)
 {
     kv_init(entities.balls);
     kv_init(entities.paddles);
     kv_init(entities.bricks);
     kv_init(entities.nanites);
+
+    entities.ships = ships;
 
     entities.add_ball = add_ball_func;
     entities.add_paddle = add_paddle_func;
