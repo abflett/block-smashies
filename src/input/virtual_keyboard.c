@@ -17,6 +17,13 @@
 // =ZXCVBNM,._* // (=)shift, (*)none  // row 3
 // >>>>>>>>>>>> // (>)space...        // row 4
 
+static void keyboard_activate(VirtualKeyboard *keyboard)
+{
+    keyboard->active = true;
+    int input_length = (int)strlen(keyboard->input_text);
+    keyboard->cursor_position = input_length;
+}
+
 static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
 {
     if (!keyboard->active)
@@ -178,7 +185,7 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
     }
 
     // Handle backspace input // Todo: inputmanager keydebounce
-    if (IsKeyPressed(KEY_BACKSPACE) || IsKeyDown(KEY_BACKSPACE) || IsGamepadButtonPressed(0, keyboard->p1_input->action_B))
+    if (keyboard->input_manager->key_debounce(0, KEY_BACKSPACE) || keyboard->input_manager->key_down_repeat(0, KEY_BACKSPACE) || IsGamepadButtonPressed(0, keyboard->p1_input->action_B))
     {
         if (keyboard->cursor_position > 0)
         {
@@ -334,6 +341,7 @@ VirtualKeyboard *create_virtual_keyboard(char *input_text, int max_length, Vecto
 
     keyboard->update = keyboard_update;
     keyboard->render = keyboard_render;
+    keyboard->activate = keyboard_activate;
     keyboard->get_string = keyboard_get_string;
     keyboard->cleanup = keyboard_cleanup;
 

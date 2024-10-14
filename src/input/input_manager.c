@@ -12,6 +12,17 @@ static Font *font;
 static float axis_debounce_time[MAX_INPUTS];
 static float key_debounce_time[MAX_INPUTS];
 
+static bool key_down_repeat(int input_index, KeyboardKey key)
+{
+    bool key_pressed = IsKeyDown(key);
+    if (key_pressed && key_debounce_time[input_index] <= 0)
+    {
+        key_debounce_time[input_index] = 0.2f;
+        return true;
+    }
+    return false;
+}
+
 static bool key_debounce(int input_index, KeyboardKey key)
 {
     bool key_pressed = IsKeyPressed(key);
@@ -202,6 +213,7 @@ InputManager *create_input_manager(void)
     }
 
     manager.key_debounce = key_debounce;
+    manager.key_down_repeat = key_down_repeat;
     manager.axis_debounce = axis_debounce;
     manager.get_player_input = get_player_input;
     manager.map_player_input = map_player_input;

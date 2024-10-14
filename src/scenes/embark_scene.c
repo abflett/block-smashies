@@ -95,7 +95,7 @@ static void scene_update(float delta_time)
                 scene_manager.change(scene_manager.scenes.gameplay, 1, game_data);
                 break;
             case 2:
-                virtual_keyboard->active = true;
+                virtual_keyboard->activate(virtual_keyboard);
                 break;
             default:
                 scene_manager.change(scene_manager.scenes.main_menu, 0);

@@ -39,6 +39,7 @@ typedef struct VirtualKeyboard
     bool active;                                                        // True if the virtual keyboard is in use
     void (*update)(struct VirtualKeyboard *keyboard, float delta_time); // Update logic for input
     void (*render)(struct VirtualKeyboard *keyboard);                   // Render the keyboard
+    void (*activate)(struct VirtualKeyboard *keyboard);                 // Activate the keyboard
     char *(*get_string)(struct VirtualKeyboard *keyboard);              // Return the current string
     void (*cleanup)(struct VirtualKeyboard *keyboard);                  // Cleanup memory, etc.
 } VirtualKeyboard;
