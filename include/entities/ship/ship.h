@@ -18,11 +18,12 @@ typedef struct Ship
     ShipThrusters *ship_thrusters;
 
     int segments;
-    int player;       // from game_data
-    int player_count; // from game_data
+    int *player;       // from game_data
+    int *player_count; // from game_data
+    int previous_player_count;
     b2Vec2 position;
-    int ship_color; // from game_data
-    int shield_level;
+    int *ship_color; // from game_data
+    int *shield_level;
 
     int (*calculate_segments)(struct Ship *ship);
     void (*move)(struct Ship *ship, b2Vec2 position);    // movement for animation scenes without physics
@@ -33,6 +34,6 @@ typedef struct Ship
     void (*cleanup)(struct Ship *ship);
 } Ship;
 
-Ship *create_ship(int player, int player_count, int ship_color, b2Vec2 position);
+Ship *create_ship(int *player, int *player_count, int *ship_color, int *shield_level, b2Vec2 position);
 
 #endif

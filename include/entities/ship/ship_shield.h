@@ -9,11 +9,12 @@
 typedef struct ShipShield
 {
     int *segments;
+    int previous_segments;
     int *shield_level;
+    int previous_shield_level;
     b2Vec2 *position;
     Subtexture *subtexture;
 
-    void (*set_shield)(struct ShipShield *ship_shield);
     void (*render)(struct ShipShield *ship_shield);
     void (*cleanup)(struct ShipShield *ship_shield);
 } ShipShield;

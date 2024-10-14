@@ -92,11 +92,11 @@ GameData *create_game_data(void)
     game_data.perks.orb_shot = false;
 
     // ShipCustomization
-    SetRandomSeed(1);
+    SetRandomSeed(4);
     for (int i = 0; i < MAX_SHIPS; i++)
     {
-        int random_color = GetRandomValue(0, 25);
-        game_data.ships[i] = (ShipCustomization){.active = i == 0, .player_num = i, .ship_color = random_color};
+        int random_color = GetRandomValue(0, 24);
+        game_data.ships[i] = (ShipCustomization){.active = i == 0, .player_num = i, .ship_color = random_color, .shield_level = 0};
     }
 
     game_data.add_player = add_player_game_data;

@@ -25,6 +25,7 @@ typedef struct ShipCustomization
     bool active;    // active based on player count
     int ship_color; // ship color
     int player_num; // player number: shape/segments based on player_num and player_count
+    int shield_level;
 } ShipCustomization;
 
 typedef struct PaddleAttributes

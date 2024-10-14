@@ -34,7 +34,6 @@ static Texture2D *embark_text_backing;
 
 static int menu_selection = 2;
 static const int menu_selection_count = 3;
-static int color_selection = 0;
 static bool menu_selection_mode = true;
 
 static Color hologram_color = {255, 255, 255, 255};
@@ -42,26 +41,9 @@ static Color projector_beam_color = {255, 255, 255, 255};
 
 static float hologram_beam_timer = 0.0f;
 
-static void change_player_count(int *players)
-{
-    for (int i = 0; i < MAX_PLAYERS; i++)
-    {
-        ships[i]->player_count = game_data->player_count;            // should be a pointer reference
-        ships[i]->segments = ships[i]->calculate_segments(ships[i]); // maybe check and update inside ship instead
-        ships[i]->ship_shield->set_shield(ships[i]->ship_shield);    // maybe check and update inside ship shield instead
-    }
-}
-
 static void scene_init(int arg_count, va_list args)
 {
     menu_selection = 2; // change team name
-    float x_positions[] = {135, 188, 84, 239};
-
-    SetRandomSeed(1);
-    for (int i = 0; i < MAX_PLAYERS; i++)
-    {
-        ships[i] = create_ship(i + 1, game_data->player_count, GetRandomValue(0, 24), (b2Vec2){x_positions[i], 80}); // player count and color should be a pointer reference
-    }
 
     virtual_keyboard = create_virtual_keyboard(input_text, MAX_NAME_LENGTH, text_position, (Vector2){40, 90}, settings.colors.blue_04);
 }
@@ -93,75 +75,65 @@ static void scene_update(float delta_time)
         player_inputs[i] = input_manager->get_player_input(i);
     }
 
-    if (menu_selection_mode)
+    if (input_manager->check_for_new_players(game_data->player_count))
+    {
+        game_data->player_count++;
+    }
+
+    if (input_manager->key_debounce(0, player_inputs[0]->action_k_ENTER) || IsGamepadButtonPressed(0, player_inputs[0]->action_A) || IsGamepadButtonPressed(0, player_inputs[0]->action_START))
+    {
+        switch (menu_selection)
+        {
+        case 0:
+            scene_manager.change(scene_manager.scenes.main_menu, 0);
+            break;
+        case 1:
+            scene_manager.change(scene_manager.scenes.gameplay, 2, game_data, ships);
+            break;
+        case 2:
+            virtual_keyboard->activate(virtual_keyboard);
+            break;
+        default:
+            scene_manager.change(scene_manager.scenes.main_menu, 0);
+            break;
+        }
+    }
+
+    if (IsKeyPressed(player_inputs[0]->action_k_RIGHT) || IsGamepadButtonPressed(0, player_inputs[0]->action_RIGHT) || input_manager->axis_debounce(0, player_inputs[0]->action_a_X, 0.5f))
+    {
+        menu_selection = (menu_selection + 1) % menu_selection_count;
+    }
+    if (IsKeyPressed(player_inputs[0]->action_k_LEFT) || IsGamepadButtonPressed(0, player_inputs[0]->action_LEFT) || input_manager->axis_debounce(0, player_inputs[0]->action_a_X, -0.5f))
+    {
+        menu_selection = (menu_selection - 1 + menu_selection_count) % menu_selection_count;
+    }
+
+    // player wide inputs
+    for (int i = 0; i < game_data->player_count; i++)
     {
 
-        if (input_manager->check_for_new_players(game_data->player_count))
+        int player_i_i = input_manager->player[i];
+
+        // change color forward
+        if (IsKeyPressed(player_inputs[i]->action_k_UP) || IsGamepadButtonPressed(player_i_i, player_inputs[i]->action_UP) || input_manager->axis_debounce(player_i_i, player_inputs[i]->action_a_Y, 0.5f))
         {
-            game_data->player_count++;
-            change_player_count(&game_data->player_count); // update the ships
+            game_data->ships[i].ship_color = (1 + game_data->ships[i].ship_color) % SHIP_COLORS;
         }
 
-        if (input_manager->key_debounce(0, player_inputs[0]->action_k_ENTER) || IsGamepadButtonPressed(0, player_inputs[0]->action_A) || IsGamepadButtonPressed(0, player_inputs[0]->action_START))
+        // change color backward
+        if (IsKeyPressed(player_inputs[i]->action_k_DOWN) || IsGamepadButtonPressed(player_i_i, player_inputs[i]->action_DOWN) || input_manager->axis_debounce(player_i_i, player_inputs[i]->action_a_Y, -0.5f))
         {
-            switch (menu_selection)
-            {
-            case 0:
-                scene_manager.change(scene_manager.scenes.main_menu, 0);
-                break;
-            case 1:
-                scene_manager.change(scene_manager.scenes.gameplay, 1, game_data);
-                break;
-            case 2:
-                virtual_keyboard->activate(virtual_keyboard);
-                break;
-            default:
-                scene_manager.change(scene_manager.scenes.main_menu, 0);
-                break;
-            }
+            game_data->ships[i].ship_color = (game_data->ships[i].ship_color - 1 + SHIP_COLORS) % SHIP_COLORS;
         }
 
-        if (IsKeyPressed(player_inputs[0]->action_k_RIGHT) || IsGamepadButtonPressed(0, player_inputs[0]->action_RIGHT) || input_manager->axis_debounce(0, player_inputs[0]->action_a_X, 0.5f))
+        // remove player
+        if (i != 0 && input_manager->player_mapped[i])
         {
-            menu_selection = (menu_selection + 1) % menu_selection_count;
-        }
-        if (IsKeyPressed(player_inputs[0]->action_k_LEFT) || IsGamepadButtonPressed(0, player_inputs[0]->action_LEFT) || input_manager->axis_debounce(0, player_inputs[0]->action_a_X, -0.5f))
-        {
-            menu_selection = (menu_selection - 1 + menu_selection_count) % menu_selection_count;
-        }
-
-        // player wide inputs
-        for (int i = 0; i < game_data->player_count; i++)
-        {
-
-            int player_i_i = input_manager->player[i];
-
-            // change color forward
-            if (IsKeyPressed(player_inputs[i]->action_k_UP) || IsGamepadButtonPressed(player_i_i, player_inputs[i]->action_UP) || input_manager->axis_debounce(player_i_i, player_inputs[i]->action_a_Y, 0.5f))
+            if (IsKeyPressed(player_inputs[i]->action_k_ESCAPE) || IsGamepadButtonPressed(player_i_i, player_inputs[i]->action_B))
             {
-                color_selection = (1 + color_selection) % SHIP_COLORS;
-                ships[i]->ship_body->set_color(ships[i]->ship_body, color_selection);
-            }
-
-            // change color backward
-            if (IsKeyPressed(player_inputs[i]->action_k_DOWN) || IsGamepadButtonPressed(player_i_i, player_inputs[i]->action_DOWN) || input_manager->axis_debounce(player_i_i, player_inputs[i]->action_a_Y, -0.5f))
-            {
-                color_selection = (color_selection - 1 + SHIP_COLORS) % SHIP_COLORS;
-                ships[i]->ship_body->set_color(ships[i]->ship_body, color_selection);
-            }
-
-            // remove player
-            if (i != 0 && input_manager->player_mapped[i])
-            {
-                if (IsKeyPressed(player_inputs[i]->action_k_ESCAPE) || IsGamepadButtonPressed(player_i_i, player_inputs[i]->action_B))
-                {
-                    game_data->player_count--;
-                    input_manager->unmap_player_input(i); // remove the input mapping for the player and shift the players down
-
-                    change_player_count(&game_data->player_count); // this will reset the player count for all ships, recalculate segments, and set the shield
-
-                    TraceLog(LOG_INFO, "Player %d removed from embarking", i);
-                }
+                game_data->player_count--;
+                input_manager->unmap_player_input(i); // remove the input mapping for the player and shift the players down
+                TraceLog(LOG_INFO, "Player %d removed from embarking", i);
             }
         }
     }
@@ -190,6 +162,7 @@ static void scene_render(void)
     DrawTexture(*embark_projector_beams, 51, 36, hologram_color);
     DrawTexture(*holo_spots, 48, 13, hologram_color);
 
+    // Todo: use switch case for hologram beam color
     DrawTexture(*holo_beam, 114, 42, menu_selection == 2 ? projector_beam_color : projector_beam_color);
     DrawTexture(*embark_text_backing, 114, 51, menu_selection == 2 ? hologram_color : projector_beam_color);
 
@@ -213,11 +186,6 @@ static void scene_render(void)
 
 static void scene_cleanup(void)
 {
-    for (int i = 0; i < MAX_PLAYERS; i++)
-    {
-        ships[i]->cleanup(ships[i]);
-    }
-
     virtual_keyboard->cleanup(virtual_keyboard);
 }
 
@@ -240,6 +208,19 @@ Scene *create_embark_scene(void)
 
     game_data = create_game_data();
     font = resource_manager.get_pixel7_font();
+
+    float x_positions[] = {135, 188, 84, 239};
+    for (int i = 0; i < MAX_PLAYERS; i++)
+    {
+        if (ships[i] == NULL)
+        {
+            ships[i] = create_ship(&game_data->ships[i].player_num,
+                                   &game_data->player_count,
+                                   &game_data->ships[i].ship_color,
+                                   &game_data->ships[i].shield_level,
+                                   (b2Vec2){x_positions[i], 80});
+        }
+    }
 
     embark_scene.init = scene_init;
     embark_scene.update = scene_update;
