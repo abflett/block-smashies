@@ -27,8 +27,8 @@ static Subtexture *text_exit[4];
 
 static Font *pixel7;
 static Color beam_alpha;
-static Color text_alpha;
-
+static Color text_alpha1;
+static Color text_alpha2;
 static bool toggle_beams;
 float accumalator;
 
@@ -136,13 +136,12 @@ static void scene_update(float delta_time)
 
     update_flavor_text_scroll(delta_time);
 
-    beam_alpha = settings.colors.alpha_07;
-    text_alpha = settings.colors.alpha_06;
     accumalator += delta_time;
-    if (accumalator > 0.1)
+    if (accumalator > 0.05)
     {
-        text_alpha = settings.colors.alpha_03;
-        beam_alpha = settings.colors.alpha_05;
+        text_alpha1 = (Color){255, 255, 255, GetRandomValue(200, 255)};
+        text_alpha2 = (Color){255, 255, 255, GetRandomValue(200, 255)};
+        beam_alpha = (Color){255, 255, 255, GetRandomValue(100, 155)};
         accumalator = 0;
     }
 }
@@ -173,20 +172,20 @@ static void scene_render(void)
     int historic_index_b = (selected_menu_option == 3) ? 3 : 2;
     int exit_index_b = (selected_menu_option == 4) ? 3 : 2;
 
-    DrawTextureRec(text_block_smashies[0]->texture_resource->texture, text_block_smashies[0]->src, (Vector2){113, 19}, text_alpha);
-    DrawTextureRec(text_block_smashies[2]->texture_resource->texture, text_block_smashies[2]->src, (Vector2){113, 20}, beam_alpha);
+    DrawTextureRec(text_block_smashies[0]->texture_resource->texture, text_block_smashies[0]->src, (Vector2){113, 19}, text_alpha1);
+    DrawTextureRec(text_block_smashies[2]->texture_resource->texture, text_block_smashies[2]->src, (Vector2){113, 20}, text_alpha2);
 
-    DrawTextureRec(text_embark[embark_index_a]->texture_resource->texture, text_embark[embark_index_a]->src, (Vector2){41, 68}, text_alpha);
-    DrawTextureRec(text_relive[relive_index_a]->texture_resource->texture, text_relive[relive_index_a]->src, (Vector2){194, 87}, text_alpha);
-    DrawTextureRec(text_modify[modify_index_a]->texture_resource->texture, text_modify[modify_index_a]->src, (Vector2){22, 99}, text_alpha);
-    DrawTextureRec(text_historic[historic_index_a]->texture_resource->texture, text_historic[historic_index_a]->src, (Vector2){51, 148}, text_alpha);
-    DrawTextureRec(text_exit[exit_index_a]->texture_resource->texture, text_exit[exit_index_a]->src, (Vector2){239, 126}, text_alpha);
+    DrawTextureRec(text_embark[embark_index_a]->texture_resource->texture, text_embark[embark_index_a]->src, (Vector2){41, 68}, text_alpha1);
+    DrawTextureRec(text_relive[relive_index_a]->texture_resource->texture, text_relive[relive_index_a]->src, (Vector2){194, 87}, text_alpha1);
+    DrawTextureRec(text_modify[modify_index_a]->texture_resource->texture, text_modify[modify_index_a]->src, (Vector2){22, 99}, text_alpha1);
+    DrawTextureRec(text_historic[historic_index_a]->texture_resource->texture, text_historic[historic_index_a]->src, (Vector2){51, 148}, text_alpha1);
+    DrawTextureRec(text_exit[exit_index_a]->texture_resource->texture, text_exit[exit_index_a]->src, (Vector2){239, 126}, text_alpha1);
 
-    DrawTextureRec(text_embark[embark_index_b]->texture_resource->texture, text_embark[embark_index_b]->src, (Vector2){41, 69}, beam_alpha);
-    DrawTextureRec(text_relive[relive_index_b]->texture_resource->texture, text_relive[relive_index_b]->src, (Vector2){194, 88}, beam_alpha);
-    DrawTextureRec(text_modify[modify_index_b]->texture_resource->texture, text_modify[modify_index_b]->src, (Vector2){22, 100}, beam_alpha);
-    DrawTextureRec(text_historic[historic_index_b]->texture_resource->texture, text_historic[historic_index_b]->src, (Vector2){51, 149}, beam_alpha);
-    DrawTextureRec(text_exit[exit_index_b]->texture_resource->texture, text_exit[exit_index_b]->src, (Vector2){239, 127}, beam_alpha);
+    DrawTextureRec(text_embark[embark_index_b]->texture_resource->texture, text_embark[embark_index_b]->src, (Vector2){41, 69}, text_alpha2);
+    DrawTextureRec(text_relive[relive_index_b]->texture_resource->texture, text_relive[relive_index_b]->src, (Vector2){194, 88}, text_alpha2);
+    DrawTextureRec(text_modify[modify_index_b]->texture_resource->texture, text_modify[modify_index_b]->src, (Vector2){22, 100}, text_alpha2);
+    DrawTextureRec(text_historic[historic_index_b]->texture_resource->texture, text_historic[historic_index_b]->src, (Vector2){51, 149}, text_alpha2);
+    DrawTextureRec(text_exit[exit_index_b]->texture_resource->texture, text_exit[exit_index_b]->src, (Vector2){239, 127}, text_alpha2);
 }
 
 static void scene_cleanup(void)

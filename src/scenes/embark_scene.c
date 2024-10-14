@@ -37,6 +37,11 @@ static const int menu_selection_count = 3;
 static int color_selection = 0;
 static bool menu_selection_mode = true;
 
+static Color hologram_color = {255, 255, 255, 255};
+static Color projector_beam_color = {255, 255, 255, 255};
+
+static float hologram_beam_timer = 0.0f;
+
 static void change_player_count(int *players)
 {
     for (int i = 0; i < MAX_PLAYERS; i++)
@@ -61,8 +66,21 @@ static void scene_init(int arg_count, va_list args)
     virtual_keyboard = create_virtual_keyboard(input_text, MAX_NAME_LENGTH, text_position, (Vector2){40, 90}, settings.colors.blue_04);
 }
 
+static void update_timers(float delta_time)
+{
+    hologram_beam_timer += delta_time;
+    if (hologram_beam_timer > 0.05f)
+    {
+        hologram_color = (Color){255, 255, 255, GetRandomValue(200, 255)};
+        projector_beam_color = (Color){255, 255, 255, GetRandomValue(100, 155)};
+        hologram_beam_timer = 0.0f;
+    }
+}
+
 static void scene_update(float delta_time)
 {
+    update_timers(delta_time);
+
     virtual_keyboard->update(virtual_keyboard, delta_time);
     if (virtual_keyboard->active)
     {
@@ -169,11 +187,11 @@ static void scene_render(void)
         break;
     }
 
-    DrawTexture(*embark_projector_beams, 51, 36, WHITE);
-    DrawTexture(*holo_spots, 48, 13, WHITE);
+    DrawTexture(*embark_projector_beams, 51, 36, hologram_color);
+    DrawTexture(*holo_spots, 48, 13, hologram_color);
 
-    DrawTexture(*holo_beam, 114, 42, WHITE);
-    DrawTexture(*embark_text_backing, 114, 51, WHITE);
+    DrawTexture(*holo_beam, 114, 42, menu_selection == 2 ? projector_beam_color : projector_beam_color);
+    DrawTexture(*embark_text_backing, 114, 51, menu_selection == 2 ? hologram_color : projector_beam_color);
 
     int num_x_positions[] = {133, 185, 81, 236};
     for (int i = 0; i < game_data->player_count; i++)
@@ -184,11 +202,11 @@ static void scene_render(void)
 
     Vector2 text_size = MeasureTextEx(*font, input_text, 7, 0.0f);
     Vector2 text_centered_position = {
-        text_position.x - text_size.x / 2, // Center horizontally
-        text_position.y                    // Keep vertical position the same
+        (float)(int)(text_position.x - text_size.x / 2), // Center horizontally
+        text_position.y                                  // Keep vertical position the same
     };
 
-    DrawTextEx(*font, input_text, text_centered_position, 7, 0.0f, settings.colors.blue_04);
+    DrawTextEx(*font, input_text, text_centered_position, 7, 0.0f, menu_selection == 2 ? settings.colors.blue_05 : settings.colors.blue_04);
 
     virtual_keyboard->render(virtual_keyboard);
 }
