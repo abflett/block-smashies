@@ -188,15 +188,20 @@ static void keyboard_render(VirtualKeyboard *keyboard)
     // Keyboard background
     DrawTexture(*keyboard->keyboard_bg, (int)keyboard->keyboard_position.x, (int)keyboard->keyboard_position.y, WHITE);
 
+    Vector2 text_size = MeasureTextEx(*keyboard->font, keyboard->input_text, 7, 0.0f);
+    Vector2 text_centered_position = {
+        keyboard->text_position.x - text_size.x / 2, // Center horizontally
+        keyboard->text_position.y                    // Keep vertical position the same
+    };
+
     // Render the input text at the specified position
-    DrawTextEx(*keyboard->font, keyboard->input_text, keyboard->text_position, 7, 0.0f, keyboard->font_color);
+    DrawTextEx(*keyboard->font, keyboard->input_text, text_centered_position, 7, 0.0f, keyboard->font_color);
 
     // If we haven't reached max_length, show the blinking underscore at the typing position
     if (keyboard->cursor_position < keyboard->max_length && keyboard->show_underscore)
     {
-        Vector2 text_size = MeasureTextEx(*keyboard->font, keyboard->input_text, 7, 0.0f);
         Vector2 underscore_position = {
-            keyboard->text_position.x + text_size.x, // At the end of the input text
+            keyboard->text_position.x + text_size.x / 2, // At the end of the input text
             keyboard->text_position.y};
         DrawTextEx(*keyboard->font, "_", underscore_position, 7, 0.0f, keyboard->font_color); // Draw the blinking underscore
     }
