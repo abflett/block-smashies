@@ -38,7 +38,7 @@ static void cleanup_game_context(void)
     b2DestroyWorld(context.world_id);
 }
 
-GameContext *create_game_context(GameData *game_data, Ship **ships)
+GameContext *create_game_context(GameData *game_data)
 {
     b2WorldDef world_def = b2DefaultWorldDef();
     world_def.gravity = (b2Vec2){0.0f, 0.0f};
@@ -50,7 +50,7 @@ GameContext *create_game_context(GameData *game_data, Ship **ships)
     context.game_ui = create_game_ui(context.game_status);
     context.shake_effect = get_shake_effect();
 
-    context.entities = create_entities(ships);
+    context.entities = create_entities();
     context.entities->add_wall_edges(context.world_id);
     context.entities->add_kill_boundary(context.world_id);
 

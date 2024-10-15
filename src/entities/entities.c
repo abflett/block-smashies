@@ -183,11 +183,6 @@ static void render_entities_func(void)
             nanite->render(nanite);
         }
     }
-
-    for (int i = 0; i < MAX_SHIPS; i++)
-    {
-        entities.ships[i]->render(entities.ships[i]);
-    }
 }
 
 static void cleanup_entities_func(void)
@@ -247,22 +242,14 @@ static void cleanup_entities_func(void)
         }
     }
     kv_destroy(entities.nanites);
-
-    for (int i = 0; i < MAX_SHIPS; i++)
-    {
-        entities.ships[i]->cleanup(entities.ships[i]);
-        entities.ships[i] = NULL;
-    }
 }
 
-Entities *create_entities(Ship **ships)
+Entities *create_entities()
 {
     kv_init(entities.balls);
     kv_init(entities.paddles);
     kv_init(entities.bricks);
     kv_init(entities.nanites);
-
-    entities.ships = ships;
 
     entities.add_ball = add_ball_func;
     entities.add_paddle = add_paddle_func;

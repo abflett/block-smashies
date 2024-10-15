@@ -21,8 +21,6 @@ typedef struct Entities
     kvec_t(Brick *) bricks;
     kvec_t(Nanite *) nanites;
 
-    Ship **ships;
-
     WallEdges *wall_edges;
     KillBoundary *kill_boundary;
 
@@ -37,6 +35,6 @@ typedef struct Entities
     void (*cleanup)(void);
 } Entities;
 
-Entities *create_entities(Ship **ships);
+Entities *create_entities();
 
 #endif

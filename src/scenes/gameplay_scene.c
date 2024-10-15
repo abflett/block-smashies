@@ -19,11 +19,9 @@ static void scene_init(int arg_count, va_list args)
     {
         if (i == 0)
             game_data = va_arg(args, GameData *);
-        if (i == 1)
-            ships = va_arg(args, Ship **);
     }
 
-    context = create_game_context(game_data, ships);
+    context = create_game_context(game_data);
     game_state_manager.context = context;
 
     // load player, this will define players level and stats based on new game, loaded game and player count
