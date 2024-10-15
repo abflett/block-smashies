@@ -4,7 +4,6 @@
 #include "game_state_manager.h"
 #include "settings.h"
 #include "game_context.h"
-#include "ship.h"
 
 static Scene gameplay_scene;
 static GameContext *context;

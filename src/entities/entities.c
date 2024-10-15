@@ -13,7 +13,7 @@
 
 Entities entities;
 
-static void add_ball_func(GameData *game_data, b2WorldId world_id, Paddle *paddle)
+static void add_ball(GameData *game_data, b2WorldId world_id, Paddle *paddle)
 {
     float random_x = (float)GetRandomValue(-25, 25);
     b2Vec2 paddle_position = b2Body_GetPosition(paddle->body);
@@ -36,7 +36,7 @@ static void add_ball_func(GameData *game_data, b2WorldId world_id, Paddle *paddl
     kv_push(Ball *, entities.balls, new_ball);
 }
 
-static void add_paddle_func(GameData *game_data, b2WorldId world_id)
+static void add_paddle(GameData *game_data, b2WorldId world_id)
 {
     int paddle_count = (int)kv_size(entities.paddles);
     int player_count = 0;
@@ -65,7 +65,7 @@ static void add_paddle_func(GameData *game_data, b2WorldId world_id)
     kv_push(Paddle *, entities.paddles, new_paddle);
 }
 
-static void add_brick_func(GameContext *game_context, b2Vec2 position, int brick_type)
+static void add_brick(GameContext *game_context, b2Vec2 position, int brick_type)
 {
     for (int i = 0; i < kv_size(game_context->entities->bricks); i++)
     {
@@ -81,7 +81,7 @@ static void add_brick_func(GameContext *game_context, b2Vec2 position, int brick
     kv_push(Brick *, entities.bricks, new_brick);
 }
 
-static void add_nanite_func(b2WorldId world_id, b2Vec2 position, float currency, int nanite_type)
+static void add_nanite(b2WorldId world_id, b2Vec2 position, float currency, int nanite_type)
 {
     for (int i = 0; i < kv_size(entities.nanites); i++)
     {
@@ -97,17 +97,17 @@ static void add_nanite_func(b2WorldId world_id, b2Vec2 position, float currency,
     kv_push(Nanite *, entities.nanites, new_nanite);
 }
 
-static void add_wall_edges_func(b2WorldId world_id)
+static void add_wall_edges(b2WorldId world_id)
 {
     entities.wall_edges = create_wall_edges(world_id);
 }
 
-static void add_kill_boundary_func(b2WorldId world_id)
+static void add_kill_boundary(b2WorldId world_id)
 {
     entities.kill_boundary = create_kill_boundary(world_id);
 }
 
-static void update_entities_func(float delta_time)
+static void update_entities(float delta_time)
 {
     for (int i = 0; i < kv_size(entities.paddles); i++)
     {
@@ -146,7 +146,7 @@ static void update_entities_func(float delta_time)
     }
 }
 
-static void render_entities_func(void)
+static void render_entities(void)
 {
     for (int i = 0; i < kv_size(entities.balls); i++)
     {
@@ -185,7 +185,7 @@ static void render_entities_func(void)
     }
 }
 
-static void cleanup_entities_func(void)
+static void cleanup_entities(void)
 {
     // Clean up wall edges
     if (entities.wall_edges && entities.wall_edges->clean_up)
@@ -244,23 +244,24 @@ static void cleanup_entities_func(void)
     kv_destroy(entities.nanites);
 }
 
-Entities *create_entities()
+Entities *create_entities(GameContext *context)
 {
     kv_init(entities.balls);
     kv_init(entities.paddles);
     kv_init(entities.bricks);
     kv_init(entities.nanites);
 
-    entities.add_ball = add_ball_func;
-    entities.add_paddle = add_paddle_func;
-    entities.add_brick = add_brick_func;
-    entities.add_nanite = add_nanite_func;
-    entities.add_wall_edges = add_wall_edges_func;
-    entities.add_kill_boundary = add_kill_boundary_func;
+    add_wall_edges(context->world_id);
+    add_kill_boundary(context->world_id);
 
-    entities.update = update_entities_func;
-    entities.render = render_entities_func;
-    entities.cleanup = cleanup_entities_func;
+    entities.add_ball = add_ball;
+    entities.add_paddle = add_paddle;
+    entities.add_brick = add_brick;
+    entities.add_nanite = add_nanite;
+
+    entities.update = update_entities;
+    entities.render = render_entities;
+    entities.cleanup = cleanup_entities;
 
     return &entities;
 }

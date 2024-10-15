@@ -34,25 +34,24 @@ static void cleanup_game_context(void)
 {
     context.entities->cleanup();
     context.game_ui->cleanup();
-    TraceLog(LOG_INFO, "[Cleanup] - Box2d WorldId [%d] - Success", context.world_id.index1);
     b2DestroyWorld(context.world_id);
 }
 
 GameContext *create_game_context(GameData *game_data)
 {
+    // world setup
     b2WorldDef world_def = b2DefaultWorldDef();
     world_def.gravity = (b2Vec2){0.0f, 0.0f};
-
     context.world_id = b2CreateWorld(&world_def);
     context.collision_manager = create_collision_manager(context.world_id);
+
+    // game setup
     context.game_data = game_data;
+
+    context.shake_effect = get_shake_effect();
     context.game_status = create_game_status(context.game_data->player_count);
     context.game_ui = create_game_ui(context.game_status);
-    context.shake_effect = get_shake_effect();
-
-    context.entities = create_entities();
-    context.entities->add_wall_edges(context.world_id);
-    context.entities->add_kill_boundary(context.world_id);
+    context.entities = create_entities(&context);
 
     context.update = update_game_context;
     context.render = render_game_context;

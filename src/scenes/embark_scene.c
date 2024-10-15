@@ -33,7 +33,7 @@ static Texture2D *embark_room;
 static Texture2D *embark_text_backing;
 
 static int menu_selection = 2;
-static const int menu_selection_count = 3;
+static const int menu_selection_count = 3; // 0 = main menu, 1 = gameplay, 2 = change team name
 static bool menu_selection_mode = true;
 
 static Color hologram_color = {255, 255, 255, 255};
@@ -43,7 +43,7 @@ static float hologram_beam_timer = 0.0f;
 
 static void scene_init(int arg_count, va_list args)
 {
-    menu_selection = 2; // change team name
+    menu_selection = 1; // change team name
 
     float x_positions[] = {135, 188, 84, 239};
     for (int i = 0; i < MAX_PLAYERS; i++)
@@ -200,11 +200,17 @@ static void scene_render(void)
 static void scene_cleanup(void)
 {
     virtual_keyboard->cleanup(virtual_keyboard);
+    for (int i = 0; i < MAX_PLAYERS; i++)
+    {
+        ships[i]->cleanup(ships[i]);
+        ships[i] = NULL;
+    }
 }
 
 Scene *create_embark_scene(void)
 {
     input_manager = get_input_manager();
+    game_data = create_game_data();
 
     // set textures
     floor_dock = &resource_manager.get_texture("embark-floor-dock")->texture;
@@ -218,8 +224,6 @@ Scene *create_embark_scene(void)
     embark_projector_beams = &resource_manager.get_texture("embark-projector-beams")->texture;
     embark_room = &resource_manager.get_texture("embark-room")->texture;
     embark_text_backing = &resource_manager.get_texture("embark-text-backing")->texture;
-
-    game_data = create_game_data();
     font = resource_manager.get_pixel7_font();
 
     embark_scene.init = scene_init;

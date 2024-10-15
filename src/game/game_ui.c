@@ -12,6 +12,7 @@ static GameUi game_ui;
 static PlayingUiBars *ui_bars;
 Debris debris_array[NUM_DEBRIS];
 static GameStatus *status;
+
 static Texture2D *screen_bg;
 static Texture2D *foreground;
 static Texture2D *radar_fade;
