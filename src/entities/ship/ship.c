@@ -48,6 +48,9 @@ static void cleanup_ship(struct Ship *ship)
     ship->ship_body->cleanup(ship->ship_body);
     ship->ship_shield->cleanup(ship->ship_shield);
     ship->ship_thrusters->cleanup(ship->ship_thrusters);
+    b2DestroyBody(ship->body);
+    // b2DestroyBody(ship->shield);
+    b2DestroyBody(ship->constraint);
     free(ship);
 }
 
