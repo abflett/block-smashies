@@ -11,6 +11,14 @@ static GameState playing_state;
 
 static void state_init(void)
 {
+
+    Ship *ship = game_state_manager.context->entities->ships[0];
+
+    if (ship != NULL)
+    {
+        ship->activate_ship_physics(ship, game_state_manager.context);
+    }
+
     if (game_state_manager.context->game_status->is_pause)
     {
         game_state_manager.context->game_status->is_pause = false;

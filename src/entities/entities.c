@@ -144,6 +144,14 @@ static void update_entities(float delta_time)
             brick->update(brick, delta_time);
         }
     }
+
+    for (int i = 0; i < MAX_SHIPS; i++)
+    {
+        if (entities.ships[i]->active)
+        {
+            entities.ships[i]->update(entities.ships[i], delta_time);
+        }
+    }
 }
 
 static void render_entities(void)
