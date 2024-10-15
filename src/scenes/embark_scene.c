@@ -95,6 +95,7 @@ static void scene_update(float delta_time)
     if (input_manager->check_for_new_players(game_data->player_count))
     {
         game_data->ships[game_data->player_count].active = input_manager->player_mapped[game_data->player_count];
+        game_data->ships[game_data->player_count].ship_color = GetRandomValue(0, 24);
         game_data->player_count++;
     }
 
