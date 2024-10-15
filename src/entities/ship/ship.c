@@ -44,17 +44,17 @@ static void cleanup_ship(struct Ship *ship)
     free(ship);
 }
 
-Ship *create_ship(int *player, int *player_count, int *ship_color, int *shield_level, b2Vec2 position)
+Ship *create_ship(int *player, GameData *game_data, b2Vec2 position)
 {
     Ship *ship = malloc(sizeof(Ship));
 
     ship->active = true;
     ship->player = player;
-    ship->player_count = player_count;
-    ship->previous_player_count = *player_count;
-    ship->ship_color = ship_color;
+    ship->player_count = &game_data->player_count;
+    ship->previous_player_count = *ship->player_count;
+    ship->ship_color = &game_data->ships[*ship->player].ship_color;
     ship->position = position;
-    ship->shield_level = shield_level;
+    ship->shield_level = &game_data->ships[*ship->player].shield_level;
     ship->segments = calculate_segments_func(ship);
 
     ship->ship_body = create_ship_body(&ship->segments, ship->ship_color, &ship->position);
@@ -62,6 +62,7 @@ Ship *create_ship(int *player, int *player_count, int *ship_color, int *shield_l
     ship->ship_thrusters = create_ship_thrusters(&ship->segments, &ship->position);
 
     // add box2d data
+    // fuction to set physics body to ship and all settings
 
     ship->calculate_segments = calculate_segments_func;
     ship->move = move_ship;

@@ -271,9 +271,7 @@ Entities *create_entities(GameContext *context)
         if (entities.ships[i] == NULL)
         {
             entities.ships[i] = create_ship(&context->game_data->ships[i].player_num,
-                                            &context->game_data->player_count,
-                                            &context->game_data->ships[i].ship_color,
-                                            &context->game_data->ships[i].shield_level,
+                                            context->game_data,
                                             (b2Vec2){x_positions[i], 35});
         }
         entities.ships[i]->active = context->game_data->ships[i].active;

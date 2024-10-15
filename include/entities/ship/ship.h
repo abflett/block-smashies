@@ -5,7 +5,7 @@
 #include "ship_body.h"
 #include "ship_shield.h"
 #include "ship_thrusters.h"
-// #include "game_data.h" // add later
+#include "game_data.h" // add later
 
 struct ShipBody;
 
@@ -34,6 +34,6 @@ typedef struct Ship
     void (*cleanup)(struct Ship *ship);
 } Ship;
 
-Ship *create_ship(int *player, int *player_count, int *ship_color, int *shield_level, b2Vec2 position);
+Ship *create_ship(int *player, GameData *game_data, b2Vec2 position);
 
 #endif

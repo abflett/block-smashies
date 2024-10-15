@@ -53,9 +53,7 @@ static void scene_init(int arg_count, va_list args)
         if (ships[i] == NULL)
         {
             ships[i] = create_ship(&game_data->ships[i].player_num,
-                                   &game_data->player_count,
-                                   &game_data->ships[i].ship_color,
-                                   &game_data->ships[i].shield_level,
+                                   game_data,
                                    (b2Vec2){x_positions[i], 100});
         }
     }
