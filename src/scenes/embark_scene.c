@@ -44,6 +44,8 @@ static float hologram_beam_timer = 0.0f;
 static void scene_init(int arg_count, va_list args)
 {
     menu_selection = 1; // change team name
+    game_data->player_count = 1;
+    input_manager->reset_player_inputs();
 
     float x_positions[] = {135, 188, 84, 239};
     for (int i = 0; i < MAX_PLAYERS; i++)
@@ -82,17 +84,21 @@ static void scene_update(float delta_time)
         return;
     }
 
+    // set player inputs for easy access
     InputMapping *player_inputs[MAX_PLAYERS];
     for (int i = 0; i < MAX_PLAYERS; i++)
     {
         player_inputs[i] = input_manager->get_player_input(i);
     }
 
+    // check for key presses to add players
     if (input_manager->check_for_new_players(game_data->player_count))
     {
+        game_data->ships[game_data->player_count].active = input_manager->player_mapped[game_data->player_count];
         game_data->player_count++;
     }
 
+    // menu selection action
     if (input_manager->key_debounce(0, player_inputs[0]->action_k_ENTER) || IsGamepadButtonPressed(0, player_inputs[0]->action_A) || IsGamepadButtonPressed(0, player_inputs[0]->action_START))
     {
         switch (menu_selection)
@@ -112,6 +118,7 @@ static void scene_update(float delta_time)
         }
     }
 
+    // menu selection navigation
     if (IsKeyPressed(player_inputs[0]->action_k_RIGHT) || IsGamepadButtonPressed(0, player_inputs[0]->action_RIGHT) || input_manager->axis_debounce(0, player_inputs[0]->action_a_X, 0.5f))
     {
         menu_selection = (menu_selection + 1) % menu_selection_count;
@@ -124,7 +131,7 @@ static void scene_update(float delta_time)
     // player wide inputs
     for (int i = 0; i < game_data->player_count; i++)
     {
-
+        // get player input mapping for easy access
         int player_i_i = input_manager->player[i];
 
         // change color forward
@@ -147,6 +154,13 @@ static void scene_update(float delta_time)
                 game_data->player_count--;
                 input_manager->unmap_player_input(i); // remove the input mapping for the player and shift the players down
                 TraceLog(LOG_INFO, "Player %d removed from embarking", i);
+                game_data->ships[i].active = input_manager->player_mapped[i];
+
+                // shift the ship colors down
+                for (int j = i; j < game_data->player_count; j++)
+                {
+                    game_data->ships[j].ship_color = game_data->ships[j + 1].ship_color;
+                }
             }
         }
     }

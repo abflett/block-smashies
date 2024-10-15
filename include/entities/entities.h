@@ -1,6 +1,8 @@
 #ifndef ENTITIES_H
 #define ENTITIES_H
 
+#define MAX_SHIPS 4
+
 #include "box2d/box2d.h"
 #include "paddle.h"
 #include "ball.h"
@@ -20,6 +22,8 @@ typedef struct Entities
     kvec_t(Paddle *) paddles;
     kvec_t(Brick *) bricks;
     kvec_t(Nanite *) nanites;
+
+    Ship *ships[MAX_SHIPS];
 
     WallEdges *wall_edges;
     KillBoundary *kill_boundary;

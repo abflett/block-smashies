@@ -197,21 +197,27 @@ static InputMapping *get_player_input(int player)
     return &manager.inputs[manager.player[player]];
 }
 
+static void reset_player_inputs(void)
+{
+    for (int i = 0; i < MAX_INPUTS; i++)
+    {
+        notification_timeout[i] = 0.0f;
+        manager.pad_active[i] = IsGamepadAvailable(i);
+        manager.input_mapped[i] = i == 0;
+        manager.player_mapped[i] = i == 0;
+        manager.player[i] = i == 0 ? 0 : -1;
+    }
+}
+
 InputManager *create_input_manager(void)
 {
     font = resource_manager.get_pixel7_font();
 
     manager.inputs = settings.inputs;
 
-    for (int i = 0; i < MAX_INPUTS; i++)
-    {
-        notification_timeout[i] = 0.0f;
-        manager.pad_active[i] = IsGamepadAvailable(i);
-        manager.input_mapped[i] = i == 0;
-        manager.player_mapped[0] = i == 0;
-        manager.player[i] = i == 0 ? 0 : -1;
-    }
+    reset_player_inputs();
 
+    manager.reset_player_inputs = reset_player_inputs;
     manager.key_debounce = key_debounce;
     manager.key_down_repeat = key_down_repeat;
     manager.axis_debounce = axis_debounce;

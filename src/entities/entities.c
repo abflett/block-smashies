@@ -183,6 +183,14 @@ static void render_entities(void)
             nanite->render(nanite);
         }
     }
+
+    for (int i = 0; i < MAX_SHIPS; i++)
+    {
+        if (entities.ships[i]->active)
+        {
+            entities.ships[i]->render(entities.ships[i]);
+        }
+    }
 }
 
 static void cleanup_entities(void)
@@ -242,6 +250,12 @@ static void cleanup_entities(void)
         }
     }
     kv_destroy(entities.nanites);
+
+    for (int i = 0; i < MAX_SHIPS; i++)
+    {
+        entities.ships[i]->cleanup(entities.ships[i]);
+        entities.ships[i] = NULL;
+    }
 }
 
 Entities *create_entities(GameContext *context)
@@ -250,6 +264,20 @@ Entities *create_entities(GameContext *context)
     kv_init(entities.paddles);
     kv_init(entities.bricks);
     kv_init(entities.nanites);
+
+    float x_positions[] = {204, 239, 169, 274};
+    for (int i = 0; i < MAX_SHIPS; i++)
+    {
+        if (entities.ships[i] == NULL)
+        {
+            entities.ships[i] = create_ship(&context->game_data->ships[i].player_num,
+                                            &context->game_data->player_count,
+                                            &context->game_data->ships[i].ship_color,
+                                            &context->game_data->ships[i].shield_level,
+                                            (b2Vec2){x_positions[i], 35});
+        }
+        entities.ships[i]->active = context->game_data->ships[i].active;
+    }
 
     add_wall_edges(context->world_id);
     add_kill_boundary(context->world_id);
