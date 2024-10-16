@@ -50,7 +50,7 @@ set(COLLISIONS_SRC
     src/collisions/collision_manager.c
     src/collisions/ball_brick_collision.c
     src/collisions/ball_kill_boundary_collision.c
-    src/collisions/nanite_paddle_collision.c
+    src/collisions/nanite_ship_collision.c
     src/collisions/nanite_kill_boundary_collision.c
 )
 

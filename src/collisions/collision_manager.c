@@ -8,7 +8,7 @@
 // #include "game_context.h"
 #include "ball_brick_collision.h"
 #include "ball_kill_boundary_collision.h"
-#include "nanite_paddle_collision.h"
+#include "nanite_ship_collision.h"
 #include "nanite_kill_boundary_collision.h"
 
 CollisionManager collision_manager;
@@ -132,7 +132,7 @@ static void begin_contact(b2ShapeId shapeA, b2ShapeId shapeB, GameContext *conte
 
         if (nanite != NULL && ship != NULL)
         {
-            nanite_paddle_collision(nanite, context); // Corrected function call
+            nanite_ship_collision(nanite, context); // Corrected function call
         }
     }
 
