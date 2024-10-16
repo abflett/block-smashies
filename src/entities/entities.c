@@ -13,10 +13,12 @@
 
 Entities entities;
 
-static void add_ball(GameData *game_data, b2WorldId world_id, Paddle *paddle)
+static void add_ball(GameData *game_data, b2WorldId world_id)
 {
     float random_x = (float)GetRandomValue(-25, 25);
-    b2Vec2 paddle_position = b2Body_GetPosition(paddle->body);
+    Ship *p1_ship = entities.ships[0];
+
+    b2Vec2 ship_position = p1_ship->position;
 
     for (int i = 0; i < kv_size(entities.balls); i++)
     {
@@ -24,14 +26,14 @@ static void add_ball(GameData *game_data, b2WorldId world_id, Paddle *paddle)
         if (!existing_ball->active)
         {
             existing_ball->reset(existing_ball,
-                                 (b2Vec2){paddle_position.x, paddle_position.y + (paddle->size.y / 2) + 3},
+                                 (b2Vec2){ship_position.x, ship_position.y + (p1_ship->shield_size.y) + 3},
                                  (b2Vec2){random_x, 50});
             return;
         }
     }
 
     Ball *new_ball = create_ball(game_data, world_id,
-                                 (b2Vec2){paddle_position.x, paddle_position.y + (paddle->size.y / 2) + 3},
+                                 (b2Vec2){ship_position.x, ship_position.y + (p1_ship->shield_size.y) + 3},
                                  (b2Vec2){random_x, 50});
     kv_push(Ball *, entities.balls, new_ball);
 }
@@ -280,7 +282,7 @@ Entities *create_entities(GameContext *context)
         {
             entities.ships[i] = create_ship(&context->game_data->ships[i].player_num,
                                             context->game_data,
-                                            (b2Vec2){x_positions[i], 35});
+                                            (b2Vec2){x_positions[i], 19.0f});
         }
         entities.ships[i]->active = context->game_data->ships[i].active;
     }

@@ -8,7 +8,7 @@
 #include "ship_thrusters.h"
 #include "game_data.h" // add later
 
-struct ShipBody;
+// struct ShipBody;
 struct GameContext;
 
 typedef struct Ship
@@ -17,10 +17,9 @@ typedef struct Ship
     bool active;
     bool physics_active;
     b2BodyId body;
-    b2BodyId shield;
     b2BodyId constraint;
 
-    struct ShipBody *ship_body;
+    ShipBody *ship_body;
     ShipShield *ship_shield;
     ShipThrusters *ship_thrusters;
 
@@ -28,14 +27,23 @@ typedef struct Ship
     int *player;       // from game_data
     int *player_count; // from game_data
     int previous_player_count;
+
     b2Vec2 position;
+    b2Vec2 velocity;
+    b2Vec2 shield_size;
+    float *force;
+
     int *ship_color; // from game_data
     int *shield_level;
 
+    // ship_inputs
+    void (*move_left)(struct Ship *ship);
+    void (*move_right)(struct Ship *ship);
+
     void (*activate_ship_physics)(struct Ship *ship, struct GameContext *game_context);
     int (*calculate_segments)(struct Ship *ship);
-    void (*move)(struct Ship *ship, b2Vec2 position);    // movement for animation scenes without physics
-    void (*update)(struct Ship *ship, float delta_time); // handle player input and other updates
+    void (*move)(struct Ship *ship, b2Vec2 position, b2Vec2 velocity); // movement for animation scenes without physics
+    void (*update)(struct Ship *ship, float delta_time);               // handle player input and other updates
     void (*render)(struct Ship *ship);
     void (*disable)(struct Ship *ship);                // set active false
     void (*reset)(struct Ship *ship, b2Vec2 position); // reset position on death etc.

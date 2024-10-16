@@ -4,6 +4,11 @@ project(BlockSmashies VERSION 0.1)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
+# Ensure static linking with MSVC
+if (MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")  # Static runtime for Debug and Release
+endif()
+
 # Third-party subdirectories
 add_subdirectory(external/raylib)
 add_subdirectory(external/parson)
@@ -113,6 +118,7 @@ set(INPUT_SRC
     src/input/gamepad_test.c
     src/input/input_manager.c
     src/input/virtual_keyboard.c
+    src/input/playing_input_handler.c
 ) 
 
 # Create the BlockSmashies executable
@@ -128,8 +134,22 @@ add_executable(BlockSmashies
     ${MAPPINGS_SRC}
     ${EXTERNAL_SRC})
 
-# Link with libraries
+# Ensure static linking for raylib, parson, and box2d
 target_link_libraries(BlockSmashies PUBLIC raylib parson box2d)
+
+# Make sure raylib, parson, and box2d are compiled statically
+set_target_properties(raylib PROPERTIES
+    MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+    POSITION_INDEPENDENT_CODE ON
+)
+set_target_properties(parson PROPERTIES
+    MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+    POSITION_INDEPENDENT_CODE ON
+)
+set_target_properties(box2d PROPERTIES
+    MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+    POSITION_INDEPENDENT_CODE ON
+)
 
 # Custom command to copy assets directory to the build directory
 add_custom_command(TARGET BlockSmashies POST_BUILD
@@ -140,7 +160,7 @@ add_custom_command(TARGET BlockSmashies POST_BUILD
 # Set build types
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release;MinSizeRel;RelWithDebInfo" CACHE STRING "" FORCE)
 
-# compiler specific settings
+# Compiler specific settings
 if (MSVC)
     add_compile_options(/MP)
     target_compile_options(BlockSmashies PRIVATE

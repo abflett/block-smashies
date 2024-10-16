@@ -28,7 +28,7 @@ typedef struct Entities
     WallEdges *wall_edges;
     KillBoundary *kill_boundary;
 
-    void (*add_ball)(GameData *game_data, b2WorldId world_id, Paddle *paddle);
+    void (*add_ball)(GameData *game_data, b2WorldId world_id);
     void (*add_paddle)(GameData *game_data, b2WorldId world_id);
     void (*add_brick)(struct GameContext *game_context, b2Vec2 position, int brick_type);
     void (*add_nanite)(b2WorldId world_id, b2Vec2 position, float currency, int nanite_type);

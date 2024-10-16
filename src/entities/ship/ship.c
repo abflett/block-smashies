@@ -22,10 +22,19 @@ static int calculate_segments_func(Ship *ship)
     }
 }
 
-static void move_ship(struct Ship *ship, b2Vec2 position) {}
-static void update_ship(struct Ship *ship, float delta_time) {}
+// For static animations, velocity will show correct thruster animation
+static void move_ship(Ship *ship, b2Vec2 position, b2Vec2 velocity)
+{
+    ship->velocity = velocity;
+    ship->position = position;
+}
 
-static void render_ship(struct Ship *ship)
+static void update_ship(Ship *ship, float delta_time)
+{
+    ship->velocity = b2Body_GetLinearVelocity(ship->body);
+}
+
+static void render_ship(Ship *ship)
 {
     if (ship->physics_active)
     {
@@ -41,16 +50,22 @@ static void render_ship(struct Ship *ship)
     ship->ship_thrusters->render(ship->ship_thrusters);
 }
 
-static void disable_ship(struct Ship *ship) {}
-static void reset_ship(struct Ship *ship, b2Vec2 position) {}
-static void cleanup_ship(struct Ship *ship)
+static void disable_ship(Ship *ship) {}
+
+static void reset_ship(Ship *ship, b2Vec2 position) {}
+
+static void cleanup_ship(Ship *ship)
 {
     ship->ship_body->cleanup(ship->ship_body);
     ship->ship_shield->cleanup(ship->ship_shield);
     ship->ship_thrusters->cleanup(ship->ship_thrusters);
-    b2DestroyBody(ship->body);
-    // b2DestroyBody(ship->shield);
-    b2DestroyBody(ship->constraint);
+
+    if (ship->physics_active)
+    {
+        b2DestroyBody(ship->body);
+        b2DestroyBody(ship->constraint);
+    }
+
     free(ship);
 }
 
@@ -64,8 +79,9 @@ void activate_ship_physics(Ship *ship, GameContext *game_context)
     body_def.isBullet = true;
     ship->body = b2CreateBody(game_context->world_id, &body_def);
 
-    b2Vec2 shield_size = {ship->ship_shield->subtexture->src.width * 0.5f, ship->ship_shield->subtexture->src.height * 0.5f};
-    b2Polygon shield_box = b2MakeBox(shield_size.x, shield_size.y);
+    // set physics body in relation to the shield
+    // b2Vec2 shield_size = {ship->ship_shield->subtexture->src.width * 0.5f, ship->ship_shield->subtexture->src.height};
+    b2Polygon shield_box = b2MakeBox(ship->shield_size.x * 0.5f, ship->shield_size.y);
 
     b2ShapeDef shield_shape_def = b2DefaultShapeDef();
     shield_shape_def.density = 1.0f;
@@ -100,6 +116,16 @@ void activate_ship_physics(Ship *ship, GameContext *game_context)
     b2Body_SetUserData(ship->body, ship);
 }
 
+void move_left(Ship *ship)
+{
+    b2Body_ApplyForceToCenter(ship->body, (b2Vec2){-*ship->force, 0.0f}, true);
+}
+
+void move_right(Ship *ship)
+{
+    b2Body_ApplyForceToCenter(ship->body, (b2Vec2){*ship->force, 0.0f}, true);
+}
+
 Ship *create_ship(int *player, GameData *game_data, b2Vec2 position)
 {
     Ship *ship = malloc(sizeof(Ship));
@@ -111,7 +137,11 @@ Ship *create_ship(int *player, GameData *game_data, b2Vec2 position)
     ship->player_count = &game_data->player_count;
     ship->previous_player_count = *ship->player_count;
     ship->ship_color = &game_data->ships[*ship->player].ship_color;
+
     ship->position = position;
+    ship->velocity = (b2Vec2){0, 0};
+    ship->force = &game_data->paddle.boost_force;
+
     ship->shield_level = &game_data->ships[*ship->player].shield_level;
     ship->segments = calculate_segments_func(ship);
 
@@ -119,8 +149,10 @@ Ship *create_ship(int *player, GameData *game_data, b2Vec2 position)
     ship->ship_shield = create_ship_shield(&ship->segments, ship->shield_level, &ship->position);
     ship->ship_thrusters = create_ship_thrusters(&ship->segments, &ship->position);
 
-    // add box2d data
-    // fuction to set physics body to ship and all settings
+    ship->shield_size = (b2Vec2){ship->ship_shield->subtexture->src.width, ship->ship_shield->subtexture->src.height};
+
+    ship->move_left = move_left;
+    ship->move_right = move_right;
 
     ship->activate_ship_physics = activate_ship_physics;
     ship->calculate_segments = calculate_segments_func;

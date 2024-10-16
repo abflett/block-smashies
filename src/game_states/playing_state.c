@@ -6,22 +6,28 @@
 #include "settings.h"
 #include "game_state_manager.h"
 #include "game_context.h"
+#include "playing_input_handler.h"
 
 static GameState playing_state;
+static PlayingInputHandler *input;
 
 static void state_init(void)
 {
+    GameContext *context = game_state_manager.context;
+    input = initialize_playing_input(context);
 
-    Ship *ship = game_state_manager.context->entities->ships[0];
-
-    if (ship != NULL)
+    Ship **ships = context->entities->ships;
+    for (int i = 0; i < context->game_data->player_count; i++)
     {
-        ship->activate_ship_physics(ship, game_state_manager.context);
+        if (ships[i] != NULL && !ships[i]->physics_active && ships[i]->active)
+        {
+            ships[i]->activate_ship_physics(ships[i], context);
+        }
     }
 
-    if (game_state_manager.context->game_status->is_pause)
+    if (context->game_status->is_pause)
     {
-        game_state_manager.context->game_status->is_pause = false;
+        context->game_status->is_pause = false;
     }
 }
 
@@ -31,6 +37,7 @@ static void state_cleanup(void)
 
 static void state_update(float delta_time)
 {
+    input->update();
     game_state_manager.context->update(delta_time);
 
     if (IsKeyPressed(KEY_ESCAPE))
