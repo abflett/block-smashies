@@ -3,6 +3,7 @@
 #include "entity_type.h"
 #include "ball.h"
 #include "brick.h"
+#include "ship.h"
 #include "nanite.h"
 // #include "game_context.h"
 #include "ball_brick_collision.h"
@@ -127,11 +128,11 @@ static void begin_contact(b2ShapeId shapeA, b2ShapeId shapeB, GameContext *conte
         (*typeA == ENTITY_PADDLE && *typeB == ENTITY_NANITE))
     {
         Nanite *nanite = (*typeA == ENTITY_NANITE) ? (Nanite *)userDataA : (Nanite *)userDataB;
-        Paddle *paddle = (*typeA == ENTITY_PADDLE) ? (Paddle *)userDataA : (Paddle *)userDataB;
+        Ship *ship = (*typeA == ENTITY_PADDLE) ? (Ship *)userDataA : (Ship *)userDataB;
 
-        if (nanite != NULL && paddle != NULL)
+        if (nanite != NULL && ship != NULL)
         {
-            nanite_paddle_collision(nanite, paddle, context); // Corrected function call
+            nanite_paddle_collision(nanite, context); // Corrected function call
         }
     }
 

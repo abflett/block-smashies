@@ -2,7 +2,6 @@
 #include "box2d/box2d.h"
 #include "entities.h"
 #include "ball.h"
-#include "paddle.h"
 #include "brick.h"
 #include "nanite.h"
 #include "game_data.h"
@@ -36,35 +35,6 @@ static void add_ball(GameData *game_data, b2WorldId world_id)
                                  (b2Vec2){ship_position.x, ship_position.y + (p1_ship->shield_size.y) + 3},
                                  (b2Vec2){random_x, 50});
     kv_push(Ball *, entities.balls, new_ball);
-}
-
-static void add_paddle(GameData *game_data, b2WorldId world_id)
-{
-    int paddle_count = (int)kv_size(entities.paddles);
-    int player_count = 0;
-
-    for (int i = 0; i < kv_size(entities.paddles); i++)
-    {
-        Paddle *existing_paddle = kv_A(entities.paddles, i);
-        if (existing_paddle->active)
-        {
-            player_count++;
-        }
-    }
-
-    for (int i = 0; i < paddle_count; i++)
-    {
-        Paddle *existing_paddle = kv_A(entities.paddles, i);
-        if (!existing_paddle->active)
-        {
-            existing_paddle->reset(existing_paddle, player_count);
-            return;
-        }
-    }
-
-    // Todo: check active paddles before setting the player count
-    Paddle *new_paddle = create_paddle(player_count, game_data, world_id);
-    kv_push(Paddle *, entities.paddles, new_paddle);
 }
 
 static void add_brick(GameContext *game_context, b2Vec2 position, int brick_type)
@@ -111,15 +81,6 @@ static void add_kill_boundary(b2WorldId world_id)
 
 static void update_entities(float delta_time)
 {
-    for (int i = 0; i < kv_size(entities.paddles); i++)
-    {
-        Paddle *paddle = kv_A(entities.paddles, i);
-        if (paddle->active)
-        {
-            paddle->update(paddle, delta_time);
-        }
-    }
-
     for (int i = 0; i < kv_size(entities.balls); i++)
     {
         Ball *paddle = kv_A(entities.balls, i);
@@ -167,15 +128,6 @@ static void render_entities(void)
         }
     }
 
-    for (int i = 0; i < kv_size(entities.paddles); i++)
-    {
-        Paddle *paddle = kv_A(entities.paddles, i);
-        if (paddle->active)
-        {
-            paddle->render(paddle);
-        }
-    }
-
     for (int i = 0; i < kv_size(entities.bricks); i++)
     {
         Brick *brick = kv_A(entities.bricks, i);
@@ -216,17 +168,6 @@ static void cleanup_entities(void)
     {
         entities.kill_boundary->clean_up(entities.kill_boundary);
     }
-
-    // Clean up paddles
-    for (size_t i = 0; i < kv_size(entities.paddles); i++)
-    {
-        Paddle *paddle = kv_A(entities.paddles, i);
-        if (paddle->clean_up)
-        {
-            paddle->clean_up(paddle);
-        }
-    }
-    kv_destroy(entities.paddles);
 
     // Clean up balls
     for (size_t i = 0; i < kv_size(entities.balls); i++)
@@ -271,7 +212,6 @@ static void cleanup_entities(void)
 Entities *create_entities(GameContext *context)
 {
     kv_init(entities.balls);
-    kv_init(entities.paddles);
     kv_init(entities.bricks);
     kv_init(entities.nanites);
 
@@ -291,7 +231,6 @@ Entities *create_entities(GameContext *context)
     add_kill_boundary(context->world_id);
 
     entities.add_ball = add_ball;
-    entities.add_paddle = add_paddle;
     entities.add_brick = add_brick;
     entities.add_nanite = add_nanite;
 

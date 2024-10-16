@@ -1,6 +1,7 @@
 #include "ship.h"
 #include "entity_type.h"
 #include "game_context.h"
+#include "settings.h"
 #include "collision_category.h"
 
 static int calculate_segments_func(Ship *ship)

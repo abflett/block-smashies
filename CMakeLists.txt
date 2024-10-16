@@ -56,7 +56,6 @@ set(COLLISIONS_SRC
 
 # Source files for entities
 set(ENTITIES_SRC
-    src/entities/paddle.c
     src/entities/ball.c
     src/entities/brick.c
     src/entities/wall_edges.c
