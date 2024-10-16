@@ -9,13 +9,14 @@
 #include "playing_input_handler.h"
 
 static GameState playing_state;
-static PlayingInputHandler *input;
+static PlayingInputHandler *input_handler;
 
 static void state_init(void)
 {
     GameContext *context = game_state_manager.context;
-    input = initialize_playing_input(context);
+    input_handler = initialize_playing_input(context);
 
+    // game is playing, activate physics for all ships
     Ship **ships = context->entities->ships;
     for (int i = 0; i < context->game_data->player_count; i++)
     {
@@ -37,15 +38,8 @@ static void state_cleanup(void)
 
 static void state_update(float delta_time)
 {
-    input->update(delta_time);
+    input_handler->update(delta_time);
     game_state_manager.context->update(delta_time);
-
-    if (IsKeyPressed(KEY_ESCAPE))
-    {
-        game_state_manager.context->game_status->is_pause = true;
-        game_state_manager.change(game_state_manager.states.pause_menu);
-        return;
-    }
 
     if (game_state_manager.context->game_status->game_over)
     {
