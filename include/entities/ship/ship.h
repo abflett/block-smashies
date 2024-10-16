@@ -31,7 +31,25 @@ typedef struct Ship
     b2Vec2 position;
     b2Vec2 velocity;
     b2Vec2 shield_size;
-    float *force;
+
+    float pulse_timer;
+    float pulse_active_timer;
+    float boost_timer_left;
+    float boost_timer_right;
+    float boost_active_timer;
+
+    float *force;          // general movement force
+    float *friction;       // ball manipulation
+    float *damping;        // de-acceleration - affects max velocity as well
+    float *max_energy;     // max_energy
+    float *boost_force;    // boost force - horizontal burst
+    float *boost_cooldown; // boost cooldown timer < is better
+    float *pulse_force;    // boost force - vertical burst
+    float *pulse_cooldown; // pulse cooldown timer < is better
+    float *heat;           // heat buildup % < is no heat
+
+    float *phase_shift;
+    bool *orb_shot;
 
     int *ship_color; // from game_data
     int *shield_level;
@@ -39,6 +57,8 @@ typedef struct Ship
     // ship_inputs
     void (*move_left)(struct Ship *ship);
     void (*move_right)(struct Ship *ship);
+    void (*boost_left)(struct Ship *ship);
+    void (*boost_right)(struct Ship *ship);
 
     void (*activate_ship_physics)(struct Ship *ship, struct GameContext *game_context);
     int (*calculate_segments)(struct Ship *ship);

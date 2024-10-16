@@ -31,6 +31,17 @@ static void move_ship(Ship *ship, b2Vec2 position, b2Vec2 velocity)
 
 static void update_ship(Ship *ship, float delta_time)
 {
+    // ship->boost_timer_left += delta_time;
+    // ship->boost_timer_right += delta_time;
+
+    if (ship->boost_active_timer > 0)
+    {
+        ship->boost_active_timer -= delta_time;
+    }
+
+    // ship->pulse_active_timer -= delta_time;
+    // ship->pulse_timer -= delta_time;
+
     ship->velocity = b2Body_GetLinearVelocity(ship->body);
 }
 
@@ -126,6 +137,24 @@ void move_right(Ship *ship)
     b2Body_ApplyForceToCenter(ship->body, (b2Vec2){*ship->force, 0.0f}, true);
 }
 
+void boost_left(Ship *ship)
+{
+    if (ship->boost_active_timer <= 0.0f)
+    {
+        b2Body_ApplyLinearImpulse(ship->body, (b2Vec2){-*ship->force, 0.0f}, b2Body_GetWorldCenterOfMass(ship->body), true);
+        ship->boost_active_timer = *ship->boost_cooldown;
+    }
+}
+
+void boost_right(Ship *ship)
+{
+    if (ship->boost_active_timer <= 0.0f)
+    {
+        b2Body_ApplyLinearImpulse(ship->body, (b2Vec2){*ship->force, 0.0f}, b2Body_GetWorldCenterOfMass(ship->body), true);
+        ship->boost_active_timer = *ship->boost_cooldown;
+    }
+}
+
 Ship *create_ship(int *player, GameData *game_data, b2Vec2 position)
 {
     Ship *ship = malloc(sizeof(Ship));
@@ -140,7 +169,27 @@ Ship *create_ship(int *player, GameData *game_data, b2Vec2 position)
 
     ship->position = position;
     ship->velocity = (b2Vec2){0, 0};
-    ship->force = &game_data->paddle.boost_force;
+    // current timers
+    ship->pulse_timer = 0.0f;
+    ship->pulse_active_timer = 0.0f;
+    ship->boost_timer_left = 0.0f;
+    ship->boost_timer_right = 0.0f;
+    ship->boost_active_timer = 0.0f;
+
+    // perks
+    ship->phase_shift = &game_data->perks.phase_shift;
+    ship->orb_shot = &game_data->perks.orb_shot;
+
+    // new paddle attributes
+    ship->force = &game_data->paddle.force;                   // general movement force
+    ship->friction = &game_data->paddle.friction;             // ball manipulation
+    ship->damping = &game_data->paddle.damping;               // de-acceleration - affects max velocity as well
+    ship->max_energy = &game_data->paddle.max_energy;         // max_energy
+    ship->boost_force = &game_data->paddle.boost_force;       // boost force - horizontal burst
+    ship->boost_cooldown = &game_data->paddle.boost_cooldown; // boost cooldown timer < is better
+    ship->pulse_force = &game_data->paddle.pulse_force;       // boost force - vertical burst
+    ship->pulse_cooldown = &game_data->paddle.pulse_cooldown; // pulse cooldown timer < is better
+    ship->heat = &game_data->paddle.max_heat;                 // heat buildup % < is no heat
 
     ship->shield_level = &game_data->ships[*ship->player].shield_level;
     ship->segments = calculate_segments_func(ship);
@@ -153,6 +202,8 @@ Ship *create_ship(int *player, GameData *game_data, b2Vec2 position)
 
     ship->move_left = move_left;
     ship->move_right = move_right;
+    ship->boost_left = boost_left;
+    ship->boost_right = boost_right;
 
     ship->activate_ship_physics = activate_ship_physics;
     ship->calculate_segments = calculate_segments_func;

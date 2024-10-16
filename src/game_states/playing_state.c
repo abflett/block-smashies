@@ -37,7 +37,7 @@ static void state_cleanup(void)
 
 static void state_update(float delta_time)
 {
-    input->update();
+    input->update(delta_time);
     game_state_manager.context->update(delta_time);
 
     if (IsKeyPressed(KEY_ESCAPE))
