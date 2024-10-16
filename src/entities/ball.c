@@ -23,8 +23,6 @@ static void set_default_ball_trails(BallTrail *trails, b2Vec2 position, float ra
 
 void update_ball_trails(Ball *ball)
 {
-    b2Vec2 position = b2Body_GetPosition(ball->body);
-
     // Move existing trails down the array
     for (int i = MAX_TRAIL - 1; i > 0; i--)
     {
@@ -32,7 +30,7 @@ void update_ball_trails(Ball *ball)
         ball->balltrails[i].texture = ball->balltrails[i - 1].texture;
     }
 
-    ball->balltrails[0].position = position;
+    ball->balltrails[0].position = ball->position;
     ball->balltrails[0].texture = ball->texture;
 }
 
@@ -46,10 +44,8 @@ static void clean_up_ball(Ball *ball)
 static void render_ball(Ball *ball)
 {
 
-    b2Vec2 position = b2Body_GetPosition(ball->body);
-
     // draw larger ball and resize down for subpixel drawing effect
-    render_texture_scale(ball->texture, position, 0.5f);
+    render_texture_scale(ball->texture, ball->position, 0.5f);
 
     // render ball trails
     for (int i = 0; i < MAX_TRAIL; i++)
@@ -87,7 +83,34 @@ static void update_ball(Ball *ball, float delta_time)
     }
 
     // Retrieve the current velocity of the ball
+    ball->position = b2Body_GetPosition(ball->body);
     b2Vec2 velocity = b2Body_GetLinearVelocity(ball->body);
+
+    // double check if ball comes out of bounds
+    float left_bound = settings.game.play_area.x;
+    float right_bound = settings.game.play_area.x + settings.game.play_area.width;
+    float top_bound = settings.game.target_size.y - settings.game.play_area.y; // flip coords
+
+    // Check left boundary
+    if (ball->position.x < left_bound)
+    {
+        ball->position.x = left_bound + 3; // Push ball slightly inside
+        b2Body_SetTransform(ball->body, ball->position, (b2Rot){1.0f, 0.0f});
+    }
+
+    // Check right boundary
+    if (ball->position.x > right_bound)
+    {
+        ball->position.x = right_bound - 3; // Push ball slightly inside
+        b2Body_SetTransform(ball->body, ball->position, (b2Rot){1.0f, 0.0f});
+    }
+
+    // Check top boundary
+    if (ball->position.y > top_bound)
+    {
+        ball->position.y = top_bound - 3; // Push ball slightly inside
+        b2Body_SetTransform(ball->body, ball->position, (b2Rot){1.0f, 0.0f});
+    }
 
     // Cap the horizontal and vertical velocities with max values
     if (fabs(velocity.x) > *ball->max_velocity)
