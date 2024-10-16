@@ -34,8 +34,6 @@ typedef struct Ship
 
     float pulse_timer;
     float pulse_active_timer;
-    float boost_timer_left;
-    float boost_timer_right;
     float boost_active_timer;
 
     float *force;          // general movement force
@@ -54,11 +52,10 @@ typedef struct Ship
     int *ship_color; // from game_data
     int *shield_level;
 
-    // ship_inputs
-    void (*move_left)(struct Ship *ship);
-    void (*move_right)(struct Ship *ship);
-    void (*boost_left)(struct Ship *ship);
-    void (*boost_right)(struct Ship *ship);
+    // ship input commands
+    void (*move_ship)(struct Ship *ship, int direction);
+    void (*boost_ship)(struct Ship *ship, int direction);
+    void (*pulse_ship)(struct Ship *ship);
 
     void (*activate_ship_physics)(struct Ship *ship, struct GameContext *game_context);
     int (*calculate_segments)(struct Ship *ship);

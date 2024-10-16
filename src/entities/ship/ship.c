@@ -23,7 +23,7 @@ static int calculate_segments_func(Ship *ship)
 }
 
 // For static animations, velocity will show correct thruster animation
-static void move_ship(Ship *ship, b2Vec2 position, b2Vec2 velocity)
+static void move(Ship *ship, b2Vec2 position, b2Vec2 velocity)
 {
     ship->velocity = velocity;
     ship->position = position;
@@ -31,16 +31,29 @@ static void move_ship(Ship *ship, b2Vec2 position, b2Vec2 velocity)
 
 static void update_ship(Ship *ship, float delta_time)
 {
-    // ship->boost_timer_left += delta_time;
-    // ship->boost_timer_right += delta_time;
-
+    // boost cooldown timer
     if (ship->boost_active_timer > 0)
     {
         ship->boost_active_timer -= delta_time;
     }
 
-    // ship->pulse_active_timer -= delta_time;
-    // ship->pulse_timer -= delta_time;
+    // pulse cooldown timer
+    if (ship->pulse_active_timer > 0)
+    {
+        ship->pulse_active_timer -= delta_time;
+    }
+
+    // pulse animation timer
+    if (ship->pulse_timer > 0)
+    {
+        ship->pulse_timer -= delta_time;
+    }
+
+    // return paddle back to X constraint after pulse
+    if (ship->pulse_timer <= 0.0f && !b2Body_IsEnabled(ship->constraint))
+    {
+        b2Body_Enable(ship->constraint);
+    }
 
     ship->velocity = b2Body_GetLinearVelocity(ship->body);
 }
@@ -51,6 +64,8 @@ static void render_ship(Ship *ship)
     {
         ship->position = b2Body_GetPosition(ship->body);
     }
+
+    ship->position = (b2Vec2){ship->position.x, (float)(int)ship->position.y};
 
     if (ship->previous_player_count != *ship->player_count)
     {
@@ -80,7 +95,7 @@ static void cleanup_ship(Ship *ship)
     free(ship);
 }
 
-void activate_ship_physics(Ship *ship, GameContext *game_context)
+static void activate_ship_physics(Ship *ship, GameContext *game_context)
 {
     TraceLog(LOG_INFO, "Activating ship physics");
     b2BodyDef body_def = b2DefaultBodyDef();
@@ -90,8 +105,7 @@ void activate_ship_physics(Ship *ship, GameContext *game_context)
     body_def.isBullet = true;
     ship->body = b2CreateBody(game_context->world_id, &body_def);
 
-    // set physics body in relation to the shield
-    // b2Vec2 shield_size = {ship->ship_shield->subtexture->src.width * 0.5f, ship->ship_shield->subtexture->src.height};
+    // set physics body size in relation to the shield
     b2Polygon shield_box = b2MakeBox(ship->shield_size.x * 0.5f, ship->shield_size.y);
 
     b2ShapeDef shield_shape_def = b2DefaultShapeDef();
@@ -127,31 +141,30 @@ void activate_ship_physics(Ship *ship, GameContext *game_context)
     b2Body_SetUserData(ship->body, ship);
 }
 
-void move_left(Ship *ship)
+// Ship input commands
+static void move_ship(Ship *ship, int direction)
 {
-    b2Body_ApplyForceToCenter(ship->body, (b2Vec2){-*ship->force, 0.0f}, true);
+    b2Body_ApplyForceToCenter(ship->body, (b2Vec2){direction * (*ship->force), 0.0f}, true);
 }
 
-void move_right(Ship *ship)
-{
-    b2Body_ApplyForceToCenter(ship->body, (b2Vec2){*ship->force, 0.0f}, true);
-}
-
-void boost_left(Ship *ship)
+static void boost_ship(Ship *ship, int direction)
 {
     if (ship->boost_active_timer <= 0.0f)
     {
-        b2Body_ApplyLinearImpulse(ship->body, (b2Vec2){-*ship->force, 0.0f}, b2Body_GetWorldCenterOfMass(ship->body), true);
+        b2Body_ApplyLinearImpulse(ship->body, (b2Vec2){direction * (*ship->boost_force), 0.0f}, b2Body_GetWorldCenterOfMass(ship->body), true);
         ship->boost_active_timer = *ship->boost_cooldown;
     }
 }
 
-void boost_right(Ship *ship)
+static void pulse_ship(Ship *ship)
 {
-    if (ship->boost_active_timer <= 0.0f)
+    if (ship->pulse_active_timer <= 0.0f)
     {
-        b2Body_ApplyLinearImpulse(ship->body, (b2Vec2){*ship->force, 0.0f}, b2Body_GetWorldCenterOfMass(ship->body), true);
-        ship->boost_active_timer = *ship->boost_cooldown;
+        b2Body_Disable(ship->constraint);
+        b2Body_ApplyLinearImpulse(ship->body, (b2Vec2){0.0f, *ship->pulse_force}, b2Body_GetWorldCenterOfMass(ship->body), true);
+
+        ship->pulse_timer = settings.gameplay.pulse_timer; // pulse animation up timer
+        ship->pulse_active_timer = *ship->pulse_cooldown;
     }
 }
 
@@ -169,11 +182,10 @@ Ship *create_ship(int *player, GameData *game_data, b2Vec2 position)
 
     ship->position = position;
     ship->velocity = (b2Vec2){0, 0};
+
     // current timers
     ship->pulse_timer = 0.0f;
     ship->pulse_active_timer = 0.0f;
-    ship->boost_timer_left = 0.0f;
-    ship->boost_timer_right = 0.0f;
     ship->boost_active_timer = 0.0f;
 
     // perks
@@ -200,14 +212,13 @@ Ship *create_ship(int *player, GameData *game_data, b2Vec2 position)
 
     ship->shield_size = (b2Vec2){ship->ship_shield->subtexture->src.width, ship->ship_shield->subtexture->src.height};
 
-    ship->move_left = move_left;
-    ship->move_right = move_right;
-    ship->boost_left = boost_left;
-    ship->boost_right = boost_right;
+    ship->move_ship = move_ship;
+    ship->boost_ship = boost_ship;
+    ship->pulse_ship = pulse_ship;
 
     ship->activate_ship_physics = activate_ship_physics;
     ship->calculate_segments = calculate_segments_func;
-    ship->move = move_ship;
+    ship->move = move;
     ship->update = update_ship;
     ship->render = render_ship;
     ship->disable = disable_ship;
