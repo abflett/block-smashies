@@ -2,7 +2,8 @@
 #define GAME_UI
 
 #include "raylib.h"
-#include "game_status.h"
+
+struct GameContext;
 
 typedef struct Debris
 {
@@ -19,6 +20,6 @@ typedef struct GameUi
     void (*cleanup)(void);
 } GameUi;
 
-GameUi *create_game_ui(GameStatus *game_status);
+GameUi *create_game_ui(struct GameContext *game_context);
 
 #endif

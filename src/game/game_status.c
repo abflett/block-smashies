@@ -29,6 +29,7 @@ GameStatus *create_game_status(int player_count)
     status.game_over = false;
     status.is_hold = true;
     status.is_pause = false;
+    status.enemy_count = 0;
 
     for (int i = 0; i < 4; i++)
     {

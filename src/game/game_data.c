@@ -56,7 +56,7 @@ GameData *create_game_data(void)
 
     game_data.player_count = 1;
     game_data.operation = 0;
-    game_data.mission = 2;            // 5 missions per operation
+    game_data.mission = 0;            // 5 missions per operation
     game_data.currency = 0;           // available currency
     game_data.currency_collected = 0; // total currency collected
     game_data.high_score = 0;         // current high score

@@ -8,6 +8,7 @@ typedef struct GameStatus
 {
     PlayerStat player_stats[4];
     int player_count;
+    int enemy_count;
     int score;
     float currency;
     int lives;

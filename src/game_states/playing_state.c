@@ -41,6 +41,15 @@ static void state_update(float delta_time)
     input_handler->update(delta_time);
     game_state_manager.context->update(delta_time);
 
+    if (game_state_manager.context->game_status->enemy_count <= 0)
+    {
+        game_state_manager.context->game_data->mission++;
+        game_state_manager.context->level_manager->load_level();
+        game_state_manager.context->level_manager->create_level();
+
+        TraceLog(LOG_INFO, "Loading - Operation: %d, Mission %d", game_state_manager.context->game_data->operation, game_state_manager.context->game_data->mission);
+    }
+
     if (game_state_manager.context->game_status->game_over)
     {
         game_state_manager.change(game_state_manager.states.game_over);

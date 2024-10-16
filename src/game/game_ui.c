@@ -5,6 +5,7 @@
 #include "resource_manager.h"
 #include "settings.h"
 #include "playing_ui_bars.h"
+#include "game_context.h"
 
 #define NUM_DEBRIS 4
 
@@ -12,6 +13,7 @@ static GameUi game_ui;
 static PlayingUiBars *ui_bars;
 Debris debris_array[NUM_DEBRIS];
 static GameStatus *status;
+static GameContext *context;
 
 static Texture2D *screen_bg;
 static Texture2D *foreground;
@@ -202,10 +204,14 @@ static void render_before_content_ui(void)
     DrawTexture(*menu_screen, 5, 68, WHITE);
 
     // Operation number
-    DrawTextEx(*resource_manager.get_pixel7_font(), "07", (Vector2){35.0f, 70.0f}, 7, 0.0f, settings.colors.blue_03);
+    int operation_num = context->game_data->operation;
+    const char *operation = TextFormat("%02d", operation_num);
+    DrawTextEx(*resource_manager.get_pixel7_font(), operation, (Vector2){35.0f, 70.0f}, 7, 0.0f, settings.colors.blue_03);
 
     // Mission number
-    DrawTextEx(*resource_manager.get_pixel7_font(), "4", (Vector2){48.0f, 70.0f}, 7, 0.0f, settings.colors.blue_03);
+    int mission_num = context->game_data->mission;
+    const char *mission = TextFormat("%d", mission_num);
+    DrawTextEx(*resource_manager.get_pixel7_font(), mission, (Vector2){48.0f, 70.0f}, 7, 0.0f, settings.colors.blue_03);
 
     // Game Status
     DrawTexture(*clock, 18, 12, WHITE);
@@ -245,9 +251,10 @@ static void cleanup_ui(void)
 {
 }
 
-GameUi *create_game_ui(GameStatus *game_status)
+GameUi *create_game_ui(GameContext *game_context)
 {
-    status = game_status;
+    context = game_context;
+    status = game_context->game_status;
     screen_bg = &resource_manager.get_texture("gameplay-screen-bg-01")->texture;
     foreground = &resource_manager.get_texture("gameplay-fg")->texture;
 
@@ -267,14 +274,14 @@ GameUi *create_game_ui(GameStatus *game_status)
 
     init_debris(settings.game.play_area);
 
-    ui_bars = create_playing_ui_bars(game_status);
+    ui_bars = create_playing_ui_bars(status);
 
     // set defaults
     minutes = 0;
     seconds = 0;
     snprintf(time_text, sizeof(time_text), "%d:%05.2f", minutes, seconds);
-    snprintf(currency_text, sizeof(currency_text), "%0.2f", game_status->currency);
-    snprintf(score_text, sizeof(score_text), "%d", game_status->score);
+    snprintf(currency_text, sizeof(currency_text), "%0.2f", status->currency);
+    snprintf(score_text, sizeof(score_text), "%d", status->score);
 
     game_ui.update = update_ui;
     game_ui.render_before_content = render_before_content_ui;

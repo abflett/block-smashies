@@ -50,7 +50,7 @@ GameContext *create_game_context(GameData *game_data)
 
     context.shake_effect = get_shake_effect();
     context.game_status = create_game_status(context.game_data->player_count);
-    context.game_ui = create_game_ui(context.game_status);
+    context.game_ui = create_game_ui(&context);
     context.entities = create_entities(&context);
     context.level_manager = create_level_manager(&context);
 

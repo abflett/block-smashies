@@ -51,6 +51,7 @@ static void update_brick(Brick *brick, float delta_time)
             b2Vec2 position = b2Body_GetPosition(brick->body);
             brick->active = false;
             brick->game_context->entities->add_nanite(position, brick_currency(brick), brick->brick_type);
+            brick->game_context->game_status->enemy_count--;
         }
     }
 }
@@ -88,11 +89,14 @@ static void disable_brick(Brick *brick)
 
 static void reset_brick(Brick *brick, b2Vec2 position, int brick_type)
 {
+    brick->brick_type = brick_type;
+    brick->is_destroying = false;
+    brick->subtexture = resource_manager.get_subtexture(resource_manager.brick_type_mapper->brick_type_to_subtexture_id(brick->brick_type, 0));
     brick->health = brick_max_health(brick->brick_type);
     brick->max_health = brick_max_health(brick->brick_type);
     brick->active = true;
     b2Body_Enable(brick->body);
-    b2Body_SetTransform(brick->body, position, (b2Rot){0.0f, 1.0f});
+    b2Body_SetTransform(brick->body, position, (b2Rot){1.0f, 0.0f});
 }
 
 Brick *create_brick(GameContext *game_context, b2Vec2 position, int brick_type)

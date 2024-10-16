@@ -64,6 +64,8 @@ static void load_level(void)
 
 static void create_level(void)
 {
+    manager.context->game_status->enemy_count = 0;
+
     // Define row and column sizes, assuming 12x12 grid
     int brick_row = 12;
     int brick_column = 12;
@@ -91,6 +93,8 @@ static void create_level(void)
 
                 // Add the brick using the brick_type
                 manager.context->entities->add_brick(position, brick_type - 1);
+
+                manager.context->game_status->enemy_count++;
             }
         }
     }
