@@ -40,15 +40,23 @@ static void add_ball(void)
 static void add_ships(void)
 {
     GameContext *context = entities.game_context;
-    float x_positions[] = {204, 239, 169, 274};
+
+    float play_area_center = settings.game.play_area.width * 0.5f + settings.game.play_area.x;
+    float ship_spacing = settings.game.play_area.width / (context->game_data->player_count + 1); // Spacing based on player count
+
     for (int i = 0; i < MAX_SHIPS; i++)
     {
+        float x_position = play_area_center - (context->game_data->player_count - 1) * ship_spacing / 2.0f + i * ship_spacing;
         if (entities.ships[i] == NULL)
         {
             entities.ships[i] = create_ship(&context->game_data->ships[i].player_num,
                                             context->game_data,
-                                            (b2Vec2){x_positions[i], 19.0f});
+                                            (b2Vec2){
+                                                x_position,
+                                                19.0f});
         }
+
+        // set active if game_data has the ship as active for up to 4 players
         entities.ships[i]->active = context->game_data->ships[i].active;
     }
 }
