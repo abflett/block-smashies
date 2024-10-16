@@ -49,15 +49,14 @@ GameData *create_game_data(void)
 {
     const char *uuid = create_uuid(); // Use your existing create_uuid function
     strncpy(game_data.uuid, uuid, UUID4_LEN);
-    // game_data.uuid[UUID4_LEN - 1] = '\0'; // Ensure null termination
 
     const char *name = "Block Smashies";
     strncpy(game_data.name, name, sizeof(game_data.name) - 1);
     game_data.name[sizeof(game_data.name) - 1] = '\0'; // Ensure null termination
 
     game_data.player_count = 1;
-    game_data.operation_complete = 0;
-    game_data.mission_complete = 0;   // 5 missions per operation
+    game_data.operation = 0;
+    game_data.mission = 2;            // 5 missions per operation
     game_data.currency = 0;           // available currency
     game_data.currency_collected = 0; // total currency collected
     game_data.high_score = 0;         // current high score
@@ -82,7 +81,7 @@ GameData *create_game_data(void)
     // Initialize ball attributes
     game_data.ball.max_velocity = 50.0f;
     game_data.ball.min_velocity = 20.0f;
-    game_data.ball.power = 6.25f; // Starting power level
+    game_data.ball.power = 1.0f; // Starting power level
 
     // Initialize perks
     game_data.perks.phase_shift = 0.0f;

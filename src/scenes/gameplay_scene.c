@@ -11,7 +11,7 @@ static GameContext *context;
 static void scene_init(int arg_count, va_list args)
 {
     GameData *game_data = NULL;
-    Ship **ships = NULL;
+    // Ship **ships = NULL;
 
     // Retrieve arguments
     for (int i = 0; i < arg_count; i++)
@@ -22,29 +22,8 @@ static void scene_init(int arg_count, va_list args)
 
     context = create_game_context(game_data);
     game_state_manager.context = context;
-
-    // load player, this will define players level and stats based on new game, loaded game and player count
-    for (int i = 0; i < 1; i++)
-    {
-        context->entities->add_ball();
-    }
-
-    // use the context level loader to create the level and populate the playfield
-    int brick_row = 12;
-    int brick_column = 12;
-    float row_spacing = 18.0f; // Horizontal spacing (width of the brick + any gap)
-    float col_spacing = 8.0f;  // Vertical spacing (height of the brick + any gap)
-    for (int col = 0; col < brick_row; col++)
-    {
-        for (int row = 0; row < brick_column; row++)
-        {
-            int brick_type = rand() % 100;
-            if (brick_type < 25)
-            {
-                context->entities->add_brick((b2Vec2){row * row_spacing + settings.game.play_area.x + 10, settings.game.target_size.y - (col * col_spacing + settings.game.play_area.y + 5)}, brick_type);
-            }
-        }
-    }
+    context->level_manager->create_level();
+    context->entities->add_ball();
 
     // start cutscene and cutsene will change to playing once animation is finished.
     game_state_manager.change(game_state_manager.states.game_intro_start);

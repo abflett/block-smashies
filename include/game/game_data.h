@@ -67,8 +67,8 @@ typedef struct GameData
     char uuid[UUID4_LEN]; // game_data id for saving and loading
     char name[15];        // Team name max 10 chars
     int player_count;
-    int operation_complete;
-    int mission_complete;   // 5 missions per operation
+    int operation;
+    int mission;            // 5 missions per operation
     int currency;           // available currency
     int currency_collected; // total currency collected
     int high_score;         // current high score

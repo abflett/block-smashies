@@ -10,6 +10,7 @@
 #include "collision_manager.h"
 #include "game_ui.h"
 #include "shake_effect.h"
+#include "level_manager.h"
 
 typedef struct GameContext
 {
@@ -20,6 +21,8 @@ typedef struct GameContext
     GameStatus *game_status;             // Tracks global game state like time, score, is_paused, etc.
     GameUi *game_ui;
     ShakeEffect *shake_effect;
+
+    LevelManager *level_manager;
 
     void (*update)(float delta_time);
     void (*render)(void);

@@ -52,6 +52,7 @@ GameContext *create_game_context(GameData *game_data)
     context.game_status = create_game_status(context.game_data->player_count);
     context.game_ui = create_game_ui(context.game_status);
     context.entities = create_entities(&context);
+    context.level_manager = create_level_manager(&context);
 
     context.update = update_game_context;
     context.render = render_game_context;
