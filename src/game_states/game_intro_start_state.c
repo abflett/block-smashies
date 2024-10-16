@@ -4,18 +4,37 @@
 
 #include "game_intro_start_state.h"
 #include "game_state_manager.h"
+#include "settings.h"
 
 static GameState game_intro_start_state;
-
+static GameContext *context;
+static Ship **ships;
+static Font *font;
 static float count_down;
+static float y_position;
 
 static void state_init(void)
 {
-    count_down = 2.0f;
+    context = game_state_manager.context;
+
+    count_down = 3.0f;
+    y_position = 3.0f;
+    ships = context->entities->ships;
+
+    for (int i = 0; i < context->game_data->player_count; i++)
+    {
+        ships[i]->position = (b2Vec2){ships[i]->position.x, y_position};
+    }
 }
 
 static void state_update(float delta_time)
 {
+    y_position += delta_time * 5.7f;
+    for (int i = 0; i < context->game_data->player_count; i++)
+    {
+        ships[i]->position = (b2Vec2){ships[i]->position.x, y_position};
+    }
+
     count_down -= delta_time;
 
     if (count_down < 0)
@@ -30,17 +49,19 @@ static void state_render(void)
 {
     game_state_manager.context->render();
 
-    // Convert countdown value to text
-    char count_down_text[2]; // Increase size if necessary
-
     // Round up the floating-point number
     int rounded_count_down = (int)ceil(count_down);
 
-    // Format the rounded integer value to a string
-    snprintf(count_down_text, sizeof(count_down_text), "%d", rounded_count_down);
+    const char *countdown_text = TextFormat("%d", rounded_count_down);
+
+    float middle_x = (settings.game.play_area.width * 0.5f) + settings.game.play_area.x;
+
+    Vector2 contact_size = MeasureTextEx(*font, "Contact in", 7, 0.0f);
+    Vector2 countdown_size = MeasureTextEx(*font, countdown_text, 7, 0.0f);
 
     // Draw countdown text
-    DrawText(count_down_text, 198, 110, 22, LIGHTGRAY);
+    DrawTextEx(*font, "Contact in", (Vector2){middle_x - contact_size.x * 0.5f, 115}, 7, 0.0f, WHITE);
+    DrawTextEx(*font, countdown_text, (Vector2){middle_x - countdown_size.x * 0.5f - 1, 125}, 14, 0.0f, WHITE);
 }
 
 static void state_cleanup(void)
@@ -51,6 +72,8 @@ static void state_cleanup(void)
 // Return a pointer to the statically defined GameState
 GameState *create_game_intro_start_state(void)
 {
+    font = resource_manager.get_pixel7_font();
+
     game_intro_start_state.init = state_init;
     game_intro_start_state.update = state_update;
     game_intro_start_state.render = state_render;
