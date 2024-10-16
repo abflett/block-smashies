@@ -12,7 +12,7 @@
 
 Entities entities;
 
-static void add_ball(GameData *game_data, b2WorldId world_id)
+static void add_ball(void)
 {
     float random_x = (float)GetRandomValue(-25, 25);
     Ship *p1_ship = entities.ships[0];
@@ -31,17 +31,33 @@ static void add_ball(GameData *game_data, b2WorldId world_id)
         }
     }
 
-    Ball *new_ball = create_ball(game_data, world_id,
+    Ball *new_ball = create_ball(entities.game_context->game_data, entities.game_context->world_id,
                                  (b2Vec2){ship_position.x, ship_position.y + (p1_ship->shield_size.y) + 3},
                                  (b2Vec2){random_x, 50});
     kv_push(Ball *, entities.balls, new_ball);
 }
 
-static void add_brick(GameContext *game_context, b2Vec2 position, int brick_type)
+static void add_ships(void)
 {
-    for (int i = 0; i < kv_size(game_context->entities->bricks); i++)
+    GameContext *context = entities.game_context;
+    float x_positions[] = {204, 239, 169, 274};
+    for (int i = 0; i < MAX_SHIPS; i++)
     {
-        Brick *existing_brick = kv_A(game_context->entities->bricks, i);
+        if (entities.ships[i] == NULL)
+        {
+            entities.ships[i] = create_ship(&context->game_data->ships[i].player_num,
+                                            context->game_data,
+                                            (b2Vec2){x_positions[i], 19.0f});
+        }
+        entities.ships[i]->active = context->game_data->ships[i].active;
+    }
+}
+
+static void add_brick(b2Vec2 position, int brick_type)
+{
+    for (int i = 0; i < kv_size(entities.bricks); i++)
+    {
+        Brick *existing_brick = kv_A(entities.bricks, i);
         if (!existing_brick->active)
         {
             existing_brick->reset(existing_brick, position, brick_type);
@@ -49,11 +65,11 @@ static void add_brick(GameContext *game_context, b2Vec2 position, int brick_type
         }
     }
 
-    Brick *new_brick = create_brick(game_context, position, brick_type);
+    Brick *new_brick = create_brick(entities.game_context, position, brick_type);
     kv_push(Brick *, entities.bricks, new_brick);
 }
 
-static void add_nanite(b2WorldId world_id, b2Vec2 position, float currency, int nanite_type)
+static void add_nanite(b2Vec2 position, float currency, int nanite_type)
 {
     for (int i = 0; i < kv_size(entities.nanites); i++)
     {
@@ -65,18 +81,18 @@ static void add_nanite(b2WorldId world_id, b2Vec2 position, float currency, int 
         }
     }
 
-    Nanite *new_nanite = create_nanite(world_id, position, currency, nanite_type);
+    Nanite *new_nanite = create_nanite(entities.game_context->world_id, position, currency, nanite_type);
     kv_push(Nanite *, entities.nanites, new_nanite);
 }
 
-static void add_wall_edges(b2WorldId world_id)
+static void add_wall_edges(void)
 {
-    entities.wall_edges = create_wall_edges(world_id);
+    entities.wall_edges = create_wall_edges(entities.game_context->world_id);
 }
 
-static void add_kill_boundary(b2WorldId world_id)
+static void add_kill_boundary(void)
 {
-    entities.kill_boundary = create_kill_boundary(world_id);
+    entities.kill_boundary = create_kill_boundary(entities.game_context->world_id);
 }
 
 static void update_entities(float delta_time)
@@ -211,24 +227,14 @@ static void cleanup_entities(void)
 
 Entities *create_entities(GameContext *context)
 {
+    entities.game_context = context;
     kv_init(entities.balls);
     kv_init(entities.bricks);
     kv_init(entities.nanites);
 
-    float x_positions[] = {204, 239, 169, 274};
-    for (int i = 0; i < MAX_SHIPS; i++)
-    {
-        if (entities.ships[i] == NULL)
-        {
-            entities.ships[i] = create_ship(&context->game_data->ships[i].player_num,
-                                            context->game_data,
-                                            (b2Vec2){x_positions[i], 19.0f});
-        }
-        entities.ships[i]->active = context->game_data->ships[i].active;
-    }
-
-    add_wall_edges(context->world_id);
-    add_kill_boundary(context->world_id);
+    add_ships();
+    add_wall_edges();
+    add_kill_boundary();
 
     entities.add_ball = add_ball;
     entities.add_brick = add_brick;

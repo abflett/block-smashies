@@ -36,7 +36,7 @@ void ball_brick_collision(Ball *ball, Brick *brick, GameContext *context)
                     int brick_type = GetRandomValue(0, 50);
                     if (brick_type < 25)
                     {
-                        context->entities->add_brick(context, (b2Vec2){row * row_spacing + settings.game.play_area.x + 10, settings.game.target_size.y - (col * col_spacing + settings.game.play_area.y + 5)}, brick_type);
+                        context->entities->add_brick((b2Vec2){row * row_spacing + settings.game.play_area.x + 10, settings.game.target_size.y - (col * col_spacing + settings.game.play_area.y + 5)}, brick_type);
                     }
                 }
             }

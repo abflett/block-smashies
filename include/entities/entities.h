@@ -17,18 +17,18 @@ struct GameContext;
 
 typedef struct Entities
 {
+    struct GameContext *game_context;
+
     kvec_t(Ball *) balls;
     kvec_t(Brick *) bricks;
     kvec_t(Nanite *) nanites;
-
     Ship *ships[MAX_SHIPS];
-
     WallEdges *wall_edges;
     KillBoundary *kill_boundary;
 
-    void (*add_ball)(GameData *game_data, b2WorldId world_id);
-    void (*add_brick)(struct GameContext *game_context, b2Vec2 position, int brick_type);
-    void (*add_nanite)(b2WorldId world_id, b2Vec2 position, float currency, int nanite_type);
+    void (*add_ball)(void);
+    void (*add_brick)(b2Vec2 position, int brick_type);
+    void (*add_nanite)(b2Vec2 position, float currency, int nanite_type);
     void (*update)(float delta_time);
     void (*render)(void);
     void (*cleanup)(void);

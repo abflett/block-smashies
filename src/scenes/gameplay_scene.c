@@ -24,14 +24,9 @@ static void scene_init(int arg_count, va_list args)
     game_state_manager.context = context;
 
     // load player, this will define players level and stats based on new game, loaded game and player count
-    // setup paddle default positions and initial ball.
-
-    // context->entities->add_paddle(context->game_data, context->world_id);
-    // Paddle *paddle = kv_A(context->entities->paddles, 0); // player1 paddle
-
     for (int i = 0; i < 1; i++)
     {
-        context->entities->add_ball(context->game_data, context->world_id);
+        context->entities->add_ball();
     }
 
     // use the context level loader to create the level and populate the playfield
@@ -46,7 +41,7 @@ static void scene_init(int arg_count, va_list args)
             int brick_type = rand() % 100;
             if (brick_type < 25)
             {
-                context->entities->add_brick(context, (b2Vec2){row * row_spacing + settings.game.play_area.x + 10, settings.game.target_size.y - (col * col_spacing + settings.game.play_area.y + 5)}, brick_type);
+                context->entities->add_brick((b2Vec2){row * row_spacing + settings.game.play_area.x + 10, settings.game.target_size.y - (col * col_spacing + settings.game.play_area.y + 5)}, brick_type);
             }
         }
     }

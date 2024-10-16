@@ -50,7 +50,7 @@ static void update_brick(Brick *brick, float delta_time)
         {
             b2Vec2 position = b2Body_GetPosition(brick->body);
             brick->active = false;
-            brick->game_context->entities->add_nanite(brick->game_context->world_id, position, brick_currency(brick), brick->brick_type);
+            brick->game_context->entities->add_nanite(position, brick_currency(brick), brick->brick_type);
         }
     }
 }
