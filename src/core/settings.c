@@ -9,12 +9,8 @@ Settings settings = {
     .game = {
         .target_size = {320, 180}, //
         .play_area = {95, 7, 218, 167},
-        .max_logo_screen_time = 4.0f,
-        .min_logo_screen_time = 0.5f,
-        .min_title_screen_time = 0.5f,
-        .min_main_menu_screen_time = 0.5f,
-        .min_game_over_screen_time = 0.5f, //
-        .min_high_score_screen_time = 0.5f //
+        .max_screen_time = 4.0f,
+        .min_screen_time = 0.5f //
     },
 
     .file_locations = {

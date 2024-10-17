@@ -24,7 +24,7 @@ static float min_scene_time;
 
 static void state_init(int arg_count, va_list args)
 {
-    min_scene_time = settings.game.min_high_score_screen_time;
+    min_scene_time = settings.game.min_screen_time;
     game_data = game_state_manager.context->game_data;
     score = game_state_manager.context->game_status->score;
 

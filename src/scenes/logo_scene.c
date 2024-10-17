@@ -15,8 +15,8 @@ static Font *font;
 
 static void scene_init(int arg_count, va_list args)
 {
-    max_scene_time = settings.game.max_logo_screen_time;
-    min_scene_time = settings.game.min_logo_screen_time;
+    max_scene_time = settings.game.max_screen_time;
+    min_scene_time = settings.game.min_screen_time;
 }
 
 static void scene_update(float delta_time)
