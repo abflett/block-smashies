@@ -3,7 +3,7 @@
 #include "settings.h"
 #include "scene_manager.h"
 #include "resource_manager.h"
-#include "game.h"
+#include "input_manager.h"
 
 #define MAX_PLAYERS 4
 

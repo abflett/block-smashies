@@ -5,7 +5,7 @@
 #include "high_score.h"
 #include "game_status.h"
 #include "resource_manager.h"
-#include "game.h"
+#include "input_manager.h"
 
 #define MAX_NAME_LENGTH 14
 

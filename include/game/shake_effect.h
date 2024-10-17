@@ -15,5 +15,6 @@ typedef struct ShakeEffect
 } ShakeEffect;
 
 ShakeEffect *create_shake_effect(void);
+ShakeEffect *get_shake_effect(void);
 
 #endif

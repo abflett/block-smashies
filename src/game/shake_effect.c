@@ -31,6 +31,11 @@ static void update_shake_effect(float delta_time)
     }
 }
 
+ShakeEffect *get_shake_effect(void)
+{
+    return &shake_effect;
+}
+
 ShakeEffect *create_shake_effect(void)
 {
     shake_effect.duration = 0.0f;

@@ -242,6 +242,11 @@ static void reset_player_inputs(void)
     }
 }
 
+InputManager *get_input_manager(void)
+{
+    return &manager;
+}
+
 InputManager *create_input_manager(void)
 {
     font = resource_manager.get_pixel7_font();

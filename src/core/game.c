@@ -1,9 +1,10 @@
-#include <time.h>
 #include <stdbool.h>
+#include "raylib.h"
 #include "game.h"
 #include "settings.h"
-#include "scene_manager.h"
 #include "resource_manager.h"
+#include "shake_effect.h"
+#include "input_manager.h"
 #include "scene_manager.h"
 #include "game_state_manager.h"
 
@@ -70,19 +71,9 @@ static void run_game(void)
     cleanup_game();
 }
 
-InputManager *get_input_manager(void)
-{
-    return input_manager;
-}
-
 void exit_game(void)
 {
     exit_window = true;
-}
-
-ShakeEffect *get_shake_effect(void)
-{
-    return shake_effect;
 }
 
 Game *create_game(const char *game_title)

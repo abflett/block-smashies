@@ -1,6 +1,6 @@
 #include "playing_input_handler.h"
 #include "ship.h"
-#include "game.h"
+#include "input_manager.h"
 #include "settings.h"
 #include "game_state_manager.h"
 

@@ -32,5 +32,6 @@ typedef struct InputManager
 } InputManager;
 
 InputManager *create_input_manager(void);
+InputManager *get_input_manager(void);
 
 #endif

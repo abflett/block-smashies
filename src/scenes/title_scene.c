@@ -3,7 +3,7 @@
 #include "scene_manager.h"
 #include "resource_manager.h"
 #include "settings.h"
-#include "game.h"
+#include "input_manager.h"
 
 static Scene title_scene;
 static InputManager *input_manager;
