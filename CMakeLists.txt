@@ -9,6 +9,11 @@ if (MSVC)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")  # Static runtime for Debug and Release
 endif()
 
+
+if (WIN32)
+    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+endif()
+
 # Third-party subdirectories
 add_subdirectory(external/raylib)
 add_subdirectory(external/parson)
@@ -173,6 +178,8 @@ if (MSVC)
         $<$<CONFIG:RelWithDebInfo>:/O2 /Zi>
     )
     target_compile_options(BlockSmashies PRIVATE /W3 /WX /wd4996)
+    # set_property(TARGET BlockSmashies PROPERTY LINK_FLAGS "/SUBSYSTEM:CONSOLE")
+    # set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 else()
     target_compile_options(BlockSmashies PRIVATE
         $<$<CONFIG:Debug>:-g -O0>
