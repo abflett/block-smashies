@@ -1,5 +1,3 @@
-#include <stdarg.h>
-#include <string.h>
 #include "raylib.h"
 #include "game_over_state.h"
 #include "scene_manager.h"
@@ -7,11 +5,13 @@
 #include "high_score.h"
 #include "game_status.h"
 #include "resource_manager.h"
+#include "game.h"
 
 #define MAX_NAME_LENGTH 14
 
 static GameState game_over_state;
 static GameData *game_data;
+static InputManager *input_manager;
 static Font *font;
 
 static HighScore high_scores[10];
@@ -36,9 +36,18 @@ static void state_init(void)
 
 static void state_update(float delta_time)
 {
-    if (IsKeyPressed(KEY_ENTER))
+    for (int i = 0; i < game_data->player_count; i++)
     {
-        scene_manager.change(scene_manager.scenes.logo, 0);
+        InputMapping *input = input_manager->get_player_input(i);
+        int mapping = input_manager->player[i];
+
+        if (input_manager->key_debounce(mapping, input->action_k_ENTER) || //
+            input_manager->button_debounce(mapping, input->action_A) ||
+            input_manager->button_debounce(mapping, input->action_B) ||
+            input_manager->button_debounce(mapping, input->action_START))
+        {
+            scene_manager.change(scene_manager.scenes.logo, 0);
+        }
     }
 }
 
@@ -48,7 +57,6 @@ static void state_render(void)
     {
         const char *high_score_text = TextFormat("%s - %d", high_scores[i].username, high_scores[i].score);
         DrawTextEx(*font, high_score_text, (Vector2){5, (float)10 * i + 5}, 7, 0, LIGHTGRAY);
-        // DrawText(high_score_text, 5, 10 * i + 5, 8, LIGHTGRAY);
     }
 }
 
@@ -59,6 +67,7 @@ static void state_cleanup(void)
 GameState *create_game_over_state(void)
 {
     font = resource_manager.get_pixel7_font();
+    input_manager = get_input_manager();
 
     game_over_state.init = state_init;
     game_over_state.update = state_update;

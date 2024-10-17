@@ -3,8 +3,10 @@
 #include "scene_manager.h"
 #include "resource_manager.h"
 #include "settings.h"
+#include "game.h"
 
 static Scene title_scene;
+static InputManager *input_manager;
 static float min_scene_time = 0.0f;
 static Font *font;
 
@@ -20,9 +22,19 @@ static void scene_update(float delta_time)
         min_scene_time -= delta_time;
     }
 
-    if ((GetKeyPressed() != 0 || IsGestureDetected(GESTURE_TAP) || GetGamepadButtonPressed() != 0) && min_scene_time <= 0.0f)
+    for (int i = 0; i < MAX_PLAYERS; i++)
     {
-        scene_manager.change(scene_manager.scenes.main_menu, 0);
+        InputMapping *input = input_manager->get_player_input(i);
+        int mapping = input_manager->player[i];
+
+        if (input_manager->key_debounce(mapping, input->action_k_ENTER) || //
+            input_manager->button_debounce(mapping, input->action_A) ||
+            input_manager->button_debounce(mapping, input->action_B) ||
+            input_manager->button_debounce(mapping, input->action_START) ||
+            min_scene_time <= 0.0f)
+        {
+            scene_manager.change(scene_manager.scenes.main_menu, 0);
+        }
     }
 }
 
@@ -43,6 +55,7 @@ static void scene_cleanup(void)
 Scene *create_title_scene()
 {
     font = resource_manager.get_pixel7_font();
+    input_manager = get_input_manager();
     title_scene.init = scene_init;
     title_scene.update = scene_update;
     title_scene.render = scene_render;

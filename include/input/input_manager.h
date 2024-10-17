@@ -16,6 +16,8 @@ typedef struct InputManager
     int player[MAX_PLAYERS];         // player input mapping to the correct input index, so player 2 can map to input 3 for example.
 
     bool (*axis_debounce)(int input_index, GamepadAxis axis, float threshold);
+    bool (*button_debounce)(int input_index, GamepadButton button);
+    bool (*any_button_debounce)(void);
     bool (*key_debounce)(int input_index, KeyboardKey key);
     bool (*key_down_repeat)(int input_index, KeyboardKey key);
 

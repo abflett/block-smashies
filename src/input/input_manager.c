@@ -10,7 +10,9 @@ static InputManager manager;
 static float notification_timeout[MAX_INPUTS];
 static Font *font;
 static float axis_debounce_time[MAX_INPUTS];
+static float button_debounce_time[MAX_INPUTS];
 static float key_debounce_time[MAX_INPUTS];
+static float any_button_debounce_time;
 
 static bool key_down_repeat(int input_index, KeyboardKey key)
 {
@@ -47,8 +49,34 @@ static bool axis_debounce(int input_index, GamepadAxis axis, float threshold)
     return false;
 }
 
+static bool button_debounce(int input_index, GamepadButton button)
+{
+    bool button_pressed = IsGamepadButtonPressed(input_index, button);
+    if (button_pressed && button_debounce_time[input_index] <= 0)
+    {
+        button_debounce_time[input_index] = 0.2f;
+        return true;
+    }
+    return false;
+}
+
+static bool any_button_debounce(void)
+{
+    if (GetGamepadButtonPressed() != 0 && any_button_debounce_time <= 0)
+    {
+        any_button_debounce_time = 0.2f;
+        return true;
+    }
+    return false;
+}
+
 static void update(float delta_time)
 {
+    if (any_button_debounce_time > 0)
+    {
+        any_button_debounce_time -= delta_time;
+    }
+
     for (int i = 0; i < MAX_INPUTS; i++)
     {
         if (axis_debounce_time[i] > 0)
@@ -59,6 +87,11 @@ static void update(float delta_time)
         if (key_debounce_time[i] > 0)
         {
             key_debounce_time[i] -= delta_time;
+        }
+
+        if (button_debounce_time[i] > 0)
+        {
+            button_debounce_time[i] -= delta_time;
         }
 
         bool connected = IsGamepadAvailable(i);
@@ -221,6 +254,8 @@ InputManager *create_input_manager(void)
     manager.key_debounce = key_debounce;
     manager.key_down_repeat = key_down_repeat;
     manager.axis_debounce = axis_debounce;
+    manager.button_debounce = button_debounce;
+    manager.any_button_debounce = any_button_debounce;
     manager.get_player_input = get_player_input;
     manager.map_player_input = map_player_input;
     manager.unmap_player_input = unmap_player_input;

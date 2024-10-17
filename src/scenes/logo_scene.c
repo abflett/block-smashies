@@ -3,7 +3,11 @@
 #include "settings.h"
 #include "scene_manager.h"
 #include "resource_manager.h"
+#include "game.h"
 
+#define MAX_PLAYERS 4
+
+static InputManager *input_manager;
 static Scene logo_scene;
 static float min_scene_time = 0.0f; // Variable to track elapsed time
 static Font *font;
@@ -17,9 +21,19 @@ static void scene_update(float delta_time)
 {
     min_scene_time += delta_time; // Increment elapsed time by delta_time
 
-    if (GetKeyPressed() != 0 || GetGamepadButtonPressed() != 0 || IsGestureDetected(GESTURE_TAP) || min_scene_time >= settings.game.logo_screen_time)
+    for (int i = 0; i < MAX_PLAYERS; i++)
     {
-        scene_manager.change(scene_manager.scenes.title, 0);
+        InputMapping *input = input_manager->get_player_input(i);
+        int mapping = input_manager->player[i];
+
+        if (input_manager->key_debounce(mapping, input->action_k_ENTER) || //
+            input_manager->button_debounce(mapping, input->action_A) ||
+            input_manager->button_debounce(mapping, input->action_B) ||
+            input_manager->button_debounce(mapping, input->action_START) ||
+            min_scene_time >= settings.game.logo_screen_time)
+        {
+            scene_manager.change(scene_manager.scenes.title, 0);
+        }
     }
 }
 
@@ -41,6 +55,7 @@ static void scene_cleanup(void)
 Scene *create_logo_scene()
 {
     font = resource_manager.get_pixel7_font();
+    input_manager = get_input_manager();
     logo_scene.init = scene_init;
     logo_scene.update = scene_update;
     logo_scene.render = scene_render;
