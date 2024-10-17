@@ -36,7 +36,9 @@ typedef struct VirtualKeyboard
     int selected_key_x, selected_key_y; // Current position on the virtual keyboard
     Vector2 text_position;              // Position of where the text will be displayed
     Vector2 keyboard_position;
-    bool active;                                                        // True if the virtual keyboard is in use
+    Vector2 keyboard_final_position;
+    bool active; // True if the virtual keyboard is in use
+    bool is_closing;
     void (*update)(struct VirtualKeyboard *keyboard, float delta_time); // Update logic for input
     void (*render)(struct VirtualKeyboard *keyboard);                   // Render the keyboard
     void (*activate)(struct VirtualKeyboard *keyboard);                 // Activate the keyboard
