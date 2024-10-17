@@ -50,7 +50,7 @@ GameData *create_game_data(void)
     const char *uuid = create_uuid(); // Use your existing create_uuid function
     strncpy(game_data.uuid, uuid, UUID4_LEN);
 
-    const char *name = "Block Smashies";
+    const char *name = "Team1";
     strncpy(game_data.name, name, sizeof(game_data.name) - 1);
     game_data.name[sizeof(game_data.name) - 1] = '\0'; // Ensure null termination
 

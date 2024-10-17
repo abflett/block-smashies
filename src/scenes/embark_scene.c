@@ -20,7 +20,6 @@ static GameData *game_data;
 static Ship *ships[MAX_PLAYERS];
 
 static Font *font;
-static char input_text[MAX_NAME_LENGTH + 1] = "Team1";
 static Vector2 text_position = {160, 52};
 
 static Texture2D *floor_dock;
@@ -44,6 +43,7 @@ static float hologram_beam_timer = 0.0f;
 static void scene_init(int arg_count, va_list args)
 {
     menu_selection = 1; // change team name
+    game_data = create_game_data();
     game_data->player_count = 1;
     input_manager->reset_player_inputs();
 
@@ -58,7 +58,7 @@ static void scene_init(int arg_count, va_list args)
         }
     }
 
-    virtual_keyboard = create_virtual_keyboard(input_text, MAX_NAME_LENGTH, text_position, (Vector2){40, 90}, settings.colors.blue_04);
+    virtual_keyboard = create_virtual_keyboard(game_data->name, MAX_NAME_LENGTH, text_position, (Vector2){40, 90}, settings.colors.blue_04);
 }
 
 static void update_timers(float delta_time)
@@ -199,13 +199,13 @@ static void scene_render(void)
         DrawTexture(*nums[i], num_x_positions[i], 148, WHITE);
     }
 
-    Vector2 text_size = MeasureTextEx(*font, input_text, 7, 0.0f);
+    Vector2 text_size = MeasureTextEx(*font, game_data->name, 7, 0.0f);
     Vector2 text_centered_position = {
         (float)(int)(text_position.x - text_size.x / 2), // Center horizontally
         text_position.y                                  // Keep vertical position the same
     };
 
-    DrawTextEx(*font, input_text, text_centered_position, 7, 0.0f, menu_selection == 2 ? settings.colors.blue_05 : settings.colors.blue_04);
+    DrawTextEx(*font, game_data->name, text_centered_position, 7, 0.0f, menu_selection == 2 ? settings.colors.blue_05 : settings.colors.blue_04);
 
     virtual_keyboard->render(virtual_keyboard);
 }
@@ -223,7 +223,6 @@ static void scene_cleanup(void)
 Scene *create_embark_scene(void)
 {
     input_manager = get_input_manager();
-    game_data = create_game_data();
 
     // set textures
     floor_dock = &resource_manager.get_texture("embark-floor-dock")->texture;
