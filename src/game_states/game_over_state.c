@@ -6,6 +6,7 @@
 #include "game_status.h"
 #include "resource_manager.h"
 #include "input_manager.h"
+#include "settings.h"
 
 #define MAX_NAME_LENGTH 14
 
@@ -18,8 +19,11 @@ static HighScore high_scores[10];
 static int count;
 static int score;
 
+static float min_scene_time;
+
 static void state_init(void)
 {
+    min_scene_time = settings.game.min_game_over_screen_time;
     game_data = game_state_manager.context->game_data;
     score = game_state_manager.context->game_status->score;
 
@@ -36,6 +40,11 @@ static void state_init(void)
 
 static void state_update(float delta_time)
 {
+    if (min_scene_time >= 0)
+    {
+        min_scene_time -= delta_time;
+    }
+
     for (int i = 0; i < game_data->player_count; i++)
     {
         InputMapping *input = input_manager->get_player_input(i);
@@ -44,7 +53,7 @@ static void state_update(float delta_time)
         if (input_manager->key_debounce(mapping, input->action_k_ENTER) || //
             input_manager->button_debounce(mapping, input->action_A) ||
             input_manager->button_debounce(mapping, input->action_B) ||
-            input_manager->button_debounce(mapping, input->action_START))
+            input_manager->button_debounce(mapping, input->action_START) && min_scene_time <= 0.0f)
         {
             scene_manager.change(scene_manager.scenes.logo, 0);
         }

@@ -35,6 +35,8 @@ float accumalator;
 static int selected_menu_option = 0; // 0 for Embark, 1 for Relive, 2 for Modify, etc.
 static int num_menu_options = 5;     // Number of options in your menu
 
+static float min_scene_time;
+
 static const char *flavor_texts[] = {
     "Begin your journey as a Block Smashy. Relive the legend from the start.          ",
     "Jump back to a pivotal moment. Continue the mission from a chosen point.          ",
@@ -92,10 +94,15 @@ void draw_flavor_text(void)
 
 static void scene_init(int arg_count, va_list args)
 {
+    min_scene_time = settings.game.min_main_menu_screen_time;
 }
 
 static void scene_update(float delta_time)
 {
+    if (min_scene_time >= 0)
+    {
+        min_scene_time -= delta_time;
+    }
 
     if (IsKeyPressed(input->action_k_DOWN) || IsGamepadButtonPressed(0, input->action_DOWN))
     {
@@ -107,7 +114,7 @@ static void scene_update(float delta_time)
         selected_menu_option = (selected_menu_option - 1 + num_menu_options) % num_menu_options; // Loop to the last option
     }
 
-    if (IsKeyPressed(input->action_k_ENTER) || IsGamepadButtonPressed(0, input->action_A))
+    if (IsKeyPressed(input->action_k_ENTER) || IsGamepadButtonPressed(0, input->action_A) || IsGamepadButtonPressed(0, input->action_START) && min_scene_time <= 0.0f)
     {
         switch (selected_menu_option)
         {

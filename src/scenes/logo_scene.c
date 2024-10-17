@@ -9,17 +9,27 @@
 
 static InputManager *input_manager;
 static Scene logo_scene;
-static float min_scene_time = 0.0f; // Variable to track elapsed time
+static float max_scene_time; // Variable to track elapsed time
+static float min_scene_time; // Variable to track elapsed time
 static Font *font;
 
 static void scene_init(int arg_count, va_list args)
 {
-    min_scene_time = 0.0f;
+    max_scene_time = settings.game.max_logo_screen_time;
+    min_scene_time = settings.game.min_logo_screen_time;
 }
 
 static void scene_update(float delta_time)
 {
-    min_scene_time += delta_time; // Increment elapsed time by delta_time
+    if (min_scene_time >= 0)
+    {
+        min_scene_time -= delta_time;
+    }
+
+    if (max_scene_time >= 0)
+    {
+        max_scene_time -= delta_time;
+    }
 
     for (int i = 0; i < MAX_PLAYERS; i++)
     {
@@ -30,7 +40,7 @@ static void scene_update(float delta_time)
             input_manager->button_debounce(mapping, input->action_A) ||
             input_manager->button_debounce(mapping, input->action_B) ||
             input_manager->button_debounce(mapping, input->action_START) ||
-            min_scene_time >= settings.game.logo_screen_time)
+            max_scene_time <= 0.0f && min_scene_time <= 0.0f)
         {
             scene_manager.change(scene_manager.scenes.title, 0);
         }

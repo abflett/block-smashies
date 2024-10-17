@@ -7,12 +7,12 @@
 
 static Scene title_scene;
 static InputManager *input_manager;
-static float min_scene_time = 0.0f;
+static float min_scene_time;
 static Font *font;
 
 static void scene_init(int arg_count, va_list args)
 {
-    min_scene_time = 0.2f;
+    min_scene_time = settings.game.min_title_screen_time;
 }
 
 static void scene_update(float delta_time)
@@ -30,8 +30,8 @@ static void scene_update(float delta_time)
         if (input_manager->key_debounce(mapping, input->action_k_ENTER) || //
             input_manager->button_debounce(mapping, input->action_A) ||
             input_manager->button_debounce(mapping, input->action_B) ||
-            input_manager->button_debounce(mapping, input->action_START) ||
-            min_scene_time <= 0.0f)
+            input_manager->button_debounce(mapping, input->action_START) &&
+                min_scene_time <= 0.0f)
         {
             scene_manager.change(scene_manager.scenes.main_menu, 0);
         }

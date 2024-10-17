@@ -58,15 +58,19 @@ typedef struct Colors
 typedef struct
 {
     const Vector2 target_size;
-    const float logo_screen_time;
+    const float max_logo_screen_time;
+    const float min_logo_screen_time;
+    const float min_title_screen_time;
+    const float min_main_menu_screen_time;
+    const float min_game_over_screen_time;
     const Rectangle play_area;
 } GameSettings;
 
 // GameplaySettings: Playfield-related settings (paddle, bricks, etc.)
 typedef struct
 {
-    // paddle
-    const float paddle_height;
+    // ship
+    const float ship_padding_height;
     const float boost_timer;
     const float pulse_timer;
     const float paddle_mass;
