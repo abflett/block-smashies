@@ -244,7 +244,6 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
 
 static void keyboard_render(VirtualKeyboard *keyboard)
 {
-    TraceLog(LOG_INFO, "Keyboard is closing: %d", keyboard->is_closing);
     if (!keyboard->active && !keyboard->is_closing)
         return;
 

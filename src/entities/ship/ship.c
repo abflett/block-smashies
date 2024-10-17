@@ -6,7 +6,6 @@
 
 static int calculate_segments_func(Ship *ship)
 {
-    TraceLog(LOG_INFO, "Player: %d, Count: %d", *ship->player, *ship->player_count);
     ship->previous_player_count = *ship->player_count;
     switch (*ship->player_count)
     {

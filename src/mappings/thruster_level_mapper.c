@@ -28,7 +28,6 @@ ThrusterLevelMapper *create_thruster_level_mapper(const JSON_Object *root_object
     for (size_t i = 0; i < json_array_get_count(thrusters_array); i++)
     {
         const char *animation_id = json_array_get_string(thrusters_array, i);
-        TraceLog(LOG_INFO, "[[[animation id]]] - %s", animation_id);
         kv_push(char *, mapper.animation_ids, strdup(animation_id));
     }
 
