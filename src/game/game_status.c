@@ -24,7 +24,7 @@ GameStatus *create_game_status(int player_count)
     status.player_count = player_count;
     status.score = 0;
     status.currency = 0;
-    status.lives = 3;
+    status.lives = 1;
     status.game_time = 0.0f;
     status.game_over = false;
     status.is_hold = true;

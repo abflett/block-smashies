@@ -11,6 +11,7 @@ typedef struct GameStates
     GameState *pause_menu;
     GameState *game_over;
     GameState *game_intro_start;
+    GameState *high_score;
 } GameStates;
 
 typedef struct GameStateManager

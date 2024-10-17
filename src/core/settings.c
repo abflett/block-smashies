@@ -13,7 +13,8 @@ Settings settings = {
         .min_logo_screen_time = 0.5f,
         .min_title_screen_time = 0.5f,
         .min_main_menu_screen_time = 0.5f,
-        .min_game_over_screen_time = 0.5f //
+        .min_game_over_screen_time = 0.5f, //
+        .min_high_score_screen_time = 0.5f //
     },
 
     .file_locations = {

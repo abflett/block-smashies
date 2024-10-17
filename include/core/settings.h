@@ -63,6 +63,7 @@ typedef struct
     const float min_title_screen_time;
     const float min_main_menu_screen_time;
     const float min_game_over_screen_time;
+    const float min_high_score_screen_time;
     const Rectangle play_area;
 } GameSettings;
 

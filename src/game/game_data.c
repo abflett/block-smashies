@@ -60,7 +60,7 @@ GameData *create_game_data(void)
     game_data.currency = 0;           // available currency
     game_data.currency_collected = 0; // total currency collected
     game_data.high_score = 0;         // current high score
-    game_data.lives = 3;              // number of orb catchers/lives
+    game_data.lives = 1;              // number of orb catchers/lives
 
     game_data.difficulty = NORMAL_DIFFICULTY;
     game_data.max_lives = 5;          // max ammount of saver bots
