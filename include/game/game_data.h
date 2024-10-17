@@ -84,13 +84,9 @@ typedef struct GameData
     BallAttributes ball;
     Perks perks;
     ShipCustomization ships[MAX_SHIPS];
-
-    void (*add_player)(void);    // change player count and update active ships
-    void (*remove_player)(void); // change player cound and update active ships
-    void (*save_data)(void);     // save game data to the json file, either updating or creating a new json object, uses id of current game_data global struct
 } GameData;
 
-GameData *create_game_data(void);           // create a new default game data with starting attributes
-GameData *load_game_data(const char *uuid); // create a game data from an existing object from json
+GameData *create_game_data(void);        // create a new default game data with starting attributes
+void update_game_data(const char *uuid); // update game data from the json file uuid
 
 #endif

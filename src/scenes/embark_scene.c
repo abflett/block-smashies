@@ -31,6 +31,7 @@ static Texture2D *embark_projector_beams;
 static Texture2D *embark_room;
 static Texture2D *embark_text_backing;
 
+static bool is_loading;
 static int menu_selection = 2;
 static const int menu_selection_count = 3; // 0 = main menu, 1 = gameplay, 2 = change team name
 static bool menu_selection_mode = true;
@@ -42,8 +43,27 @@ static float hologram_beam_timer = 0.0f;
 
 static void scene_init(int arg_count, va_list args)
 {
-    menu_selection = 1; // change team name
     game_data = create_game_data();
+
+    for (int i = 0; i < arg_count; i++)
+    {
+        if (i == 0)
+            is_loading = va_arg(args, bool);
+    }
+
+    if (is_loading)
+    {
+        // enable game_data_summaries
+        TraceLog(LOG_INFO, "Reliving Past");
+    }
+    else
+    {
+        // intialize new game data
+        TraceLog(LOG_INFO, "Embark Story");
+    }
+
+    menu_selection = 1; // change team name
+
     game_data->player_count = 1;
     input_manager->reset_player_inputs();
 
@@ -75,6 +95,17 @@ static void update_timers(float delta_time)
 static void scene_update(float delta_time)
 {
     update_timers(delta_time);
+
+    if (is_loading)
+    {
+        // update game_data_summaries inputs
+        if (input_manager->key_debounce(0, KEY_ESCAPE) || input_manager->key_debounce(0, KEY_ENTER))
+        {
+            update_game_data("The UUID of the game data to load");
+            is_loading = false;
+        }
+        return;
+    }
 
     virtual_keyboard->update(virtual_keyboard, delta_time);
     if (virtual_keyboard->active)
@@ -152,7 +183,6 @@ static void scene_update(float delta_time)
             {
                 game_data->player_count--;
                 input_manager->unmap_player_input(i); // remove the input mapping for the player and shift the players down
-                TraceLog(LOG_INFO, "Player %d removed from embarking", i);
                 game_data->ships[i].active = input_manager->player_mapped[i];
 
                 // shift the ship colors down
@@ -206,6 +236,12 @@ static void scene_render(void)
     };
 
     DrawTextEx(*font, game_data->name, text_centered_position, 7, 0.0f, menu_selection == 2 ? settings.colors.blue_05 : settings.colors.blue_04);
+
+    if (is_loading)
+    {
+        // render game_data_summaries same setup as the virtual keyboard
+        DrawRectangle(20, 20, 280, 140, BLACK);
+    }
 
     virtual_keyboard->render(virtual_keyboard);
 }

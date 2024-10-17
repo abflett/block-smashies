@@ -119,13 +119,14 @@ static void scene_update(float delta_time)
         switch (selected_menu_option)
         {
         case 0: // Embark
-            scene_manager.change(scene_manager.scenes.embark, 0);
+            scene_manager.change(scene_manager.scenes.embark, 1, false);
             break;
         case 1: // Relive
-            // Add logic for loading a saved game
+            scene_manager.change(scene_manager.scenes.embark, 1, true);
             break;
         case 2: // Modify
             // Add logic for settings
+            // show game_state for settings - is an overlay
             break;
         case 3: // Historic
             // Add logic for showing credits/high scores

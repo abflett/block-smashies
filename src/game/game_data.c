@@ -6,45 +6,6 @@
 
 static GameData game_data;
 
-static void add_player_game_data(void)
-{
-    if (game_data.player_count < MAX_SHIPS)
-    {
-        game_data.player_count++;
-    }
-
-    for (int i = 0; i < MAX_SHIPS; i++)
-    {
-        if (i < game_data.player_count)
-        {
-            game_data.ships[i].active = true;
-        }
-        else
-        {
-            game_data.ships[i].active = false;
-        }
-    }
-}
-static void remove_player_game_data(void)
-{
-    if (game_data.player_count > 1)
-    {
-        game_data.player_count--;
-    }
-
-    for (int i = 0; i < MAX_SHIPS; i++)
-    {
-        if (i < game_data.player_count)
-        {
-            game_data.ships[i].active = true;
-        }
-        else
-        {
-            game_data.ships[i].active = false;
-        }
-    }
-}
-
 GameData *create_game_data(void)
 {
     const char *uuid = create_uuid(); // Use your existing create_uuid function
@@ -99,15 +60,11 @@ GameData *create_game_data(void)
             .shield_level = 0}; // set default shield level to 0
     }
 
-    game_data.add_player = add_player_game_data;
-    game_data.remove_player = remove_player_game_data;
-
     return &game_data;
 }
 
-GameData *load_game_data(const char *uuid)
+void update_game_data(const char *uuid)
 {
-    // populate game_data based on the data from the json based on the found uuid
-
-    return &game_data;
+    // load json data from uuid
+    // update game_data with loaded data
 }
