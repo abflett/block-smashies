@@ -35,7 +35,7 @@ void ball_kill_boundary_collision(Ball *ball, KillBoundary *kill_boundary, GameC
         else
         {
             context->entities->add_ball();
-            game_state_manager.change(game_state_manager.states.game_intro_start);
+            game_state_manager.change(game_state_manager.states.game_intro_start, 0, NULL);
         }
     }
 }

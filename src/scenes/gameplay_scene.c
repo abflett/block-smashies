@@ -26,7 +26,7 @@ static void scene_init(int arg_count, va_list args)
     context->entities->add_ball();
 
     // start cutscene and cutsene will change to playing once animation is finished.
-    game_state_manager.change(game_state_manager.states.game_intro_start);
+    game_state_manager.change(game_state_manager.states.game_intro_start, 0, NULL);
 }
 
 static void scene_update(float delta_time)

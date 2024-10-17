@@ -11,7 +11,7 @@
 static GameState playing_state;
 static PlayingInputHandler *input_handler;
 
-static void state_init(void)
+static void state_init(int arg_count, va_list args)
 {
     GameContext *context = game_state_manager.context;
     input_handler = initialize_playing_input(context);
@@ -52,7 +52,7 @@ static void state_update(float delta_time)
 
     if (game_state_manager.context->game_status->game_over)
     {
-        game_state_manager.change(game_state_manager.states.game_over);
+        game_state_manager.change(game_state_manager.states.game_over, 0, NULL);
     }
 }
 

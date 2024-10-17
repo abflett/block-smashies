@@ -13,7 +13,7 @@ static Font *font;
 static float count_down;
 static float y_position;
 
-static void state_init(void)
+static void state_init(int arg_count, va_list args)
 {
     context = game_state_manager.context;
 
@@ -39,7 +39,7 @@ static void state_update(float delta_time)
 
     if (count_down < 0)
     {
-        game_state_manager.change(game_state_manager.states.playing);
+        game_state_manager.change(game_state_manager.states.playing, 0, NULL);
     }
 
     game_state_manager.context->game_ui->update(delta_time);

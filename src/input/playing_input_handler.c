@@ -69,7 +69,7 @@ static void update(float delta_time)
         if (IsKeyPressed(p_inputs[i]->action_k_ESCAPE) || IsGamepadButtonPressed(input_nums[i], p_inputs[i]->action_START))
         {
             game_state_manager.context->game_status->is_pause = true;
-            game_state_manager.change(game_state_manager.states.pause_menu);
+            game_state_manager.change(game_state_manager.states.pause_menu, 0, NULL);
             return;
         }
     }

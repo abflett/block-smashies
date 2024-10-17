@@ -9,7 +9,7 @@
 
 static GameState pause_menu_state;
 
-static void state_init(void)
+static void state_init(int arg_count, va_list args)
 {
 }
 
@@ -26,7 +26,7 @@ static void state_update(float delta_time)
 
     if (IsKeyPressed(KEY_ESCAPE))
     {
-        game_state_manager.change(game_state_manager.states.playing);
+        game_state_manager.change(game_state_manager.states.playing, 0, NULL);
     }
 }
 

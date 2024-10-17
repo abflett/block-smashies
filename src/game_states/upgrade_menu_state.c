@@ -17,7 +17,7 @@ static Font *font;
 
 static float min_scene_time;
 
-static void state_init(void)
+static void state_init(int arg_count, va_list args)
 {
     min_scene_time = settings.game.min_game_over_screen_time;
     game_data = game_state_manager.context->game_data;
@@ -40,7 +40,7 @@ static void state_update(float delta_time)
             input_manager->button_debounce(mapping, input->action_B) ||
             input_manager->button_debounce(mapping, input->action_START) && min_scene_time <= 0.0f)
         {
-            game_state_manager.change(game_state_manager.states.playing);
+            game_state_manager.change(game_state_manager.states.playing, 0, NULL);
         }
     }
 }

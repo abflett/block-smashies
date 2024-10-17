@@ -10,7 +10,7 @@
 #include "upgrade_menu_state.h"
 #include "settings_menu_state.h"
 
-void change_state(GameState *new_state)
+void change_state(GameState *new_state, int arg_count, ...)
 {
     if (game_state_manager.current_state && game_state_manager.current_state->cleanup)
     {
@@ -21,7 +21,10 @@ void change_state(GameState *new_state)
 
     if (game_state_manager.current_state && game_state_manager.current_state->init)
     {
-        game_state_manager.current_state->init();
+        va_list args;
+        va_start(args, arg_count); // Only call this once before the init
+        game_state_manager.current_state->init(arg_count, args);
+        va_end(args);
     }
 }
 

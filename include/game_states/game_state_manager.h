@@ -22,7 +22,7 @@ typedef struct GameStateManager
     GameStates states;
     GameContext *context;
 
-    void (*change)(GameState *new_state);
+    void (*change)(GameState *new_state, int arg_count, ...);
     void (*update)(float delta_time);
     void (*render)(void);
 } GameStateManager;
