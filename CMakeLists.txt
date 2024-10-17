@@ -99,6 +99,8 @@ set(GAME_STATES_SRC
     src/game_states/game_over_state.c
     src/game_states/game_intro_start_state.c
     src/game_states/high_score_state.c
+    src/game_states/upgrade_menu_state.c
+    src/game_states/settings_menu_state.c
 )
 
 # Source files for game

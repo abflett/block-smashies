@@ -12,6 +12,8 @@ typedef struct GameStates
     GameState *game_over;
     GameState *game_intro_start;
     GameState *high_score;
+    GameState *upgrade_menu;
+    GameState *settings_menu;
 } GameStates;
 
 typedef struct GameStateManager

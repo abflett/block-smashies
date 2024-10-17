@@ -7,6 +7,8 @@
 #include "game_over_state.h"
 #include "game_intro_start_state.h"
 #include "high_score_state.h"
+#include "upgrade_menu_state.h"
+#include "settings_menu_state.h"
 
 void change_state(GameState *new_state)
 {
@@ -56,4 +58,6 @@ void initialize_game_state_manager(void)
     game_state_manager.states.game_over = create_game_over_state();
     game_state_manager.states.game_intro_start = create_game_intro_start_state();
     game_state_manager.states.high_score = create_high_score_state();
+    game_state_manager.states.upgrade_menu = create_upgrade_menu_state();
+    game_state_manager.states.settings_menu = create_settings_menu_state();
 }
