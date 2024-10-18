@@ -120,6 +120,8 @@ set(GAME_SRC
     src/game/player_stat.c
     src/game/game_data_summary.c
     src/game/level_manager.c
+    src/game/game_slide.c
+    src/game/slide_manager.c
 ) 
 
 set(INPUT_SRC

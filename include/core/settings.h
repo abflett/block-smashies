@@ -19,6 +19,7 @@ typedef struct FileLocations
 {
     const char *settings_file;
     const char *resource_file;
+    const char *slides_file;
     const char *high_score_file;
     const char *game_data_file;
     const char *levels_file;

@@ -18,7 +18,8 @@ Settings settings = {
         .high_score_file = "assets/config/high_scores.json", // high scores
         .resource_file = "assets/config/resources.json",     // asset locations
         .settings_file = "assets/config/settings.json",      // save settings and options
-        .levels_file = "assets/config/levels.json"           // levels data
+        .levels_file = "assets/config/levels.json",          // levels data
+        .slides_file = "assets/config/slides.json"           // slides data
     },
 
     .colors = {

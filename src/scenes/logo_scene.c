@@ -43,6 +43,7 @@ static void scene_update(float delta_time)
             max_scene_time <= 0.0f && min_scene_time <= 0.0f)
         {
             scene_manager.change(scene_manager.scenes.title, 0);
+            break;
         }
     }
 }
