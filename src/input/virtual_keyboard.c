@@ -22,8 +22,16 @@ static void keyboard_activate(VirtualKeyboard *keyboard)
     keyboard->active = true;
     keyboard->is_closing = false;
     keyboard->keyboard_position = (Vector2){keyboard->keyboard_position.x, settings.game.target_size.y - 20};
-    int input_length = (int)strlen(keyboard->input_text);
-    keyboard->cursor_position = input_length;
+    keyboard->cursor_position = (int)strlen(keyboard->input_text);
+}
+
+static void close_keyboard(VirtualKeyboard *keyboard)
+{
+    if (keyboard->input_text[0] == '\0') // Check if it's empty
+    {
+        strcpy(keyboard->input_text, "Team1");
+    }
+    keyboard->is_closing = true;
 }
 
 static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
@@ -56,12 +64,10 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
             keyboard->keyboard_position = keyboard->keyboard_final_position;
         }
 
-        // move back down if enter was pressed.
-
         // close virtural keyboard if enter key is pressed
         if (keyboard->input_manager->key_debounce(0, keyboard->p1_input->action_k_ENTER))
         {
-            keyboard->is_closing = true;
+            close_keyboard(keyboard);
         }
 
         keyboard->blink_time -= delta_time;
@@ -165,7 +171,7 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
                 keyboard->caps_on = !keyboard->caps_on;
                 break;
             case ']':
-                keyboard->is_closing = true;
+                close_keyboard(keyboard);
                 break;
             case '=':
                 keyboard->shift_on = !keyboard->shift_on;

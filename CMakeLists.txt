@@ -178,8 +178,6 @@ if (MSVC)
         $<$<CONFIG:RelWithDebInfo>:/O2 /Zi>
     )
     target_compile_options(BlockSmashies PRIVATE /W3 /WX /wd4996)
-    # set_property(TARGET BlockSmashies PROPERTY LINK_FLAGS "/SUBSYSTEM:CONSOLE")
-    # set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 else()
     target_compile_options(BlockSmashies PRIVATE
         $<$<CONFIG:Debug>:-g -O0>
