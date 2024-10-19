@@ -18,9 +18,7 @@ typedef struct GameSlide
     Texture2D *texture;
     AudioStream *audio;
 
-    float total_duration;      // Duration for which the slide is displayed
-    int current_line_index;    // Index for the current line being displayed
-    float line_duration_timer; // Timer for line fade-in
+    float total_duration; // Duration for which the slide is displayed
 } GameSlide;
 
 GameSlide *create_game_slide(JSON_Object *slide_obj);

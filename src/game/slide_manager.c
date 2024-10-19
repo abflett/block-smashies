@@ -7,27 +7,28 @@
 static void render(SlideManager *manager)
 {
     // Draw the texture of the current slide
-    DrawTexture(*manager->current_slide->texture, 96, 30, manager->texture_fade_color);
+    DrawTexture(*manager->current_slide->texture, 96, 30, (Color){255, 255, 255, (int)manager->texture_fade_alpha});
 
     // Loop through the text lines of the current slide
-    for (int i = 0; i < kv_size(manager->current_slide->text_lines); i++)
+    for (int i = 0; i < manager->current_text_index + 1; i++)
     {
-        SlideText text = kv_A(manager->current_slide->text_lines, i);
-        Vector2 text_size = MeasureTextEx(*manager->font, text.text, 7, 0.0f);
-        Vector2 text_position = {settings.game.target_size.x / 2 - text_size.x / 2, (float)100 + (i * 10)};
+        SlideText *text = &kv_A(manager->current_slide->text_lines, i);
+        Vector2 text_size = MeasureTextEx(*manager->font, text->text, 7, 0.0f);
+        Vector2 text_position = {settings.game.target_size.x / 2 - text_size.x / 2, (float)105 + (i * 10)};
         if (i == manager->current_text_index)
         {
-            DrawTextEx(*manager->font, text.text, text_position, 7, 0.0f, manager->text_fade_color);
+            DrawTextEx(*manager->font, text->text, text_position, 7, 0.0f, (Color){255, 255, 255, (int)manager->text_fade_alpha});
         }
-        else if (i < manager->current_text_index)
+        else
         {
-            DrawTextEx(*manager->font, text.text, text_position, 7, 0.0f, WHITE);
+            DrawTextEx(*manager->font, text->text, text_position, 7, 0.0f, WHITE);
         }
     }
 }
 
 static void update(SlideManager *manager, float delta_time)
 {
+    // Fade in the texture
     if (manager->texture_fade_alpha < 255)
     {
         manager->texture_fade_alpha += delta_time * 200;
@@ -36,8 +37,8 @@ static void update(SlideManager *manager, float delta_time)
             manager->texture_fade_alpha = 255.0f;
         }
     }
-    manager->texture_fade_color = (Color){255, 255, 255, (int)manager->texture_fade_alpha};
 
+    // Fade in the text
     if (manager->text_fade_alpha < 255)
     {
         manager->text_fade_alpha += delta_time * 200;
@@ -46,44 +47,42 @@ static void update(SlideManager *manager, float delta_time)
             manager->text_fade_alpha = 255.0f;
         }
     }
-    manager->text_fade_color = (Color){255, 255, 255, (int)manager->text_fade_alpha};
 
-    // Decrease the remaining time of the current slide
-    manager->current_duration += delta_time;
+    // Decrease the remaining time of the current text line
     manager->current_text_duration += delta_time;
 
-    if (manager->current_text_duration >= manager->text_duration)
-    {
-        if (manager->current_text_index + 1 < kv_size(manager->current_slide->text_lines))
-        {
-            SlideText text_line = kv_A(manager->current_slide->text_lines, ++manager->current_text_index);
-            manager->text_duration = text_line.duration; // Update the duration for the new line
-            manager->current_text_duration = 0.0f;
-            manager->text_fade_alpha = 0.0f;
-        }
-    }
-
-    // Check if the current slide has finished
-    if (manager->current_duration < manager->total_duration)
+    if (manager->current_text_duration < manager->text_duration)
         return;
 
-    // Move to the next slide if available
-    if (manager->current_slide_index + 1 < kv_size(manager->slides))
+    if (manager->current_text_index + 1 < kv_size(manager->current_slide->text_lines))
     {
-        manager->current_slide = kv_A(manager->slides, ++manager->current_slide_index);
-        manager->texture_fade_alpha = 0.0f;
-        manager->total_duration = manager->current_slide->total_duration;
-        manager->current_duration = 0.0f;
+        // Move to the next text line
+        manager->current_text_index++;
+        SlideText *text_line = &kv_A(manager->current_slide->text_lines, manager->current_text_index);
 
-        manager->current_text_index = 0;
+        // Update duration and reset timers for the new text line
+        manager->text_duration = text_line->duration;
         manager->current_text_duration = 0.0f;
-        // manager->text_duration = 1.0f;
-        manager->text_fade_alpha = 0.0f;
-        TraceLog(LOG_INFO, "Total Duration %f", manager->total_duration);
+        manager->text_fade_alpha = 0.0f; // Reset the fade-in for the new line
     }
     else
     {
-        manager->slides_end = true;
+        // Move to the next slide
+        if (manager->current_slide_index + 1 < kv_size(manager->slides))
+        {
+            manager->current_slide = kv_A(manager->slides, ++manager->current_slide_index);
+            manager->texture_fade_alpha = 0.0f;
+
+            manager->current_text_index = 0;
+            SlideText *text_line = &kv_A(manager->current_slide->text_lines, manager->current_text_index);
+            manager->current_text_duration = 0.0f;
+            manager->text_duration = text_line->duration;
+            manager->text_fade_alpha = 0.0f;
+        }
+        else
+        {
+            manager->slides_end = true;
+        }
     }
 }
 
@@ -153,21 +152,16 @@ SlideManager *create_slide_manager(const char *slides_scene_name)
 
     slide_manager->current_slide_index = 0;
     slide_manager->current_slide = kv_A(slide_manager->slides, slide_manager->current_slide_index);
-
     slide_manager->texture_fade_alpha = 0.0f;
-    slide_manager->texture_fade_color = (Color){255, 255, 255, (int)slide_manager->texture_fade_alpha};
-
-    slide_manager->total_duration = slide_manager->current_slide->total_duration;
-    slide_manager->current_duration = 0.0f;
-
     slide_manager->slides_end = false;
 
-    slide_manager->text_fade_alpha = 0.0f;
-    slide_manager->text_fade_color = (Color){255, 255, 255, (int)slide_manager->text_fade_alpha};
+    // Todo fix text duration per text line in json
+
     slide_manager->current_text_index = 0;
     slide_manager->current_text_duration = 0.0f;
-    SlideText text_line = kv_A(slide_manager->current_slide->text_lines, slide_manager->current_text_index);
-    slide_manager->text_duration = text_line.duration;
+    SlideText *text_line = &kv_A(slide_manager->current_slide->text_lines, slide_manager->current_text_index);
+    slide_manager->text_duration = text_line->duration;
+    slide_manager->text_fade_alpha = 0.0f;
 
     slide_manager->render = render;
     slide_manager->update = update;
