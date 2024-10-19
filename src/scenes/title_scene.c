@@ -14,9 +14,13 @@ static InputManager *input_manager;
 static float min_scene_time;
 static Font *font;
 
+static float fade_in_alpha;
+static bool title_fading_in;
+
 static void scene_init(int arg_count, va_list args)
 {
     min_scene_time = settings.game.min_screen_time;
+    title_fading_in = false;
 
     slide_manager = create_slide_manager("intro");
     if (slide_manager == NULL)
@@ -29,9 +33,25 @@ static void scene_init(int arg_count, va_list args)
 
 static void scene_update(float delta_time)
 {
+    if (title_fading_in)
+    {
+        if (fade_in_alpha < 255)
+        {
+            fade_in_alpha += delta_time * 80;
+            if (fade_in_alpha >= 255)
+            {
+                fade_in_alpha = 255.0f;
+            }
+        }
+    }
+
     if (!slide_manager->slides_end)
     {
         slide_manager->update(slide_manager, delta_time);
+    }
+    else
+    {
+        title_fading_in = true;
     }
 
     if (min_scene_time >= 0.0f)
@@ -65,12 +85,19 @@ static void scene_render(void)
     }
     else
     {
-        const char *text = "Title: Press any button";
+        const char *title = "Block Smashies";
+        Vector2 title_size = MeasureTextEx(*font, title, 21, 0.0f);
+        Vector2 title_position = {
+            (settings.game.target_size.x - title_size.x) / 2,
+            (settings.game.target_size.y - title_size.y) / 2 - 40};
+        DrawTextEx(*font, title, title_position, 21, 0.0f, (Color){255, 255, 255, (int)fade_in_alpha});
+
+        const char *text = "Press Start to Continue";
         Vector2 text_size = MeasureTextEx(*font, text, 8, 0.0f);
         Vector2 text_position = {
             (settings.game.target_size.x - text_size.x) / 2,
-            (settings.game.target_size.y - text_size.y) / 2};
-        DrawTextEx(*font, text, text_position, 7, 0.0f, WHITE);
+            (settings.game.target_size.y - text_size.y) / 2 + 70};
+        DrawTextEx(*font, text, text_position, 7, 0.0f, (Color){171, 148, 122, (int)fade_in_alpha});
     }
 }
 
