@@ -11,6 +11,7 @@ typedef struct UpgradeManager
     int node_count;
 
     UpgradeNode *current_node;
+    Vector2 draw_offset;
 
     void (*update)(struct UpgradeManager *upgrade_manager, float delta_time);
     void (*render)(struct UpgradeManager *upgrade_manager);

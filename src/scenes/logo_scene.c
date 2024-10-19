@@ -22,11 +22,13 @@ static void scene_init(int arg_count, va_list args)
     min_scene_time = settings.game.min_screen_time;
 
     upgrade_manager = create_upgrade_manager(create_game_data());
-    upgrade_manager->print_nodes(upgrade_manager);
+    // upgrade_manager->print_nodes(upgrade_manager); // prints the upgrade nodes to the console
 }
 
 static void scene_update(float delta_time)
 {
+    upgrade_manager->update(upgrade_manager, delta_time);
+
     if (min_scene_time >= 0)
     {
         min_scene_time -= delta_time;
@@ -45,8 +47,9 @@ static void scene_update(float delta_time)
         if (input_manager->key_debounce(mapping, input->action_k_ENTER) || //
             input_manager->button_debounce(mapping, input->action_A) ||
             input_manager->button_debounce(mapping, input->action_B) ||
-            input_manager->button_debounce(mapping, input->action_START) ||
-            max_scene_time <= 0.0f && min_scene_time <= 0.0f)
+            input_manager->button_debounce(mapping, input->action_START) /* ||
+            max_scene_time <= 0.0f*/
+                && min_scene_time <= 0.0f)
         {
             scene_manager.change(scene_manager.scenes.title, 0);
             break;
@@ -56,12 +59,13 @@ static void scene_update(float delta_time)
 
 static void scene_render(void)
 {
-    const char *text = "Press any button";
-    Vector2 text_size = MeasureTextEx(*font, text, 8, 0.0f);
-    Vector2 text_position = {
-        (settings.game.target_size.x - text_size.x) / 2,
-        (settings.game.target_size.y - text_size.y) / 2};
-    DrawTextEx(*font, text, text_position, 7, 0.0f, (Color){171, 148, 122, 255});
+    upgrade_manager->render(upgrade_manager);
+    // const char *text = "Press any button";
+    // Vector2 text_size = MeasureTextEx(*font, text, 8, 0.0f);
+    // Vector2 text_position = {
+    //     (settings.game.target_size.x - text_size.x) / 2,
+    //     (settings.game.target_size.y - text_size.y) / 2};
+    // DrawTextEx(*font, text, text_position, 7, 0.0f, (Color){171, 148, 122, 255});
 }
 
 static void scene_cleanup(void)

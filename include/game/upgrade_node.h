@@ -4,6 +4,14 @@
 #include <stdbool.h>
 #include "raylib.h"
 
+typedef enum UpgradeNodeState
+{
+    NODE_STATE_LOCKED,
+    NODE_STATE_UNLOCKED,
+    NODE_STATE_PURCHASED,
+    NODE_STATE_SELECTED
+} UpgradeNodeState;
+
 typedef enum UpgradeType
 {
     ATTRIBUTE,
@@ -46,10 +54,9 @@ typedef struct UpgradeNode
     int num_prerequisites;              // Number of prerequisites
     struct UpgradeNode **next;          // Array pointers of next nodes
     int num_next;                       // Number of next nodes
-    bool is_unlocked;                   // dark greyed out if not unlocked
-    bool is_purchased;                  // light greyed out if purchased
-    Vector2 position;                   // Position for rendering
-    Texture2D *texture;                 // Texture for rendering
+    UpgradeNodeState node_state;
+    Vector2 position;   // Position for rendering
+    Texture2D *texture; // Texture for rendering
 } UpgradeNode;
 
 #endif // UPGRADE_NODE_H
