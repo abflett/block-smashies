@@ -17,11 +17,11 @@ static void render(SlideManager *manager)
         Vector2 text_position = {settings.game.target_size.x / 2 - text_size.x / 2, (float)105 + (i * 10)};
         if (i == manager->current_text_index)
         {
-            DrawTextEx(*manager->font, text->text, text_position, 7, 0.0f, (Color){255, 255, 255, (int)manager->text_fade_alpha});
+            DrawTextEx(*manager->font, text->text, text_position, 7, 0.0f, (Color){171, 148, 122, (int)manager->text_fade_alpha});
         }
         else
         {
-            DrawTextEx(*manager->font, text->text, text_position, 7, 0.0f, WHITE);
+            DrawTextEx(*manager->font, text->text, text_position, 7, 0.0f, (Color){171, 148, 122, 255});
         }
     }
 }

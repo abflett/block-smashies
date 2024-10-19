@@ -55,7 +55,7 @@ static void scene_render(void)
     Vector2 text_position = {
         (settings.game.target_size.x - text_size.x) / 2,
         (settings.game.target_size.y - text_size.y) / 2};
-    DrawTextEx(*font, text, text_position, 7, 0.0f, WHITE);
+    DrawTextEx(*font, text, text_position, 7, 0.0f, (Color){171, 148, 122, 255});
 }
 
 static void scene_cleanup(void)
