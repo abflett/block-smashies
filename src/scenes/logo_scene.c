@@ -10,6 +10,7 @@
 #define MAX_PLAYERS 4
 
 static InputManager *input_manager;
+static UpgradeManager *upgrade_manager;
 static Scene logo_scene;
 static float max_scene_time; // Variable to track elapsed time
 static float min_scene_time; // Variable to track elapsed time
@@ -20,7 +21,8 @@ static void scene_init(int arg_count, va_list args)
     max_scene_time = settings.game.max_screen_time;
     min_scene_time = settings.game.min_screen_time;
 
-    UpgradeManager *upgrade_manager = create_upgrade_manager(create_game_data());
+    upgrade_manager = create_upgrade_manager(create_game_data());
+    upgrade_manager->print_nodes(upgrade_manager);
 }
 
 static void scene_update(float delta_time)
@@ -65,6 +67,7 @@ static void scene_render(void)
 static void scene_cleanup(void)
 {
     // Cleanup resources used by the main menu
+    upgrade_manager->cleanup(upgrade_manager);
 }
 
 Scene *create_logo_scene()

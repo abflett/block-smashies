@@ -15,6 +15,7 @@ typedef struct UpgradeManager
     void (*update)(struct UpgradeManager *upgrade_manager, float delta_time);
     void (*render)(struct UpgradeManager *upgrade_manager);
     void (*cleanup)(struct UpgradeManager *upgrade_manager);
+    void (*print_nodes)(struct UpgradeManager *upgrade_manager);
 } UpgradeManager;
 
 UpgradeManager *create_upgrade_manager(GameData *game_data);

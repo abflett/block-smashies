@@ -7,6 +7,26 @@
 #include <stdlib.h>
 #include "upgrade_manager.h"
 
+void print_nodes(UpgradeManager *upgrade_manager)
+{
+    for (int i = 0; i < upgrade_manager->node_count; i++)
+    {
+        TraceLog(LOG_INFO, "Node %d: %s", i, upgrade_manager->upgrade_nodes[i].name);
+
+        TraceLog(LOG_INFO, "\tPrerequisite");
+        for (int j = 0; j < upgrade_manager->upgrade_nodes[i].num_prerequisites; j++)
+        {
+            TraceLog(LOG_INFO, "\t\t%s", upgrade_manager->upgrade_nodes[i].prerequisites[j]->name);
+        }
+
+        TraceLog(LOG_INFO, "\tNext");
+        for (int j = 0; j < upgrade_manager->upgrade_nodes[i].num_next; j++)
+        {
+            TraceLog(LOG_INFO, "\t\t%s", upgrade_manager->upgrade_nodes[i].next[j]->name);
+        }
+    }
+}
+
 // Function to clean up the UpgradeManager
 void upgrade_manager_cleanup(UpgradeManager *upgrade_manager)
 {
@@ -89,22 +109,10 @@ UpgradeManager *create_upgrade_manager(GameData *game_data)
 
     free(root_value);
 
-    for (int i = 0; i < upgrade_manager->node_count; i++)
-    {
-        TraceLog(LOG_INFO, "Node %d: %s", i, upgrade_manager->upgrade_nodes[i].name);
-
-        TraceLog(LOG_INFO, "\tPrerequisite");
-        for (int j = 0; j < upgrade_manager->upgrade_nodes[i].num_prerequisites; j++)
-        {
-            TraceLog(LOG_INFO, "\t\t%s", upgrade_manager->upgrade_nodes[i].prerequisites[j]->name);
-        }
-
-        TraceLog(LOG_INFO, "\tNext");
-        for (int j = 0; j < upgrade_manager->upgrade_nodes[i].num_next; j++)
-        {
-            TraceLog(LOG_INFO, "\t\t%s", upgrade_manager->upgrade_nodes[i].next[j]->name);
-        }
-    }
+    // upgrade_manager->update = upgrade_manager_update;
+    // upgrade_manager->render = upgrade_manager_render;
+    upgrade_manager->cleanup = upgrade_manager_cleanup;
+    upgrade_manager->print_nodes = print_nodes;
 
     return upgrade_manager;
 }
