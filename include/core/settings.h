@@ -23,6 +23,7 @@ typedef struct FileLocations
     const char *high_score_file;
     const char *game_data_file;
     const char *levels_file;
+    const char *upgrade_file;
 } FileLocations;
 
 typedef struct Colors

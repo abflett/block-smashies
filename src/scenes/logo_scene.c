@@ -4,6 +4,8 @@
 #include "scene_manager.h"
 #include "resource_manager.h"
 #include "input_manager.h"
+#include "upgrade_manager.h"
+#include "game_data.h"
 
 #define MAX_PLAYERS 4
 
@@ -17,6 +19,8 @@ static void scene_init(int arg_count, va_list args)
 {
     max_scene_time = settings.game.max_screen_time;
     min_scene_time = settings.game.min_screen_time;
+
+    UpgradeManager *upgrade_manager = create_upgrade_manager(create_game_data());
 }
 
 static void scene_update(float delta_time)

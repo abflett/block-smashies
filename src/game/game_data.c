@@ -15,6 +15,12 @@ GameData *create_game_data(void)
     strncpy(game_data.name, name, sizeof(game_data.name) - 1);
     game_data.name[sizeof(game_data.name) - 1] = '\0'; // Ensure null termination
 
+    game_data.num_unlocked_upgrades = 0; // No upgrades unlocked at the start
+    for (int i = 0; i < MAX_UPGRADES; i++)
+    {
+        game_data.unlocked_upgrades[i] = -1; // -1 for no upgrade
+    }
+
     game_data.player_count = 1;
     game_data.operation = 0;
     game_data.mission = 0;            // 5 missions per operation

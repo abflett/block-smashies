@@ -122,6 +122,7 @@ set(GAME_SRC
     src/game/level_manager.c
     src/game/game_slide.c
     src/game/slide_manager.c
+    src/game/upgrade_manager.c
 ) 
 
 set(INPUT_SRC

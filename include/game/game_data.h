@@ -6,6 +6,9 @@
 #include <stdbool.h>
 #include "uuid4.h"
 
+#define MAX_UPGRADES 64
+#define MAX_TEAM_NAME_LENGTH 15
+
 /*  GameData
     - Used for saving data that will remain persistant
     - Using the upgrade tree will modify and save the new game_data
@@ -64,8 +67,8 @@ typedef struct Perks
 
 typedef struct GameData
 {
-    char uuid[UUID4_LEN]; // game_data id for saving and loading
-    char name[15];        // Team name max 10 chars
+    char uuid[UUID4_LEN];            // game_data id for saving and loading
+    char name[MAX_TEAM_NAME_LENGTH]; // Team name max 10 chars
     int player_count;
     int operation;
     int mission;            // 5 missions per operation
@@ -73,6 +76,9 @@ typedef struct GameData
     int currency_collected; // total currency collected
     int high_score;         // current high score
     int lives;              // number of orb catchers/lives
+
+    int unlocked_upgrades[MAX_UPGRADES]; // Array to hold upgrade IDs
+    int num_unlocked_upgrades;
 
     // Difficulty and modifiers
     Difficulty difficulty;

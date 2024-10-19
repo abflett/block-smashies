@@ -29,8 +29,6 @@ GameSlide *create_game_slide(JSON_Object *slide_obj)
     }
 
     slide->texture = &resource_manager.get_texture(image)->texture;
-
-    TraceLog(LOG_INFO, "texture: %p", slide->texture);
     slide->audio = NULL; // Handle audio if necessary
 
     return slide;
