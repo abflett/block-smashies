@@ -3,15 +3,23 @@
 
 #include "game_data.h"
 #include "upgrade_node.h"
+#include "raylib.h"
+#include "resource.h"
+#include "input_manager.h"
 
 typedef struct UpgradeManager
 {
     GameData *game_data;
+    InputManager *input_manager;
     UpgradeNode *upgrade_nodes;
     int node_count;
 
     UpgradeNode *current_node;
     Vector2 draw_offset;
+    Vector2 camera_offset;
+    Subtexture *subtexture_hightlight_perk;
+    Subtexture *subtexture_hightlight_attribute;
+    Font *font;
 
     void (*update)(struct UpgradeManager *upgrade_manager, float delta_time);
     void (*render)(struct UpgradeManager *upgrade_manager);

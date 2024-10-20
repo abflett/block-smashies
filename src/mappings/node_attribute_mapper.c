@@ -30,6 +30,7 @@ NodeAttributeMapper *create_node_attribute_mapper(const JSON_Object *root_object
         kv_push(char *, mapper.subtexture_ids, strdup(subtexture_id));
     }
 
+    mapper.node_attribute_type_to_subtexture_id = node_attribute_type_to_subtexture_id;
     mapper.cleanup = cleanup;
     return &mapper;
 }

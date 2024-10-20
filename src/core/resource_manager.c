@@ -179,6 +179,4 @@ ResourceManager resource_manager = {
     .textures = NULL,
     .subtextures = NULL,
     .animations = NULL,
-    .brick_type_mapper = NULL,
-    .bar_level_mapper = NULL,
     .pixel7_font = {0}};

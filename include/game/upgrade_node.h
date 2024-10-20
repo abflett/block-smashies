@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include "raylib.h"
+#include "resource.h"
 
 typedef enum UpgradeNodeState
 {
@@ -13,8 +14,8 @@ typedef enum UpgradeNodeState
 
 typedef enum UpgradeType
 {
-    ATTRIBUTE,
-    PERK
+    UPGRADE_TYPE_NODE_ATTRIBUTE,
+    UPGRADE_TYPE_NODE_PERK
 } UpgradeType;
 
 typedef enum UpgradeTypeId
@@ -54,8 +55,8 @@ typedef struct UpgradeNode
     struct UpgradeNode **next;          // Array pointers of next nodes
     int num_next;                       // Number of next nodes
     UpgradeNodeState node_state;
-    Vector2 position;   // Position for rendering
-    Texture2D *texture; // Texture for rendering
+    Vector2 position;       // Position for rendering
+    Subtexture *subtexture; // Texture for rendering
 } UpgradeNode;
 
 #endif // UPGRADE_NODE_H

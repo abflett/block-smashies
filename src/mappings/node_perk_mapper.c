@@ -1,5 +1,6 @@
 #include <string.h>
 #include "node_perk_mapper.h"
+#include "raylib.h"
 
 static NodePerkMapper mapper;
 
@@ -30,6 +31,7 @@ NodePerkMapper *create_node_perk_mapper(const JSON_Object *root_object)
         kv_push(char *, mapper.subtexture_ids, strdup(subtexture_id));
     }
 
+    mapper.node_perk_type_to_subtexture_id = node_perk_type_to_subtexture_id;
     mapper.cleanup = cleanup;
     return &mapper;
 }

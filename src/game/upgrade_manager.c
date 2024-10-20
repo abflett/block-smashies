@@ -4,22 +4,32 @@
 #include "upgrade_manager.h"
 #include "parson.h"
 #include "settings.h"
+#include "resource_manager.h"
+#include "raymath.h"
 
 #include <math.h> // Make sure to include math.h for cos and sin
 
 static void update_node_states(UpgradeManager *upgrade_manager)
 {
+
     // Update purchased upgrades based on game_data
     for (int i = 0; i < upgrade_manager->game_data->num_purchased_upgrades; i++)
     {
-        upgrade_manager->upgrade_nodes[upgrade_manager->game_data->purchased_upgrades[i]].node_state = NODE_STATE_PURCHASED;
+        UpgradeNode *upgrade_node = &upgrade_manager->upgrade_nodes[upgrade_manager->game_data->purchased_upgrades[i]];
+        upgrade_node->node_state = NODE_STATE_PURCHASED;
+        UpgradeType upgrade_type = upgrade_node->type;
+
+        upgrade_node->subtexture = upgrade_type == UPGRADE_TYPE_NODE_PERK ? resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id((int)NODE_STATE_PURCHASED)) : resource_manager.get_subtexture(resource_manager.node_attribute_mapper->node_attribute_type_to_subtexture_id((int)NODE_STATE_PURCHASED));
     }
 
     // Update remaining nodes based on prerequisites
     for (int i = 0; i < upgrade_manager->node_count; i++)
     {
         UpgradeNode *node = &upgrade_manager->upgrade_nodes[i];
-        if (node->node_state == upgrade_manager->current_node->node_state || node->node_state == NODE_STATE_PURCHASED)
+        Subtexture *subtexture_perk = resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id((int)NODE_STATE_LOCKED));
+        Subtexture *subtexture_attribute = resource_manager.get_subtexture(resource_manager.node_attribute_mapper->node_attribute_type_to_subtexture_id((int)NODE_STATE_LOCKED));
+
+        if (node->node_state == NODE_STATE_PURCHASED)
         {
             continue;
         }
@@ -33,6 +43,9 @@ static void update_node_states(UpgradeManager *upgrade_manager)
                 break;
             }
         }
+
+        UpgradeType upgrade_type = node->type;
+        node->subtexture = upgrade_type == UPGRADE_TYPE_NODE_PERK ? resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id((int)node->node_state)) : resource_manager.get_subtexture(resource_manager.node_attribute_mapper->node_attribute_type_to_subtexture_id((int)node->node_state));
     }
 }
 
@@ -187,13 +200,84 @@ static Color get_node_color(UpgradeNode *node)
 
 static void update(UpgradeManager *upgrade_manager, float delta_time)
 {
+
+    Vector2 temp_position = upgrade_manager->current_node->position;
+
+    // Todo: use to change the upgrade manager offset
+
+    bool moved = false;
+    for (int player = 0; player < upgrade_manager->game_data->player_count; player++)
+    {
+        InputManager *input_manager = upgrade_manager->input_manager;
+        InputMapping *input = input_manager->get_player_input(player);
+        int mapping = input_manager->player[player];
+
+        if (input_manager->key_debounce(mapping, input->action_k_UP))
+        {
+            TraceLog(LOG_INFO, "UP");
+            temp_position.y -= 15;
+            moved = true;
+            break;
+        }
+        if (input_manager->key_debounce(mapping, input->action_k_DOWN))
+        {
+            TraceLog(LOG_INFO, "DOWN");
+            temp_position.y += 15;
+            moved = true;
+            break;
+        }
+        if (input_manager->key_debounce(mapping, input->action_k_LEFT))
+        {
+            TraceLog(LOG_INFO, "LEFT");
+            temp_position.x -= 15;
+            moved = true;
+            break;
+        }
+        if (input_manager->key_debounce(mapping, input->action_k_RIGHT))
+        {
+            TraceLog(LOG_INFO, "RIGHT");
+            temp_position.x += 15;
+            moved = true;
+            break;
+        }
+    }
+
+    if (moved)
+    {
+        // upgrade_manager->current_node->position = temp_position;
+
+        UpgradeNode *closest_node = upgrade_manager->current_node;
+        float closest_distance = 99999999.99f;
+
+        for (int i = 0; i < upgrade_manager->node_count; i++)
+        {
+            UpgradeNode *working_node = &upgrade_manager->upgrade_nodes[i];
+            float working_distance = Vector2Distance(temp_position, upgrade_manager->upgrade_nodes[i].position);
+
+            if (working_distance < closest_distance && upgrade_manager->current_node != working_node)
+            {
+                closest_distance = working_distance;
+                closest_node = working_node;
+            }
+        }
+
+        upgrade_manager->current_node = closest_node;
+
+        Vector2 center_position = upgrade_manager->upgrade_nodes[0].position;
+        upgrade_manager->camera_offset = (Vector2){upgrade_manager->current_node->position.x - center_position.x, upgrade_manager->current_node->position.y - center_position.y};
+    }
+}
+
+static void display_details(UpgradeManager *upgrade_manager)
+{
+    // Todo: display details of the current node
 }
 
 static void render(UpgradeManager *upgrade_manager)
 {
     ClearBackground(settings.colors.blue_01);
     // Set the draw offset
-    Vector2 offset = upgrade_manager->draw_offset;
+    Vector2 offset = Vector2Subtract(upgrade_manager->draw_offset, upgrade_manager->camera_offset);
 
     // Draw connections between nodes and their prerequisites, this first so lines are behind nodes
     for (int i = 0; i < upgrade_manager->node_count; i++)
@@ -202,8 +286,10 @@ static void render(UpgradeManager *upgrade_manager)
         for (int j = 0; j < node->num_prerequisites; j++)
         {
             UpgradeNode *prerequisite = node->prerequisites[j];
-            DrawLine((int)(prerequisite->position.x + offset.x), (int)(prerequisite->position.y + offset.y),
-                     (int)(node->position.x + offset.x), (int)(node->position.y + offset.y), settings.colors.blue_02);
+
+            // Todo change line thickness and design
+            DrawLineEx((Vector2){(prerequisite->position.x + offset.x), (prerequisite->position.y + offset.y)},
+                       (Vector2){(node->position.x + offset.x), (node->position.y + offset.y)}, 2.0f, settings.colors.blue_02);
         }
     }
 
@@ -211,12 +297,17 @@ static void render(UpgradeManager *upgrade_manager)
     for (int i = 0; i < upgrade_manager->node_count; i++)
     {
         UpgradeNode *node = &upgrade_manager->upgrade_nodes[i];
+        // draw node highlight
+        if (node == upgrade_manager->current_node)
+        {
+            Subtexture *subtexture_highlight = node->type == UPGRADE_TYPE_NODE_PERK ? upgrade_manager->subtexture_hightlight_perk : upgrade_manager->subtexture_hightlight_attribute;
+            Vector2 highlight_size = (Vector2){subtexture_highlight->src.width, subtexture_highlight->src.height};
+            DrawTexturePro(subtexture_highlight->texture_resource->texture, subtexture_highlight->src, (Rectangle){node->position.x + offset.x - highlight_size.x / 2 + 1, node->position.y + offset.y - highlight_size.y / 2, highlight_size.x, highlight_size.y}, (Vector2){1, 0}, 0, WHITE);
+        }
 
-        // Draw the node circle
-        Color color = get_node_color(node);
-        Vector2 size = (Vector2){20, 20};
-        DrawRectangleV((Vector2){node->position.x + offset.x - size.x / 2, node->position.y + offset.y - size.y / 2}, size, color);
-        // DrawCircleV((Vector2){node->position.x + offset.x, node->position.y + offset.y}, 10, color);
+        // draw node body
+        Vector2 size = (Vector2){node->subtexture->src.width, node->subtexture->src.height};
+        DrawTexturePro(node->subtexture->texture_resource->texture, node->subtexture->src, (Rectangle){node->position.x + offset.x - size.x / 2 + 1, node->position.y + offset.y - size.y / 2, size.x, size.y}, (Vector2){1, 0}, 0, WHITE);
 
         // Draw the node ID in the center of the circle
         const char *id_text = TextFormat("%d", node->id);
@@ -283,6 +374,9 @@ UpgradeManager *create_upgrade_manager(GameData *game_data)
     upgrade_manager->node_count = (int)json_array_get_count(upgrades_array);
     upgrade_manager->upgrade_nodes = malloc(sizeof(UpgradeNode) * upgrade_manager->node_count);
 
+    Subtexture *subtexture_perk = resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id(0));
+    Subtexture *subtexture_attribute = resource_manager.get_subtexture(resource_manager.node_attribute_mapper->node_attribute_type_to_subtexture_id((int)NODE_STATE_LOCKED));
+
     for (int i = 0; i < upgrade_manager->node_count; i++)
     {
         JSON_Object *upgrade_object = json_array_get_object(upgrades_array, i);
@@ -296,7 +390,7 @@ UpgradeManager *create_upgrade_manager(GameData *game_data)
         upgrade_manager->upgrade_nodes[i].cost = (int)json_object_get_number(upgrade_object, "cost");
         upgrade_manager->upgrade_nodes[i].node_state = NODE_STATE_LOCKED;
         upgrade_manager->upgrade_nodes[i].position = (Vector2){0, 0}; // Initialize position
-        upgrade_manager->upgrade_nodes[i].texture = NULL;
+        upgrade_manager->upgrade_nodes[i].subtexture = upgrade_manager->upgrade_nodes[i].type == UPGRADE_TYPE_NODE_PERK ? subtexture_perk : subtexture_attribute;
 
         // Handle prerequisites
         JSON_Array *prerequisites_array = json_object_get_array(upgrade_object, "prerequisites");
@@ -321,7 +415,12 @@ UpgradeManager *create_upgrade_manager(GameData *game_data)
 
     // Set the current node to the first node (optional)
     upgrade_manager->current_node = &upgrade_manager->upgrade_nodes[3]; // Todo: set 3 for testing
-    upgrade_manager->draw_offset = (Vector2){160, 60};
+    upgrade_manager->draw_offset = (Vector2){160, 90};
+    upgrade_manager->camera_offset = (Vector2){0, 0};
+    upgrade_manager->subtexture_hightlight_perk = resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id(3));
+    upgrade_manager->subtexture_hightlight_attribute = resource_manager.get_subtexture(resource_manager.node_attribute_mapper->node_attribute_type_to_subtexture_id(3));
+    upgrade_manager->input_manager = get_input_manager();
+    upgrade_manager->font = resource_manager.get_pixel7_font();
 
     free(root_value);
 
