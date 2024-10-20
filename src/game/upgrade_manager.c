@@ -165,7 +165,7 @@ static void update_node_positions(UpgradeManager *upgrade_manager, Vector2 cente
                     float total_spread = angle_offset * (nodes_count - 1);
 
                     // Calculate the starting angle offset to center the spread
-                    float start_offset = -total_spread / 2.0f;
+                    float start_offset = -total_spread * 0.5f;
 
                     // Calculate the final angle for this node
                     float node_angle_offset = start_offset + (angle_offset * node);
@@ -200,10 +200,7 @@ static Color get_node_color(UpgradeNode *node)
 
 static void update(UpgradeManager *upgrade_manager, float delta_time)
 {
-
     Vector2 temp_position = upgrade_manager->current_node->position;
-
-    // Todo: use to change the upgrade manager offset
 
     bool moved = false;
     for (int player = 0; player < upgrade_manager->game_data->player_count; player++)
@@ -214,28 +211,24 @@ static void update(UpgradeManager *upgrade_manager, float delta_time)
 
         if (input_manager->key_debounce(mapping, input->action_k_UP))
         {
-            TraceLog(LOG_INFO, "UP");
             temp_position.y -= 15;
             moved = true;
             break;
         }
         if (input_manager->key_debounce(mapping, input->action_k_DOWN))
         {
-            TraceLog(LOG_INFO, "DOWN");
             temp_position.y += 15;
             moved = true;
             break;
         }
         if (input_manager->key_debounce(mapping, input->action_k_LEFT))
         {
-            TraceLog(LOG_INFO, "LEFT");
             temp_position.x -= 15;
             moved = true;
             break;
         }
         if (input_manager->key_debounce(mapping, input->action_k_RIGHT))
         {
-            TraceLog(LOG_INFO, "RIGHT");
             temp_position.x += 15;
             moved = true;
             break;
@@ -244,11 +237,9 @@ static void update(UpgradeManager *upgrade_manager, float delta_time)
 
     if (moved)
     {
-        // upgrade_manager->current_node->position = temp_position;
-
+        // set and move to closest node
         UpgradeNode *closest_node = upgrade_manager->current_node;
         float closest_distance = 99999999.99f;
-
         for (int i = 0; i < upgrade_manager->node_count; i++)
         {
             UpgradeNode *working_node = &upgrade_manager->upgrade_nodes[i];
@@ -260,9 +251,9 @@ static void update(UpgradeManager *upgrade_manager, float delta_time)
                 closest_node = working_node;
             }
         }
-
         upgrade_manager->current_node = closest_node;
 
+        // move camera based on new current node
         Vector2 center_position = upgrade_manager->upgrade_nodes[0].position;
         upgrade_manager->camera_offset = (Vector2){upgrade_manager->current_node->position.x - center_position.x, upgrade_manager->current_node->position.y - center_position.y};
     }
@@ -270,7 +261,35 @@ static void update(UpgradeManager *upgrade_manager, float delta_time)
 
 static void display_details(UpgradeManager *upgrade_manager)
 {
-    // Todo: display details of the current node
+    UpgradeNode *node = upgrade_manager->current_node;
+
+    const char *cost_text;
+    switch (node->node_state)
+    {
+    case NODE_STATE_LOCKED:
+        cost_text = "Locked";
+        break;
+    case NODE_STATE_UNLOCKED:
+        cost_text = TextFormat("Cost: %d", node->cost);
+        break;
+    case NODE_STATE_PURCHASED:
+        cost_text = "Purchased";
+        break;
+    default:
+        break;
+    }
+
+    const char *node_type_text = TextFormat("%s: %s", node->type == UPGRADE_TYPE_NODE_PERK ? "Perk" : "Attribute", node->name);
+    DrawTextEx(*upgrade_manager->font, node_type_text, (Vector2){44, 136}, 7, 0.0f, settings.colors.blue_04);
+
+    DrawTextEx(*upgrade_manager->font, node->description, (Vector2){44, 151}, 7, 0.0f, settings.colors.blue_04);
+
+    Vector2 cost_text_size = MeasureTextEx(*upgrade_manager->font, cost_text, 7, 0.0f);
+    DrawTextEx(*upgrade_manager->font, cost_text, (Vector2){277 - cost_text_size.x, 136}, 7, 0.0f, settings.colors.blue_04);
+
+    const char *node_id_text = TextFormat("Id: %d", node->id);
+    Vector2 id_text_size = MeasureTextEx(*upgrade_manager->font, node_id_text, 7, 0.0f);
+    DrawTextEx(*upgrade_manager->font, node_id_text, (Vector2){277 - id_text_size.x, 161}, 7, 0.0f, settings.colors.blue_04);
 }
 
 static void render(UpgradeManager *upgrade_manager)
@@ -287,7 +306,6 @@ static void render(UpgradeManager *upgrade_manager)
         {
             UpgradeNode *prerequisite = node->prerequisites[j];
 
-            // Todo change line thickness and design
             DrawLineEx((Vector2){(prerequisite->position.x + offset.x), (prerequisite->position.y + offset.y)},
                        (Vector2){(node->position.x + offset.x), (node->position.y + offset.y)}, 2.0f, settings.colors.blue_02);
         }
@@ -302,20 +320,26 @@ static void render(UpgradeManager *upgrade_manager)
         {
             Subtexture *subtexture_highlight = node->type == UPGRADE_TYPE_NODE_PERK ? upgrade_manager->subtexture_hightlight_perk : upgrade_manager->subtexture_hightlight_attribute;
             Vector2 highlight_size = (Vector2){subtexture_highlight->src.width, subtexture_highlight->src.height};
-            DrawTexturePro(subtexture_highlight->texture_resource->texture, subtexture_highlight->src, (Rectangle){node->position.x + offset.x - highlight_size.x / 2 + 1, node->position.y + offset.y - highlight_size.y / 2, highlight_size.x, highlight_size.y}, (Vector2){1, 0}, 0, WHITE);
+            DrawTexturePro(subtexture_highlight->texture_resource->texture, subtexture_highlight->src, (Rectangle){node->position.x + offset.x - highlight_size.x * 0.5f + 1, node->position.y + offset.y - highlight_size.y * 0.5f, highlight_size.x, highlight_size.y}, (Vector2){1, 0}, 0, WHITE);
         }
 
         // draw node body
         Vector2 size = (Vector2){node->subtexture->src.width, node->subtexture->src.height};
-        DrawTexturePro(node->subtexture->texture_resource->texture, node->subtexture->src, (Rectangle){node->position.x + offset.x - size.x / 2 + 1, node->position.y + offset.y - size.y / 2, size.x, size.y}, (Vector2){1, 0}, 0, WHITE);
+        DrawTexturePro(node->subtexture->texture_resource->texture, node->subtexture->src, (Rectangle){node->position.x + offset.x - size.x * 0.5f + 1, node->position.y + offset.y - size.y * 0.5f, size.x, size.y}, (Vector2){1, 0}, 0, WHITE);
 
         // Draw the node ID in the center of the circle
         const char *id_text = TextFormat("%d", node->id);
-        int text_width = MeasureText(id_text, 10);                                                                                 // Measure text width to center it
-        DrawText(id_text, (int)(node->position.x + offset.x - text_width / 2), (int)(node->position.y + offset.y - 5), 10, BLACK); // Adjust to center the text
+        Vector2 id_text_size = MeasureTextEx(*upgrade_manager->font, id_text, 7, 0.0f);
+        DrawTextEx(*upgrade_manager->font, id_text, (Vector2){(float)(int)(node->position.x + offset.x - id_text_size.x * 0.5f + 1), (float)(int)(node->position.y + offset.y - id_text_size.y * 0.5f)}, 7, 0.0f, settings.colors.blue_05); // Measure text width to center it
     }
+
+    // Draw the upgrade display
+    DrawTexture(*upgrade_manager->upgrade_display, 0, 0, WHITE);
+
+    display_details(upgrade_manager);
 }
 
+// Todo: remove debugging printing function
 static void print_nodes(UpgradeManager *upgrade_manager)
 {
     for (int i = 0; i < upgrade_manager->node_count; i++)
@@ -374,7 +398,8 @@ UpgradeManager *create_upgrade_manager(GameData *game_data)
     upgrade_manager->node_count = (int)json_array_get_count(upgrades_array);
     upgrade_manager->upgrade_nodes = malloc(sizeof(UpgradeNode) * upgrade_manager->node_count);
 
-    Subtexture *subtexture_perk = resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id(0));
+    // default locked textures
+    Subtexture *subtexture_perk = resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id((int)NODE_STATE_LOCKED));
     Subtexture *subtexture_attribute = resource_manager.get_subtexture(resource_manager.node_attribute_mapper->node_attribute_type_to_subtexture_id((int)NODE_STATE_LOCKED));
 
     for (int i = 0; i < upgrade_manager->node_count; i++)
@@ -392,7 +417,7 @@ UpgradeManager *create_upgrade_manager(GameData *game_data)
         upgrade_manager->upgrade_nodes[i].position = (Vector2){0, 0}; // Initialize position
         upgrade_manager->upgrade_nodes[i].subtexture = upgrade_manager->upgrade_nodes[i].type == UPGRADE_TYPE_NODE_PERK ? subtexture_perk : subtexture_attribute;
 
-        // Handle prerequisites
+        // assign prerequisites
         JSON_Array *prerequisites_array = json_object_get_array(upgrade_object, "prerequisites");
         upgrade_manager->upgrade_nodes[i].num_prerequisites = (int)json_array_get_count(prerequisites_array);
         upgrade_manager->upgrade_nodes[i].prerequisites = malloc(sizeof(UpgradeNode *) * upgrade_manager->upgrade_nodes[i].num_prerequisites);
@@ -402,7 +427,7 @@ UpgradeManager *create_upgrade_manager(GameData *game_data)
             upgrade_manager->upgrade_nodes[i].prerequisites[j] = &upgrade_manager->upgrade_nodes[prerequisite_index];
         }
 
-        // Handle next nodes
+        // assign next nodes
         JSON_Array *next_array = json_object_get_array(upgrade_object, "next");
         upgrade_manager->upgrade_nodes[i].num_next = (int)json_array_get_count(next_array);
         upgrade_manager->upgrade_nodes[i].next = malloc(sizeof(UpgradeNode *) * upgrade_manager->upgrade_nodes[i].num_next);
@@ -414,13 +439,14 @@ UpgradeManager *create_upgrade_manager(GameData *game_data)
     }
 
     // Set the current node to the first node (optional)
-    upgrade_manager->current_node = &upgrade_manager->upgrade_nodes[3]; // Todo: set 3 for testing
-    upgrade_manager->draw_offset = (Vector2){160, 90};
-    upgrade_manager->camera_offset = (Vector2){0, 0};
-    upgrade_manager->subtexture_hightlight_perk = resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id(3));
-    upgrade_manager->subtexture_hightlight_attribute = resource_manager.get_subtexture(resource_manager.node_attribute_mapper->node_attribute_type_to_subtexture_id(3));
+    upgrade_manager->current_node = &upgrade_manager->upgrade_nodes[0];                                                                                                  // set to root
+    upgrade_manager->draw_offset = (Vector2){settings.game.target_size.x * 0.5f, 59};                                                                                    // center of target area
+    upgrade_manager->camera_offset = (Vector2){0, 0};                                                                                                                    // pan camera based on this offset
+    upgrade_manager->subtexture_hightlight_perk = resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id(3));                // set highlight subtexture
+    upgrade_manager->subtexture_hightlight_attribute = resource_manager.get_subtexture(resource_manager.node_attribute_mapper->node_attribute_type_to_subtexture_id(3)); // set highlight subtexture
     upgrade_manager->input_manager = get_input_manager();
     upgrade_manager->font = resource_manager.get_pixel7_font();
+    upgrade_manager->upgrade_display = &resource_manager.get_texture("upgrade-display")->texture;
 
     free(root_value);
 
@@ -429,7 +455,7 @@ UpgradeManager *create_upgrade_manager(GameData *game_data)
     upgrade_manager->cleanup = cleanup;
     upgrade_manager->print_nodes = print_nodes;
 
-    update_node_positions(upgrade_manager, (Vector2){0, 0}, 30);
-    update_node_states(upgrade_manager);
+    update_node_positions(upgrade_manager, (Vector2){0, 0}, 30); // assign positions to all the upgrade nodes
+    update_node_states(upgrade_manager);                         // set states and textures based on prerequests and if purchased
     return upgrade_manager;
 }

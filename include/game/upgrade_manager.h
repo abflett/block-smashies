@@ -19,6 +19,7 @@ typedef struct UpgradeManager
     Vector2 camera_offset;
     Subtexture *subtexture_hightlight_perk;
     Subtexture *subtexture_hightlight_attribute;
+    Texture *upgrade_display;
     Font *font;
 
     void (*update)(struct UpgradeManager *upgrade_manager, float delta_time);
