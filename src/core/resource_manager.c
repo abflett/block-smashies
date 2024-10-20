@@ -25,6 +25,8 @@ static void rm_load_resource_file(void)
     resource_manager.ship_color_mapper = create_ship_color_mapper(root_object);
     resource_manager.shield_type_mapper = create_shield_type_mapper(root_object);
     resource_manager.thruster_level_mapper = create_thruster_level_mapper(root_object);
+    resource_manager.node_perk_mapper = create_node_perk_mapper(root_object);
+    resource_manager.node_attribute_mapper = create_node_attribute_mapper(root_object);
 
     for (size_t i = 0; i < (int)json_array_get_count(textures_array); i++)
     {
@@ -154,12 +156,15 @@ static void rm_cleanup(void)
     resource_manager.animations = NULL;
     resource_manager.textures = NULL;
 
+    // cleanup mappers
     resource_manager.brick_type_mapper->cleanup();
     resource_manager.bar_level_mapper->cleanup();
     resource_manager.nanite_type_mapper->cleanup();
     resource_manager.shield_type_mapper->cleanup();
     resource_manager.ship_color_mapper->cleanup();
     resource_manager.thruster_level_mapper->cleanup();
+    resource_manager.node_perk_mapper->cleanup();
+    resource_manager.node_attribute_mapper->cleanup();
 
     UnloadFont(resource_manager.pixel7_font);
 }

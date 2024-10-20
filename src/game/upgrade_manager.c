@@ -143,7 +143,7 @@ static void update_node_positions(UpgradeManager *upgrade_manager, Vector2 cente
                     float angle_to_prerequisite = (float)atan2(prerequisite->position.y - center.y, prerequisite->position.x - center.x);
 
                     // Calculate the desired arc length between nodes (e.g., 30 pixels)
-                    float desired_arc_length = 30.0f;
+                    float desired_arc_length = radius_increment;
 
                     // Calculate the angle offset based on the desired arc length and current radius
                     float angle_offset = desired_arc_length / radius;

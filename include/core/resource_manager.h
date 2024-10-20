@@ -10,6 +10,8 @@
 #include "ship_color_mapper.h"
 #include "shield_type_mapper.h"
 #include "thruster_level_mapper.h"
+#include "node_perk_mapper.h"
+#include "node_attribute_mapper.h"
 
 typedef struct ResourceManager
 {
@@ -19,6 +21,8 @@ typedef struct ResourceManager
     ShipColorMapper *ship_color_mapper;
     ShieldTypeMapper *shield_type_mapper;
     ThrusterLevelMapper *thruster_level_mapper;
+    NodePerkMapper *node_perk_mapper;
+    NodeAttributeMapper *node_attribute_mapper;
 
     // Function pointers for managing resources
     void (*load_resource_file)(void);                // Load the JSON file and store resources in memory

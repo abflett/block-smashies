@@ -84,6 +84,8 @@ set(MAPPINGS_SRC
     src/mappings/ship_color_mapper.c
     src/mappings/thruster_level_mapper.c
     src/mappings/shield_type_mapper.c
+    src/mappings/node_perk_mapper.c
+    src/mappings/node_attribute_mapper.c
 )
 
 # Source files for scenes
