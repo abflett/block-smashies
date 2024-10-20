@@ -8,8 +8,7 @@ typedef enum UpgradeNodeState
 {
     NODE_STATE_LOCKED,
     NODE_STATE_UNLOCKED,
-    NODE_STATE_PURCHASED,
-    NODE_STATE_SELECTED
+    NODE_STATE_PURCHASED
 } UpgradeNodeState;
 
 typedef enum UpgradeType

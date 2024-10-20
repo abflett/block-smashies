@@ -67,8 +67,8 @@ typedef struct Perks
 
 typedef struct GameData
 {
-    char uuid[UUID4_LEN];            // game_data id for saving and loading
-    char name[MAX_TEAM_NAME_LENGTH]; // Team name max 10 chars
+    char uuid[UUID4_LEN]; // game_data id for saving and loading
+    char name[MAX_TEAM_NAME_LENGTH];
     int player_count;
     int operation;
     int mission;            // 5 missions per operation
@@ -77,8 +77,8 @@ typedef struct GameData
     int high_score;         // current high score
     int lives;              // number of orb catchers/lives
 
-    int unlocked_upgrades[MAX_UPGRADES]; // Array to hold upgrade IDs
-    int num_unlocked_upgrades;
+    int purchased_upgrades[MAX_UPGRADES]; // Array to hold upgrade IDs
+    int num_purchased_upgrades;
 
     // Difficulty and modifiers
     Difficulty difficulty;

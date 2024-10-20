@@ -9,36 +9,28 @@
 
 static void update_node_states(UpgradeManager *upgrade_manager)
 {
-    // first update the purchased upgrades based on game_data
-    for (int i = 0; i < upgrade_manager->game_data->num_unlocked_upgrades; i++)
+    // Update purchased upgrades based on game_data
+    for (int i = 0; i < upgrade_manager->game_data->num_purchased_upgrades; i++)
     {
-        TraceLog(LOG_INFO, "Purchased upgrade %d", upgrade_manager->game_data->unlocked_upgrades[i]);
-        upgrade_manager->upgrade_nodes[upgrade_manager->game_data->unlocked_upgrades[i]].node_state = NODE_STATE_PURCHASED;
-        TraceLog(LOG_INFO, "Name: %s, Id: %d", upgrade_manager->upgrade_nodes[upgrade_manager->game_data->unlocked_upgrades[i]].name, upgrade_manager->upgrade_nodes[upgrade_manager->game_data->unlocked_upgrades[i]].id);
+        upgrade_manager->upgrade_nodes[upgrade_manager->game_data->purchased_upgrades[i]].node_state = NODE_STATE_PURCHASED;
     }
 
-    // then update nodes based on the purchased upgrades
+    // Update remaining nodes based on prerequisites
     for (int i = 0; i < upgrade_manager->node_count; i++)
     {
         UpgradeNode *node = &upgrade_manager->upgrade_nodes[i];
-        TraceLog(LOG_INFO, "Node %d: %s, State: %d", node->id, node->name, node->node_state);
+        if (node->node_state == upgrade_manager->current_node->node_state || node->node_state == NODE_STATE_PURCHASED)
+        {
+            continue;
+        }
+
+        node->node_state = NODE_STATE_UNLOCKED;
         for (int j = 0; j < node->num_prerequisites; j++)
         {
-            // Todo: if one of the prerequisites is not purchased, then the node is locked
-
-            if (node->node_state == NODE_STATE_PURCHASED)
+            if (node->prerequisites[j]->node_state != NODE_STATE_PURCHASED)
             {
-                continue;
-            }
-
-            if (node->prerequisites[j]->node_state == NODE_STATE_PURCHASED && node->node_state != NODE_STATE_SELECTED)
-            {
-                node->node_state = NODE_STATE_UNLOCKED;
-                TraceLog(LOG_INFO, "Unlocked");
-            }
-            else
-            {
-                TraceLog(LOG_INFO, "Locked");
+                node->node_state = NODE_STATE_LOCKED;
+                break;
             }
         }
     }
@@ -150,12 +142,21 @@ static void update_node_positions(UpgradeManager *upgrade_manager, Vector2 cente
                     UpgradeNode *prerequisite = current_node->prerequisites[0];
                     float angle_to_prerequisite = (float)atan2(prerequisite->position.y - center.y, prerequisite->position.x - center.x);
 
-                    // Calculate the angle offset based on the number of nodes
-                    float angle_offset_per_node = (15.0f * (nodes_count - 1)) * 0.5f; // Half the total spread
-                    float node_angle_offset = angle_offset_per_node - (15.0f * node); // Adjust for current node index
-                    float angle_offset_radians = node_angle_offset * (PI / 180.0f);   // Convert to radians
-                    // Calculate the final angle without an if-else
-                    float final_angle = angle_to_prerequisite + angle_offset_radians;
+                    // Calculate the desired arc length between nodes (e.g., 30 pixels)
+                    float desired_arc_length = 30.0f;
+
+                    // Calculate the angle offset based on the desired arc length and current radius
+                    float angle_offset = desired_arc_length / radius;
+
+                    // Calculate the total spread based on the number of nodes
+                    float total_spread = angle_offset * (nodes_count - 1);
+
+                    // Calculate the starting angle offset to center the spread
+                    float start_offset = -total_spread / 2.0f;
+
+                    // Calculate the final angle for this node
+                    float node_angle_offset = start_offset + (angle_offset * node);
+                    float final_angle = angle_to_prerequisite + node_angle_offset;
 
                     // Set the node's position based on the final angle around the prerequisite
                     current_node->position.x = (float)(center.x + (radius * cos(final_angle)));
@@ -179,9 +180,6 @@ static Color get_node_color(UpgradeNode *node)
         break;
     case NODE_STATE_PURCHASED:
         color = settings.colors.blue_03;
-        break;
-    case NODE_STATE_SELECTED:
-        color = settings.colors.blue_05;
         break;
     }
     return color;
@@ -216,7 +214,9 @@ static void render(UpgradeManager *upgrade_manager)
 
         // Draw the node circle
         Color color = get_node_color(node);
-        DrawCircleV((Vector2){node->position.x + offset.x, node->position.y + offset.y}, 10, color);
+        Vector2 size = (Vector2){20, 20};
+        DrawRectangleV((Vector2){node->position.x + offset.x - size.x / 2, node->position.y + offset.y - size.y / 2}, size, color);
+        // DrawCircleV((Vector2){node->position.x + offset.x, node->position.y + offset.y}, 10, color);
 
         // Draw the node ID in the center of the circle
         const char *id_text = TextFormat("%d", node->id);
@@ -321,7 +321,6 @@ UpgradeManager *create_upgrade_manager(GameData *game_data)
 
     // Set the current node to the first node (optional)
     upgrade_manager->current_node = &upgrade_manager->upgrade_nodes[3]; // Todo: set 3 for testing
-    upgrade_manager->current_node->node_state = NODE_STATE_SELECTED;    // set selected for testing
     upgrade_manager->draw_offset = (Vector2){160, 60};
 
     free(root_value);
