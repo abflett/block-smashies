@@ -86,6 +86,7 @@ set(MAPPINGS_SRC
     src/mappings/shield_type_mapper.c
     src/mappings/node_perk_mapper.c
     src/mappings/node_attribute_mapper.c
+    src/mappings/upgrade_icon_mapper.c
 )
 
 # Source files for scenes

@@ -12,6 +12,7 @@
 #include "thruster_level_mapper.h"
 #include "node_perk_mapper.h"
 #include "node_attribute_mapper.h"
+#include "upgrade_icon_mapper.h"
 
 typedef struct ResourceManager
 {
@@ -23,6 +24,7 @@ typedef struct ResourceManager
     ThrusterLevelMapper *thruster_level_mapper;
     NodePerkMapper *node_perk_mapper;
     NodeAttributeMapper *node_attribute_mapper;
+    UpgradeIconMapper *upgrade_icon_mapper;
 
     // Function pointers for managing resources
     void (*load_resource_file)(void);                // Load the JSON file and store resources in memory
