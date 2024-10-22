@@ -36,21 +36,21 @@ typedef struct Ship
     float pulse_active_timer;
     float boost_active_timer;
 
-    float *force;          // general movement force
-    float *friction;       // ball manipulation
-    float *damping;        // de-acceleration - affects max velocity as well
+    float *ship_force;     // general movement ship_force
+    float *orb_control;    // ball manipulation
+    float *ship_damping;   // de-acceleration - affects max velocity as well
     float *max_energy;     // max_energy
-    float *boost_force;    // boost force - horizontal burst
+    float *boost_force;    // boost ship_force - horizontal burst
     float *boost_cooldown; // boost cooldown timer < is better
-    float *pulse_force;    // boost force - vertical burst
+    float *pulse_force;    // boost ship_force - vertical burst
     float *pulse_cooldown; // pulse cooldown timer < is better
     float *heat;           // heat buildup % < is no heat
 
     float *phase_shift;
-    bool *orb_shot;
+    float *orb_shot;
 
     int *ship_color; // from game_data
-    int *shield_level;
+    int *shield_strength;
 
     // ship input commands
     void (*move_ship)(struct Ship *ship, int direction);

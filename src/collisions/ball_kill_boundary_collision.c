@@ -22,13 +22,13 @@ void ball_kill_boundary_collision(Ball *ball, KillBoundary *kill_boundary, GameC
         }
     }
 
-    // If no active balls remain, decrement lives
+    // If no active balls remain, decrement orb_retrievers
     if (active_ball_count == 0)
     {
-        context->game_status->lives--;
+        context->game_status->orb_retrievers--;
 
-        // Check if lives are exhausted, and set game over if true
-        if (context->game_status->lives <= 0)
+        // Check if orb_retrievers are exhausted, and set game over if true
+        if (context->game_status->orb_retrievers <= 0)
         {
             context->game_status->game_over = true;
         }

@@ -3,7 +3,7 @@
 
 void ball_brick_collision(Ball *ball, Brick *brick, GameContext *context)
 {
-    brick->health -= *ball->power;
+    brick->health -= *ball->orb_power;
     if (brick->health <= 0)
     {
         brick->disable(brick);

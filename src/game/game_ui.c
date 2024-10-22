@@ -223,7 +223,7 @@ static void render_before_content_ui(void)
     DrawTexture(*score_ui, 18, 36, WHITE);
     DrawTextEx(*resource_manager.get_pixel7_font(), score_text, (Vector2){26.0f, 36.0f}, 7, 0, settings.colors.screen_text_color);
 
-    for (int i = 0; i < status->lives; i++)
+    for (int i = 0; i < status->orb_retrievers; i++)
     {
         DrawTexture(resource_manager.get_texture("life-ui")->texture, (i * 9) + 18, 48, WHITE);
     }

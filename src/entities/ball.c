@@ -144,11 +144,11 @@ Ball *create_ball(GameData *game_data, b2WorldId world_id, b2Vec2 position, b2Ve
 
     set_default_ball_trails(ball->balltrails, ball->position, ball->radius, ball->texture);
 
-    ball->power = &game_data->ball.power;
+    ball->orb_power = &game_data->orb_attributes.orb_power;
     ball->phase_nova = &game_data->perks.phase_shift;
     ball->super_nova = &game_data->perks.super_nova;
-    ball->max_velocity = &game_data->ball.max_velocity;
-    ball->min_velocity = &game_data->ball.min_velocity;
+    ball->max_velocity = &game_data->orb_attributes.max_velocity;
+    ball->min_velocity = &game_data->orb_attributes.min_velocity;
 
     // Create the Box2D body definition
     b2BodyDef bodyDef = b2DefaultBodyDef();

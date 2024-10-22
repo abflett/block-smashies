@@ -11,9 +11,9 @@ typedef struct GameStatus
     int enemy_count;
     int score;
     float currency;
-    int lives;
+    int orb_retrievers;
     float game_time;
-    bool game_over; // flag true when no more lives
+    bool game_over; // flag true when no more orb_retrievers
     bool is_hold;   // hold or play starting animation sequence
     bool is_pause;  // pause game on menu state etc
     void (*update)(float delta_time);

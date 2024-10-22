@@ -10,7 +10,7 @@ typedef struct ShipShield
 {
     int *segments;
     int previous_segments;
-    int *shield_level;
+    int *shield_strength;
     int previous_shield_level;
     b2Vec2 *position;
     Subtexture *subtexture;
@@ -19,6 +19,6 @@ typedef struct ShipShield
     void (*cleanup)(struct ShipShield *ship_shield);
 } ShipShield;
 
-ShipShield *create_ship_shield(int *segments, int *shield_level, b2Vec2 *position);
+ShipShield *create_ship_shield(int *segments, int *shield_strength, b2Vec2 *position);
 
 #endif

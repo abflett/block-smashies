@@ -144,7 +144,7 @@ static void activate_ship_physics(Ship *ship, GameContext *game_context)
 // Ship input commands
 static void move_ship(Ship *ship, int direction)
 {
-    b2Body_ApplyForceToCenter(ship->body, (b2Vec2){direction * (*ship->force), 0.0f}, true);
+    b2Body_ApplyForceToCenter(ship->body, (b2Vec2){direction * (*ship->ship_force), 0.0f}, true);
 }
 
 static void boost_ship(Ship *ship, int direction)
@@ -193,21 +193,21 @@ Ship *create_ship(int *player, GameData *game_data, b2Vec2 position)
     ship->orb_shot = &game_data->perks.orb_shot;
 
     // new paddle attributes
-    ship->force = &game_data->paddle.force;                   // general movement force
-    ship->friction = &game_data->paddle.friction;             // ball manipulation
-    ship->damping = &game_data->paddle.damping;               // de-acceleration - affects max velocity as well
-    ship->max_energy = &game_data->paddle.max_energy;         // max_energy
-    ship->boost_force = &game_data->paddle.boost_force;       // boost force - horizontal burst
-    ship->boost_cooldown = &game_data->paddle.boost_cooldown; // boost cooldown timer < is better
-    ship->pulse_force = &game_data->paddle.pulse_force;       // boost force - vertical burst
-    ship->pulse_cooldown = &game_data->paddle.pulse_cooldown; // pulse cooldown timer < is better
-    ship->heat = &game_data->paddle.max_heat;                 // heat buildup % < is no heat
+    ship->ship_force = &game_data->ship_attributes.ship_force;         // general movement ship_force
+    ship->orb_control = &game_data->ship_attributes.orb_control;       // ball manipulation
+    ship->ship_damping = &game_data->ship_attributes.ship_damping;     // de-acceleration - affects max velocity as well
+    ship->max_energy = &game_data->ship_attributes.max_energy;         // max_energy
+    ship->boost_force = &game_data->ship_attributes.boost_force;       // boost ship_force - horizontal burst
+    ship->boost_cooldown = &game_data->ship_attributes.boost_cooldown; // boost cooldown timer < is better
+    ship->pulse_force = &game_data->ship_attributes.pulse_force;       // boost ship_force - vertical burst
+    ship->pulse_cooldown = &game_data->ship_attributes.pulse_cooldown; // pulse cooldown timer < is better
+    ship->heat = &game_data->ship_attributes.max_heat;                 // heat buildup % < is no heat
 
-    ship->shield_level = &game_data->ships[*ship->player].shield_level;
+    ship->shield_strength = &game_data->ships[*ship->player].shield_strength;
     ship->segments = calculate_segments_func(ship);
 
     ship->ship_body = create_ship_body(&ship->segments, ship->ship_color, &ship->position);
-    ship->ship_shield = create_ship_shield(&ship->segments, ship->shield_level, &ship->position);
+    ship->ship_shield = create_ship_shield(&ship->segments, ship->shield_strength, &ship->position);
     ship->ship_thrusters = create_ship_thrusters(&ship->segments, &ship->position);
 
     ship->shield_size = (b2Vec2){ship->ship_shield->subtexture->src.width, ship->ship_shield->subtexture->src.height};

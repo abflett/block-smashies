@@ -65,7 +65,7 @@ typedef struct
     const Rectangle play_area;
 } GameSettings;
 
-// GameplaySettings: Playfield-related settings (paddle, bricks, etc.)
+// GameplaySettings: Playfield-related settings (ship_attributes, bricks, etc.)
 typedef struct
 {
     // ship

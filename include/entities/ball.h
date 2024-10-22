@@ -30,7 +30,7 @@ typedef struct Ball
     b2Vec2 position;
     float radius;
 
-    float *power;
+    float *orb_power;
     float *phase_nova;
     float *super_nova;
     float *max_velocity;

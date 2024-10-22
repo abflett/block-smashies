@@ -14,7 +14,7 @@ typedef struct GameDataSummary
     int high_score;
     int player_count;
     int currency_collected;
-    int lives;
+    int orb_retrievers;
     Difficulty difficulty;
 } GameDataSummary;
 

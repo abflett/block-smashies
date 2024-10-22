@@ -17,15 +17,15 @@ static void set_ship_shield(ShipShield *ship_shield)
         shield_type = 2; // For 4 segments
     }
 
-    ship_shield->previous_shield_level = *ship_shield->shield_level;
+    ship_shield->previous_shield_level = *ship_shield->shield_strength;
     ship_shield->previous_segments = *ship_shield->segments;
-    const char *subtexture_id = resource_manager.shield_type_mapper->shield_type_to_subtexture_id(shield_type, *ship_shield->shield_level);
+    const char *subtexture_id = resource_manager.shield_type_mapper->shield_type_to_subtexture_id(shield_type, *ship_shield->shield_strength);
     ship_shield->subtexture = resource_manager.get_subtexture(subtexture_id);
 }
 
 static void render_ship_shield(ShipShield *ship_shield)
 {
-    if (ship_shield->previous_shield_level != *ship_shield->shield_level || ship_shield->previous_segments != *ship_shield->segments)
+    if (ship_shield->previous_shield_level != *ship_shield->shield_strength || ship_shield->previous_segments != *ship_shield->segments)
     {
         set_ship_shield(ship_shield);
     }
@@ -45,17 +45,17 @@ static void cleanup_ship_shield(ShipShield *ship_shield)
     free(ship_shield);
 }
 
-ShipShield *create_ship_shield(int *segments, int *shield_level, b2Vec2 *position)
+ShipShield *create_ship_shield(int *segments, int *shield_strength, b2Vec2 *position)
 {
     ShipShield *ship_shield = malloc(sizeof(ShipShield));
 
     ship_shield->segments = segments;
     ship_shield->previous_segments = *segments;
-    ship_shield->shield_level = shield_level;
+    ship_shield->shield_strength = shield_strength;
     ship_shield->position = position;
 
     set_ship_shield(ship_shield);
-    ship_shield->previous_shield_level = *shield_level;
+    ship_shield->previous_shield_level = *shield_strength;
 
     ship_shield->render = render_ship_shield;
     ship_shield->cleanup = cleanup_ship_shield;

@@ -85,7 +85,7 @@ PlayingUiBars *create_playing_ui_bars(GameStatus *game_status)
     bars.playing_ui_bars[2] = create_playing_ui_bar(&game_status->player_stats[2].energy, 2, 0.0f, (Vector2){18, 122});
     bars.playing_ui_bars[3] = create_playing_ui_bar(&game_status->player_stats[3].energy, 3, 0.0f, (Vector2){21, 123});
 
-    // Top Bars for force move timeout - uses energy to use force timeout
+    // Top Bars for ship_force move timeout - uses energy to use ship_force timeout
     bars.playing_ui_bars[4] = create_playing_ui_bar(&game_status->player_stats[0].force_cooldown, 0, 90.0f, (Vector2){61, 104});
     bars.playing_ui_bars[5] = create_playing_ui_bar(&game_status->player_stats[1].force_cooldown, 1, 90.0f, (Vector2){60, 107});
     bars.playing_ui_bars[6] = create_playing_ui_bar(&game_status->player_stats[2].force_cooldown, 2, 90.0f, (Vector2){58, 110});

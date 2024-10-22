@@ -28,41 +28,40 @@ typedef struct ShipCustomization
     bool active;    // active based on player count
     int ship_color; // ship color
     int player_num; // player number: shape/segments based on player_num and player_count
-    int shield_level;
+    int shield_strength;
 } ShipCustomization;
 
-typedef struct PaddleAttributes
+typedef struct ShipAttributes
 {
     // Ship Attributes
-    int shield_level;
-    float force;          // general movement force
-    float friction;       // ball manipulation
-    float damping;        // de-acceleration - affects max velocity as well
+    int shield_strength;
+    float ship_force;     // general movement ship_force
+    float orb_control;    // ball manipulation
+    float ship_damping;   // de-acceleration - affects max velocity as well
     float max_energy;     // max_energy
-    float boost_force;    // boost force - horizontal burst
+    float boost_force;    // boost ship_force - horizontal burst
     float boost_cooldown; // boost cooldown timer < is better
-    float pulse_force;    // boost force - vertical burst
+    float pulse_force;    // boost ship_force - vertical burst
     float pulse_cooldown; // pulse cooldown timer < is better
     float max_heat;       // heat buildup % < is no heat
-} PaddleAttributes;
+} ShipAttributes;
 
-typedef struct BallAttributes
+typedef struct OrbAttributes
 {
     float max_velocity; // max velocity
     float min_velocity; // min velocity
-    float power;        // damage
-} BallAttributes;
+    float orb_power;    // damage
+} OrbAttributes;
 
 typedef struct Perks
 {
-    // paddle perks
+    // ship perks
     float phase_shift; // dublicate orb weapon % chance
-    bool orb_shot;     // consume heat and energy to fire bullets
+    float orb_shot;    // consume heat and energy to fire bullets
 
-    // ball perks
-    bool time_manipulation; // slow ball.max_velocity duration
-    float phase_nova;       // spawn explosion radius % chance
-    float super_nova;       // max damage destroying any block duration
+    // orb perks
+    float phase_nova; // spawn explosion radius % chance
+    float super_nova; // max damage destroying any block duration
 } Perks;
 
 typedef struct GameData
@@ -75,19 +74,19 @@ typedef struct GameData
     int currency;           // available currency
     int currency_collected; // total currency collected
     int high_score;         // current high score
-    int lives;              // number of orb catchers/lives
+    int orb_retrievers;     // number of orb retrievers/lives
 
     int purchased_upgrades[MAX_UPGRADES]; // Array to hold upgrade IDs
     int num_purchased_upgrades;
 
     // Difficulty and modifiers
     Difficulty difficulty;
-    int max_lives;         // max ammount of saver bots
+    int max_retrievers;    // max ammount of saver bots
     float difficulty_high; // 0.5 - 2.0 - currency * difficulty_high > is easier
     float difficulty_low;  // 0.5 - 2.0 - ball.max_velocity * difficulty_low < is easier
 
-    PaddleAttributes paddle;
-    BallAttributes ball;
+    ShipAttributes ship_attributes;
+    OrbAttributes orb_attributes;
     Perks perks;
     ShipCustomization ships[MAX_SHIPS];
 } GameData;
