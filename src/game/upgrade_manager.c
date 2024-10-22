@@ -186,13 +186,13 @@ static Color get_node_color(UpgradeNode *node)
     switch (node->node_state)
     {
     case NODE_STATE_LOCKED:
-        color = settings.colors.blue_02;
+        color = settings.colors.blue_03;
         break;
     case NODE_STATE_UNLOCKED:
-        color = settings.colors.blue_04;
+        color = settings.colors.blue_05;
         break;
     case NODE_STATE_PURCHASED:
-        color = settings.colors.blue_03;
+        color = settings.colors.blue_04;
         break;
     }
     return color;
@@ -201,6 +201,16 @@ static Color get_node_color(UpgradeNode *node)
 static void update(UpgradeManager *upgrade_manager, float delta_time)
 {
     Vector2 temp_position = upgrade_manager->current_node->position;
+
+    // Update highlight alpha
+    upgrade_manager->highlight_alpha += (upgrade_manager->highlight_alpha_increasing ? 1 : -1) * delta_time * 200.0f;
+
+    // Clamp alpha between 0 and 255, and flip direction if bounds are reached
+    if (upgrade_manager->highlight_alpha <= 100 || upgrade_manager->highlight_alpha >= 255)
+    {
+        upgrade_manager->highlight_alpha = fmaxf(100, fminf(255, upgrade_manager->highlight_alpha));
+        upgrade_manager->highlight_alpha_increasing = !upgrade_manager->highlight_alpha_increasing;
+    }
 
     bool moved = false;
     for (int player = 0; player < upgrade_manager->game_data->player_count; player++)
@@ -279,13 +289,19 @@ static void display_details(UpgradeManager *upgrade_manager)
         break;
     }
 
+    // bottom left
     const char *node_type_text = TextFormat("%s: %s", node->type == UPGRADE_TYPE_NODE_PERK ? "Perk" : "Attribute", node->name);
     DrawTextEx(*upgrade_manager->font, node_type_text, (Vector2){44, 136}, 7, 0.0f, settings.colors.blue_04);
 
-    DrawTextEx(*upgrade_manager->font, node->description, (Vector2){44, 151}, 7, 0.0f, settings.colors.blue_04);
+    DrawTextEx(*upgrade_manager->font, node->description, (Vector2){44, 149}, 7, 0.0f, settings.colors.blue_04);
 
+    // bottom Right
     Vector2 cost_text_size = MeasureTextEx(*upgrade_manager->font, cost_text, 7, 0.0f);
     DrawTextEx(*upgrade_manager->font, cost_text, (Vector2){277 - cost_text_size.x, 136}, 7, 0.0f, settings.colors.blue_04);
+
+    const char *available_currency_text = TextFormat("Nanites: %d", upgrade_manager->game_data->currency);
+    Vector2 available_currency_text_size = MeasureTextEx(*upgrade_manager->font, available_currency_text, 7, 0.0f);
+    DrawTextEx(*upgrade_manager->font, available_currency_text, (Vector2){277 - available_currency_text_size.x, 149}, 7, 0.0f, settings.colors.blue_04);
 
     const char *node_id_text = TextFormat("Id: %d", node->id);
     Vector2 id_text_size = MeasureTextEx(*upgrade_manager->font, node_id_text, 7, 0.0f);
@@ -320,17 +336,22 @@ static void render(UpgradeManager *upgrade_manager)
         {
             Subtexture *subtexture_highlight = node->type == UPGRADE_TYPE_NODE_PERK ? upgrade_manager->subtexture_hightlight_perk : upgrade_manager->subtexture_hightlight_attribute;
             Vector2 highlight_size = (Vector2){subtexture_highlight->src.width, subtexture_highlight->src.height};
-            DrawTexturePro(subtexture_highlight->texture_resource->texture, subtexture_highlight->src, (Rectangle){node->position.x + offset.x - highlight_size.x * 0.5f + 1, node->position.y + offset.y - highlight_size.y * 0.5f, highlight_size.x, highlight_size.y}, (Vector2){1, 0}, 0, WHITE);
+            DrawTexturePro(subtexture_highlight->texture_resource->texture, subtexture_highlight->src, (Rectangle){node->position.x + offset.x - highlight_size.x * 0.5f + 1, node->position.y + offset.y - highlight_size.y * 0.5f, highlight_size.x, highlight_size.y}, (Vector2){1, 0}, 0, (Color){255, 255, 255, (unsigned char)upgrade_manager->highlight_alpha});
         }
 
         // draw node body
         Vector2 size = (Vector2){node->subtexture->src.width, node->subtexture->src.height};
         DrawTexturePro(node->subtexture->texture_resource->texture, node->subtexture->src, (Rectangle){node->position.x + offset.x - size.x * 0.5f + 1, node->position.y + offset.y - size.y * 0.5f, size.x, size.y}, (Vector2){1, 0}, 0, WHITE);
 
+        // draw node icon
+        Color icon_color = get_node_color(node);
+        Vector2 icon_size = (Vector2){upgrade_manager->upgrade_icons[node->type_id]->src.width, upgrade_manager->upgrade_icons[node->type_id]->src.height};
+        DrawTexturePro(upgrade_manager->upgrade_icons[node->type_id]->texture_resource->texture, upgrade_manager->upgrade_icons[node->type_id]->src, (Rectangle){node->position.x + offset.x - icon_size.x * 0.5f + 1, node->position.y + offset.y - icon_size.y * 0.5f, icon_size.x, icon_size.y}, (Vector2){1, 0}, 0, icon_color);
+
         // Draw the node ID in the center of the circle
-        const char *id_text = TextFormat("%d", node->id);
-        Vector2 id_text_size = MeasureTextEx(*upgrade_manager->font, id_text, 7, 0.0f);
-        DrawTextEx(*upgrade_manager->font, id_text, (Vector2){(float)(int)(node->position.x + offset.x - id_text_size.x * 0.5f + 1), (float)(int)(node->position.y + offset.y - id_text_size.y * 0.5f)}, 7, 0.0f, settings.colors.blue_05); // Measure text width to center it
+        // const char *id_text = TextFormat("%d", node->id);
+        // Vector2 id_text_size = MeasureTextEx(*upgrade_manager->font, id_text, 7, 0.0f);
+        // DrawTextEx(*upgrade_manager->font, id_text, (Vector2){(float)(int)(node->position.x + offset.x - id_text_size.x * 0.5f + 1), (float)(int)(node->position.y + offset.y - id_text_size.y * 0.5f)}, 7, 0.0f, settings.colors.blue_05); // Measure text width to center it
     }
 
     // Draw the upgrade display
@@ -438,6 +459,8 @@ UpgradeManager *create_upgrade_manager(GameData *game_data)
         }
     }
 
+    free(root_value);
+
     // Set the current node to the first node (optional)
     upgrade_manager->current_node = &upgrade_manager->upgrade_nodes[0];                                                                                                  // set to root
     upgrade_manager->draw_offset = (Vector2){settings.game.target_size.x * 0.5f, 59};                                                                                    // center of target area
@@ -447,13 +470,24 @@ UpgradeManager *create_upgrade_manager(GameData *game_data)
     upgrade_manager->input_manager = get_input_manager();
     upgrade_manager->font = resource_manager.get_pixel7_font();
     upgrade_manager->upgrade_display = &resource_manager.get_texture("upgrade-display")->texture;
+    upgrade_manager->highlight_alpha = 0.0f;
+    upgrade_manager->highlight_alpha_increasing = true;
 
-    free(root_value);
+    for (int i = 0; i < 18; i++)
+    {
+        upgrade_manager->upgrade_icons[i] = resource_manager.get_subtexture(resource_manager.upgrade_icon_mapper->upgrade_type_to_subtexture_id(i));
+    }
 
     upgrade_manager->update = update;
     upgrade_manager->render = render;
     upgrade_manager->cleanup = cleanup;
     upgrade_manager->print_nodes = print_nodes;
+
+    // Todo: update to use the types data from the json file
+    // Todo: add value to the upgrade nodes so we can display the value of the upgrade
+    // Todo: add a function to calculate the value of the upgrade based on the type and id
+    // Todo: add a function to display the value of the upgrade
+    // remove next from upgrade_node if not needed I don't think it's needed
 
     update_node_positions(upgrade_manager, (Vector2){0, 0}, 30); // assign positions to all the upgrade nodes
     update_node_states(upgrade_manager);                         // set states and textures based on prerequests and if purchased
