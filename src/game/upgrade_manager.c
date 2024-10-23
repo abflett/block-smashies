@@ -9,7 +9,6 @@
 
 static void update_node_states(UpgradeManager *upgrade_manager)
 {
-
     // Update purchased upgrades based on game_data
     for (int i = 0; i < upgrade_manager->game_data->num_purchased_upgrades; i++)
     {
@@ -201,26 +200,26 @@ static void update_node_positions(UpgradeManager *upgrade_manager, Vector2 cente
     }
 }
 
-static Color get_node_color(UpgradeNode *node)
+static Color get_state_color(UpgradeNode *node)
 {
-    Color color;
-    switch (node->node_state)
-    {
-    case NODE_STATE_LOCKED:
-        color = settings.colors.blue_03;
-        break;
-    case NODE_STATE_UNLOCKED:
-        color = settings.colors.blue_05;
-        break;
-    case NODE_STATE_PURCHASED:
-        color = settings.colors.blue_04;
-        break;
-    }
-    return color;
+    const Color colors[3] =
+        {
+            settings.colors.blue_03, // NODE_STATE_LOCKED
+            settings.colors.blue_05, // NODE_STATE_UNLOCKED
+            settings.colors.blue_04  // NODE_STATE_PURCHASED
+        };
+    return colors[node->node_state];
 }
 
 static void update(UpgradeManager *upgrade_manager, float delta_time)
 {
+    if (!upgrade_manager)
+    {
+        return;
+    }
+
+    upgrade_manager->exit_dialog->update(upgrade_manager->exit_dialog, delta_time);
+
     Vector2 temp_position = upgrade_manager->current_node->position;
 
     // Update highlight alpha
@@ -294,7 +293,7 @@ static void display_details(UpgradeManager *upgrade_manager)
 {
     UpgradeNode *node = upgrade_manager->current_node;
 
-    const char *cost_text;
+    const char *cost_text = "";
     switch (node->node_state)
     {
     case NODE_STATE_LOCKED:
@@ -305,8 +304,6 @@ static void display_details(UpgradeManager *upgrade_manager)
         break;
     case NODE_STATE_PURCHASED:
         cost_text = "Purchased";
-        break;
-    default:
         break;
     }
 
@@ -331,6 +328,11 @@ static void display_details(UpgradeManager *upgrade_manager)
 
 static void render(UpgradeManager *upgrade_manager)
 {
+    if (!upgrade_manager)
+    {
+        return;
+    }
+
     ClearBackground(settings.colors.blue_01);
     // Set the draw offset
     Vector2 offset = Vector2Subtract(upgrade_manager->draw_offset, upgrade_manager->camera_offset);
@@ -365,7 +367,7 @@ static void render(UpgradeManager *upgrade_manager)
         DrawTexturePro(node->background_subtexture->texture_resource->texture, node->background_subtexture->src, (Rectangle){node->position.x + offset.x - size.x * 0.5f + 1, node->position.y + offset.y - size.y * 0.5f, size.x, size.y}, (Vector2){1, 0}, 0, WHITE);
 
         // draw node icon
-        Color icon_color = get_node_color(node);
+        Color icon_color = get_state_color(node);
         Vector2 icon_size = (Vector2){node->node_type->icon_subtexture->src.width, node->node_type->icon_subtexture->src.height};
 
         DrawTexturePro(node->node_type->icon_subtexture->texture_resource->texture, node->node_type->icon_subtexture->src, (Rectangle){node->position.x + offset.x - icon_size.x * 0.5f + 1, node->position.y + offset.y - icon_size.y * 0.5f, icon_size.x, icon_size.y}, (Vector2){1, 0}, 0, icon_color);
@@ -375,6 +377,8 @@ static void render(UpgradeManager *upgrade_manager)
     DrawTexture(*upgrade_manager->upgrade_display, 0, 0, WHITE);
 
     display_details(upgrade_manager);
+
+    upgrade_manager->exit_dialog->render(upgrade_manager->exit_dialog);
 }
 
 // Todo: remove debugging printing function
@@ -478,6 +482,10 @@ UpgradeManager *create_upgrade_manager(GameData *game_data)
     upgrade_manager->render = render;
     upgrade_manager->cleanup = cleanup;
     upgrade_manager->print_nodes = print_nodes;
+
+    upgrade_manager->active = true;
+
+    upgrade_manager->exit_dialog = create_game_dialog("Are sure you are sure\nyou want to exit?", (Vector2){50, 50});
 
     // Todo: update to use the types data from the json file
     // Todo: add value to the upgrade nodes so we can display the value of the upgrade

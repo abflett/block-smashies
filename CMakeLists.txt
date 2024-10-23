@@ -126,6 +126,7 @@ set(GAME_SRC
     src/game/game_slide.c
     src/game/slide_manager.c
     src/game/upgrade_manager.c
+    src/game/game_dialog.c
 ) 
 
 set(INPUT_SRC

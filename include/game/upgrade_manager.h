@@ -6,6 +6,7 @@
 #include "raylib.h"
 #include "resource.h"
 #include "input_manager.h"
+#include "game_dialog.h"
 
 typedef struct UpgradeManager
 {
@@ -16,6 +17,8 @@ typedef struct UpgradeManager
 
     UpgradeNode *upgrade_nodes;
     int node_count;
+
+    GameDialog *exit_dialog;
 
     Subtexture *subtexture_hightlight_types[2];
     Subtexture *background_subtexture[2];
