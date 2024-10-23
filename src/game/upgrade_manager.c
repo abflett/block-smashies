@@ -7,8 +7,6 @@
 #include "resource_manager.h"
 #include "raymath.h"
 
-#include <math.h> // Make sure to include math.h for cos and sin
-
 static void update_node_states(UpgradeManager *upgrade_manager)
 {
 
@@ -17,9 +15,9 @@ static void update_node_states(UpgradeManager *upgrade_manager)
     {
         UpgradeNode *upgrade_node = &upgrade_manager->upgrade_nodes[upgrade_manager->game_data->purchased_upgrades[i]];
         upgrade_node->node_state = NODE_STATE_PURCHASED;
-        UpgradeType upgrade_type = upgrade_node->type;
+        UpgradeType upgrade_type = upgrade_node->node_type->type;
 
-        upgrade_node->subtexture = upgrade_type == UPGRADE_TYPE_NODE_PERK ? resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id((int)NODE_STATE_PURCHASED)) : resource_manager.get_subtexture(resource_manager.node_attribute_mapper->node_attribute_type_to_subtexture_id((int)NODE_STATE_PURCHASED));
+        upgrade_node->background_subtexture = upgrade_type == UPGRADE_TYPE_NODE_PERK ? resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id((int)NODE_STATE_PURCHASED)) : resource_manager.get_subtexture(resource_manager.node_attribute_mapper->node_attribute_type_to_subtexture_id((int)NODE_STATE_PURCHASED));
     }
 
     // Update remaining nodes based on prerequisites
@@ -44,8 +42,8 @@ static void update_node_states(UpgradeManager *upgrade_manager)
             }
         }
 
-        UpgradeType upgrade_type = node->type;
-        node->subtexture = upgrade_type == UPGRADE_TYPE_NODE_PERK ? resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id((int)node->node_state)) : resource_manager.get_subtexture(resource_manager.node_attribute_mapper->node_attribute_type_to_subtexture_id((int)node->node_state));
+        UpgradeType upgrade_type = node->node_type->type;
+        node->background_subtexture = upgrade_type == UPGRADE_TYPE_NODE_PERK ? resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id((int)node->node_state)) : resource_manager.get_subtexture(resource_manager.node_attribute_mapper->node_attribute_type_to_subtexture_id((int)node->node_state));
     }
 }
 
@@ -53,7 +51,7 @@ static void update_node_positions(UpgradeManager *upgrade_manager, Vector2 cente
 {
     // Array to store node positions, indexed by layer, group, and node ID
     int layer_groups[24][24][24];
-    memset(layer_groups, -1, sizeof(layer_groups)); // Initialize with -1 (assuming node IDs are positive)
+    memset(layer_groups, -1, sizeof(layer_groups)); // Initialize with -1
 
     int max_layer = 0;
     int max_group = 0;
@@ -72,7 +70,7 @@ static void update_node_positions(UpgradeManager *upgrade_manager, Vector2 cente
         UpgradeNode *node = &upgrade_manager->upgrade_nodes[i];
         int current_node_id = node->id;
 
-        // Step 1: Determine the layer based on prerequisites (distance from the root)
+        // Determine the layer based on prerequisites (distance from the root)
         layer = 0;
         UpgradeNode *checked_node = node;
 
@@ -88,7 +86,6 @@ static void update_node_positions(UpgradeManager *upgrade_manager, Vector2 cente
             max_layer = layer;
         }
 
-        // Step 2: Determine the group based on prerequisites
         // Nodes with the same prerequisites should belong to the same group.
         // Let's assume the first prerequisite determines the group.
         group = -1; // Reset group each time
@@ -113,15 +110,13 @@ static void update_node_positions(UpgradeManager *upgrade_manager, Vector2 cente
             max_group = group;
         }
 
-        // Step 3: Place the node in the next available position within the group
+        // Place the node in the next available position within the group
         node_id = 0;
         while (layer_groups[layer][group][node_id] != -1)
         {
             node_id++; // Find the next available slot in the group
         }
         layer_groups[layer][group][node_id] = current_node_id;
-
-        // TraceLog(LOG_INFO, "Node %d -> Layer %d, Group %d, Node %d", current_node_id, layer, group, node_id);
     }
 
     for (int layer_count = 0; layer_count <= max_layer; layer_count++)
@@ -152,28 +147,54 @@ static void update_node_positions(UpgradeManager *upgrade_manager, Vector2 cente
                 }
                 else
                 {
-                    UpgradeNode *prerequisite = current_node->prerequisites[0];
-                    float angle_to_prerequisite = (float)atan2(prerequisite->position.y - center.y, prerequisite->position.x - center.x);
 
-                    // Calculate the desired arc length between nodes (e.g., 30 pixels)
-                    float desired_arc_length = radius_increment;
+                    if (current_node->num_prerequisites > 1)
+                    {
+                        // Put node between the two prerequisites
+                        UpgradeNode *prerequisite1 = current_node->prerequisites[0];
+                        UpgradeNode *prerequisite2 = current_node->prerequisites[1];
+                        float angle_to_prerequisite1 = (float)atan2(prerequisite1->position.y - center.y, prerequisite1->position.x - center.x);
+                        float angle_to_prerequisite2 = (float)atan2(prerequisite2->position.y - center.y, prerequisite2->position.x - center.x);
 
-                    // Calculate the angle offset based on the desired arc length and current radius
-                    float angle_offset = desired_arc_length / radius;
+                        // Calculate the average angle between the two prerequisites
+                        float final_angle = (angle_to_prerequisite1 + angle_to_prerequisite2) / 2.0f;
 
-                    // Calculate the total spread based on the number of nodes
-                    float total_spread = angle_offset * (nodes_count - 1);
+                        // Ensure the angle is between 0 and 2*PI
+                        if (final_angle < 0)
+                        {
+                            final_angle += 2 * PI;
+                        }
+                        else if (final_angle > 2 * PI)
+                        {
+                            final_angle -= 2 * PI;
+                        }
 
-                    // Calculate the starting angle offset to center the spread
-                    float start_offset = -total_spread * 0.5f;
+                        // Set the node's position based on the final angle around the prerequisites
+                        current_node->position.x = (float)(center.x + (radius * cos(final_angle)));
+                        current_node->position.y = (float)(center.y + (radius * sin(final_angle)));
+                    }
+                    else
+                    {
+                        UpgradeNode *prerequisite = current_node->prerequisites[0];
+                        float angle_to_prerequisite = (float)atan2(prerequisite->position.y - center.y, prerequisite->position.x - center.x);
 
-                    // Calculate the final angle for this node
-                    float node_angle_offset = start_offset + (angle_offset * node);
-                    float final_angle = angle_to_prerequisite + node_angle_offset;
+                        // Calculate the angle offset based on the desired arc length and current radius
+                        float angle_offset = radius_increment / radius;
 
-                    // Set the node's position based on the final angle around the prerequisite
-                    current_node->position.x = (float)(center.x + (radius * cos(final_angle)));
-                    current_node->position.y = (float)(center.y + (radius * sin(final_angle)));
+                        // Calculate the total spread based on the number of nodes
+                        float total_spread = angle_offset * (nodes_count - 1);
+
+                        // Calculate the starting angle offset to center the spread
+                        float start_offset = -total_spread * 0.5f;
+
+                        // Calculate the final angle for this node
+                        float node_angle_offset = start_offset + (angle_offset * node);
+                        float final_angle = angle_to_prerequisite + node_angle_offset;
+
+                        // Set the node's position based on the final angle around the prerequisite
+                        current_node->position.x = (float)(center.x + (radius * cos(final_angle)));
+                        current_node->position.y = (float)(center.y + (radius * sin(final_angle)));
+                    }
                 }
             }
         }
@@ -290,10 +311,10 @@ static void display_details(UpgradeManager *upgrade_manager)
     }
 
     // bottom left
-    const char *node_type_text = TextFormat("%s: %s", node->type == UPGRADE_TYPE_NODE_PERK ? "Perk" : "Attribute", node->name);
-    DrawTextEx(*upgrade_manager->font, node_type_text, (Vector2){44, 136}, 7, 0.0f, settings.colors.blue_04);
+    const char *node_type_text = TextFormat("%s - (%s)", node->node_type->name, node->node_type->type == UPGRADE_TYPE_NODE_PERK ? "Perk" : "Attribute");
+    DrawTextEx(*upgrade_manager->font, node_type_text, (Vector2){44, 136}, 7, 0.0f, settings.colors.blue_05);
 
-    DrawTextEx(*upgrade_manager->font, node->description, (Vector2){44, 149}, 7, 0.0f, settings.colors.blue_04);
+    DrawTextEx(*upgrade_manager->font, node->node_type->description, (Vector2){44, 149}, 7, 0.0f, settings.colors.blue_04);
 
     // bottom Right
     Vector2 cost_text_size = MeasureTextEx(*upgrade_manager->font, cost_text, 7, 0.0f);
@@ -334,24 +355,20 @@ static void render(UpgradeManager *upgrade_manager)
         // draw node highlight
         if (node == upgrade_manager->current_node)
         {
-            Subtexture *subtexture_highlight = node->type == UPGRADE_TYPE_NODE_PERK ? upgrade_manager->subtexture_hightlight_perk : upgrade_manager->subtexture_hightlight_attribute;
+            Subtexture *subtexture_highlight = node->node_type->highlight_subtexture;
             Vector2 highlight_size = (Vector2){subtexture_highlight->src.width, subtexture_highlight->src.height};
             DrawTexturePro(subtexture_highlight->texture_resource->texture, subtexture_highlight->src, (Rectangle){node->position.x + offset.x - highlight_size.x * 0.5f + 1, node->position.y + offset.y - highlight_size.y * 0.5f, highlight_size.x, highlight_size.y}, (Vector2){1, 0}, 0, (Color){255, 255, 255, (unsigned char)upgrade_manager->highlight_alpha});
         }
 
         // draw node body
-        Vector2 size = (Vector2){node->subtexture->src.width, node->subtexture->src.height};
-        DrawTexturePro(node->subtexture->texture_resource->texture, node->subtexture->src, (Rectangle){node->position.x + offset.x - size.x * 0.5f + 1, node->position.y + offset.y - size.y * 0.5f, size.x, size.y}, (Vector2){1, 0}, 0, WHITE);
+        Vector2 size = (Vector2){node->background_subtexture->src.width, node->background_subtexture->src.height};
+        DrawTexturePro(node->background_subtexture->texture_resource->texture, node->background_subtexture->src, (Rectangle){node->position.x + offset.x - size.x * 0.5f + 1, node->position.y + offset.y - size.y * 0.5f, size.x, size.y}, (Vector2){1, 0}, 0, WHITE);
 
         // draw node icon
         Color icon_color = get_node_color(node);
-        Vector2 icon_size = (Vector2){upgrade_manager->upgrade_icons[node->type_id]->src.width, upgrade_manager->upgrade_icons[node->type_id]->src.height};
-        DrawTexturePro(upgrade_manager->upgrade_icons[node->type_id]->texture_resource->texture, upgrade_manager->upgrade_icons[node->type_id]->src, (Rectangle){node->position.x + offset.x - icon_size.x * 0.5f + 1, node->position.y + offset.y - icon_size.y * 0.5f, icon_size.x, icon_size.y}, (Vector2){1, 0}, 0, icon_color);
+        Vector2 icon_size = (Vector2){node->node_type->icon_subtexture->src.width, node->node_type->icon_subtexture->src.height};
 
-        // Draw the node ID in the center of the circle
-        // const char *id_text = TextFormat("%d", node->id);
-        // Vector2 id_text_size = MeasureTextEx(*upgrade_manager->font, id_text, 7, 0.0f);
-        // DrawTextEx(*upgrade_manager->font, id_text, (Vector2){(float)(int)(node->position.x + offset.x - id_text_size.x * 0.5f + 1), (float)(int)(node->position.y + offset.y - id_text_size.y * 0.5f)}, 7, 0.0f, settings.colors.blue_05); // Measure text width to center it
+        DrawTexturePro(node->node_type->icon_subtexture->texture_resource->texture, node->node_type->icon_subtexture->src, (Rectangle){node->position.x + offset.x - icon_size.x * 0.5f + 1, node->position.y + offset.y - icon_size.y * 0.5f, icon_size.x, icon_size.y}, (Vector2){1, 0}, 0, icon_color);
     }
 
     // Draw the upgrade display
@@ -365,18 +382,12 @@ static void print_nodes(UpgradeManager *upgrade_manager)
 {
     for (int i = 0; i < upgrade_manager->node_count; i++)
     {
-        TraceLog(LOG_INFO, "Node %d: %s, Position: %f, %f", i, upgrade_manager->upgrade_nodes[i].name, upgrade_manager->upgrade_nodes[i].position.x, upgrade_manager->upgrade_nodes[i].position.y);
+        TraceLog(LOG_INFO, "Node %d: %s, Position: %f, %f", i, upgrade_manager->upgrade_nodes[i].node_type->name, upgrade_manager->upgrade_nodes[i].position.x, upgrade_manager->upgrade_nodes[i].position.y);
 
         TraceLog(LOG_INFO, "\tPrerequisite");
         for (int j = 0; j < upgrade_manager->upgrade_nodes[i].num_prerequisites; j++)
         {
-            TraceLog(LOG_INFO, "\t\t%s", upgrade_manager->upgrade_nodes[i].prerequisites[j]->name);
-        }
-
-        TraceLog(LOG_INFO, "\tNext");
-        for (int j = 0; j < upgrade_manager->upgrade_nodes[i].num_next; j++)
-        {
-            TraceLog(LOG_INFO, "\t\t%s", upgrade_manager->upgrade_nodes[i].next[j]->name);
+            TraceLog(LOG_INFO, "\t\t%s", upgrade_manager->upgrade_nodes[i].prerequisites[j]->node_type->name);
         }
     }
 }
@@ -385,24 +396,18 @@ static void cleanup(UpgradeManager *upgrade_manager)
 {
     if (upgrade_manager)
     {
-        // Free each upgrade node
         for (int i = 0; i < upgrade_manager->node_count; i++)
         {
-            // Free the strings for name and description
-            free(upgrade_manager->upgrade_nodes[i].name);
-            free(upgrade_manager->upgrade_nodes[i].description);
-
-            // Free the prerequisites array if it was allocated
             free(upgrade_manager->upgrade_nodes[i].prerequisites);
-
-            // Free the next array if it was allocated
-            free(upgrade_manager->upgrade_nodes[i].next);
         }
 
-        // Free the array of upgrade nodes
-        free(upgrade_manager->upgrade_nodes);
+        for (int i = 0; i < 18; i++)
+        {
+            free(upgrade_manager->upgrade_node_types[i].name);
+            free(upgrade_manager->upgrade_node_types[i].description);
+        }
 
-        // Finally, free the UpgradeManager itself
+        free(upgrade_manager->upgrade_nodes);
         free(upgrade_manager);
     }
 }
@@ -411,32 +416,40 @@ UpgradeManager *create_upgrade_manager(GameData *game_data)
 {
     UpgradeManager *upgrade_manager = (UpgradeManager *)malloc(sizeof(UpgradeManager));
     upgrade_manager->game_data = game_data;
+    upgrade_manager->subtexture_hightlight_types[0] = resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id(3));
+    upgrade_manager->subtexture_hightlight_types[1] = resource_manager.get_subtexture(resource_manager.node_attribute_mapper->node_attribute_type_to_subtexture_id(3));
 
     JSON_Value *root_value = json_parse_file(settings.file_locations.upgrade_file);
     JSON_Object *root_object = json_value_get_object(root_value);
-    JSON_Array *upgrades_array = json_object_get_array(root_object, "upgrades");
 
+    JSON_Array *node_types_array = json_object_get_array(root_object, "node-types");
+    for (int i = 0; i < json_array_get_count(node_types_array); i++)
+    {
+        JSON_Object *node_type_object = json_array_get_object(node_types_array, i);
+        upgrade_manager->upgrade_node_types[i].type_id = (UpgradeTypeId)json_object_get_number(node_type_object, "type_id");
+        upgrade_manager->upgrade_node_types[i].type = (UpgradeType)json_object_get_number(node_type_object, "type");
+        upgrade_manager->upgrade_node_types[i].name = strdup(json_object_get_string(node_type_object, "name"));
+        upgrade_manager->upgrade_node_types[i].description = strdup(json_object_get_string(node_type_object, "description"));
+        upgrade_manager->upgrade_node_types[i].highlight_subtexture = upgrade_manager->upgrade_node_types[i].type == UPGRADE_TYPE_NODE_PERK ? upgrade_manager->subtexture_hightlight_types[0] : upgrade_manager->subtexture_hightlight_types[1];
+        upgrade_manager->upgrade_node_types[i].icon_subtexture = resource_manager.get_subtexture(resource_manager.upgrade_icon_mapper->upgrade_type_to_subtexture_id(i));
+    }
+
+    JSON_Array *upgrades_array = json_object_get_array(root_object, "upgrades");
     upgrade_manager->node_count = (int)json_array_get_count(upgrades_array);
     upgrade_manager->upgrade_nodes = malloc(sizeof(UpgradeNode) * upgrade_manager->node_count);
-
-    // default locked textures
-    Subtexture *subtexture_perk = resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id((int)NODE_STATE_LOCKED));
-    Subtexture *subtexture_attribute = resource_manager.get_subtexture(resource_manager.node_attribute_mapper->node_attribute_type_to_subtexture_id((int)NODE_STATE_LOCKED));
-
     for (int i = 0; i < upgrade_manager->node_count; i++)
     {
         JSON_Object *upgrade_object = json_array_get_object(upgrades_array, i);
 
         // Populate each node directly
         upgrade_manager->upgrade_nodes[i].id = (int)json_object_get_number(upgrade_object, "id");
-        upgrade_manager->upgrade_nodes[i].name = strdup(json_object_get_string(upgrade_object, "name"));
-        upgrade_manager->upgrade_nodes[i].description = strdup(json_object_get_string(upgrade_object, "description"));
-        upgrade_manager->upgrade_nodes[i].type = (UpgradeType)json_object_get_number(upgrade_object, "type");
-        upgrade_manager->upgrade_nodes[i].type_id = (UpgradeTypeId)json_object_get_number(upgrade_object, "type_id");
+        upgrade_manager->upgrade_nodes[i].node_type = &upgrade_manager->upgrade_node_types[(int)json_object_get_number(upgrade_object, "type_id")];
         upgrade_manager->upgrade_nodes[i].cost = (int)json_object_get_number(upgrade_object, "cost");
+        upgrade_manager->upgrade_nodes[i].value = (float)json_object_get_number(upgrade_object, "value");
         upgrade_manager->upgrade_nodes[i].node_state = NODE_STATE_LOCKED;
         upgrade_manager->upgrade_nodes[i].position = (Vector2){0, 0}; // Initialize position
-        upgrade_manager->upgrade_nodes[i].subtexture = upgrade_manager->upgrade_nodes[i].type == UPGRADE_TYPE_NODE_PERK ? subtexture_perk : subtexture_attribute;
+        bool is_perk = upgrade_manager->upgrade_nodes[i].node_type->type == UPGRADE_TYPE_NODE_PERK;
+        upgrade_manager->upgrade_nodes[i].background_subtexture = is_perk ? resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id((int)upgrade_manager->upgrade_nodes[i].node_state)) : resource_manager.get_subtexture(resource_manager.node_attribute_mapper->node_attribute_type_to_subtexture_id((int)upgrade_manager->upgrade_nodes[i].node_state));
 
         // assign prerequisites
         JSON_Array *prerequisites_array = json_object_get_array(upgrade_object, "prerequisites");
@@ -447,36 +460,19 @@ UpgradeManager *create_upgrade_manager(GameData *game_data)
             int prerequisite_index = (int)json_array_get_number(prerequisites_array, j);
             upgrade_manager->upgrade_nodes[i].prerequisites[j] = &upgrade_manager->upgrade_nodes[prerequisite_index];
         }
-
-        // assign next nodes
-        JSON_Array *next_array = json_object_get_array(upgrade_object, "next");
-        upgrade_manager->upgrade_nodes[i].num_next = (int)json_array_get_count(next_array);
-        upgrade_manager->upgrade_nodes[i].next = malloc(sizeof(UpgradeNode *) * upgrade_manager->upgrade_nodes[i].num_next);
-        for (int j = 0; j < upgrade_manager->upgrade_nodes[i].num_next; j++)
-        {
-            int next_index = (int)json_array_get_number(next_array, j);
-            upgrade_manager->upgrade_nodes[i].next[j] = &upgrade_manager->upgrade_nodes[next_index];
-        }
     }
 
     free(root_value);
 
     // Set the current node to the first node (optional)
-    upgrade_manager->current_node = &upgrade_manager->upgrade_nodes[0];                                                                                                  // set to root
-    upgrade_manager->draw_offset = (Vector2){settings.game.target_size.x * 0.5f, 59};                                                                                    // center of target area
-    upgrade_manager->camera_offset = (Vector2){0, 0};                                                                                                                    // pan camera based on this offset
-    upgrade_manager->subtexture_hightlight_perk = resource_manager.get_subtexture(resource_manager.node_perk_mapper->node_perk_type_to_subtexture_id(3));                // set highlight subtexture
-    upgrade_manager->subtexture_hightlight_attribute = resource_manager.get_subtexture(resource_manager.node_attribute_mapper->node_attribute_type_to_subtexture_id(3)); // set highlight subtexture
+    upgrade_manager->current_node = &upgrade_manager->upgrade_nodes[0];               // set to root
+    upgrade_manager->draw_offset = (Vector2){settings.game.target_size.x * 0.5f, 59}; // center of target area
+    upgrade_manager->camera_offset = (Vector2){0, 0};                                 // pan camera based on this offset
     upgrade_manager->input_manager = get_input_manager();
     upgrade_manager->font = resource_manager.get_pixel7_font();
     upgrade_manager->upgrade_display = &resource_manager.get_texture("upgrade-display")->texture;
     upgrade_manager->highlight_alpha = 0.0f;
     upgrade_manager->highlight_alpha_increasing = true;
-
-    for (int i = 0; i < 18; i++)
-    {
-        upgrade_manager->upgrade_icons[i] = resource_manager.get_subtexture(resource_manager.upgrade_icon_mapper->upgrade_type_to_subtexture_id(i));
-    }
 
     upgrade_manager->update = update;
     upgrade_manager->render = render;
@@ -487,7 +483,6 @@ UpgradeManager *create_upgrade_manager(GameData *game_data)
     // Todo: add value to the upgrade nodes so we can display the value of the upgrade
     // Todo: add a function to calculate the value of the upgrade based on the type and id
     // Todo: add a function to display the value of the upgrade
-    // remove next from upgrade_node if not needed I don't think it's needed
 
     update_node_positions(upgrade_manager, (Vector2){0, 0}, 30); // assign positions to all the upgrade nodes
     update_node_states(upgrade_manager);                         // set states and textures based on prerequests and if purchased

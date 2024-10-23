@@ -9,21 +9,27 @@
 
 typedef struct UpgradeManager
 {
+    bool active;
+
     GameData *game_data;
     InputManager *input_manager;
+
     UpgradeNode *upgrade_nodes;
     int node_count;
 
+    Subtexture *subtexture_hightlight_types[2];
+    Subtexture *background_subtexture[2];
+    UpgradeNodeType upgrade_node_types[18];
+
     UpgradeNode *current_node;
+
     Vector2 draw_offset;
     Vector2 camera_offset;
-    Subtexture *subtexture_hightlight_perk;
-    Subtexture *subtexture_hightlight_attribute;
+
     float highlight_alpha;
     bool highlight_alpha_increasing;
     Texture *upgrade_display;
     Font *font;
-    Subtexture *upgrade_icons[18];
 
     void (*update)(struct UpgradeManager *upgrade_manager, float delta_time);
     void (*render)(struct UpgradeManager *upgrade_manager);

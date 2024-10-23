@@ -43,21 +43,30 @@ typedef enum UpgradeTypeId
     UPGRADE_PERK_PHASE_NOVA
 } UpgradeTypeId;
 
+typedef struct UpgradeNodeType
+{
+    UpgradeTypeId type_id;
+    UpgradeType type;
+    char *name;
+    char *description;
+    Subtexture *highlight_subtexture;
+    Subtexture *icon_subtexture;
+} UpgradeNodeType;
+
 typedef struct UpgradeNode
 {
     int id; // Unique identifier
-    char *name;
-    char *description;
     int cost;
-    UpgradeType type;                   // attribute or perk
-    UpgradeTypeId type_id;              // used for linking upgrades to attributes or perks
+    float value;
+    Vector2 position; // Position for rendering
+
+    UpgradeNodeType *node_type;
+    UpgradeNodeState node_state;
+
     struct UpgradeNode **prerequisites; // Array pointers of the prerequisites nodes
     int num_prerequisites;              // Number of prerequisites
-    struct UpgradeNode **next;          // Array pointers of next nodes
-    int num_next;                       // Number of next nodes
-    UpgradeNodeState node_state;
-    Vector2 position;       // Position for rendering
-    Subtexture *subtexture; // Texture for rendering
+
+    Subtexture *background_subtexture;
 } UpgradeNode;
 
 #endif // UPGRADE_NODE_H
