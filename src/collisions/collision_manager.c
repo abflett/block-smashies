@@ -13,10 +13,10 @@
 
 CollisionManager collision_manager;
 
-static void print_entity_types(EntityType *type_a, EntityType *type_b)
+static void print_entity_types(const EntityType *type_a, const EntityType *type_b)
 {
-    const char *a_type = "unknown";
-    const char *b_type = "unknown";
+    const char *a_type;
+    const char *b_type;
 
     switch (*type_a)
     {
@@ -77,10 +77,10 @@ static void print_entity_types(EntityType *type_a, EntityType *type_b)
     TraceLog(LOG_INFO, "Collision: (%s), (%s)", a_type, b_type);
 }
 
-static void begin_contact(b2ShapeId shapeA, b2ShapeId shapeB, GameContext *context)
+static void begin_contact(const b2ShapeId shapeA, const b2ShapeId shapeB, const GameContext *context)
 {
-    b2BodyId bodyA = b2Shape_GetBody(shapeA);
-    b2BodyId bodyB = b2Shape_GetBody(shapeB);
+    const b2BodyId bodyA = b2Shape_GetBody(shapeA);
+    const b2BodyId bodyB = b2Shape_GetBody(shapeB);
 
     // Get user data once for each body
     void *userDataA = b2Body_GetUserData(bodyA);
@@ -93,22 +93,18 @@ static void begin_contact(b2ShapeId shapeA, b2ShapeId shapeB, GameContext *conte
     }
 
     // Cast user data to entity types
-    EntityType *typeA = (EntityType *)userDataA;
-    EntityType *typeB = (EntityType *)userDataB;
+    const EntityType *typeA = (EntityType *)userDataA;
+    const EntityType *typeB = (EntityType *)userDataB;
 
     print_entity_types(typeA, typeB);
 
-    // Handle ball-brick collision
     if ((*typeA == ENTITY_BALL && *typeB == ENTITY_BRICK) ||
         (*typeA == ENTITY_BRICK && *typeB == ENTITY_BALL))
     {
-        Ball *ball = (*typeA == ENTITY_BALL) ? (Ball *)userDataA : (Ball *)userDataB;
+        const Ball *ball = (*typeA == ENTITY_BALL) ? (const Ball *)userDataA : (const Ball *)userDataB;
         Brick *brick = (*typeA == ENTITY_BRICK) ? (Brick *)userDataA : (Brick *)userDataB;
 
-        if (ball != NULL && brick != NULL)
-        {
-            ball_brick_collision(ball, brick, context);
-        }
+        ball_brick_collision(ball, brick, context);
     }
 
     // Handle ball-kill_boundary collision
@@ -116,36 +112,21 @@ static void begin_contact(b2ShapeId shapeA, b2ShapeId shapeB, GameContext *conte
         (*typeA == ENTITY_KILL_BOUNDARY && *typeB == ENTITY_BALL))
     {
         Ball *ball = (*typeA == ENTITY_BALL) ? (Ball *)userDataA : (Ball *)userDataB;
-        KillBoundary *kill_boundary = (*typeA == ENTITY_KILL_BOUNDARY) ? (KillBoundary *)userDataA : (KillBoundary *)userDataB;
-
-        if (ball != NULL && kill_boundary != NULL)
-        {
-            ball_kill_boundary_collision(ball, kill_boundary, context); // Corrected function call
-        }
+        ball_kill_boundary_collision(ball, context); // Corrected function call
     }
 
     if ((*typeA == ENTITY_NANITE && *typeB == ENTITY_PADDLE) ||
         (*typeA == ENTITY_PADDLE && *typeB == ENTITY_NANITE))
     {
         Nanite *nanite = (*typeA == ENTITY_NANITE) ? (Nanite *)userDataA : (Nanite *)userDataB;
-        Ship *ship = (*typeA == ENTITY_PADDLE) ? (Ship *)userDataA : (Ship *)userDataB;
-
-        if (nanite != NULL && ship != NULL)
-        {
-            nanite_ship_collision(nanite, context); // Corrected function call
-        }
+        nanite_ship_collision(nanite, context); // Corrected function call
     }
 
     if ((*typeA == ENTITY_NANITE && *typeB == ENTITY_KILL_BOUNDARY) ||
         (*typeA == ENTITY_KILL_BOUNDARY && *typeB == ENTITY_NANITE))
     {
         Nanite *nanite = (*typeA == ENTITY_NANITE) ? (Nanite *)userDataA : (Nanite *)userDataB;
-        KillBoundary *kill_boundary = (*typeA == ENTITY_PADDLE) ? (KillBoundary *)userDataA : (KillBoundary *)userDataB;
-
-        if (nanite != NULL && kill_boundary != NULL)
-        {
-            nanite_kill_boundary_collision(nanite, kill_boundary, context); // Corrected function call
-        }
+        nanite_kill_boundary_collision(nanite); // Corrected function call
     }
 }
 
@@ -159,13 +140,13 @@ static void begin_contact(b2ShapeId shapeA, b2ShapeId shapeB, GameContext *conte
 //     // not in use as of yet
 // }
 
-static void collision_manager_process_collisions(GameContext *context)
+static void collision_manager_process_collisions(const GameContext *context)
 {
-    b2ContactEvents contactEvents = b2World_GetContactEvents(collision_manager.world);
+    const b2ContactEvents contactEvents = b2World_GetContactEvents(collision_manager.world);
 
     for (int i = 0; i < contactEvents.beginCount; ++i)
     {
-        b2ContactBeginTouchEvent *beginEvent = &contactEvents.beginEvents[i];
+        const b2ContactBeginTouchEvent *beginEvent = &contactEvents.beginEvents[i];
         begin_contact(beginEvent->shapeIdA, beginEvent->shapeIdB, context);
     }
 
@@ -182,7 +163,7 @@ static void collision_manager_process_collisions(GameContext *context)
     // }
 }
 
-CollisionManager *create_collision_manager(b2WorldId world_id)
+CollisionManager *create_collision_manager(const b2WorldId world_id)
 {
     collision_manager.world = world_id;
     collision_manager.process_collisions = collision_manager_process_collisions;

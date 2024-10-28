@@ -3,6 +3,6 @@
 
 #include "game_context.h"
 
-void ball_brick_collision(Ball *ball, Brick *brick, GameContext *context);
+void ball_brick_collision(const Ball *ball, Brick *brick, const GameContext *context);
 
 #endif

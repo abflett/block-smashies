@@ -3,6 +3,6 @@
 
 #include "game_context.h"
 
-void ball_kill_boundary_collision(Ball *ball, KillBoundary *kill_boundary, GameContext *context);
+void ball_kill_boundary_collision(Ball *ball, const GameContext *context);
 
 #endif

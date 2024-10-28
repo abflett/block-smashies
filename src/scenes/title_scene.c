@@ -5,7 +5,6 @@
 #include "settings.h"
 #include "input_manager.h"
 #include "slide_manager.h"
-#include "kvec.h"
 #include "b_utils.h"
 
 static Scene title_scene;
@@ -17,7 +16,7 @@ static Font *font;
 static float fade_in_alpha;
 static bool title_fading_in;
 
-static void scene_init(int arg_count, va_list args)
+static void scene_init(const int arg_count, const va_list args)
 {
     min_scene_time = settings.game.min_screen_time;
     title_fading_in = false;
@@ -31,7 +30,7 @@ static void scene_init(int arg_count, va_list args)
     TraceLog(LOG_INFO, "Loaded slide manager");
 }
 
-static void scene_update(float delta_time)
+static void scene_update(const float delta_time)
 {
     if (title_fading_in)
     {

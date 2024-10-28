@@ -13,7 +13,7 @@ static Font *font;
 static float count_down;
 static float y_position;
 
-static void state_init(int arg_count, va_list args)
+static void state_init(const int arg_count,const va_list args)
 {
     context = game_state_manager.context;
 
@@ -27,7 +27,7 @@ static void state_init(int arg_count, va_list args)
     }
 }
 
-static void state_update(float delta_time)
+static void state_update(const float delta_time)
 {
     y_position += delta_time * 5.7f;
     for (int i = 0; i < context->game_data->player_count; i++)
@@ -50,14 +50,14 @@ static void state_render(void)
     game_state_manager.context->render();
 
     // Round up the floating-point number
-    int rounded_count_down = (int)ceil(count_down);
+    const int rounded_count_down = (int)ceil((double)count_down);
 
     const char *countdown_text = TextFormat("%d", rounded_count_down);
 
-    float middle_x = (settings.game.play_area.width * 0.5f) + settings.game.play_area.x;
+    const float middle_x = (settings.game.play_area.width * 0.5f) + settings.game.play_area.x;
 
-    Vector2 contact_size = MeasureTextEx(*font, "Contact in", 7, 0.0f);
-    Vector2 countdown_size = MeasureTextEx(*font, countdown_text, 7, 0.0f);
+    const Vector2 contact_size = MeasureTextEx(*font, "Contact in", 7, 0.0f);
+    const Vector2 countdown_size = MeasureTextEx(*font, countdown_text, 7, 0.0f);
 
     // Draw countdown text
     DrawTextEx(*font, "Contact in", (Vector2){middle_x - contact_size.x * 0.5f, 115}, 7, 0.0f, WHITE);

@@ -6,7 +6,6 @@
 #include "resource_manager.h"
 #include "game_data.h"
 #include "ship.h"
-#include "game.h"
 #include "virtual_keyboard.h"
 
 #define SHIP_COLORS 25
@@ -34,40 +33,40 @@ static Texture2D *embark_text_backing;
 static bool is_loading;
 static int menu_selection = 2;
 static const int menu_selection_count = 3; // 0 = main menu, 1 = gameplay, 2 = change team name
-static bool menu_selection_mode = true;
+// static bool menu_selection_mode = true;
 
 static Color hologram_color = {255, 255, 255, 255};
 static Color projector_beam_color = {255, 255, 255, 255};
 
 static float hologram_beam_timer = 0.0f;
 
-static void scene_init(int arg_count, va_list args)
+static void scene_init(const int arg_count, const va_list args)
 {
     game_data = create_game_data();
 
     for (int i = 0; i < arg_count; i++)
     {
         if (i == 0)
-            is_loading = va_arg(args, bool);
+            is_loading = (bool)va_arg(args, int);
     }
 
     if (is_loading)
     {
-        // enable game_data_summaries
+        // enable game_data_summaries - load existing game data
         TraceLog(LOG_INFO, "Reliving Past");
     }
     else
     {
-        // intialize new game data
+        // initialize new game data - new game data
         TraceLog(LOG_INFO, "Embark Story");
     }
 
-    menu_selection = 1; // change team name
+    menu_selection = 1; // Todo: change team name = 2
 
     game_data->player_count = 1;
     input_manager->reset_player_inputs();
 
-    float x_positions[] = {135, 188, 84, 239};
+    const float x_positions[] = {135, 188, 84, 239};
     for (int i = 0; i < MAX_PLAYERS; i++)
     {
         if (ships[i] == NULL)
@@ -81,7 +80,7 @@ static void scene_init(int arg_count, va_list args)
     virtual_keyboard = create_virtual_keyboard(game_data->name, MAX_NAME_LENGTH, text_position, (Vector2){40, 90}, settings.colors.blue_04);
 }
 
-static void update_timers(float delta_time)
+static void update_timers(const float delta_time)
 {
     hologram_beam_timer += delta_time;
     if (hologram_beam_timer > 0.05f)
@@ -92,7 +91,7 @@ static void update_timers(float delta_time)
     }
 }
 
-static void scene_update(float delta_time)
+static void scene_update(const float delta_time)
 {
     update_timers(delta_time);
 
@@ -124,7 +123,7 @@ static void scene_update(float delta_time)
     if (input_manager->check_for_new_players(game_data->player_count))
     {
         game_data->ships[game_data->player_count].active = input_manager->player_mapped[game_data->player_count];
-        game_data->ships[game_data->player_count].ship_color = GetRandomValue(0, 24);
+        game_data->ships[game_data->player_count].ship_color = GetRandomValue(0, 24); // random ship color between 0-24 options
         game_data->player_count++;
     }
 
@@ -162,15 +161,13 @@ static void scene_update(float delta_time)
     for (int i = 0; i < game_data->player_count; i++)
     {
         // get player input mapping for easy access
-        int player_i_i = input_manager->player[i];
+        const int player_i_i = input_manager->player[i];
 
-        // change color forward
+        // change color
         if (IsKeyPressed(player_inputs[i]->action_k_UP) || IsGamepadButtonPressed(player_i_i, player_inputs[i]->action_UP) || input_manager->axis_debounce(player_i_i, player_inputs[i]->action_a_Y, 0.5f))
         {
             game_data->ships[i].ship_color = (1 + game_data->ships[i].ship_color) % SHIP_COLORS;
         }
-
-        // change color backward
         if (IsKeyPressed(player_inputs[i]->action_k_DOWN) || IsGamepadButtonPressed(player_i_i, player_inputs[i]->action_DOWN) || input_manager->axis_debounce(player_i_i, player_inputs[i]->action_a_Y, -0.5f))
         {
             game_data->ships[i].ship_color = (game_data->ships[i].ship_color - 1 + SHIP_COLORS) % SHIP_COLORS;
@@ -208,7 +205,7 @@ static void scene_render(void)
         DrawTexture(*floor_simulation, 214, 166, WHITE);
         break;
     case 2:
-        // modify aphla color of projector beams
+        // modify alpha color of projector beams
         break;
     default:
         DrawTexture(*floor_dock, 22, 166, WHITE);
@@ -219,18 +216,18 @@ static void scene_render(void)
     DrawTexture(*holo_spots, 48, 13, hologram_color);
 
     // Todo: use switch case for hologram beam color
-    DrawTexture(*holo_beam, 114, 42, menu_selection == 2 ? projector_beam_color : projector_beam_color);
+    DrawTexture(*holo_beam, 114, 42, projector_beam_color);
     DrawTexture(*embark_text_backing, 114, 51, menu_selection == 2 ? hologram_color : projector_beam_color);
 
-    int num_x_positions[] = {133, 185, 81, 236};
+    const int num_x_positions[] = {133, 185, 81, 236};
     for (int i = 0; i < game_data->player_count; i++)
     {
         ships[i]->render(ships[i]);
         DrawTexture(*nums[i], num_x_positions[i], 148, WHITE);
     }
 
-    Vector2 text_size = MeasureTextEx(*font, game_data->name, 7, 0.0f);
-    Vector2 text_centered_position = {
+    const Vector2 text_size = MeasureTextEx(*font, game_data->name, 7, 0.0f);
+    const Vector2 text_centered_position = {
         (float)(int)(text_position.x - text_size.x / 2), // Center horizontally
         text_position.y                                  // Keep vertical position the same
     };
@@ -239,7 +236,7 @@ static void scene_render(void)
 
     if (is_loading)
     {
-        // render game_data_summaries same setup as the virtual keyboard
+        // Todo: render game_data_summaries same setup as the virtual keyboard
         DrawRectangle(20, 20, 280, 140, BLACK);
     }
 

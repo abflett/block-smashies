@@ -30,7 +30,7 @@ static Color beam_alpha;
 static Color text_alpha1;
 static Color text_alpha2;
 static bool toggle_beams;
-float accumalator;
+static float accumulator;
 
 static int selected_menu_option = 0; // 0 for Embark, 1 for Relive, 2 for Modify, etc.
 static int num_menu_options = 5;     // Number of options in your menu
@@ -47,9 +47,8 @@ int flavor_text_scroll_index = 0;      // Starting index of the displayed text
 float flavor_text_scroll_timer = 0.0f; // Timer for controlling scroll speed
 float scroll_speed = 0.3f;             // Adjust this to change the scroll speed
 
-void update_flavor_text_scroll(float delta_time)
+void update_flavor_text_scroll(const float delta_time)
 {
-    // Increment the timer
     flavor_text_scroll_timer += delta_time;
 
     // If enough time has passed, move the scroll index
@@ -60,7 +59,7 @@ void update_flavor_text_scroll(float delta_time)
 
         // Get the current text length for the selected menu option
         const char *current_text = flavor_texts[selected_menu_option];
-        int text_length = (int)strlen(current_text);
+        const int text_length = (int)strlen(current_text);
 
         // Loop the text if the scroll index goes past the text length
         if (flavor_text_scroll_index >= text_length)
@@ -74,16 +73,16 @@ void draw_flavor_text(void)
 {
     // Get the current flavor text for the selected option
     const char *current_text = flavor_texts[selected_menu_option];
-    int text_length = (int)strlen(current_text);
+    const int text_length = (int)strlen(current_text);
 
     // Determine how many characters to display (circular scrolling)
-    int end_index = flavor_text_scroll_index + MAX_DISPLAY_CHARS;
+    // int end_index = flavor_text_scroll_index + MAX_DISPLAY_CHARS;
     char displayed_text[MAX_DISPLAY_CHARS + 1];
 
     // Copy the substring to be displayed, considering looping around the text
     for (int i = 0; i < MAX_DISPLAY_CHARS; i++)
     {
-        int index = (flavor_text_scroll_index + i) % text_length;
+        const int index = (flavor_text_scroll_index + i) % text_length;
         displayed_text[i] = current_text[index];
     }
     displayed_text[MAX_DISPLAY_CHARS] = '\0'; // Null-terminate the string
@@ -92,12 +91,12 @@ void draw_flavor_text(void)
     DrawTextEx(*pixel7, displayed_text, (Vector2){106, 53}, 7, 0.0f, settings.colors.blue_03);
 }
 
-static void scene_init(int arg_count, va_list args)
+static void scene_init(const int arg_count, const va_list args)
 {
     min_scene_time = settings.game.min_screen_time;
 }
 
-static void scene_update(float delta_time)
+static void scene_update(const float delta_time)
 {
     if (min_scene_time >= 0)
     {
@@ -119,20 +118,24 @@ static void scene_update(float delta_time)
         switch (selected_menu_option)
         {
         case 0: // Embark
-            scene_manager.change(scene_manager.scenes.embark, 1, false);
+            scene_manager.change(scene_manager.scenes.embark, 1, 0);
             break;
         case 1: // Relive
-            scene_manager.change(scene_manager.scenes.embark, 1, true);
+            scene_manager.change(scene_manager.scenes.embark, 1, 1);
             break;
         case 2: // Modify
             // Add logic for settings
             // show game_state for settings - is an overlay
+            scene_manager.change(scene_manager.scenes.embark, 1, 0);
             break;
         case 3: // Historic
             // Add logic for showing credits/high scores
+            scene_manager.change(scene_manager.scenes.embark, 1, 1);
             break;
         case 4: // Exit
             exit_game();
+            break;
+        default:
             break;
         }
     }
@@ -144,13 +147,13 @@ static void scene_update(float delta_time)
 
     update_flavor_text_scroll(delta_time);
 
-    accumalator += delta_time;
-    if (accumalator > 0.05)
+    accumulator += delta_time;
+    if (accumulator > 0.05)
     {
         text_alpha1 = (Color){255, 255, 255, GetRandomValue(200, 255)};
         text_alpha2 = (Color){255, 255, 255, GetRandomValue(200, 255)};
         beam_alpha = (Color){255, 255, 255, GetRandomValue(100, 155)};
-        accumalator = 0;
+        accumulator = 0;
     }
 }
 
@@ -168,17 +171,17 @@ static void scene_render(void)
     DrawTexture(*texture_beam_block_smashies, 113, 19, beam_alpha);
     DrawTexture(*texture_beam_embark, 41, 68, beam_alpha);
 
-    int embark_index_a = (selected_menu_option == 0) ? 1 : 0;
-    int relive_index_a = (selected_menu_option == 1) ? 1 : 0;
-    int modify_index_a = (selected_menu_option == 2) ? 1 : 0;
-    int historic_index_a = (selected_menu_option == 3) ? 1 : 0;
-    int exit_index_a = (selected_menu_option == 4) ? 1 : 0;
+    const int embark_index_a = (selected_menu_option == 0) ? 1 : 0;
+    const int relive_index_a = (selected_menu_option == 1) ? 1 : 0;
+    const int modify_index_a = (selected_menu_option == 2) ? 1 : 0;
+    const int historic_index_a = (selected_menu_option == 3) ? 1 : 0;
+    const int exit_index_a = (selected_menu_option == 4) ? 1 : 0;
 
-    int embark_index_b = (selected_menu_option == 0) ? 3 : 2;
-    int relive_index_b = (selected_menu_option == 1) ? 3 : 2;
-    int modify_index_b = (selected_menu_option == 2) ? 3 : 2;
-    int historic_index_b = (selected_menu_option == 3) ? 3 : 2;
-    int exit_index_b = (selected_menu_option == 4) ? 3 : 2;
+    const int embark_index_b = (selected_menu_option == 0) ? 3 : 2;
+    const int relive_index_b = (selected_menu_option == 1) ? 3 : 2;
+    const int modify_index_b = (selected_menu_option == 2) ? 3 : 2;
+    const int historic_index_b = (selected_menu_option == 3) ? 3 : 2;
+    const int exit_index_b = (selected_menu_option == 4) ? 3 : 2;
 
     DrawTextureRec(text_block_smashies[0]->texture_resource->texture, text_block_smashies[0]->src, (Vector2){113, 19}, text_alpha1);
     DrawTextureRec(text_block_smashies[2]->texture_resource->texture, text_block_smashies[2]->src, (Vector2){113, 20}, text_alpha2);
@@ -245,7 +248,7 @@ Scene *create_main_menu_scene()
     pixel7 = resource_manager.get_pixel7_font();
 
     toggle_beams = false;
-    accumalator = 0.0f;
+    accumulator = 0.0f;
     beam_alpha = settings.colors.alpha_05;
 
     input = &settings.inputs[0];

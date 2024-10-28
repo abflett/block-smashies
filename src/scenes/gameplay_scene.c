@@ -8,12 +8,10 @@
 static Scene gameplay_scene;
 static GameContext *context;
 
-static void scene_init(int arg_count, va_list args)
+static void scene_init(const int arg_count, const va_list args)
 {
     GameData *game_data = NULL;
-    // Ship **ships = NULL;
 
-    // Retrieve arguments
     for (int i = 0; i < arg_count; i++)
     {
         if (i == 0)
@@ -25,11 +23,11 @@ static void scene_init(int arg_count, va_list args)
     context->level_manager->create_level();
     context->entities->add_ball();
 
-    // start cutscene and cutsene will change to playing once animation is finished.
+    // start cutscene and cutscene will change to playing once animation is finished.
     game_state_manager.change(game_state_manager.states.game_intro_start, 0, NULL);
 }
 
-static void scene_update(float delta_time)
+static void scene_update(const float delta_time)
 {
     game_state_manager.update(delta_time);
 }

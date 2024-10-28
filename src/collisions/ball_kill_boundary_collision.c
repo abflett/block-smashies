@@ -3,10 +3,9 @@
 #include "box2d/box2d.h"
 
 #include "ball_kill_boundary_collision.h"
-#include "kill_boundary.h"
 #include "game_state_manager.h"
 
-void ball_kill_boundary_collision(Ball *ball, KillBoundary *kill_boundary, GameContext *context)
+void ball_kill_boundary_collision(Ball *ball, const GameContext *context)
 {
     // Disable the ball (set its active status to false)
     ball->disable(ball);
@@ -15,7 +14,7 @@ void ball_kill_boundary_collision(Ball *ball, KillBoundary *kill_boundary, GameC
     int active_ball_count = 0;
     for (int i = 0; i < kv_size(context->entities->balls); i++)
     {
-        Ball *existing_ball = kv_A(context->entities->balls, i);
+        const Ball *existing_ball = kv_A(context->entities->balls, i);
         if (existing_ball->active)
         {
             active_ball_count++;

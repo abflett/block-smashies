@@ -16,7 +16,7 @@ static float max_scene_time; // Variable to track elapsed time
 static float min_scene_time; // Variable to track elapsed time
 static Font *font;
 
-static void scene_init(int arg_count, va_list args)
+static void scene_init(const int arg_count, const va_list args)
 {
     max_scene_time = settings.game.max_screen_time;
     min_scene_time = settings.game.min_screen_time;
@@ -25,7 +25,7 @@ static void scene_init(int arg_count, va_list args)
     // upgrade_manager->print_nodes(upgrade_manager); // prints the upgrade nodes to the console
 }
 
-static void scene_update(float delta_time)
+static void scene_update(const float delta_time)
 {
     upgrade_manager->update(upgrade_manager, delta_time);
 
@@ -41,8 +41,8 @@ static void scene_update(float delta_time)
 
     for (int i = 0; i < MAX_PLAYERS; i++)
     {
-        InputMapping *input = input_manager->get_player_input(i);
-        int mapping = input_manager->player[i];
+        const InputMapping *input = input_manager->get_player_input(i);
+        const int mapping = input_manager->player[i];
 
         if (input_manager->key_debounce(mapping, input->action_k_ENTER) || //
             input_manager->button_debounce(mapping, input->action_A) ||

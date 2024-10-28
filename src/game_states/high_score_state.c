@@ -22,7 +22,7 @@ static int score;
 
 static float min_scene_time;
 
-static void state_init(int arg_count, va_list args)
+static void state_init(const int arg_count, const va_list args)
 {
     min_scene_time = settings.game.min_screen_time;
     game_data = game_state_manager.context->game_data;
@@ -39,7 +39,7 @@ static void state_init(int arg_count, va_list args)
     }
 }
 
-static void state_update(float delta_time)
+static void state_update(const float delta_time)
 {
     if (min_scene_time >= 0)
     {
@@ -48,8 +48,8 @@ static void state_update(float delta_time)
 
     for (int i = 0; i < game_data->player_count; i++)
     {
-        InputMapping *input = input_manager->get_player_input(i);
-        int mapping = input_manager->player[i];
+        const InputMapping *input = input_manager->get_player_input(i);
+        const int mapping = input_manager->player[i];
 
         if (input_manager->key_debounce(mapping, input->action_k_ENTER) || //
             input_manager->button_debounce(mapping, input->action_A) ||
@@ -66,7 +66,7 @@ static void state_render(void)
     for (int i = 0; i < count; ++i)
     {
         const char *high_score_text = TextFormat("%s - %d", high_scores[i].username, high_scores[i].score);
-        DrawTextEx(*font, high_score_text, (Vector2){5, (float)10 * i + 5}, 7, 0, LIGHTGRAY);
+        DrawTextEx(*font, high_score_text, (Vector2){5, (float)(10 * i + 5)}, 7, 0, LIGHTGRAY);
     }
 }
 

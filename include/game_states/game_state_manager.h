@@ -22,8 +22,8 @@ typedef struct GameStateManager
     GameStates states;
     GameContext *context;
 
-    void (*change)(GameState *new_state, int arg_count, ...);
-    void (*update)(float delta_time);
+    void (*change)(GameState *new_state, const int arg_count, ...);
+    void (*update)(const float delta_time);
     void (*render)(void);
 } GameStateManager;
 

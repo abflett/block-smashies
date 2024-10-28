@@ -1,9 +1,7 @@
 #include <stdlib.h>
 #include "raylib.h"
 #include "box2d/box2d.h"
-#include "kvec.h"
 #include "playing_state.h"
-#include "settings.h"
 #include "game_state_manager.h"
 #include "game_context.h"
 #include "playing_input_handler.h"
@@ -11,7 +9,7 @@
 static GameState playing_state;
 static PlayingInputHandler *input_handler;
 
-static void state_init(int arg_count, va_list args)
+static void state_init(const int arg_count, const va_list args)
 {
     GameContext *context = game_state_manager.context;
     input_handler = initialize_playing_input(context);
@@ -36,7 +34,7 @@ static void state_cleanup(void)
 {
 }
 
-static void state_update(float delta_time)
+static void state_update(const float delta_time)
 {
     input_handler->update(delta_time);
     game_state_manager.context->update(delta_time);

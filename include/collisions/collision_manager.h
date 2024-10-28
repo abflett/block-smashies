@@ -8,9 +8,9 @@ struct GameContext;
 typedef struct CollisionManager
 {
     b2WorldId world;
-    void (*process_collisions)(struct GameContext *context);
+    void (*process_collisions)(const struct GameContext *context);
 } CollisionManager;
 
-CollisionManager *create_collision_manager(b2WorldId world_id);
+CollisionManager *create_collision_manager(const b2WorldId world_id);
 
 #endif

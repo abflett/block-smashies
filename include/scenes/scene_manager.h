@@ -18,8 +18,8 @@ typedef struct SceneManager
     Scene *current_scene;
     GameScenes scenes;
 
-    void (*change)(Scene *new_scene, int arg_count, ...);
-    void (*update)(float delta_time);
+    void (*change)(Scene *new_scene, const int arg_count, ...);
+    void (*update)(const float delta_time);
     void (*render)(void);
 } SceneManager;
 

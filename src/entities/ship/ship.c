@@ -15,21 +15,19 @@ static int calculate_segments_func(Ship *ship)
         return 2; // 2 players, each with 2 segments
     case 3:
         return (*ship->player == 0) ? 2 : 1; // Player 1 has 2, others have 1
-    case 4:
-        return 1; // 4 players, each with 1 segment
     default:
-        return 1; // Fallback, should not happen unless player_count is misconfigured
+        return 1; // also handles 4 players
     }
 }
 
 // For static animations, velocity will show correct thruster animation
-static void move(Ship *ship, b2Vec2 position, b2Vec2 velocity)
+static void move(Ship *ship, const b2Vec2 position, const b2Vec2 velocity)
 {
     ship->velocity = velocity;
     ship->position = position;
 }
 
-static void update_ship(Ship *ship, float delta_time)
+static void update_ship(Ship *ship, const float delta_time)
 {
     // boost cooldown timer
     if (ship->boost_active_timer > 0)
@@ -142,16 +140,16 @@ static void activate_ship_physics(Ship *ship, GameContext *game_context)
 }
 
 // Ship input commands
-static void move_ship(Ship *ship, int direction)
+static void move_ship(const Ship *ship, const int direction)
 {
-    b2Body_ApplyForceToCenter(ship->body, (b2Vec2){direction * (*ship->ship_force), 0.0f}, true);
+    b2Body_ApplyForceToCenter(ship->body, (b2Vec2){(float)direction * (*ship->ship_force), 0.0f}, true);
 }
 
-static void boost_ship(Ship *ship, int direction)
+static void boost_ship(Ship *ship, const int direction)
 {
     if (ship->boost_active_timer <= 0.0f)
     {
-        b2Body_ApplyLinearImpulse(ship->body, (b2Vec2){direction * (*ship->boost_force), 0.0f}, b2Body_GetWorldCenterOfMass(ship->body), true);
+        b2Body_ApplyLinearImpulse(ship->body, (b2Vec2){(float)direction * (*ship->boost_force), 0.0f}, b2Body_GetWorldCenterOfMass(ship->body), true);
         ship->boost_active_timer = *ship->boost_cooldown;
     }
 }
@@ -168,7 +166,7 @@ static void pulse_ship(Ship *ship)
     }
 }
 
-Ship *create_ship(int *player, GameData *game_data, b2Vec2 position)
+Ship *create_ship(int *player, GameData *game_data, const b2Vec2 position)
 {
     Ship *ship = malloc(sizeof(Ship));
 

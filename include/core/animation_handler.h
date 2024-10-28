@@ -23,12 +23,12 @@ typedef struct AnimationHandler
     bool ping_pong_forward;
     float rotation;
     bool is_playing;
-    void (*update)(struct AnimationHandler *animation_handler, float delta_time, float rotation);
-    void (*render)(struct AnimationHandler *animation_handler, Vector2 position);
+    void (*update)(struct AnimationHandler *animation_handler, const float delta_time, const float rotation);
+    void (*render)(struct AnimationHandler *animation_handler, const Vector2 position);
     void (*cleanup)(struct AnimationHandler *animation_handler);
 
 } AnimationHandler;
 
-AnimationHandler *create_animation_manager(const char *id, AnimationType animation_type, float frame_time);
+AnimationHandler *create_animation_manager(const char *id, AnimationType animation_type, const float frame_time);
 
 #endif

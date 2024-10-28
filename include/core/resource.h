@@ -16,7 +16,7 @@ typedef struct
 typedef struct
 {
     const char *id;                    // Name of the subtexture
-    TextureResource *texture_resource; // Pointer to the texture texture resource
+    TextureResource *texture_resource; // Pointer to the texture resource
     Rectangle src;                     // Source rectangle defining the subtexture in the atlas
     UT_hash_handle hh;                 // Handle for hash table management
 } Subtexture;

@@ -4,16 +4,14 @@
 #include "resource_manager.h"
 #include "scene_manager.h"
 #include "settings.h"
-#include "entities.h"
-#include "resource_manager.h"
 
 static GameState pause_menu_state;
 
-static void state_init(int arg_count, va_list args)
+static void state_init(const int arg_count, const va_list args)
 {
 }
 
-static void state_update(float delta_time)
+static void state_update(const float delta_time)
 {
     if (IsKeyPressed(KEY_ENTER))
     {
@@ -36,11 +34,12 @@ static void state_render(void)
 
     DrawRectangle(0, (int)(settings.game.target_size.y / 2) - 40, (int)settings.game.target_size.x, 80, (Color){0, 0, 0, 170});
 
+    // Todo: fix this to use the game font and proper text measure.
     const char *text = "'Escape' to exit\n'Enter' to continue playing!";
-    int fontSize = 8;
-    int textWidth = MeasureText(text, fontSize);
-    int posX = (int)((settings.game.target_size.x - textWidth) / 2);
-    int posY = (int)((settings.game.target_size.y / 2) - (fontSize / 2)) - fontSize;
+    const int fontSize = 8;
+    const int textWidth = MeasureText(text, fontSize);
+    const int posX = (int)(settings.game.target_size.x - (float)textWidth / 2);
+    const int posY = (int)(settings.game.target_size.y / 2 - (float)fontSize / 2 - (float)fontSize);
 
     DrawText(text, posX, posY, fontSize, LIGHTGRAY);
 }

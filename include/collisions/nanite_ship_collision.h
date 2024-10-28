@@ -4,6 +4,6 @@
 #include "nanite.h"
 #include "game_context.h"
 
-void nanite_ship_collision(Nanite *nanite, GameContext *context);
+void nanite_ship_collision(Nanite *nanite, const GameContext *context);
 
 #endif

@@ -3,6 +3,6 @@
 
 #include "game_context.h"
 
-void nanite_kill_boundary_collision(Nanite *nanite, KillBoundary *kill_boundary, GameContext *GameContext);
+void nanite_kill_boundary_collision(Nanite *nanite);
 
 #endif

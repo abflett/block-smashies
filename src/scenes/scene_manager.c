@@ -10,7 +10,7 @@
 #include "logo_scene.h"
 #include "embark_scene.h"
 
-void change_scene(Scene *new_scene, int arg_count, ...)
+void change_scene(Scene *new_scene, const int arg_count, ...)
 {
     if (scene_manager.current_scene && scene_manager.current_scene->cleanup)
         scene_manager.current_scene->cleanup();
@@ -25,7 +25,7 @@ void change_scene(Scene *new_scene, int arg_count, ...)
     }
 }
 
-void update_scene(float delta_time)
+void update_scene(const float delta_time)
 {
     if (scene_manager.current_scene && scene_manager.current_scene->update)
         scene_manager.current_scene->update(delta_time);

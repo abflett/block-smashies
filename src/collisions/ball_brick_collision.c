@@ -1,7 +1,6 @@
 #include "ball_brick_collision.h"
-#include "settings.h"
 
-void ball_brick_collision(Ball *ball, Brick *brick, GameContext *context)
+void ball_brick_collision(const Ball *ball, Brick *brick, const GameContext *context)
 {
     brick->health -= *ball->orb_power;
     if (brick->health <= 0)
