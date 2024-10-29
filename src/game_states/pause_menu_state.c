@@ -1,7 +1,6 @@
 #include "raylib.h"
 #include "pause_menu_state.h"
 #include "game_state_manager.h"
-#include "resource_manager.h"
 #include "scene_manager.h"
 #include "settings.h"
 

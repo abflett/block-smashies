@@ -2,9 +2,8 @@
 #include "slide_manager.h"
 #include "settings.h"
 #include "resource_manager.h"
-#include "settings.h"
 
-static void render(SlideManager *manager)
+static void render(const SlideManager *manager)
 {
     // Draw the texture of the current slide
     DrawTexture(*manager->current_slide->texture, 96, 30, (Color){255, 255, 255, (int)manager->texture_fade_alpha});
@@ -12,9 +11,9 @@ static void render(SlideManager *manager)
     // Loop through the text lines of the current slide
     for (int i = 0; i < manager->current_text_index + 1; i++)
     {
-        SlideText *text = &kv_A(manager->current_slide->text_lines, i);
-        Vector2 text_size = MeasureTextEx(*manager->font, text->text, 7, 0.0f);
-        Vector2 text_position = {settings.game.target_size.x / 2 - text_size.x / 2, (float)105 + (i * 10)};
+        const SlideText *text = &kv_A(manager->current_slide->text_lines, i);
+        const Vector2 text_size = MeasureTextEx(*manager->font, text->text, 7, 0.0f);
+        const Vector2 text_position = {settings.game.target_size.x / 2 - text_size.x / 2, (float)105 + (float)(i * 10)};
         if (i == manager->current_text_index)
         {
             DrawTextEx(*manager->font, text->text, text_position, 7, 0.0f, (Color){171, 148, 122, (int)manager->text_fade_alpha});
@@ -26,7 +25,7 @@ static void render(SlideManager *manager)
     }
 }
 
-static void update(SlideManager *manager, float delta_time)
+static void update(SlideManager *manager, const float delta_time)
 {
     // Fade in the texture
     if (manager->texture_fade_alpha < 255)
@@ -58,7 +57,7 @@ static void update(SlideManager *manager, float delta_time)
     {
         // Move to the next text line
         manager->current_text_index++;
-        SlideText *text_line = &kv_A(manager->current_slide->text_lines, manager->current_text_index);
+        const SlideText *text_line = &kv_A(manager->current_slide->text_lines, manager->current_text_index);
 
         // Update duration and reset timers for the new text line
         manager->text_duration = text_line->duration;
@@ -74,7 +73,7 @@ static void update(SlideManager *manager, float delta_time)
             manager->texture_fade_alpha = 0.0f;
 
             manager->current_text_index = 0;
-            SlideText *text_line = &kv_A(manager->current_slide->text_lines, manager->current_text_index);
+            const SlideText *text_line = &kv_A(manager->current_slide->text_lines, manager->current_text_index);
             manager->current_text_duration = 0.0f;
             manager->text_duration = text_line->duration;
             manager->text_fade_alpha = 0.0f;
@@ -120,7 +119,7 @@ void cleanup_slide_manager(SlideManager *self)
 
 SlideManager *create_slide_manager(const char *slides_scene_name)
 {
-    SlideManager *slide_manager = (SlideManager *)malloc(sizeof(SlideManager));
+    SlideManager *slide_manager = malloc(sizeof(SlideManager));
     if (slide_manager == NULL)
     {
         return NULL;
@@ -136,12 +135,12 @@ SlideManager *create_slide_manager(const char *slides_scene_name)
         return NULL;
     }
 
-    JSON_Object *root_object = json_value_get_object(root_value);
-    JSON_Array *intro_array = json_object_get_array(root_object, slides_scene_name); // Use parameter
+    const JSON_Object *root_object = json_value_get_object(root_value);
+    const JSON_Array *intro_array = json_object_get_array(root_object, slides_scene_name); // Use parameter
 
     for (size_t i = 0; i < json_array_get_count(intro_array); i++)
     {
-        JSON_Object *slide_obj = json_array_get_object(intro_array, i); // Updated name for clarity
+        const JSON_Object *slide_obj = json_array_get_object(intro_array, i); // Updated name for clarity
 
         GameSlide *slide = create_game_slide(slide_obj);
         if (slide != NULL) // Ensure slide creation was successful
@@ -154,12 +153,9 @@ SlideManager *create_slide_manager(const char *slides_scene_name)
     slide_manager->current_slide = kv_A(slide_manager->slides, slide_manager->current_slide_index);
     slide_manager->texture_fade_alpha = 0.0f;
     slide_manager->slides_end = false;
-
-    // Todo fix text duration per text line in json
-
     slide_manager->current_text_index = 0;
     slide_manager->current_text_duration = 0.0f;
-    SlideText *text_line = &kv_A(slide_manager->current_slide->text_lines, slide_manager->current_text_index);
+    const SlideText *text_line = &kv_A(slide_manager->current_slide->text_lines, slide_manager->current_text_index);
     slide_manager->text_duration = text_line->duration;
     slide_manager->text_fade_alpha = 0.0f;
 

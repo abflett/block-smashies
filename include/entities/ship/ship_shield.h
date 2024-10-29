@@ -2,9 +2,8 @@
 #define SHIP_SHIELD_H
 
 #include "box2d/box2d.h"
-#include "raylib.h"
-#include "entity_type.h"
 #include "resource_manager.h"
+#include "entity_type.h"
 
 typedef struct ShipShield
 {

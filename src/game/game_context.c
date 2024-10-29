@@ -1,20 +1,17 @@
-#include <stdlib.h>
 #include "game_context.h"
-#include "resource_manager.h"
-#include "game.h"
 
 static GameContext context;
+static const float TIME_STEP = 1.0f / 60.0f;
+static const int SUB_STEP_COUNT = 4;
 
-static void update_game_context(float delta_time)
+static void update_game_context(const float delta_time)
 {
     static float accumulator = 0.0f;
-    float timeStep = 1.0f / 60.0f;
-    int subStepCount = 4;
     accumulator += delta_time;
-    while (accumulator >= timeStep)
+    while (accumulator >= TIME_STEP)
     {
-        b2World_Step(context.world_id, timeStep, subStepCount);
-        accumulator -= timeStep;
+        b2World_Step(context.world_id, TIME_STEP, SUB_STEP_COUNT);
+        accumulator -= TIME_STEP;
         context.collision_manager->process_collisions(&context);
     }
 

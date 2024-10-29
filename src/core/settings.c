@@ -58,7 +58,7 @@ Settings settings = {
         // nanite
         .nanite_y_velocity = 20.0f, // velocity that nanites fall
         // kill boundary
-        .boundary_padding = 4.0f, // extra big segment line for kill boundary
+        .boundary_padding = 4.0f, // padding for segment line kill boundary
         // walls boundary
         .edge_padding = 10.0f //
     },
@@ -183,6 +183,8 @@ static void set_default_input_settings(void)
             settings.inputs[i].action_k_ENTER = KEY_O;
             settings.inputs[i].action_k_ESCAPE = KEY_U;
             break;
+        default:
+            break;
         }
     }
 }
@@ -199,7 +201,7 @@ void initialize_settings()
         return;
     }
 
-    JSON_Object *root_object = json_value_get_object(root_value);
+    const JSON_Object *root_object = json_value_get_object(root_value);
 
     // Load configuration settings
     settings.config.screen_size.x = (float)json_object_get_number(root_object, "screen_width");
@@ -210,12 +212,12 @@ void initialize_settings()
     settings.config.shake_screen = json_object_get_boolean(root_object, "shake_screen");
 
     // Load input mappings
-    JSON_Array *input_mappings_array = json_object_get_array(root_object, "input_mappings");
+    const JSON_Array *input_mappings_array = json_object_get_array(root_object, "input_mappings");
     if (input_mappings_array != NULL)
     {
         for (int i = 0; i < 4; i++)
         {
-            JSON_Object *input_mapping_object = json_array_get_object(input_mappings_array, i);
+            const JSON_Object *input_mapping_object = json_array_get_object(input_mappings_array, i);
 
             // Load gamepad buttons
             settings.inputs[i].action_UP = (GamepadButton)json_object_get_number(input_mapping_object, "action_UP");

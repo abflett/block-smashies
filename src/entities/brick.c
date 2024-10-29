@@ -2,27 +2,26 @@
 #include "raylib.h"
 #include "brick.h"
 #include "resource_manager.h"
-#include "settings.h"
 #include "entity_type.h"
 #include "game_context.h"
 #include "b_utils.h"
-#include "game.h"
 
-static float brick_max_health(int brick_type)
+
+static float brick_max_health(const int brick_type)
 {
     // Todo: add modifier
     return (float)(brick_type + 1) * 1;
 }
 
-static float brick_currency(Brick *brick)
+static float brick_currency(const Brick *brick)
 {
     // Todo: add modifier
     return (float)(brick->brick_type + 1) * 1;
 }
 
-static void update_brick(Brick *brick, float delta_time)
+static void update_brick(Brick *brick, const float delta_time)
 {
-    float health_percentage = brick->health / brick->max_health * 100.0f;
+    const float health_percentage = brick->health / brick->max_health * 100.0f;
     int subtexture_index = 0;
     if (health_percentage <= 25)
     {
@@ -48,7 +47,7 @@ static void update_brick(Brick *brick, float delta_time)
         brick->animation_handler->update(brick->animation_handler, delta_time, 0.0f);
         if (!brick->animation_handler->is_playing)
         {
-            b2Vec2 position = b2Body_GetPosition(brick->body);
+            const b2Vec2 position = b2Body_GetPosition(brick->body);
             brick->active = false;
             brick->game_context->entities->add_nanite(position, brick_currency(brick), brick->brick_type);
             brick->game_context->game_status->enemy_count--;
@@ -64,9 +63,9 @@ static void clean_up_brick(Brick *brick)
     free(brick);
 }
 
-static void render_brick(Brick *brick)
+static void render_brick(const Brick *brick)
 {
-    b2Vec2 position = b2Body_GetPosition(brick->body);
+    const b2Vec2 position = b2Body_GetPosition(brick->body);
 
     if (brick->animation_handler->is_playing)
     {
@@ -87,7 +86,7 @@ static void disable_brick(Brick *brick)
     b2Body_Disable(brick->body);
 }
 
-static void reset_brick(Brick *brick, b2Vec2 position, int brick_type)
+static void reset_brick(Brick *brick, const b2Vec2 position, const int brick_type)
 {
     brick->brick_type = brick_type;
     brick->is_destroying = false;
@@ -99,12 +98,13 @@ static void reset_brick(Brick *brick, b2Vec2 position, int brick_type)
     b2Body_SetTransform(brick->body, position, (b2Rot){1.0f, 0.0f});
 }
 
-Brick *create_brick(GameContext *game_context, b2Vec2 position, int brick_type)
+Brick *create_brick(GameContext *game_context, const b2Vec2 position, int const brick_type)
 {
     Brick *brick = (Brick *)malloc(sizeof(Brick));
     if (brick == NULL)
     {
         log_error("Could not allocate memory for brick!");
+        return NULL;
     }
 
     brick->type = ENTITY_BRICK;
@@ -126,7 +126,7 @@ Brick *create_brick(GameContext *game_context, b2Vec2 position, int brick_type)
     body_def.position = position;
     brick->body = b2CreateBody(game_context->world_id, &body_def);
 
-    b2Polygon brick_box = b2MakeBox(brick->size.x * 0.5f, brick->size.y * 0.5f);
+    const b2Polygon brick_box = b2MakeBox(brick->size.x * 0.5f, brick->size.y * 0.5f);
 
     b2ShapeDef brick_shape_def = b2DefaultShapeDef();
     brick_shape_def.density = 1.0f;

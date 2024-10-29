@@ -26,6 +26,7 @@ typedef struct VirtualKeyboard
     Texture2D *keyboard_shift;      // Texture for the keyboard key
     Texture2D *keyboard_space_lit;  // Texture for the keyboard key when it is pressed
     Texture2D *keyboard_space;      // Texture for the keyboard key
+
     bool shift_on;
     bool shift_down;
     bool caps_on;
@@ -39,12 +40,12 @@ typedef struct VirtualKeyboard
     Vector2 keyboard_final_position;
     bool active; // True if the virtual keyboard is in use
     bool is_closing;
-    void (*update)(struct VirtualKeyboard *keyboard, float delta_time); // Update logic for input
+    void (*update)(struct VirtualKeyboard *keyboard, const float delta_time); // Update logic for input
     void (*render)(struct VirtualKeyboard *keyboard);                   // Render the keyboard
     void (*activate)(struct VirtualKeyboard *keyboard);                 // Activate the keyboard
-    char *(*get_string)(struct VirtualKeyboard *keyboard);              // Return the current string
+    // Todo: might not need get_string
     void (*cleanup)(struct VirtualKeyboard *keyboard);                  // Cleanup memory, etc.
 } VirtualKeyboard;
 
-VirtualKeyboard *create_virtual_keyboard(char *input_text, int max_length, Vector2 text_position, Vector2 keyboard_position, Color blink_color);
+VirtualKeyboard *create_virtual_keyboard(char *input_text, const int max_length, const Vector2 text_position, const Vector2 keyboard_position, const Color blink_color);
 #endif

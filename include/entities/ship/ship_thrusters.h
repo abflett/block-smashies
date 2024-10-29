@@ -18,7 +18,7 @@ typedef struct ShipThrusters
     AnimationHandler *bottom_thruster; // render more then once for multiple segments
 
     // function to control what thruster level and direction to activate, right, left and boost up
-    void (*render)(struct ShipThrusters *ship_thrusters);  // render thrusters based on segments and postion pointers
+    void (*render)(const struct ShipThrusters *ship_thrusters);  // render thrusters based on segments and postion pointers
     void (*cleanup)(struct ShipThrusters *ship_thrusters); // cleanup animation handlers
 } ShipThrusters;
 

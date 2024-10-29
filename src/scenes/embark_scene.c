@@ -8,6 +8,7 @@
 #include "ship.h"
 #include "virtual_keyboard.h"
 
+
 #define SHIP_COLORS 25
 #define MAX_PLAYERS 4
 #define MAX_NAME_LENGTH 14

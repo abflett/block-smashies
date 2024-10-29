@@ -20,7 +20,7 @@ typedef struct UpgradeManager
 
     GameDialog *exit_dialog;
 
-    Subtexture *subtexture_hightlight_types[2];
+    Subtexture *subtexture_highlight_types[2];
     Subtexture *background_subtexture[2];
     UpgradeNodeType upgrade_node_types[18];
 
@@ -34,10 +34,9 @@ typedef struct UpgradeManager
     Texture *upgrade_display;
     Font *font;
 
-    void (*update)(struct UpgradeManager *upgrade_manager, float delta_time);
-    void (*render)(struct UpgradeManager *upgrade_manager);
+    void (*update)(const struct UpgradeManager *upgrade_manager, const float delta_time);
+    void (*render)(const struct UpgradeManager *upgrade_manager);
     void (*cleanup)(struct UpgradeManager *upgrade_manager);
-    void (*print_nodes)(struct UpgradeManager *upgrade_manager);
 } UpgradeManager;
 
 UpgradeManager *create_upgrade_manager(GameData *game_data);

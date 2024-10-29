@@ -8,11 +8,7 @@ static void set_ship_shield(ShipShield *ship_shield)
     {
         shield_type = 1; // For 2 segments
     }
-    else if (*ship_shield->segments == 3)
-    {
-        shield_type = 2; // For 4 segments
-    }
-    else if (*ship_shield->segments == 4)
+    else if (*ship_shield->segments >= 3)
     {
         shield_type = 2; // For 4 segments
     }
@@ -30,9 +26,9 @@ static void render_ship_shield(ShipShield *ship_shield)
         set_ship_shield(ship_shield);
     }
 
-    float centered_x = (float)(int)(ship_shield->position->x - (ship_shield->subtexture->src.width / 2.0f));
-    float offset_y = ship_shield->position->y + 4;
-    Vector2 position = (Vector2){centered_x, flip_y(offset_y)};
+    const float centered_x = (float)(int)(ship_shield->position->x - (ship_shield->subtexture->src.width / 2.0f));
+    const float offset_y = ship_shield->position->y + 4;
+    const Vector2 position = (Vector2){centered_x, flip_y(offset_y)};
 
     DrawTextureRec(ship_shield->subtexture->texture_resource->texture,
                    ship_shield->subtexture->src,

@@ -14,7 +14,7 @@ static InputMapping *p_inputs[MAX_SHIPS];
 static int input_nums[MAX_SHIPS];
 static Ship **ships;
 
-static void update(float delta_time)
+static void update(const float delta_time)
 {
     for (int i = 0; i < playing_input.context->game_data->player_count; i++)
     {

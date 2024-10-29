@@ -6,16 +6,20 @@
 #include "virtual_keyboard.h"
 #include "resource_manager.h"
 #include "settings.h"
-#include "game.h"
 
-#define KEYBOARD_ROWS 5
-#define KEYBOARD_COLS 12
 #define KEYBOARD_KEYS "*1234567890<*qwertyuiop*+asdfghjkl']=zxcvbnm,._*>>>>>>>>>>>>"
 // *1234567890< // (*)none, (<)delete // row 0
 // *QWERTYUIOP* // (*)none, (*)none   // row 1
 // +ASDFGHJKL'] // (+)caps, (])enter  // row 2
 // =ZXCVBNM,._* // (=)shift, (*)none  // row 3
 // >>>>>>>>>>>> // (>)space...        // row 4
+
+// Todo: Fix char casing when caps or shift
+
+const int KEY_WIDTH = 15;
+const int KEY_HEIGHT = 15;
+const int KEYBOARD_ROWS = 5;
+const int KEYBOARD_COLS = 12;
 
 static void keyboard_activate(VirtualKeyboard *keyboard)
 {
@@ -64,7 +68,7 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
             keyboard->keyboard_position = keyboard->keyboard_final_position;
         }
 
-        // close virtural keyboard if enter key is pressed
+        // close virtual keyboard if enter key is pressed
         if (keyboard->input_manager->key_debounce(0, keyboard->p1_input->action_k_ENTER))
         {
             close_keyboard(keyboard);
@@ -156,8 +160,8 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
         // Handle character input when pressing the "confirm" button (A or Enter)
         if (IsGamepadButtonPressed(0, keyboard->p1_input->action_A))
         {
-            int key_index = keyboard->selected_key_y * KEYBOARD_COLS + keyboard->selected_key_x;
-            char selected_char = KEYBOARD_KEYS[key_index];
+            const int key_index = keyboard->selected_key_y * KEYBOARD_COLS + keyboard->selected_key_x;
+            const char selected_char = KEYBOARD_KEYS[key_index];
 
             switch (selected_char)
             {
@@ -188,7 +192,8 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
             default:
                 if (keyboard->cursor_position < keyboard->max_length)
                 {
-                    keyboard->input_text[keyboard->cursor_position++] = keyboard->caps_on || keyboard->shift_on ? toupper(selected_char) : selected_char;
+                    const int transformed_char = keyboard->caps_on || keyboard->shift_on ? toupper(selected_char) : selected_char;
+                    keyboard->input_text[keyboard->cursor_position++] = (char)transformed_char;
                     keyboard->input_text[keyboard->cursor_position] = '\0'; // Null-terminate the string
                     keyboard->shift_on = false;
                     break;
@@ -203,7 +208,7 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
             keyboard->caps_on = !keyboard->caps_on; // Toggle caps state
         }
 
-        int key = GetKeyPressed(); // Get the key pressed
+        const int key = GetKeyPressed(); // Get the key pressed
         keyboard->shift_down = IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT);
 
         // Check for printable characters
@@ -211,9 +216,8 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
         { // Printable ASCII range
             if (keyboard->cursor_position < keyboard->max_length)
             { // Ensure room for null terminator
-                char selected_char = (char)key;
-                selected_char = (keyboard->caps_on || keyboard->shift_on || keyboard->shift_down) ? selected_char : tolower(selected_char);
-                keyboard->input_text[keyboard->cursor_position++] = selected_char;
+                const int transformed_char = keyboard->caps_on || keyboard->shift_on || keyboard->shift_down ? toupper(key) : key;
+                keyboard->input_text[keyboard->cursor_position++] = (char)transformed_char;
                 keyboard->input_text[keyboard->cursor_position] = '\0'; // Null-terminate the string
                 keyboard->shift_on = false;
 
@@ -222,8 +226,8 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
                 {
                     for (int x = 0; x < KEYBOARD_COLS; x++)
                     {
-                        int key_index = y * KEYBOARD_COLS + x;
-                        if (KEYBOARD_KEYS[key_index] == tolower(selected_char))
+                        const int key_index = y * KEYBOARD_COLS + x;
+                        if (KEYBOARD_KEYS[key_index] == tolower(key))
                         {
                             // Set the selected key's position
                             keyboard->selected_key_x = x;
@@ -235,7 +239,6 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
             }
         }
 
-        // Handle backspace input // Todo: inputmanager keydebounce
         if (keyboard->input_manager->key_debounce(0, KEY_BACKSPACE) || keyboard->input_manager->key_down_repeat(0, KEY_BACKSPACE) || IsGamepadButtonPressed(0, keyboard->p1_input->action_B))
         {
             if (keyboard->cursor_position > 0)
@@ -256,8 +259,8 @@ static void keyboard_render(VirtualKeyboard *keyboard)
     // If we haven't reached max_length, show the blinking underscore at the typing position
     if (keyboard->cursor_position < keyboard->max_length && keyboard->show_underscore)
     {
-        Vector2 text_size = MeasureTextEx(*keyboard->font, keyboard->input_text, 7, 0.0f);
-        Vector2 underscore_position = {
+        const Vector2 text_size = MeasureTextEx(*keyboard->font, keyboard->input_text, 7, 0.0f);
+        const Vector2 underscore_position = {
             keyboard->text_position.x + text_size.x / 2, // At the end of the input text
             keyboard->text_position.y};
         DrawTextEx(*keyboard->font, "_", underscore_position, 7, 0.0f, keyboard->blink_color); // Draw the blinking underscore
@@ -267,24 +270,23 @@ static void keyboard_render(VirtualKeyboard *keyboard)
     // Keyboard background
     DrawTexture(*keyboard->keyboard_bg, (int)keyboard->keyboard_position.x, (int)keyboard->keyboard_position.y, WHITE);
 
-    int key_width = 15;
-    int key_height = 15;
-    Vector2 keyboard_start = {keyboard->keyboard_position.x + 23, keyboard->keyboard_position.y + 6}; // Start position for the keyboard on the screen
-    int key_offsets_x[KEYBOARD_ROWS] = {-15, -5, 0, 10, 0};
 
-    Texture2D *shift_texture = keyboard->keyboard_shift;
-    Texture2D *caps_texture = keyboard->keyboard_caps;
-    Texture2D *space_texture = keyboard->keyboard_space;
-    Texture2D *enter_texture = keyboard->keyboard_enter;
-    Texture2D *delete_texture = keyboard->keyboard_delete;
+    const Vector2 keyboard_start = {keyboard->keyboard_position.x + 23, keyboard->keyboard_position.y + 6}; // Start position for the keyboard on the screen
+    const float key_offsets_x[] = {-15.0f, -5.0f, 0.0f, 10.0f, 0.0f};
+
+    const Texture2D *shift_texture = keyboard->keyboard_shift;
+    const Texture2D *caps_texture = keyboard->keyboard_caps;
+    const Texture2D *space_texture = keyboard->keyboard_space;
+    const Texture2D *enter_texture = keyboard->keyboard_enter;
+    const Texture2D *delete_texture = keyboard->keyboard_delete;
 
     for (int y = 0; y < KEYBOARD_ROWS; y++)
     {
         for (int x = 0; x < KEYBOARD_COLS; x++)
         {
-            int key_index = y * KEYBOARD_COLS + x;
+            const int key_index = y * KEYBOARD_COLS + x;
             char key = KEYBOARD_KEYS[key_index];
-            bool is_selected = keyboard->selected_key_x == x && keyboard->selected_key_y == y;
+            const bool is_selected = keyboard->selected_key_x == x && keyboard->selected_key_y == y;
 
             if (key == '*' || key == '<' || key == '+' || key == ']' || key == '=' || key == '>')
             {
@@ -315,17 +317,16 @@ static void keyboard_render(VirtualKeyboard *keyboard)
                 continue;
             }
 
-            key = keyboard->caps_on || keyboard->shift_on || keyboard->shift_down ? toupper(key) : key;
-
-            Vector2 key_position = {keyboard_start.x + x * (key_width + 1), keyboard_start.y + y * (key_height + 1)};
-            Texture2D *key_texture = is_selected ? keyboard->keyboard_key_lit : keyboard->keyboard_key;
-            DrawTexture(*key_texture, (int)key_position.x + key_offsets_x[y], (int)key_position.y, WHITE);
+            const int transformed_char = keyboard->caps_on || keyboard->shift_on || keyboard->shift_down ? toupper(key) : key;
+            const Vector2 key_position = {keyboard_start.x + (float)x * (float)(KEY_WIDTH + 1), keyboard_start.y + (float)y * (float)(KEY_HEIGHT + 1)};
+            const Texture2D *key_texture = is_selected ? keyboard->keyboard_key_lit : keyboard->keyboard_key;
+            DrawTexture(*key_texture, (int)key_position.x + (int)key_offsets_x[y], (int)key_position.y, WHITE);
 
             // Center the text in the key
-            Vector2 text_size = MeasureTextEx(*keyboard->font, TextFormat("%c", key), 7, 0.0f);
-            Vector2 text_position = {(float)(int)(key_position.x + (key_width - text_size.x) / 2) + key_offsets_x[y] + 1, (float)(int)(key_position.y + (key_height - text_size.y) / 2)};
-            Color key_text_color = is_selected ? settings.colors.blue_05 : settings.colors.blue_03;
-            DrawTextEx(*keyboard->font, TextFormat("%c", key), text_position, 7, 0.0f, key_text_color);
+            const Vector2 text_size = MeasureTextEx(*keyboard->font, TextFormat("%c", transformed_char), 7, 0.0f);
+            const Vector2 text_position = {(float)(int)(key_position.x + ((float)KEY_WIDTH - text_size.x) / 2) + key_offsets_x[y] + 1, (float)(int)(key_position.y + ((float)KEY_HEIGHT - text_size.y) / 2)};
+            const Color key_text_color = is_selected ? settings.colors.blue_05 : settings.colors.blue_03;
+            DrawTextEx(*keyboard->font, TextFormat("%c", transformed_char), text_position, 7, 0.0f, key_text_color);
         }
     }
 
@@ -346,11 +347,6 @@ static void keyboard_render(VirtualKeyboard *keyboard)
     DrawTexture(*enter_texture, (int)keyboard_start.x + 176, (int)keyboard_start.y + 32, WHITE);
     DrawTexture(*delete_texture, (int)keyboard_start.x + 161, (int)keyboard_start.y + 0, WHITE);
     DrawTexture(*shift_texture, (int)keyboard_start.x - 5, (int)keyboard_start.y + 48, WHITE);
-}
-
-static char *keyboard_get_string(VirtualKeyboard *keyboard)
-{
-    return keyboard->input_text;
 }
 
 static void keyboard_cleanup(VirtualKeyboard *keyboard)
@@ -398,7 +394,6 @@ VirtualKeyboard *create_virtual_keyboard(char *input_text, int max_length, Vecto
     keyboard->update = keyboard_update;
     keyboard->render = keyboard_render;
     keyboard->activate = keyboard_activate;
-    keyboard->get_string = keyboard_get_string;
     keyboard->cleanup = keyboard_cleanup;
 
     return keyboard;

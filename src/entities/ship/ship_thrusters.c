@@ -10,18 +10,18 @@ const float thruster_horizontal_offset = 1.0f;     // Offset for left and right 
 const float bottom_thruster_offset_y = 9.0f;       // Y offset for bottom thrusters
 const float bottom_thruster_x_padding = 3.0f;      // Padding for bottom thruster X positioning
 
-static void render_ship_thrusters(ShipThrusters *ship_thrusters)
+static void render_ship_thrusters(const ShipThrusters *ship_thrusters)
 {
     // Calculate widths
-    float full_body_width = segment_body_width * (*ship_thrusters->segments);
-    float half_body_width = full_body_width * 0.5f;
+    const float full_body_width = segment_body_width * (float)(*ship_thrusters->segments);
+    const float half_body_width = full_body_width * 0.5f;
 
     // Left and right thruster positions
-    Vector2 left_position = (Vector2){ship_thrusters->position->x - half_body_width - thruster_horizontal_offset,
+    const Vector2 left_position = (Vector2){ship_thrusters->position->x - half_body_width - thruster_horizontal_offset,
                                       flip_y(ship_thrusters->position->y - thruster_vertical_left_offset)};
-    Vector2 right_position = (Vector2){ship_thrusters->position->x + half_body_width + thruster_horizontal_offset,
+    const Vector2 right_position = (Vector2){ship_thrusters->position->x + half_body_width + thruster_horizontal_offset,
                                        flip_y(ship_thrusters->position->y - thruster_vertical_right_offset)};
-    float bottom_y_position = flip_y(ship_thrusters->position->y - bottom_thruster_offset_y);
+    const float bottom_y_position = flip_y(ship_thrusters->position->y - bottom_thruster_offset_y);
 
     // Update and render left thruster
     ship_thrusters->left_thruster->update(ship_thrusters->left_thruster, GetFrameTime(), 90.0f);
@@ -36,8 +36,8 @@ static void render_ship_thrusters(ShipThrusters *ship_thrusters)
     for (int i = 0; i < *ship_thrusters->segments; i++)
     {
         // Calculate the position for each bottom thruster segment
-        Vector2 bottom_position = (Vector2){
-            ship_thrusters->position->x - half_body_width + bottom_thruster_x_padding + (i * segment_body_width),
+        const Vector2 bottom_position = (Vector2){
+            ship_thrusters->position->x - half_body_width + bottom_thruster_x_padding + ((float)i * segment_body_width),
             bottom_y_position};
 
         ship_thrusters->bottom_thruster->render(ship_thrusters->bottom_thruster, bottom_position);

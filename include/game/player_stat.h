@@ -11,6 +11,6 @@ typedef struct PlayerStat
     float velocity;
 } PlayerStat;
 
-PlayerStat create_player_stat(int player_num);
+PlayerStat create_player_stat(const int player_num);
 
 #endif

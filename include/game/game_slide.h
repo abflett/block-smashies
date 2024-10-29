@@ -21,6 +21,6 @@ typedef struct GameSlide
     float total_duration; // Duration for which the slide is displayed
 } GameSlide;
 
-GameSlide *create_game_slide(JSON_Object *slide_obj);
+GameSlide *create_game_slide(const JSON_Object *slide_obj);
 
 #endif

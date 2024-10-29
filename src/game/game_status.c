@@ -1,13 +1,10 @@
-#include <stdio.h>
+
 #include <stdbool.h>
-#include "raylib.h"
 #include "game_status.h"
-#include "resource_manager.h"
-#include "settings.h"
 
 GameStatus status;
 
-static void update_game_status(float delta_time)
+static void update_game_status(const float delta_time)
 {
     status.game_time += delta_time;
 }
@@ -19,7 +16,7 @@ static void reset_game_status(void)
     status.game_time = 0.0f;
 }
 
-GameStatus *create_game_status(int player_count)
+GameStatus *create_game_status(const int player_count)
 {
     status.player_count = player_count;
     status.score = 0;

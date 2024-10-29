@@ -47,7 +47,6 @@ static void rm_load_resource_file(void)
         JSON_Object *src_rect_obj = json_object_get_object(subtexture_obj, "src");
         const char *id = json_object_get_string(subtexture_obj, "id");
         const char *texture_id = json_object_get_string(subtexture_obj, "texture");
-        const char *subtexture_type = json_object_get_string(subtexture_obj, "type");
 
         Subtexture *subtexture = malloc(sizeof(Subtexture));
         subtexture->id = strdup(id); // Copy string to avoid dangling pointer
@@ -60,7 +59,7 @@ static void rm_load_resource_file(void)
         HASH_ADD_KEYPTR(hh, resource_manager.subtextures, subtexture->id, strlen(subtexture->id), subtexture);
     }
 
-    // Iterate anitmations
+    // Iterate animations
     for (size_t i = 0; i < (int)json_array_get_count(animations_array); i++)
     {
         JSON_Object *animation_obj = json_array_get_object(animations_array, i);

@@ -1,8 +1,6 @@
 #ifndef GAME_CONTEXT_H
 #define GAME_CONTEXT_H
 
-#include <stdbool.h>
-#include "raylib.h"      // For Texture2D
 #include "box2d/box2d.h" // For b2WorldId
 #include "game_status.h"
 #include "entities.h"
@@ -24,7 +22,7 @@ typedef struct GameContext
 
     LevelManager *level_manager;
 
-    void (*update)(float delta_time);
+    void (*update)(const float delta_time);
     void (*render)(void);
     void (*cleanup)(void);
 } GameContext;

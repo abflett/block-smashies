@@ -9,7 +9,7 @@
 #define MAX_HIGH_SCORES 10
 
 // Helper function to check if a score is high enough to be added to the high scores list
-bool is_high_score(const HighScore *high_scores, int count, int score)
+bool is_high_score(const HighScore *high_scores, const int count, const int score)
 {
     // If the current count is less than the maximum allowed, it's always a high score
     if (count < MAX_HIGH_SCORES)
@@ -40,7 +40,7 @@ void sort_high_scores(HighScore *high_scores, int count)
             if (high_scores[j].score > high_scores[i].score)
             {
                 // Swap the scores
-                HighScore temp = high_scores[i];
+                const HighScore temp = high_scores[i];
                 high_scores[i] = high_scores[j];
                 high_scores[j] = temp;
             }
@@ -61,8 +61,8 @@ void load_high_scores(HighScore *high_scores, int *count)
         return;
     }
 
-    JSON_Object *root_object = json_value_get_object(root_value);
-    JSON_Array *scores_array = json_object_get_array(root_object, "high_scores");
+    const JSON_Object *root_object = json_value_get_object(root_value);
+    const JSON_Array *scores_array = json_object_get_array(root_object, "high_scores");
     if (scores_array == NULL)
     {
         log_error("No 'high_scores' array found in JSON file.");
@@ -71,12 +71,12 @@ void load_high_scores(HighScore *high_scores, int *count)
     }
 
     // Load scores
-    size_t num_scores = json_array_get_count(scores_array);
+    const size_t num_scores = json_array_get_count(scores_array);
     for (size_t i = 0; i < num_scores && i < MAX_HIGH_SCORES; ++i)
     {
-        JSON_Object *score_object = json_array_get_object(scores_array, i);
+        const JSON_Object *score_object = json_array_get_object(scores_array, i);
         const char *username = json_object_get_string(score_object, "username");
-        int score = (int)json_object_get_number(score_object, "score");
+        const int score = (int)json_object_get_number(score_object, "score");
 
         strncpy(high_scores[i].username, username, sizeof(high_scores[i].username) - 1);
         high_scores[i].username[sizeof(high_scores[i].username) - 1] = '\0'; // Null-terminate
@@ -87,7 +87,7 @@ void load_high_scores(HighScore *high_scores, int *count)
     json_value_free(root_value);
 }
 
-void save_high_scores(HighScore *high_scores, int count)
+void save_high_scores(const HighScore *high_scores, const int count)
 {
     // Create JSON object
     JSON_Value *root_value = json_value_init_object();
@@ -114,7 +114,7 @@ void save_high_scores(HighScore *high_scores, int count)
     json_value_free(root_value);
 }
 
-void add_high_score(HighScore *high_scores, int *count, const char *username, int score)
+void add_high_score(HighScore *high_scores, int *count, const char *username, const int score)
 {
     if (*count < MAX_HIGH_SCORES)
     {

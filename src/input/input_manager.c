@@ -14,9 +14,9 @@ static float button_debounce_time[MAX_INPUTS];
 static float key_debounce_time[MAX_INPUTS];
 static float any_button_debounce_time;
 
-static bool key_down_repeat(int input_index, KeyboardKey key)
+static bool key_down_repeat(const int input_index, const KeyboardKey key)
 {
-    bool key_pressed = IsKeyDown(key);
+    const bool key_pressed = IsKeyDown(key);
     if (key_pressed && key_debounce_time[input_index] <= 0)
     {
         key_debounce_time[input_index] = 0.2f;
@@ -25,9 +25,9 @@ static bool key_down_repeat(int input_index, KeyboardKey key)
     return false;
 }
 
-static bool key_debounce(int input_index, KeyboardKey key)
+static bool key_debounce(const int input_index, const KeyboardKey key)
 {
-    bool key_pressed = IsKeyPressed(key);
+    const bool key_pressed = IsKeyPressed(key);
     if (key_pressed && key_debounce_time[input_index] <= 0)
     {
         key_debounce_time[input_index] = 0.2f;
@@ -36,10 +36,10 @@ static bool key_debounce(int input_index, KeyboardKey key)
     return false;
 }
 
-static bool axis_debounce(int input_index, GamepadAxis axis, float threshold)
+static bool axis_debounce(const int input_index, const GamepadAxis axis, const float threshold)
 {
-    float movement = GetGamepadAxisMovement(input_index, axis);
-    bool exceeds_threshold = (threshold > 0) ? (movement > threshold) : (movement < threshold);
+    const float movement = GetGamepadAxisMovement(input_index, axis);
+    const bool exceeds_threshold = (threshold > 0) ? (movement > threshold) : (movement < threshold);
 
     if (exceeds_threshold && axis_debounce_time[input_index] <= 0)
     {
@@ -49,7 +49,7 @@ static bool axis_debounce(int input_index, GamepadAxis axis, float threshold)
     return false;
 }
 
-static bool button_debounce(int input_index, GamepadButton button)
+static bool button_debounce(const int input_index, const GamepadButton button)
 {
     bool button_pressed = IsGamepadButtonPressed(input_index, button);
     if (button_pressed && button_debounce_time[input_index] <= 0)
@@ -70,7 +70,7 @@ static bool any_button_debounce(void)
     return false;
 }
 
-static void update(float delta_time)
+static void update(const float delta_time)
 {
     if (any_button_debounce_time > 0)
     {
@@ -94,7 +94,7 @@ static void update(float delta_time)
             button_debounce_time[i] -= delta_time;
         }
 
-        bool connected = IsGamepadAvailable(i);
+        const bool connected = IsGamepadAvailable(i);
         if (connected != manager.pad_active[i])
         {
             notification_timeout[i] = NOTIFICATION_TIMEOUT;
@@ -123,16 +123,16 @@ static void render(void)
     {
         if (notification_timeout[i] > 0)
         {
-            int rect_height = 15;
-            int y_position = (int)settings.game.target_size.y - (count * rect_height);
+            const float rect_height = 15.0f;
+            const float y_position = settings.game.target_size.y - (float)count * rect_height;
 
             const char *text = TextFormat("Controller %d has %s", i + 1, manager.pad_active[i] ? "connected" : "disconnected");
-            Vector2 text_size = MeasureTextEx(*font, text, 7, 0.0f);
-            Vector2 text_position = {
+            const Vector2 text_size = MeasureTextEx(*font, text, 7, 0.0f);
+            const Vector2 text_position = {
                 (settings.game.target_size.x - text_size.x) / 2,
                 y_position + (rect_height - text_size.y) / 2};
 
-            DrawRectangle(0, y_position, (int)settings.game.target_size.x, rect_height, settings.colors.black_alpha_05);
+            DrawRectangle(0, (int)y_position, (int)settings.game.target_size.x, (int)rect_height, settings.colors.black_alpha_05);
             DrawTextEx(*font, text, text_position, 7, 0.0f, WHITE);
             count--;
         }
@@ -141,7 +141,7 @@ static void render(void)
 
 static int input_pressed(void)
 {
-    bool key_pressed = GetKeyPressed() != 0;
+    const bool key_pressed = GetKeyPressed() != 0;
     if (key_pressed || GetGamepadButtonPressed() != 0)
     {
         for (int i = 0; i < MAX_INPUTS; i++)
@@ -174,7 +174,7 @@ static int input_pressed(void)
     return -1;
 }
 
-static void map_player_input(int player, int input_index)
+static void map_player_input(const int player, const int input_index)
 {
     if (player < 0 || player >= MAX_PLAYERS || input_index < 0 || input_index >= MAX_INPUTS)
     {
@@ -186,9 +186,9 @@ static void map_player_input(int player, int input_index)
     manager.input_mapped[input_index] = true;
 }
 
-static bool check_for_new_players(int player_count)
+static bool check_for_new_players(const int player_count)
 {
-    int new_input_pressed = manager.input_pressed();
+    const int new_input_pressed = manager.input_pressed();
     if (new_input_pressed != -1)
     {
         if (!manager.input_mapped[new_input_pressed])

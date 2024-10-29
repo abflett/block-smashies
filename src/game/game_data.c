@@ -1,4 +1,4 @@
-#include <string.h> // For strcpy
+#include <string.h>
 #include "game_data.h"
 #include "raylib.h"
 #include "b_utils.h"
@@ -21,6 +21,7 @@ GameData *create_game_data(void)
         game_data.purchased_upgrades[i] = -1; // -1 for no upgrade
     }
 
+    // Todo: remove testing values
     game_data.purchased_upgrades[0] = 0; // purchased for testing
     game_data.purchased_upgrades[1] = 1; // purchased for testing
     game_data.purchased_upgrades[2] = 2; // purchased for testing
@@ -36,7 +37,7 @@ GameData *create_game_data(void)
     game_data.orb_retrievers = 1;     // number of orb catchers/orb_retrievers
 
     game_data.difficulty = NORMAL_DIFFICULTY;
-    game_data.max_retrievers = 5;     // max ammount of saver bots
+    game_data.max_retrievers = 5;     // max amount of saver bots
     game_data.difficulty_high = 1.0f; // 0.5 - 2.0 - currency * difficulty_high > is easier
     game_data.difficulty_low = 1.0f;  // 0.5 - 2.0 - ball.max_velocity * difficulty_low < is easier
 
@@ -49,7 +50,7 @@ GameData *create_game_data(void)
     game_data.ship_attributes.boost_cooldown = 2.0f; // boost cooldown timer < is better
     game_data.ship_attributes.pulse_force = 100.0f;  // boost ship_force - vertical burst
     game_data.ship_attributes.pulse_cooldown = 2.0f; // pulse cooldown timer < is better
-    game_data.ship_attributes.max_heat = 100.0f;     // max_heat until over heat
+    game_data.ship_attributes.max_heat = 100.0f;     // max_heat until overheat
 
     // Initialize ball attributes
     game_data.orb_attributes.max_velocity = 50.0f;

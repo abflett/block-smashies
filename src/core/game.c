@@ -14,7 +14,7 @@ static RenderTexture2D target_texture;
 static bool exit_window = false;
 static ShakeEffect *shake_effect;
 
-static void update_game(float delta_time)
+static void update_game(const float delta_time)
 {
     input_manager->update(delta_time);
     scene_manager.update(delta_time);
@@ -63,7 +63,7 @@ static void run_game(void)
 {
     while (!exit_window)
     {
-        float delta_time = GetFrameTime();
+        const float delta_time = GetFrameTime();
         update_game(delta_time);
         render_game();
     }
@@ -95,7 +95,7 @@ Game *create_game(const char *game_title)
     // Todo: Allow other available full screen resolutions other then native
     if (settings.config.fullscreen)
     {
-        int monitor = GetCurrentMonitor();
+        const int monitor = GetCurrentMonitor();
         settings.config.screen_size.x = (float)GetMonitorWidth(monitor);
         settings.config.screen_size.y = (float)GetMonitorHeight(monitor);
 

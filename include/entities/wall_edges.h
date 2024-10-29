@@ -12,6 +12,6 @@ typedef struct WallEdges
     void (*clean_up)(struct WallEdges *walls); // Clean-up function pointer
 } WallEdges;
 
-WallEdges *create_wall_edges(b2WorldId world_id);
+WallEdges *create_wall_edges(const b2WorldId world_id);
 
 #endif

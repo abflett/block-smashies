@@ -25,13 +25,13 @@ typedef struct Brick
     float max_health;
     int brick_type;
 
-    void (*update)(struct Brick *brick, float delta_time);
-    void (*render)(struct Brick *brick);
+    void (*update)(struct Brick *brick, const float delta_time);
+    void (*render)(const struct Brick *brick);
     void (*clean_up)(struct Brick *brick);
-    void (*reset)(struct Brick *brick, b2Vec2 position, int brick_type);
+    void (*reset)(struct Brick *brick, const b2Vec2 position, const int brick_type);
     void (*disable)(struct Brick *brick);
 } Brick;
 
-Brick *create_brick(struct GameContext *game_context, b2Vec2 position, int brick_type);
+Brick *create_brick(struct GameContext *game_context, const b2Vec2 position, const int brick_type);
 
 #endif

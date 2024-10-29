@@ -45,7 +45,7 @@ static bool toggle_warning = false;
 int minutes = 0;
 float seconds = 0;
 
-void init_debris(Rectangle play_area)
+void init_debris(const Rectangle play_area)
 {
     for (int i = 0; i < NUM_DEBRIS; i++)
     {
@@ -55,7 +55,7 @@ void init_debris(Rectangle play_area)
     }
 }
 
-void update_debris(Rectangle play_area)
+void update_debris(const Rectangle play_area)
 {
     for (int i = 0; i < NUM_DEBRIS; i++)
     {
@@ -124,7 +124,7 @@ static void render_leds(void)
     }
 }
 
-static void update_ui(float delta_time)
+static void update_ui(const float delta_time)
 {
     radar_rotation += delta_time * 50; // Adjust the speed of rotation if necessary
     radar_rotation = fmodf(radar_rotation, 360.0f);
@@ -164,7 +164,9 @@ static void update_ui(float delta_time)
     }
 
     minutes = (int)(status->game_time / 60);
-    seconds = status->game_time - minutes * 60;
+    seconds = status->game_time - (float)minutes * 60;
+
+    // Todo: use raylib functions
     snprintf(time_text, sizeof(time_text), "%d:%05.2f", minutes, seconds);
     snprintf(currency_text, sizeof(currency_text), "%0.2f", status->currency);
     snprintf(score_text, sizeof(score_text), "%d", status->score);

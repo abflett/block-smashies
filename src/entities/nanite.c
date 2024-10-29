@@ -9,7 +9,7 @@
 #include "collision_category.h"
 #include "b_utils.h"
 
-static void update_nanite(Nanite *nanite, float delta_time)
+static void update_nanite(Nanite *nanite, const float delta_time)
 {
     nanite->current_rotation += delta_time * nanite->rotation_speed;
     nanite->current_rotation = fmodf(nanite->current_rotation, 360.0f);
@@ -77,7 +77,7 @@ static void disable_nanite(Nanite *nanite)
     b2Body_Disable(nanite->body);
 }
 
-static void render_nanite(Nanite *nanite)
+static void render_nanite(const Nanite *nanite)
 {
     b2Vec2 position = b2Body_GetPosition(nanite->body);
 

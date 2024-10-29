@@ -2,7 +2,6 @@
 #define RESOURCE_MANAGER_H
 
 #include "raylib.h"
-#include "kvec.h"
 #include "resource.h"
 #include "brick_type_mapper.h"
 #include "bar_level_mapper.h"

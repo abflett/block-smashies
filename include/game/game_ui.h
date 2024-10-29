@@ -1,8 +1,6 @@
 #ifndef GAME_UI
 #define GAME_UI
 
-#include "raylib.h"
-
 struct GameContext;
 
 typedef struct Debris
@@ -16,7 +14,7 @@ typedef struct GameUi
 {
     void (*render_before_content)(void);
     void (*render_after_content)(void);
-    void (*update)(float delta_time);
+    void (*update)(const float delta_time);
     void (*cleanup)(void);
 } GameUi;
 

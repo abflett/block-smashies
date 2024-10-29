@@ -1,6 +1,6 @@
 #include "player_stat.h"
 
-PlayerStat create_player_stat(int player_num)
+PlayerStat create_player_stat(const int player_num)
 {
     PlayerStat player;
     player.player_num = player_num;

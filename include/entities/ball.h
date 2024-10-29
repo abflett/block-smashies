@@ -25,7 +25,7 @@ typedef struct Ball
     b2BodyId body;
     bool active;
 
-    BallTrail balltrails[MAX_TRAIL];
+    BallTrail ball_trails[MAX_TRAIL];
     Texture2D *texture;
     b2Vec2 position;
     float radius;
@@ -36,13 +36,13 @@ typedef struct Ball
     float *max_velocity;
     float *min_velocity;
 
-    void (*update)(struct Ball *ball, float delta_time);
-    void (*render)(struct Ball *ball);
+    void (*update)(struct Ball *ball, const float delta_time);
+    void (*render)(const struct Ball *ball);
     void (*clean_up)(struct Ball *ball);
-    void (*reset)(struct Ball *ball, b2Vec2 position, b2Vec2 velocity);
+    void (*reset)(struct Ball *ball, const b2Vec2 position, const b2Vec2 velocity);
     void (*disable)(struct Ball *ball);
 } Ball;
 
-Ball *create_ball(GameData *game_data, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity);
+Ball *create_ball(GameData *game_data, const b2WorldId world_id, const b2Vec2 position, const b2Vec2 velocity);
 
 #endif

@@ -10,7 +10,7 @@
 #define MAX_TEAM_NAME_LENGTH 15
 
 /*  GameData
-    - Used for saving data that will remain persistant
+    - Used for saving data that will remain persistent
     - Using the upgrade tree will modify and save the new game_data
 */
 
@@ -56,7 +56,7 @@ typedef struct OrbAttributes
 typedef struct Perks
 {
     // ship perks
-    float phase_shift; // dublicate orb weapon % chance
+    float phase_shift; // duplicate orb weapon % chance
     float orb_shot;    // consume heat and energy to fire bullets
 
     // orb perks
@@ -81,7 +81,7 @@ typedef struct GameData
 
     // Difficulty and modifiers
     Difficulty difficulty;
-    int max_retrievers;    // max ammount of saver bots
+    int max_retrievers;    // max amount of saver bots
     float difficulty_high; // 0.5 - 2.0 - currency * difficulty_high > is easier
     float difficulty_low;  // 0.5 - 2.0 - ball.max_velocity * difficulty_low < is easier
 

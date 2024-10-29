@@ -9,7 +9,7 @@ static void clean_up_edges(WallEdges *walls)
     free(walls);
 }
 
-WallEdges *create_wall_edges(b2WorldId world_id)
+WallEdges *create_wall_edges(const b2WorldId world_id)
 {
     WallEdges *walls = (WallEdges *)malloc(sizeof(WallEdges));
     walls->type = ENTITY_WALL;

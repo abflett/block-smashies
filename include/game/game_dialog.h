@@ -16,13 +16,13 @@ typedef struct GameDialog
     InputManager *input_manager;
     Vector2 position;
 
-    void (*update)(struct GameDialog *game_dialog, float delta_time);
-    void (*render)(struct GameDialog *game_dialog);
+    void (*update)(struct GameDialog *game_dialog, const float delta_time);
+    void (*render)(const struct GameDialog *game_dialog);
     void (*cleanup)(struct GameDialog *game_dialog);
     void (*activate)(struct GameDialog *game_dialog);
-    bool (*get_result)(struct GameDialog *game_dialog);
+    bool (*get_result)(const struct GameDialog *game_dialog);
 } GameDialog;
 
 GameDialog *create_game_dialog(const char *message, Vector2 position);
 
-#endif // HEADER_GUARD_NAME
+#endif

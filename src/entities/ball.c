@@ -5,14 +5,15 @@
 #include "settings.h"
 #include "collision_category.h"
 #include "b_utils.h"
+#include "raymath.h"
 
-static float accumlator = 0.0f;
+static float accumulator = 0.0f;
 
 static void set_default_ball_trails(BallTrail *trails, b2Vec2 position, float radius, Texture2D *texture)
 {
     for (int i = 0; i < MAX_TRAIL; i++)
     {
-        float transparency = 0.2f * (1.0f - (i / (float)(MAX_TRAIL - 1)));
+        const float transparency = 0.2f * (1.0f - ((float)i / (float)(MAX_TRAIL - 1)));
 
         trails[i].position = position;
         trails[i].color = (Color){255, 255, 255, (int)(transparency * 255)};
@@ -26,12 +27,12 @@ void update_ball_trails(Ball *ball)
     // Move existing trails down the array
     for (int i = MAX_TRAIL - 1; i > 0; i--)
     {
-        ball->balltrails[i].position = ball->balltrails[i - 1].position;
-        ball->balltrails[i].texture = ball->balltrails[i - 1].texture;
+        ball->ball_trails[i].position = ball->ball_trails[i - 1].position;
+        ball->ball_trails[i].texture = ball->ball_trails[i - 1].texture;
     }
 
-    ball->balltrails[0].position = ball->position;
-    ball->balltrails[0].texture = ball->texture;
+    ball->ball_trails[0].position = ball->position;
+    ball->ball_trails[0].texture = ball->texture;
 }
 
 static void clean_up_ball(Ball *ball)
@@ -41,7 +42,7 @@ static void clean_up_ball(Ball *ball)
     free(ball);
 }
 
-static void render_ball(Ball *ball)
+static void render_ball(const Ball *ball)
 {
 
     // draw larger ball and resize down for subpixel drawing effect
@@ -51,18 +52,18 @@ static void render_ball(Ball *ball)
     for (int i = 0; i < MAX_TRAIL; i++)
     {
         // Check if the trail is active before rendering
-        if (ball->balltrails[i].active)
+        if (ball->ball_trails[i].active)
         {
-            render_texture_scale_color(ball->balltrails[i].texture, ball->balltrails[i].position, 0.5f, ball->balltrails[i].color);
+            render_texture_scale_color(ball->ball_trails[i].texture, ball->ball_trails[i].position, 0.5f, ball->ball_trails[i].color);
         }
     }
 }
 
-static void reset_ball(Ball *ball, b2Vec2 position, b2Vec2 velocity)
+static void reset_ball(Ball *ball, const b2Vec2 position, const b2Vec2 velocity)
 {
     ball->active = true;
     b2Body_Enable(ball->body);
-    set_default_ball_trails(ball->balltrails, position, ball->radius, ball->texture);
+    set_default_ball_trails(ball->ball_trails, position, ball->radius, ball->texture);
     b2Body_SetTransform(ball->body, position, (b2Rot){0.0f, 1.0f});
     b2Body_SetLinearVelocity(ball->body, velocity);
 }
@@ -73,13 +74,13 @@ static void disable_ball(Ball *ball)
     b2Body_Disable(ball->body);
 }
 
-static void update_ball(Ball *ball, float delta_time)
+static void update_ball(Ball *ball, const float delta_time)
 {
-    accumlator += delta_time;
-    if (accumlator > 0.04)
+    accumulator += delta_time;
+    if (accumulator > 0.04)
     {
         update_ball_trails(ball);
-        accumlator = 0.0f;
+        accumulator = 0.0f;
     }
 
     // Retrieve the current velocity of the ball
@@ -113,17 +114,17 @@ static void update_ball(Ball *ball, float delta_time)
     }
 
     // Cap the horizontal and vertical velocities with max values
-    if (fabs(velocity.x) > *ball->max_velocity)
+    if (fabsf(velocity.x) > *ball->max_velocity)
     {
         velocity.x = (velocity.x > 0) ? *ball->max_velocity : -(*ball->max_velocity);
     }
 
-    if (fabs(velocity.y) > *ball->max_velocity)
+    if (fabsf(velocity.y) > *ball->max_velocity)
     {
         velocity.y = (velocity.y > 0) ? *ball->max_velocity : -(*ball->max_velocity);
     }
 
-    if (fabs(velocity.y) < *ball->min_velocity)
+    if (fabsf(velocity.y) < *ball->min_velocity)
     {
         velocity.y = (velocity.y > 0) ? *ball->min_velocity : -(*ball->min_velocity);
     }
@@ -132,17 +133,17 @@ static void update_ball(Ball *ball, float delta_time)
     b2Body_SetLinearVelocity(ball->body, velocity);
 }
 
-Ball *create_ball(GameData *game_data, b2WorldId world_id, b2Vec2 position, b2Vec2 velocity)
+Ball *create_ball(GameData *game_data, const b2WorldId world_id, const b2Vec2 position, const b2Vec2 velocity)
 {
     Ball *ball = (Ball *)malloc(sizeof(Ball));
 
     ball->type = ENTITY_BALL;
     ball->active = true;
     ball->texture = &resource_manager.get_texture("ball")->texture;
-    ball->radius = ball->texture->width / 4.0f;
+    ball->radius = (float)ball->texture->width / 4.0f;
     ball->position = position;
 
-    set_default_ball_trails(ball->balltrails, ball->position, ball->radius, ball->texture);
+    set_default_ball_trails(ball->ball_trails, ball->position, ball->radius, ball->texture);
 
     ball->orb_power = &game_data->orb_attributes.orb_power;
     ball->phase_nova = &game_data->perks.phase_shift;
@@ -161,7 +162,7 @@ Ball *create_ball(GameData *game_data, b2WorldId world_id, b2Vec2 position, b2Ve
     // Define the circle shape for the ball
     b2Circle circle;
     circle.center = (b2Vec2){0, 0};               // This is an offset from the body's position
-    circle.radius = ball->texture->width * 0.25f; // Texture width is the diameter, so radius is half and scaled half
+    circle.radius = (float)ball->texture->width * 0.25f; // Texture width is the diameter, so radius is half and scaled half
 
     // Define the physical properties of the ball (density, friction, etc.)
     b2ShapeDef circle_def = b2DefaultShapeDef();

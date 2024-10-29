@@ -1,7 +1,6 @@
 #ifndef UPGRADE_NODE_H
 #define UPGRADE_NODE_H
 
-#include <stdbool.h>
 #include "raylib.h"
 #include "resource.h"
 

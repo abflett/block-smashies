@@ -3,7 +3,7 @@
 
 ShakeEffect shake_effect;
 
-static void start_shake_effect(float intensity, float duration)
+static void start_shake_effect(const float intensity, const float duration)
 {
     shake_effect.intensity = intensity;
     shake_effect.duration = duration;
@@ -11,19 +11,19 @@ static void start_shake_effect(float intensity, float duration)
     shake_effect.offset = (Vector2){0.0f, 0.0f};
 }
 
-static void update_shake_effect(float delta_time)
+static void update_shake_effect(const float delta_time)
 {
     if (shake_effect.elapsed < shake_effect.duration && settings.config.shake_screen)
     {
         shake_effect.elapsed += delta_time;
-        float progress = shake_effect.elapsed / shake_effect.duration;
+        const float progress = shake_effect.elapsed / shake_effect.duration;
 
         // Decrease intensity over time
         shake_effect.intensity *= (1.0f - progress);
 
         // Apply random offset
-        shake_effect.offset.x = (GetRandomValue(-1, 1) * shake_effect.intensity);
-        shake_effect.offset.y = (GetRandomValue(-1, 1) * shake_effect.intensity);
+        shake_effect.offset.x = (float)GetRandomValue(-1, 1) * shake_effect.intensity;
+        shake_effect.offset.y = (float)GetRandomValue(-1, 1) * shake_effect.intensity;
     }
     else
     {

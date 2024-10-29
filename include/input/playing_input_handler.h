@@ -6,7 +6,7 @@
 typedef struct PlayingInputHandler
 {
     GameContext *context;
-    void (*update)(float delta_time);
+    void (*update)(const float delta_time);
 } PlayingInputHandler;
 
 PlayingInputHandler *initialize_playing_input(GameContext *context);

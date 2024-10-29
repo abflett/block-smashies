@@ -1,7 +1,6 @@
 #include "raylib.h"
 #include "game_over_state.h"
 #include "game_state_manager.h"
-#include "high_score.h"
 #include "resource_manager.h"
 #include "input_manager.h"
 #include "settings.h"

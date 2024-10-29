@@ -16,10 +16,10 @@ typedef struct GameStatus
     bool game_over; // flag true when no more orb_retrievers
     bool is_hold;   // hold or play starting animation sequence
     bool is_pause;  // pause game on menu state etc
-    void (*update)(float delta_time);
+    void (*update)(const float delta_time);
     void (*reset)(void);
 } GameStatus;
 
-GameStatus *create_game_status(int player_count);
+GameStatus *create_game_status(const int player_count);
 
 #endif

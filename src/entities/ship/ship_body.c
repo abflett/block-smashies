@@ -2,7 +2,7 @@
 #include "resource_manager.h"
 #include "b_utils.h"
 
-static void set_color_ship_body(ShipBody *ship_body, int color)
+static void set_color_ship_body(ShipBody *ship_body)
 {
     ship_body->previous_ship_color = *ship_body->ship_color;
     const char *subtexture_id = resource_manager.ship_color_mapper->ship_color_to_subtexture_id(*ship_body->ship_color);
@@ -13,20 +13,18 @@ static void render_ship_body(ShipBody *ship_body)
 {
     if (*ship_body->ship_color != ship_body->previous_ship_color)
     {
-        set_color_ship_body(ship_body, *ship_body->ship_color);
+        set_color_ship_body(ship_body);
     }
 
-    // Calculate the total width of all segments // Todo: cache these
-    float total_width = ship_body->subtexture->src.width * (*ship_body->segments);
+    const float total_width = ship_body->subtexture->src.width * (float)(*ship_body->segments);
 
     // Offset the position so the segments are centered
-    float starting_x = (float)(int)(ship_body->position->x - (total_width / 2.0f));
+    const float starting_x = (float)(int)(ship_body->position->x - (total_width / 2.0f));
 
+    // Draw segments of the ship body
     for (int i = 0; i < *ship_body->segments; i++)
     {
-
-        Vector2 position = (Vector2){starting_x + (ship_body->subtexture->src.width * i), flip_y(ship_body->position->y)};
-
+        const Vector2 position = (Vector2){starting_x + (ship_body->subtexture->src.width * (float)i), flip_y(ship_body->position->y)};
         DrawTextureRec(ship_body->subtexture->texture_resource->texture,
                        ship_body->subtexture->src,
                        position,
@@ -45,6 +43,7 @@ ShipBody *create_ship_body(int *segments, int *ship_color, b2Vec2 *position)
     if (!ship_body)
     {
         log_error("Could not allocate memory for ShipBody");
+        return NULL; // game should have exit
     }
 
     ship_body->segments = segments;

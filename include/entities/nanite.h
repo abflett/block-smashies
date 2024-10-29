@@ -25,7 +25,7 @@ typedef struct Nanite
     float currency;
 
     void (*update)(struct Nanite *nanite, float delta_time);
-    void (*render)(struct Nanite *nanite);
+    void (*render)(const struct Nanite *nanite);
     void (*clean_up)(struct Nanite *nanite);
     void (*reset)(struct Nanite *nanite, b2Vec2 position, float currency, int nanite_type);
     void (*disable)(struct Nanite *nanite);

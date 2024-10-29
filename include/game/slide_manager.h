@@ -20,11 +20,11 @@ typedef struct SlideManager
     float text_duration;         // the current text line duration
     float text_fade_alpha;       // increment alpha for the fade color, for the fade in effect.
 
-    void (*render)(struct SlideManager *manager);
+    void (*render)(const struct SlideManager *manager);
     void (*update)(struct SlideManager *manager, float delta_time);
     void (*cleanup)(struct SlideManager *manager);
 } SlideManager;
 
-SlideManager *create_slide_manager(const char *slides_scene_name); // read slides from json file and store in kvec
+SlideManager *create_slide_manager(const char *slides_scene_name);
 
 #endif

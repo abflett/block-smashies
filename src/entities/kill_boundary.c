@@ -5,12 +5,12 @@
 
 static void clean_up_kill_boundary(KillBoundary *kill_boundary)
 {
-    TraceLog(LOG_INFO, "[Destroy] - Box2d KillBoundry [%d] - Success", kill_boundary->body.index1);
+    TraceLog(LOG_INFO, "[Destroy] - Box2d KillBoundary [%d] - Success", kill_boundary->body.index1);
     b2DestroyBody(kill_boundary->body);
     free(kill_boundary);
 }
 
-KillBoundary *create_kill_boundary(b2WorldId world_id)
+KillBoundary *create_kill_boundary(const b2WorldId world_id)
 {
     KillBoundary *kill_boundary = (KillBoundary *)malloc(sizeof(KillBoundary));
     kill_boundary->type = ENTITY_KILL_BOUNDARY;

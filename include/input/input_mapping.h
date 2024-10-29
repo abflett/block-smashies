@@ -1,7 +1,6 @@
 #ifndef INPUT_MAPPING_H
 #define INPUT_MAPPING_H
 
-#include <stdbool.h>
 #include "raylib.h"
 
 typedef struct InputMapping

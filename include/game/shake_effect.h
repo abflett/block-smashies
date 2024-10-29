@@ -10,8 +10,8 @@ typedef struct ShakeEffect
     float elapsed;   // Time elapsed since the shake started
     Vector2 offset;  // Current offset for rendering
 
-    void (*start)(float intensity, float duration);
-    void (*update)(float delta_time);
+    void (*start)(const float intensity, const float duration);
+    void (*update)(const float delta_time);
 } ShakeEffect;
 
 ShakeEffect *create_shake_effect(void);

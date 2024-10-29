@@ -1,10 +1,5 @@
 #include <stdlib.h>
-#include "box2d/box2d.h"
 #include "entities.h"
-#include "ball.h"
-#include "brick.h"
-#include "nanite.h"
-#include "game_data.h"
 #include "settings.h"
 #include "game_context.h"
 
@@ -14,10 +9,10 @@ Entities entities;
 
 static void add_ball(void)
 {
-    float random_x = (float)GetRandomValue(-25, 25);
-    Ship *p1_ship = entities.ships[0];
+    const float random_x = (float)GetRandomValue(-25, 25);
+    const Ship *p1_ship = entities.ships[0];
 
-    b2Vec2 ship_position = p1_ship->position;
+    const b2Vec2 ship_position = p1_ship->position;
 
     for (int i = 0; i < kv_size(entities.balls); i++)
     {
@@ -34,19 +29,20 @@ static void add_ball(void)
     Ball *new_ball = create_ball(entities.game_context->game_data, entities.game_context->world_id,
                                  (b2Vec2){ship_position.x, ship_position.y + (p1_ship->shield_size.y) + 3},
                                  (b2Vec2){random_x, 50});
+
     kv_push(Ball *, entities.balls, new_ball);
 }
 
 static void add_ships(void)
 {
-    GameContext *context = entities.game_context;
+    const GameContext *context = entities.game_context;
 
-    float play_area_center = settings.game.play_area.width * 0.5f + settings.game.play_area.x;
-    float ship_spacing = settings.game.play_area.width / (context->game_data->player_count + 1); // Spacing based on player count
+    const float play_area_center = settings.game.play_area.width * 0.5f + settings.game.play_area.x;
+    const float ship_spacing = settings.game.play_area.width / (float)(context->game_data->player_count + 1); // Spacing based on player count
 
     for (int i = 0; i < MAX_SHIPS; i++)
     {
-        float x_position = play_area_center - (context->game_data->player_count - 1) * ship_spacing / 2.0f + i * ship_spacing;
+        const float x_position = play_area_center - (float)(context->game_data->player_count - 1) * ship_spacing / 2.0f + (float)i * ship_spacing;
         if (entities.ships[i] == NULL)
         {
             entities.ships[i] = create_ship(&context->game_data->ships[i].player_num,
@@ -61,7 +57,7 @@ static void add_ships(void)
     }
 }
 
-static void add_brick(b2Vec2 position, int brick_type)
+static void add_brick(const b2Vec2 position, const int brick_type)
 {
     for (int i = 0; i < kv_size(entities.bricks); i++)
     {
@@ -77,7 +73,7 @@ static void add_brick(b2Vec2 position, int brick_type)
     kv_push(Brick *, entities.bricks, new_brick);
 }
 
-static void add_nanite(b2Vec2 position, float currency, int nanite_type)
+static void add_nanite(const b2Vec2 position, const float currency, const int nanite_type)
 {
     for (int i = 0; i < kv_size(entities.nanites); i++)
     {
@@ -103,7 +99,7 @@ static void add_kill_boundary(void)
     entities.kill_boundary = create_kill_boundary(entities.game_context->world_id);
 }
 
-static void update_entities(float delta_time)
+static void update_entities(const float delta_time)
 {
     for (int i = 0; i < kv_size(entities.balls); i++)
     {
@@ -145,7 +141,7 @@ static void render_entities(void)
 {
     for (int i = 0; i < kv_size(entities.balls); i++)
     {
-        Ball *ball = kv_A(entities.balls, i);
+        const Ball *ball = kv_A(entities.balls, i);
         if (ball->active)
         {
             ball->render(ball);
@@ -154,7 +150,7 @@ static void render_entities(void)
 
     for (int i = 0; i < kv_size(entities.bricks); i++)
     {
-        Brick *brick = kv_A(entities.bricks, i);
+        const Brick *brick = kv_A(entities.bricks, i);
         if (brick->active)
         {
             brick->render(brick);
@@ -163,7 +159,7 @@ static void render_entities(void)
 
     for (int i = 0; i < kv_size(entities.nanites); i++)
     {
-        Nanite *nanite = kv_A(entities.nanites, i);
+        const Nanite *nanite = kv_A(entities.nanites, i);
         if (nanite->active)
         {
             nanite->render(nanite);
@@ -187,7 +183,7 @@ static void cleanup_entities(void)
         entities.wall_edges->clean_up(entities.wall_edges);
     }
 
-    // Clean up kill boundry
+    // Clean up kill boundary
     if (entities.kill_boundary && entities.kill_boundary->clean_up)
     {
         entities.kill_boundary->clean_up(entities.kill_boundary);
