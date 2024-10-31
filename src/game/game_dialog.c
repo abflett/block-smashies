@@ -78,7 +78,7 @@ static void render(const GameDialog *game_dialog)
     }
 }
 
-static void cleanup(struct GameDialog *game_dialog)
+static void cleanup(GameDialog *game_dialog)
 {
     if (game_dialog)
     {                               // Check if game_dialog is not NULL
@@ -87,14 +87,14 @@ static void cleanup(struct GameDialog *game_dialog)
     }
 }
 
-static void activate(struct GameDialog *game_dialog)
+static void activate(GameDialog *game_dialog)
 {
     game_dialog->active = true;
 }
 
-static bool get_result(struct GameDialog *game_dialog)
+static bool get_result(const GameDialog *game_dialog)
 {
-    return false;
+    return game_dialog->result;
 }
 
 // Todo: add yes and no text

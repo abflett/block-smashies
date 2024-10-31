@@ -9,7 +9,7 @@
 static GameState playing_state;
 static PlayingInputHandler *input_handler;
 
-static void state_init(const int arg_count, const va_list args)
+static void state_init(const int arg_count, va_list args)
 {
     GameContext *context = game_state_manager.context;
     input_handler = initialize_playing_input(context);

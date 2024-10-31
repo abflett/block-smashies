@@ -21,8 +21,8 @@ NodeAttributeMapper *create_node_attribute_mapper(const JSON_Object *root_object
 {
     kv_init(mapper.subtexture_ids);
 
-    JSON_Object *node_attributes_obj = json_object_get_object(root_object, "node-attributes");
-    JSON_Array *subtextures_array = json_object_get_array(node_attributes_obj, "subtextures");
+    const JSON_Object *node_attributes_obj = json_object_get_object(root_object, "node-attributes");
+    const JSON_Array *subtextures_array = json_object_get_array(node_attributes_obj, "subtextures");
 
     for (size_t i = 0; i < json_array_get_count(subtextures_array); i++)
     {

@@ -21,8 +21,8 @@ UpgradeIconMapper *create_upgrade_icon_mapper(const JSON_Object *root_object)
 {
     kv_init(mapper.subtexture_ids);
 
-    JSON_Object *upgrade_icons_obj = json_object_get_object(root_object, "upgrade-icons");
-    JSON_Array *subtextures_array = json_object_get_array(upgrade_icons_obj, "subtextures");
+    const JSON_Object *upgrade_icons_obj = json_object_get_object(root_object, "upgrade-icons");
+    const JSON_Array *subtextures_array = json_object_get_array(upgrade_icons_obj, "subtextures");
 
     for (size_t i = 0; i < json_array_get_count(subtextures_array); i++)
     {

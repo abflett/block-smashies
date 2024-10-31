@@ -34,7 +34,7 @@ typedef struct UpgradeManager
     Texture *upgrade_display;
     Font *font;
 
-    void (*update)(const struct UpgradeManager *upgrade_manager, const float delta_time);
+    void (*update)(struct UpgradeManager *upgrade_manager, const float delta_time);
     void (*render)(const struct UpgradeManager *upgrade_manager);
     void (*cleanup)(struct UpgradeManager *upgrade_manager);
 } UpgradeManager;

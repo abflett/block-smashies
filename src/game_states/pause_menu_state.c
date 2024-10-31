@@ -6,7 +6,7 @@
 
 static GameState pause_menu_state;
 
-static void state_init(const int arg_count, const va_list args)
+static void state_init(const int arg_count, va_list args)
 {
 }
 

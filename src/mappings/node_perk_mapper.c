@@ -1,6 +1,5 @@
 #include <string.h>
 #include "node_perk_mapper.h"
-#include "raylib.h"
 
 static NodePerkMapper mapper;
 
@@ -22,8 +21,8 @@ NodePerkMapper *create_node_perk_mapper(const JSON_Object *root_object)
 {
     kv_init(mapper.subtexture_ids);
 
-    JSON_Object *node_perks_obj = json_object_get_object(root_object, "node-perks");
-    JSON_Array *subtextures_array = json_object_get_array(node_perks_obj, "subtextures");
+    const JSON_Object *node_perks_obj = json_object_get_object(root_object, "node-perks");
+    const JSON_Array *subtextures_array = json_object_get_array(node_perks_obj, "subtextures");
 
     for (size_t i = 0; i < json_array_get_count(subtextures_array); i++)
     {

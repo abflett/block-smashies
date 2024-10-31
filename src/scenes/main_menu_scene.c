@@ -91,7 +91,7 @@ void draw_flavor_text(void)
     DrawTextEx(*pixel7, displayed_text, (Vector2){106, 53}, 7, 0.0f, settings.colors.blue_03);
 }
 
-static void scene_init(const int arg_count, const va_list args)
+static void scene_init(const int arg_count, va_list args)
 {
     min_scene_time = settings.game.min_screen_time;
 }

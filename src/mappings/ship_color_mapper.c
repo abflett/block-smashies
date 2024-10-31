@@ -4,7 +4,7 @@
 
 static ShipColorMapper mapper;
 
-static char *ship_color_to_subtexture_id_func(const int ship_color)
+static const char *ship_color_to_subtexture_id_func(const int ship_color)
 {
     return kv_A(mapper.subtexture_ids, ship_color);
 }
@@ -22,8 +22,8 @@ ShipColorMapper *create_ship_color_mapper(const JSON_Object *root_object)
 {
     kv_init(mapper.subtexture_ids);
 
-    JSON_Object *ship_colors_obj = json_object_get_object(root_object, "ship-colors");
-    JSON_Array *ship_colors_array = json_object_get_array(ship_colors_obj, "subtextures");
+    const JSON_Object *ship_colors_obj = json_object_get_object(root_object, "ship-colors");
+    const JSON_Array *ship_colors_array = json_object_get_array(ship_colors_obj, "subtextures");
 
     for (size_t i = 0; i < json_array_get_count(ship_colors_array); i++)
     {

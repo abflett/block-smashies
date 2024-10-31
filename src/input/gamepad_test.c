@@ -31,11 +31,10 @@ static void update_gamepad_test(const float delta_time)
             // Capture button states
             for (int button = GAMEPAD_BUTTON_LEFT_FACE_UP; button <= GAMEPAD_BUTTON_RIGHT_THUMB; button++)
             {
-                if(button <= GAMEPAD_BUTTON_LEFT_THUMB)
+                if (button <= GAMEPAD_BUTTON_LEFT_THUMB)
                 {
                     gamepads[i].buttons[button] = IsGamepadButtonDown(i, button);
                 }
-
             }
 
             // Capture axis states
@@ -66,7 +65,7 @@ static void render_gamepad_test(void)
         DrawTextEx(*pixel7, text, (Vector2){0, (float)i * 45.0f}, 7, 0.0f, WHITE);
 
         char buttonText[256] = "Pressed: ";
-        int position = 9; // Initialize position after "Pressed: "
+        unsigned int position = 9; // Initialize position after "Pressed: "
 
         if (gamepads[i].active)
         {

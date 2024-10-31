@@ -16,7 +16,7 @@ static Font *font;
 static float fade_in_alpha;
 static bool title_fading_in;
 
-static void scene_init(const int arg_count, const va_list args)
+static void scene_init(const int arg_count, va_list args)
 {
     min_scene_time = settings.game.min_screen_time;
     title_fading_in = false;

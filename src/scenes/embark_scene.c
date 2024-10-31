@@ -8,7 +8,6 @@
 #include "ship.h"
 #include "virtual_keyboard.h"
 
-
 #define SHIP_COLORS 25
 #define MAX_PLAYERS 4
 #define MAX_NAME_LENGTH 14
@@ -41,15 +40,11 @@ static Color projector_beam_color = {255, 255, 255, 255};
 
 static float hologram_beam_timer = 0.0f;
 
-static void scene_init(const int arg_count, const va_list args)
+static void scene_init(const int arg_count, va_list args)
 {
     game_data = create_game_data();
 
-    for (int i = 0; i < arg_count; i++)
-    {
-        if (i == 0)
-            is_loading = (bool)va_arg(args, int);
-    }
+    is_loading = (bool)va_arg(args, int);
 
     if (is_loading)
     {

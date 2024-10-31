@@ -17,20 +17,20 @@ static void cleanup_bar_level_mapper(void)
         {
             free(kv_A(mapper.bars[i].subtexture_ids, j)); // Free each string
         }
-        kv_destroy(mapper.bars[i].subtexture_ids); // Destroy the kvec
+        kv_destroy(mapper.bars[i].subtexture_ids);
     }
 }
 
 BarLevelMapper *create_bar_level_mapper(const JSON_Object *root_object)
 {
-    JSON_Array *ui_bars_array = json_object_get_array(root_object, "ui-bars");
+    const JSON_Array *ui_bars_array = json_object_get_array(root_object, "ui-bars");
 
     for (size_t i = 0; i < json_array_get_count(ui_bars_array) && i < 5; i++)
     {
         kv_init(mapper.bars[i].subtexture_ids);
 
-        JSON_Object *ui_bar_obj = json_array_get_object(ui_bars_array, i);
-        JSON_Array *subtexture_array = json_object_get_array(ui_bar_obj, "subtextures");
+        const JSON_Object *ui_bar_obj = json_array_get_object(ui_bars_array, i);
+        const JSON_Array *subtexture_array = json_object_get_array(ui_bar_obj, "subtextures");
 
         mapper.bars[i].count = (int)json_array_get_count(subtexture_array);
 

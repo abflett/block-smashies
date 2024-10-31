@@ -17,7 +17,7 @@ static void cleanup_nanite_mapper(void)
 {
     for (size_t i = 0; i < kv_size(mapper.nanite_sets); ++i)
     {
-        NaniteSubtextureIdsSet set = kv_A(mapper.nanite_sets, i);
+        const NaniteSubtextureIdsSet set = kv_A(mapper.nanite_sets, i);
         for (int j = 0; j < 2; ++j)
         {
             free(set.subtexture_ids[j]);
@@ -27,7 +27,7 @@ static void cleanup_nanite_mapper(void)
 
     for (size_t i = 0; i < kv_size(mapper.lg_nanite_sets); ++i)
     {
-        NaniteSubtextureIdsSet set = kv_A(mapper.lg_nanite_sets, i);
+        const NaniteSubtextureIdsSet set = kv_A(mapper.lg_nanite_sets, i);
         for (int j = 0; j < 2; ++j)
         {
             free(set.subtexture_ids[j]);
@@ -41,14 +41,14 @@ NaniteTypeMapper *create_nanite_type_mapper(const JSON_Object *root_object)
     kv_init(mapper.nanite_sets);
     kv_init(mapper.lg_nanite_sets);
 
-    JSON_Array *nanite_type_array = json_object_get_array(root_object, "nanites");
-    JSON_Array *lg_nanite_type_array = json_object_get_array(root_object, "lg-nanites");
+    const JSON_Array *nanite_type_array = json_object_get_array(root_object, "nanites");
+    const JSON_Array *lg_nanite_type_array = json_object_get_array(root_object, "lg-nanites");
 
     for (size_t i = 0; i < json_array_get_count(nanite_type_array); i++)
     {
-        JSON_Object *nanite_type_obj = json_array_get_object(nanite_type_array, i);
+        const JSON_Object *nanite_type_obj = json_array_get_object(nanite_type_array, i);
 
-        JSON_Array *subtexture_array = json_object_get_array(nanite_type_obj, "subtextures");
+        const JSON_Array *subtexture_array = json_object_get_array(nanite_type_obj, "subtextures");
         NaniteSubtextureIdsSet nanite_subtexture_set = {0};
         for (size_t k = 0; k < json_array_get_count(subtexture_array); k++)
         {
@@ -60,9 +60,9 @@ NaniteTypeMapper *create_nanite_type_mapper(const JSON_Object *root_object)
 
     for (size_t i = 0; i < json_array_get_count(lg_nanite_type_array); i++)
     {
-        JSON_Object *nanite_type_obj = json_array_get_object(lg_nanite_type_array, i);
+        const JSON_Object *nanite_type_obj = json_array_get_object(lg_nanite_type_array, i);
 
-        JSON_Array *subtexture_array = json_object_get_array(nanite_type_obj, "subtextures");
+        const JSON_Array *subtexture_array = json_object_get_array(nanite_type_obj, "subtextures");
         NaniteSubtextureIdsSet nanite_subtexture_set = {0};
         for (size_t k = 0; k < json_array_get_count(subtexture_array); k++)
         {

@@ -13,7 +13,7 @@ static Font *font;
 static float count_down;
 static float y_position;
 
-static void state_init(const int arg_count,const va_list args)
+static void state_init(const int arg_count, va_list args)
 {
     context = game_state_manager.context;
 

@@ -15,7 +15,7 @@ static Font *font;
 
 static float min_scene_time;
 
-static void state_init(const int arg_count, const va_list args)
+static void state_init(const int arg_count, va_list args)
 {
     min_scene_time = settings.game.min_screen_time;
     game_data = game_state_manager.context->game_data;

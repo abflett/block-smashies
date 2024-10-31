@@ -324,7 +324,7 @@ static void display_details(const UpgradeManager *upgrade_manager)
     DrawTextEx(*upgrade_manager->font, node_id_text, (Vector2){277 - id_text_size.x, 161}, 7, 0.0f, settings.colors.blue_04);
 }
 
-static void render(UpgradeManager *upgrade_manager)
+static void render(const UpgradeManager *upgrade_manager)
 {
     if (!upgrade_manager)
     {

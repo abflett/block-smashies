@@ -16,7 +16,7 @@ static float max_scene_time; // Variable to track elapsed time
 static float min_scene_time; // Variable to track elapsed time
 static Font *font;
 
-static void scene_init(const int arg_count, const va_list args)
+static void scene_init(const int arg_count, va_list args)
 {
     max_scene_time = settings.game.max_screen_time;
     min_scene_time = settings.game.min_screen_time;

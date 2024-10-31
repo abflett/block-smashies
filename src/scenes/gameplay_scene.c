@@ -8,7 +8,7 @@
 static Scene gameplay_scene;
 static GameContext *context;
 
-static void scene_init(const int arg_count, const va_list args)
+static void scene_init(const int arg_count, va_list args)
 {
     GameData *game_data = NULL;
 
