@@ -23,59 +23,13 @@ static void update(GameDialog *game_dialog, const float delta_time)
 
 static void render(const GameDialog *game_dialog)
 {
-    if (!game_dialog || !game_dialog->active || !game_dialog->font)
+    if (!game_dialog || !game_dialog->active || !game_dialog->text_manager)
         return; // Error checking
 
-    const Vector2 pos = game_dialog->position;
-    const Vector2 size = {200.f, 60.f}; // Size of the dialog box
+    Vector2 dialog_offset = (Vector2){0.0f, 0.0f};
 
-    // Draw the dialog box
-    DrawRectangle((int)pos.x, (int)pos.y, (int)size.x, (int)size.y, (Color){0, 0, 0, 200});
-
-    // Measure text size and calculate initial position
-    const float line_height = 7.0f;           // Height of each line of text
-    Vector2 msg_pos = {pos.x + 5, pos.y + 5}; // Initial position with padding
-
-    // Split the message into lines at new line characters
-    // Todo: move to stack if possible
-    char *message_copy = strdup(game_dialog->message); // Create a mutable copy of the message
-    const char *line = strtok(message_copy, "\n");           // Split by new line
-
-    // Draw each line of the message
-    while (line)
-    {
-        // Measure the width of the current line
-        const float line_width = MeasureTextEx(*game_dialog->font, line, line_height, 0.0f).x;
-
-        // Center the line within the dialog box
-        msg_pos.x = pos.x + (size.x - line_width) * 0.5f; // Center horizontally
-
-        // Draw the current line
-        DrawTextEx(*game_dialog->font, line, msg_pos, line_height, 0.0f, WHITE);
-        msg_pos.y += line_height;  // Move down for the next line
-        line = strtok(NULL, "\n"); // Get the next line
-    }
-
-    // Clean up
-    free(message_copy); // Free the mutable copy
-
-    // Define button dimensions and spacing
-    const Vector2 btn_size = {50.f, 10.f};
-
-    // Calculate button positions
-    const char *buttons[] = {"No", "Yes"};
-    const Color bkg = WHITE;
-    const Color txt = BLACK;
-
-    // Adjust button positions based on the number of lines drawn
-    for (int i = 0; i < 2; ++i)
-    {
-        const float btn_space = 20.f;
-        const float x_pos = pos.x + (size.x - ((btn_size.x * 2) + btn_space)) * 0.5f + (btn_size.x + btn_space) * (float)i;
-        DrawRectangle((int)x_pos, (int)(pos.y + 45 + (line_height * (msg_pos.y / line_height))), (int)btn_size.x, (int)btn_size.y, bkg);
-        const Vector2 text_pos = {x_pos + (btn_size.x - MeasureTextEx(*game_dialog->font, buttons[i], 7, 0).x) * 0.5f, pos.y + 46 + (line_height * (msg_pos.y / line_height))};
-        DrawTextEx(*game_dialog->font, buttons[i], text_pos, 7, 0.0f, txt);
-    }
+    DrawRectangle(0, 0, (int)settings.game.target_size.x, (int)settings.game.target_size.y, settings.colors.black_alpha_05);
+    DrawTexture(*game_dialog->panel_bg, (int)(dialog_offset.x + game_dialog->position.x), (int)(dialog_offset.y + game_dialog->position.y), WHITE);
 }
 
 static void cleanup(GameDialog *game_dialog)
@@ -113,8 +67,13 @@ GameDialog *create_game_dialog(const char *message, const Vector2 position)
         free(game_dialog); // Clean up if allocation fails
         return NULL;       // Allocation failed
     }
-    game_dialog->font = resource_manager.get_pixel7_font();
+
+    game_dialog->text_manager = get_text_manager();
     game_dialog->position = position;
+
+    game_dialog->panel_bg = &resource_manager.get_texture("dialog-panel")->texture;
+    game_dialog->btn = &resource_manager.get_texture("dialog-btn")->texture;
+    game_dialog->btn_lit = &resource_manager.get_texture("dialog-btn-lit")->texture;
 
     // Assign function pointers
     game_dialog->update = update;

@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "raylib.h"
 #include "input_manager.h"
+#include "text_manager.h"
 
 typedef struct GameDialog
 {
@@ -11,7 +12,11 @@ typedef struct GameDialog
     bool active;
     bool result;
 
-    Font *font;
+    Texture2D *panel_bg;
+    Texture2D *btn;
+    Texture2D *btn_lit;
+
+    TextManager *text_manager;
 
     InputManager *input_manager;
     Vector2 position;
