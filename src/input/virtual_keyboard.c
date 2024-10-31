@@ -14,7 +14,6 @@
 // =ZXCVBNM,._* // (=)shift, (*)none  // row 3
 // >>>>>>>>>>>> // (>)space...        // row 4
 
-// Todo: Fix char casing when caps or shift
 
 const int KEY_WIDTH = 15;
 const int KEY_HEIGHT = 15;
@@ -38,7 +37,7 @@ static void close_keyboard(VirtualKeyboard *keyboard)
     keyboard->is_closing = true;
 }
 
-static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
+static void keyboard_update(VirtualKeyboard *keyboard, const float delta_time)
 {
     if (!keyboard->active && !keyboard->is_closing)
     {
@@ -216,7 +215,7 @@ static void keyboard_update(VirtualKeyboard *keyboard, float delta_time)
         { // Printable ASCII range
             if (keyboard->cursor_position < keyboard->max_length)
             { // Ensure room for null terminator
-                const int transformed_char = keyboard->caps_on || keyboard->shift_on || keyboard->shift_down ? toupper(key) : key;
+                const int transformed_char = keyboard->caps_on || keyboard->shift_on || keyboard->shift_down ? key : tolower(key);
                 keyboard->input_text[keyboard->cursor_position++] = (char)transformed_char;
                 keyboard->input_text[keyboard->cursor_position] = '\0'; // Null-terminate the string
                 keyboard->shift_on = false;
