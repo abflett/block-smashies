@@ -7,6 +7,7 @@
 #include "input_manager.h"
 #include "scene_manager.h"
 #include "game_state_manager.h"
+#include "text_manager.h"
 
 static Game game;
 static InputManager *input_manager;
@@ -86,6 +87,7 @@ Game *create_game(const char *game_title)
     SetTargetFPS(60);     // Set target FPS for the game loop
     resource_manager.load_resource_file();
     target_texture = LoadRenderTexture((int)settings.game.target_size.x, (int)settings.game.target_size.y);
+    initialize_text_manager();
     shake_effect = create_shake_effect();
 
     input_manager = create_input_manager();
